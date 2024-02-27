@@ -7,16 +7,18 @@ import { TbReportAnalytics } from "react-icons/tb";
 import { AiOutlineUser, AiOutlineHeart } from "react-icons/ai";
 import { FiMessageSquare, FiFolder, FiShoppingCart } from "react-icons/fi";
 
-const SideNavigation = () => {
+const SideNavigationPM = () => {
   const menus = [
-    { name: "dashboard", link: "/", icon: MdOutlineDashboard },
-    { name: "user", link: "/", icon: AiOutlineUser },
-    { name: "messages", link: "/", icon: FiMessageSquare },
-    { name: "analytics", link: "/", icon: TbReportAnalytics, margin: true },
-    { name: "File Manager", link: "/", icon: FiFolder },
-    { name: "Cart", link: "/", icon: FiShoppingCart },
-    { name: "Saved", link: "/", icon: AiOutlineHeart, margin: true },
-    { name: "Setting", link: "/", icon: RiSettings4Line },
+    { name: "Dashboard", link: "/pmdashboard", icon: MdOutlineDashboard },
+    { name: "Pojects", link: "/projects", icon: AiOutlineUser },
+    { name: "Tasks", link: "/tasks", icon: FiMessageSquare },
+    {
+      name: "Progress",
+      link: "/progress",
+      icon: TbReportAnalytics,
+      margin: false,
+    },
+    { name: "Employees", link: "/", icon: FiFolder },
   ];
   const [open, setOpen] = useState(true);
 
@@ -26,7 +28,7 @@ const SideNavigation = () => {
         open ? "w-72" : "w-16"
       } duration-500 text-gray-100 px-4`}
       style={{
-        background: "linear-gradient(to right, #0f172a, #1e293b)",
+        background: "#101d3f",
       }}
     >
       <div className="flex justify-end py-3">
@@ -70,4 +72,4 @@ const SideNavigation = () => {
   );
 };
 
-export default SideNavigation;
+export default SideNavigationPM;
