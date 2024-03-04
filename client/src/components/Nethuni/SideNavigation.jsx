@@ -3,12 +3,24 @@ import { Link } from "react-router-dom";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { IoHome } from "react-icons/io5";
+import { FaRegClipboard } from "react-icons/fa6";
+import { FaClipboardUser } from "react-icons/fa6";
+import { GiProgression } from "react-icons/gi";
 import { PiProjectorScreenChartBold } from "react-icons/pi";
 
-const SideNavigationPM = () => {
+const SideNavigation = () => {
   const menus = [
     { name: "Home", link: "/pmhome", icon: IoHome },
     { name: "Pojects", link: "/projects", icon: PiProjectorScreenChartBold },
+    {
+      name: "Dashboard",
+      link: "/pmdashboard",
+      icon: MdOutlineDashboard,
+      margin: true,
+    },
+    { name: "Tasks", link: "/tasks", icon: FaRegClipboard },
+    { name: "Employees", link: "/employees", icon: FaClipboardUser },
+    { name: "Progress", link: "/progress", icon: GiProgression },
   ];
   const [open, setOpen] = useState(true);
 
@@ -62,4 +74,4 @@ const SideNavigationPM = () => {
   );
 };
 
-export default SideNavigationPM;
+export default SideNavigation;
