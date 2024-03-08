@@ -18,15 +18,21 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long projectId;
+
     @Column(nullable = false)
     private String projectName;
-    private String pDiscription;
+
+    private String pDescription;
+
     @Column(nullable = false)
     private String status;
+
     @Column(nullable = false)
     private LocalDate createdDate;
+
     @Column(nullable = false)
-    private long pmId;
+    private long emp_Id;
+
     @Column(nullable = false)
     private String image;
 }
