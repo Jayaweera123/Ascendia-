@@ -2,6 +2,7 @@ import React from "react";
 import SideNavigation from "../../components/Nethuni/SideNavigationPM";
 import TopNavigation from "../../components/Nethuni/TopNavigation";
 import PageTitle from "../../components/Nethuni/PageTitle";
+import ProjectCard from "../../components/Nethuni/ProjectCard";
 
 function Projects() {
   return (
@@ -9,7 +10,10 @@ function Projects() {
       <TopNavigation />
       <section className="flex">
         <SideNavigation />
-        <PageTitle title="Projects" />
+        <div className="ml-3.5 mt-10">
+          <PageTitle title="Projects" />
+          <ProjectCard />
+        </div>
       </section>
     </>
   );

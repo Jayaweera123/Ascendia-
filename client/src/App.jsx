@@ -10,6 +10,8 @@ import ProjectDashboard from "./pages/ProjectManager/ProjectDashboard";
 import Tasks from "./pages/ProjectManager/Tasks";
 import Employees from "./pages/ProjectManager/Employees";
 import ProjectProgress from "./pages/ProjectManager/ProjectProgress";
+import AddTaskForm from "./components/Nethuni/AddTaskForm";
+import AddTask from "./pages/ProjectManager/AddTask";
 
 //import SideNavigationPM from "./components/Nethuni/SideNavigationPM";
 
@@ -18,17 +20,16 @@ const App = () => {
     <div>
       <Routes>
         {/* Ravindu */}
-
         <Route path="/" element={<Home />} />
         <Route path="/sideNavigation" element={<SideNavigation />} />
         <Route path="/topNavigation" element={<TopNavigation />} />
-
         {/*Nethuni */}
         <Route path="/pmhome" element={<HomePM />} />
         <Route path="/projects" element={<Projects />} />
-
         <Route path="/pmdashboard" element={<ProjectDashboard />} />
         <Route path="/tasks" element={<Tasks />} />
+        <Route path="/addtask" element={<AddTask />} />
+        <Route path="/edit-task/:id" element={<AddTask />} />
         <Route path="/employees" element={<Employees />} />
         <Route path="/progress" element={<ProjectProgress />} />
       </Routes>

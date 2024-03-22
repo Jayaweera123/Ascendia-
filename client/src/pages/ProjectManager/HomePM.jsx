@@ -2,6 +2,7 @@ import React from "react";
 import SideNavigation from "../../components/Nethuni/SideNavigationPM";
 import TopNavigation from "../../components/Nethuni/TopNavigation";
 import PageTitle from "../../components/Nethuni/PageTitle";
+import DeleteModal from "../../components/Nethuni/DeleteModal";
 
 function HomePM() {
   return (
@@ -9,7 +10,10 @@ function HomePM() {
       <TopNavigation />
       <section className="flex">
         <SideNavigation />
-        <PageTitle title="Home" />
+        <div>
+          <PageTitle title="Home" />
+          <DeleteModal />
+        </div>
       </section>
     </>
   );
