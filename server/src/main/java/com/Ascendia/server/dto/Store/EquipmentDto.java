@@ -11,13 +11,12 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MaterialDto {
-    private Long materialId;
-    private String materialCode;
-    private String materialName;
+public class EquipmentDto {
+
+    private Long equipmentId;
+    private String equipmentCode;
+    private String equipmentName;
     private int quantity;
-    private String measuringUnit;
-    private int minimumLevel;
     private String description;
     private LocalDateTime createdDate;
 

@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { listMaterial } from "../../services/StoreServices";
+import { listEquipment } from "../../services/StoreServices";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../../components/Store/SearchBar";
 import TopNavigationStore from "../../components/Store/TopNavigationStore";
 import SideNavigationStore from "../../components/Store/SideNavigationStore";
-import { getMaterial } from "../../services/StoreServices";
 
-function Material() {
+function Equipment() {
 
     const [open, setOpen] = useState(true);
 
-    const [material, setMaterial] = useState([]);
+    const [equipment, setEquipment] = useState([]);
 
     const navigator = useNavigate();
 
     const [search, setSearch] = useState("");
 
-    const [selectedMaterials, setSelectedMaterials] = useState([]);
+    const [selectedEquipment, setSelectedEquipment] = useState([]);
 
     const [showUpdateButton, setShowUpdateButton] = useState(false);
 
@@ -25,28 +24,28 @@ function Material() {
     const recordsPerPage = 5;
     const lastIndex = currentPage * recordsPerPage;
     const firstIndex = lastIndex - recordsPerPage;
-    const records = material.slice(firstIndex, lastIndex);
-    const numberOfPages = Math.ceil(material.length / recordsPerPage);
+    const records = equipment.slice(firstIndex, lastIndex);
+    const numberOfPages = Math.ceil(equipment.length / recordsPerPage);
     const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
 
     useEffect(() => {
-        listMaterial().then((response) => {
-            setMaterial(response.data);
+        listEquipment().then((response) => {
+            setEquipment(response.data);
         }).catch(error => {
             console.error(error);
         })
     }, [])
 
-    const addNewMaterial = () => {
-            navigator("/addMaterial")
+    const addNewEquipment = () => {
+            navigator("/addEquipment")
     }
 
-    const editMaterial = (id) => {
-        navigator(`/editMaterial/${id}`)
+    const editEquipment = (id) => {
+        navigator(`/editEquipment/${id}`)
     }
 
-    const updateMaterial = (id) => {
-        navigator(`/updateMaterial/${id}`)
+    const updateEquipment= (id) => {
+        navigator(`/updateEquipment/${id}`)
     }
 
     //Pagination
@@ -66,44 +65,43 @@ function Material() {
             }
     }
 
-    // Update the selected materials state and show/hide the "Update Material" button
-    const handleCheckboxChange = (materialCode) => {
-
-        const updatedSelectedMaterials = [...selectedMaterials];
-
-        if (updatedSelectedMaterials.includes(materialCode)) {
-        // Material is deselected, remove from the list
-        updatedSelectedMaterials.splice(
-            updatedSelectedMaterials.indexOf(materialCode),
+    // Update the selected equipment state and show/hide the "Update Equipment" button
+    const handleCheckboxChange = (equipmentCode) => {
+        const updatedSelectedEquipment = [...selectedEquipment];
+    
+        if (updatedSelectedEquipment.includes(equipmentCode)) {
+          // Equipment is deselected, remove from the list
+          updatedSelectedEquipment.splice(
+            updatedSelectedEquipment.indexOf(equipmentCode),
             1
-        );
+          );
         } else {
-        // Material is selected, add to the list
-        updatedSelectedMaterials.push(materialCode);
+          // Equipment is selected, add to the list
+          updatedSelectedEquipment.push(equipmentCode);
         }
-
-        setSelectedMaterials(updatedSelectedMaterials);
-        setShowUpdateButton(updatedSelectedMaterials.length > 0); // Check if there's at least one checkbox selected
-    };
+    
+        setSelectedEquipment(updatedSelectedEquipment);
+        setShowUpdateButton(updatedSelectedEquipment.length > 0); // Check if there's at least one checkbox selected
+      }
 
     //Update inventory
-    function updateMaterialById() {
-        // Assuming you want to perform some action on the selected materials
-        // For example, logging the selected material codes to the console
-        let selectedMaterialCodes = selectedMaterials.map(materialId => {
-            return material.find(m => m.materialId === materialId)?.materialCode;
-        });
-
-
-        console.log('Selected Material Codes:', selectedMaterialCodes);
-
+    const updateEquipmentById = () => {
+        // Assuming you want to perform some action on the selected Equipment
+        // For example, logging the selected Equipment codes to the console
+        let selectedEquipmentCodes = selectedEquipment.map(
+          (equipmentId) =>
+            equipment.find((m) => m.equipmentId === equipmentId)?.equipmentCode
+        );
+    
+        console.log('Selected Equipment Codes:', selectedEquipmentCodes);
+    
         // Now you can perform your logic to update the inventory using the selected materials
         // You may want to make an API call to your Spring Boot backend here
-
+    
         // Clear the selected materials array after processing
-        setSelectedMaterials([]);
+        setSelectedEquipment([]);
         setShowUpdateButton(false);
-    }
+      }
     
   return (
     <div>
@@ -114,7 +112,7 @@ function Material() {
             <div className="relative h-screen">
   
                 <div className="absolute top-0 left-0 pt-3 pl-10">
-                <h1 className="text-4xl leading-relaxed font-bold text-[#101d3f] whitespace-nowrap">Material List</h1>
+                <h1 className="text-4xl leading-relaxed font-bold text-[#101d3f] whitespace-nowrap">Equipment List</h1>
                 </div>
 
                 <div className="flex justify-center min-h-screen mx-auto mt-20 ml-10 ">
@@ -125,7 +123,7 @@ function Material() {
                                 <SearchBar search = {search} setSearch={setSearch}/>
 
                                 <div className="mb-8">
-                                    <button className={`mt-6 bg-[#101d3f] hover:bg-sky-800 text-white font-bold py-2 px-4 rounded al ${showUpdateButton ? "" : "hidden"}`} onClick={updateMaterialById}>
+                                    <button className={`mt-6 bg-[#101d3f] hover:bg-sky-800 text-white font-bold py-2 px-4 rounded al ${showUpdateButton ? "" : "hidden"}`} onClick={updateEquipmentById}>
                                         <div className="flex items-center">
                                         <div className="flex items-center justify-center w-6 h-6 mr-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -138,14 +136,14 @@ function Material() {
                                 </div>
 
                                 <div className="mb-8">
-                                    <button className="mt-6 bg-[#101d3f] hover:bg-sky-800 text-white font-bold py-2 px-4 rounded al " onClick={addNewMaterial}>
+                                    <button className="mt-6 bg-[#101d3f] hover:bg-sky-800 text-white font-bold py-2 px-4 rounded al " onClick={addNewEquipment}>
                                         <div className="flex items-center">
                                         <div className="flex items-center justify-center w-6 h-6 mr-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                                                 <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
                                             </svg>
                                         </div>
-                                        Add Material
+                                        Add Equipment
                                         </div>
                                     </button>
                                 </div>
@@ -156,41 +154,40 @@ function Material() {
                             <thead>
                                 <tr className="text-gray-700 border-b bg-blue-gray-100 border-blue-gray-50 border-y">
                                 <th scope="col" className="p-4"> </th>
-                                <th className="px-4 py-5 text-left">Material Code</th>
-                                <th className="px-4 py-5 text-left">Material Name</th>
+                                <th className="px-4 py-5 text-left">Equipment Code</th>
+                                <th className="px-4 py-5 text-left">Equipment Name</th>
                                 <th className="px-4 py-5 text-left">Quantity</th>
-                                <th className="px-4 py-5 text-left">Measuring Unit</th>
                                 <th className="px-4 py-5 text-left">Description</th>
                                 <th className="w-16 px-4 py-5 text-left"></th>
                                 <th className="w-16 px-4 py-5 text-left"></th>
+                               
                                 </tr>
                             </thead>
                             <tbody className="text-blue-gray-900">
                                 {
                                     records
-                                    .filter((material) => 
-                                        material.materialCode.includes(search) || material.materialName.includes(search)
+                                    .filter((equipment) => 
+                                        equipment.equipmentCode.includes(search) || equipment.equipmentName.includes(search)
                                     )
-                                    .map(material =>
-                                        <tr className="bg-white border-b border-blue-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600" key={material.materialId}>
+                                    .map(equipment =>
+                                        <tr className="bg-white border-b border-blue-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600" key={equipment.equipmentId}>
                                             <td class="w-4 p-4">
                                                 <div class="flex items-center">
-                                                    <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onChange={() => handleCheckboxChange(material.materialCode)}/>
+                                                    <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onChange={() => handleCheckboxChange(equipment.equipmentCode)}/>
                                                     <label for="checkbox-table-search-1" className="sr-only">checkbox</label>
                                                 </div>
                                             </td>
-                                            <td className="px-4 py-3">{material.materialCode}</td>
-                                            <td className="px-4 py-3">{material.materialName}</td>
-                                            <td className="px-4 py-3">{material.quantity}</td>
-                                            <td className="px-4 py-3">{material.measuringUnit}</td>
-                                            <td className="px-4 py-3">{material.description}</td>
+                                            <td className="px-4 py-3">{equipment.equipmentCode}</td>
+                                            <td className="px-4 py-3">{equipment.equipmentName}</td>
+                                            <td className="px-4 py-3">{equipment.quantity}</td>
+                                            <td className="px-4 py-3">{equipment.description}</td>
                                             <td className="px-4 py-3">
                                                 <div className="relative inline-block group">
                                                     <button
                                                         type="button"
                                                         className="focus:outline-none text-neutral-700 dark:text-neutral-200 group-hover:opacity-70"
                                                         aria-label="Edit"
-                                                        onClick={() => editMaterial(material.materialId)}
+                                                        onClick={() => editEquipment(equipment.equipmentId)}
                                                     >
 
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -203,7 +200,6 @@ function Material() {
                                                         Edit
                                                     </div>
                                                 </div>
-
                                                 
                                             </td>
 
@@ -212,8 +208,8 @@ function Material() {
                                                     <button
                                                         type="button"
                                                         className="focus:outline-none text-neutral-700 dark:text-neutral-200 group-hover:opacity-70"
-                                                        aria-label="Edit"
-                                                        onClick={() => updateMaterial(material.materialId)}
+                                                        aria-label="Update"
+                                                        onClick={() => updateEquipment(equipment.equipmentId)}
                                                     >
 
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
@@ -276,4 +272,4 @@ function Material() {
   )
 }
 
-export default Material
+export default Equipment

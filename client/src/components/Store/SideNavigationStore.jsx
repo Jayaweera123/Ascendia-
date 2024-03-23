@@ -6,17 +6,18 @@ import { RiSettings4Line } from "react-icons/ri";
 import { TbReportAnalytics } from "react-icons/tb";
 import { AiOutlineUser, AiOutlineHeart } from "react-icons/ai";
 import { FiMessageSquare, FiFolder, FiShoppingCart } from "react-icons/fi";
+import { HiHome, HiBellAlert, HiMiniIdentification, HiMiniClock, HiMiniWrenchScrewdriver, HiMiniRectangleGroup, HiMiniDocumentText} from "react-icons/hi2";
 
 const SideNavigationStore = () => {
   const menus = [
 
-    { name: "Home", link: "/", icon: MdOutlineDashboard },
-    { name: "Dashboard", link: "/dashboard", icon: MdOutlineDashboard },
-    { name: "Material", link: "/material", icon: MdOutlineDashboard },
-    { name: "Equipment", link: "/equipment", icon: AiOutlineUser },
-    { name: "History", link: "/viewHistory", icon: FiMessageSquare },
-    { name: "Timeline", link: "/", icon: TbReportAnalytics, margin: true },
-    { name: "Notifications", link: "/", icon: FiFolder },
+    { name: "Home", link: "/", icon: HiHome},
+    { name: "Dashboard", link: "/dashboard", icon: HiMiniIdentification },
+    { name: "Material", link: "/material", icon: HiMiniRectangleGroup },
+    { name: "Equipment", link: "/equipment", icon: HiMiniWrenchScrewdriver },
+    { name: "History", link: "/viewHistory", icon: HiMiniDocumentText },
+    { name: "Timeline", link: "/", icon: HiMiniClock },
+    { name: "Notifications", link: "/", icon: HiBellAlert},
 
 
     // { name: "dashboard", link: "/", icon: MdOutlineDashboard },

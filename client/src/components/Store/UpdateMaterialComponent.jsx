@@ -3,8 +3,9 @@ import SideNavigationStore from "./SideNavigationStore"; // Adjust the path base
 import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
 import { createMaterial, editMaterial, getMaterial } from '../../services/StoreServices'
 import { useNavigate, useParams } from 'react-router-dom'
+import Popup from "./Popup";
 
-function AddMaterialComponent() {
+function UpdateMaterialComponent() {
   const [open, setOpen] = useState(true);
   const [materialCode, setMaterialCode] = useState('')
   const [materialName, setMaterialName] = useState('')
@@ -13,6 +14,8 @@ function AddMaterialComponent() {
   const [minimumLevel, setMinimumLevel] = useState('')
   const [description, setDescription] = useState('')
   const [createdDate, setCreatedDate] = useState('')
+  const [state, setState] = useState('')
+  const [showPopup, setShowPopup] = useState(false);
 
   const {id} = useParams();
 
@@ -21,10 +24,7 @@ function AddMaterialComponent() {
     materialCode: '',
     materialName: '',
     quantity: '',
-    measuringUnit: '',
-    minimumLevel: '',
-    description: '',
-    createdDate: ''
+    state: ''
 
   })
 
@@ -48,35 +48,33 @@ function AddMaterialComponent() {
 
   }, [id]) 
 
-  function saveOrEditMaterial(e){
-    e.preventDefault();
+  function updateMaterial(e){
+    // e.preventDefault();
 
-    // if(validateForm){
+    // // if(validateForm){
 
-      const material = {materialCode, materialName,quantity,measuringUnit,minimumLevel,description, createdDate}
-      console.log(material)
+    //   const material = {materialCode, materialName,quantity,measuringUnit,minimumLevel,description, createdDate}
+    //   console.log(material)
 
-      if(id){
-        editMaterial(id, material).then((response) => {
-          console.log(response.data)
-          navigator('/material')
-        }).catch(error => {
-          console.error(error)
-        })
-      }else{
-          createMaterial(material).then((response) => {
-          console.log(response.data);
-          navigator('/material')
-        }).catch(error => {
-           console.error(error)
-        })
+    //   then((response) => {
+    //     setShowPopup(true);
+    //   })
+    alert("Successfully updated")
+    navigator('/material')
+        // updateMaterial(id, material).then((response) => {
+        //   console.log(response.data)
+          
+        //   navigator('/material')
+        // }).catch(error => {
+        //   console.error(error)
+        // })
   
       }
   
       
     // }
 
-  }
+
 
 function handleCancel(e){
   navigator('/material')
@@ -149,6 +147,11 @@ function formTitle(){
  }
 }
 
+function onClosePopup() {
+    setShowPopup(false);
+    // Additional logic to perform after closing the popup
+  }
+
   return (
     <div>
       <TopNavigationStore />
@@ -160,9 +163,7 @@ function formTitle(){
 
       <div className="flex flex-row gap-3 pt-2 pb-1 mx-auto border-b items-centered border-gray-900/10">
             
-            {
-              formTitle()
-            } 
+          <h4 className="text-4xl leading-relaxed font-bold text-left text-[#001b5e] ">Update Material</h4>
          
         </div>
 
@@ -181,6 +182,7 @@ function formTitle(){
                     name="materialCode"
                     id="materialCode"
                     value={materialCode}
+                    disabled
                     onChange={(e) => setMaterialCode(e.target.value)}
                     className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "
                   />
@@ -202,6 +204,7 @@ function formTitle(){
                     id="materialName"
                     value={materialName}
                     onChange={(e) => setMaterialName(e.target.value)}
+                    disabled
                     className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
                 </div>
@@ -229,73 +232,35 @@ function formTitle(){
 
           <div>
           <label
-                  htmlFor="measuringUnit"
+                  htmlFor="state"
                   className="block text-base font-medium leading-6 text-gray-900"
                 >
-                  Measuring Unit:
+                  Add/Issue:
                 </label>
                 <div className="mt-3">
-                  <input
-                    type="text"
-                    placeholder='Enter Measuring Unit'
-                    name="measuringUnit"
-                    id="measuringUnit"
-                    value={measuringUnit}
-                    onChange={(e) => setMeasuringUnit(e.target.value)}
-                    className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
+                  
+
+                    <select
+                        value={state}
+                        onChange={(e) => setState(e.target.value)}
+                        className="block w-full px-3 py-1.5 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    >
+                        <option value="Issue">Issue</option>
+                        <option value="Add">Add</option>
+                    </select>
                 </div>
           </div>
 
-          <div>
-                <label
-                  htmlFor="description"
-                  className="block text-base font-medium leading-6 text-gray-900"
-                >
-                  Description:
-                </label>
-                <div className="mt-3">
-                  <textarea
-                    name="description"
-                    placeholder='Enter Discription'
-                    id="description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 h-24"
-                  />
-                </div>
-          </div>
-
-          <div>
-          <label
-                  htmlFor="minimumLevel"
-                  className="block text-base font-medium leading-6 text-gray-900"
-                >
-                  Minimum Level:
-                </label>
-                <div className="mt-3">
-                  <input
-                    type="text"
-                    placeholder='Enter Minimum Level'
-                    name="minimumLevel"
-                    id="minimumLevel"
-                    value={minimumLevel}
-                    onChange={(e) => setMinimumLevel(e.target.value)}
-                    className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-          </div>
-
-
-          
 
         </div>
+
+        
         
         <div className="flex items-center justify-end mt-6 gap-x-6">
-           
+           <div className="mt-24">
             <button
               type="submit"
-              onClick={saveOrEditMaterial}
+              onClick={updateMaterial}
               className="text-white bg-[#001b5e] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             >
               Submit
@@ -308,17 +273,19 @@ function formTitle(){
             >
               Cancel
             </button>
+            </div>
             
           </div>
       </form>
     </div>
         </div>
       </section>
+      {showPopup && <Popup message="Successfully updated inventory" onClose={onClosePopup} />}
     </div>
   );
 };
 
-export default AddMaterialComponent;
+export default UpdateMaterialComponent;
 
 
 

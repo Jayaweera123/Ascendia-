@@ -10,23 +10,23 @@ import { FiMessageSquare, FiFolder, FiShoppingCart } from "react-icons/fi";
 const SideNavigation = () => {
   const menus = [
 
-    { name: "Home", link: "/", icon: MdOutlineDashboard },
-    { name: "Dashboard", link: "/dashboard", icon: MdOutlineDashboard },
-    { name: "Materials & Equipments", link: "/materialsAndEquipments", icon: MdOutlineDashboard },
-    { name: "Update Inventory", link: "/updateInventory", icon: AiOutlineUser },
-    { name: "History", link: "/viewHistory", icon: FiMessageSquare },
-    { name: "Timeline", link: "/", icon: TbReportAnalytics, margin: true },
-    { name: "Notifications", link: "/", icon: FiFolder },
+    // { name: "Home", link: "/", icon: MdOutlineDashboard },
+    // { name: "Dashboard", link: "/dashboard", icon: MdOutlineDashboard },
+    // { name: "Materials & Equipments", link: "/materialsAndEquipments", icon: MdOutlineDashboard },
+    // { name: "Update Inventory", link: "/updateInventory", icon: AiOutlineUser },
+    // { name: "History", link: "/viewHistory", icon: FiMessageSquare },
+    // { name: "Timeline", link: "/", icon: TbReportAnalytics, margin: true },
+    // { name: "Notifications", link: "/", icon: FiFolder },
 
 
-    // { name: "dashboard", link: "/", icon: MdOutlineDashboard },
-    // { name: "user", link: "/", icon: AiOutlineUser },
-    // { name: "messages", link: "/", icon: FiMessageSquare },
-    // { name: "analytics", link: "/", icon: TbReportAnalytics, margin: true },
-    // { name: "File Manager", link: "/", icon: FiFolder },
-    // { name: "Cart", link: "/", icon: FiShoppingCart },
-    // { name: "Saved", link: "/", icon: AiOutlineHeart, margin: true },
-    // { name: "Setting", link: "/", icon: RiSettings4Line },
+    { name: "dashboard", link: "/", icon: MdOutlineDashboard },
+    { name: "user", link: "/", icon: AiOutlineUser },
+    { name: "messages", link: "/", icon: FiMessageSquare },
+    { name: "analytics", link: "/", icon: TbReportAnalytics, margin: true },
+    { name: "File Manager", link: "/", icon: FiFolder },
+    { name: "Cart", link: "/", icon: FiShoppingCart },
+    { name: "Saved", link: "/", icon: AiOutlineHeart, margin: true },
+    { name: "Setting", link: "/", icon: RiSettings4Line },
   ];
   const [open, setOpen] = useState(true);
 

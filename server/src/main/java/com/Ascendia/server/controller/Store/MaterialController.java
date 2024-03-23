@@ -54,7 +54,13 @@ public class MaterialController {
     @DeleteMapping("/deleteMaterial{id}")
     public ResponseEntity<String> deleteMaterial (@PathVariable("id") Long materialId){
         materialService.deleteMaterial(materialId);
-        return ResponseEntity.ok("Employee deleted successfully..");
 
+        return ResponseEntity.ok("Material deleted successfully..");
+
+    }
+
+    @GetMapping("/searchMaterial")
+    public ResponseEntity<List<MaterialDto>> searchMaterial(@RequestParam("query") String query){
+        return ResponseEntity.ok(materialService.searchMaterial(query));
     }
 }

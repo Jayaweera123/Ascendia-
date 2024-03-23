@@ -11,7 +11,9 @@ public interface MaterialService {
 
     List<MaterialDto> getAllMaterials();
 
-    MaterialDto editMaterial(Long materialId, MaterialDto editedEmployee);
+    MaterialDto editMaterial(Long materialId, MaterialDto editedMaterial);
 
     void deleteMaterial(Long materialId);
+
+    List<MaterialDto> searchMaterial(String query);
 }

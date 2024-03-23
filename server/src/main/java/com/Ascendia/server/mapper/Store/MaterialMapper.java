@@ -13,10 +13,11 @@ public class MaterialMapper {
                 material.getQuantity(),
                 material.getMeasuringUnit(),
                 material.getMinimumLevel(),
-                material.getDescription()
-                //material.getCreatedDate()
+                material.getDescription(),
+                material.getCreatedDate()
         );
     }
+
 
     public static Material mapToMaterial(MaterialDto materialDto){
         return new Material(
@@ -26,8 +27,8 @@ public class MaterialMapper {
                 materialDto.getQuantity(),
                 materialDto.getMeasuringUnit(),
                 materialDto.getMinimumLevel(),
-                materialDto.getDescription()
-                // materialDto.getCreatedDate()
+                materialDto.getDescription(),
+                materialDto.getCreatedDate()
         );
     }
 }

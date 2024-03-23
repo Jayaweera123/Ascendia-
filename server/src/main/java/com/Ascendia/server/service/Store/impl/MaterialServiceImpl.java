@@ -57,7 +57,7 @@ public class MaterialServiceImpl implements MaterialService {
         material.setDescription(editedMaterial.getDescription());
         material.setQuantity(editedMaterial.getQuantity());
         material.setMeasuringUnit(editedMaterial.getMeasuringUnit());
-        material.setDescription(editedMaterial.getDescription());
+        material.setMinimumLevel(editedMaterial.getMinimumLevel());
 
         Material editedMaterialObj = materialRepository.save(material);
 
@@ -72,5 +72,12 @@ public class MaterialServiceImpl implements MaterialService {
         );
 
         materialRepository.deleteById(materialId);
+    }
+
+    @Override
+    public List<MaterialDto> searchMaterial(String query) {
+        List<Material> materials =  materialRepository.searchMaterial(query);
+        return materials.stream().map((material) -> MaterialMapper.mapToMaterialDto(material))
+                .collect(Collectors.toList());
     }
 }
