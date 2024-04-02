@@ -28,7 +28,6 @@ public class MaterialController {
     }
 
     //Build get material REST API
-    @CrossOrigin
 
     @GetMapping("/getMaterialById{id}")
     public ResponseEntity<MaterialDto> getMaterialById(@PathVariable("id") Long materialId){

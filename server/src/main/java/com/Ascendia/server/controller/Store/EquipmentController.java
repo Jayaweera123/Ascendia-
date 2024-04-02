@@ -45,7 +45,7 @@ public class EquipmentController {
     }
 
     //Build Edit Equipment REST API
-    @PutMapping("/editEquipment{id}")
+    @PutMapping("/ {id}")
     public ResponseEntity<EquipmentDto> editEquipment(@PathVariable("id") Long equipmentId, @RequestBody EquipmentDto editedEquipment) {
         EquipmentDto equipmentDto = equipmentService.editEquipment(equipmentId, editedEquipment);
         return ResponseEntity.ok(equipmentDto);

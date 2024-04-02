@@ -85,7 +85,7 @@ function handleCancel(e){
 // function validateForm(){
 //   let valid = true;
 
-//   const errorsCopy = {...errors}
+//   const errorsCopy = {...  errors} //spread operator- copy errors object into errorsCopy 
 
 //   if(materialCode.trim()){
 //     errorsCopy.materialCode = '';
