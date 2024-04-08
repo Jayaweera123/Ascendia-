@@ -41,6 +41,7 @@ function UpdateMaterialComponent() {
       }
 
   }, [id]) 
+  //Handle function to update inventory
 
   function handleinventoryUpdate(e){
      e.preventDefault();
