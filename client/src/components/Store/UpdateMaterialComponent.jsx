@@ -1,3 +1,4 @@
+//comment
 import React, { useEffect, useState } from "react";
 import SideNavigationStore from "./SideNavigationStore"; // Adjust the path based on your project structure
 import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
@@ -29,6 +30,7 @@ function UpdateMaterialComponent() {
   const navigator = useNavigate();
 
   useEffect(() => {
+    
 
       if(id){
         getMaterial(id).then((response) => {
