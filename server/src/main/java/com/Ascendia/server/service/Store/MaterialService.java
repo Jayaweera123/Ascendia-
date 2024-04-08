@@ -1,6 +1,7 @@
 package com.Ascendia.server.service.Store;
 
 import com.Ascendia.server.dto.Store.MaterialDto;
+import com.Ascendia.server.dto.Store.UpdateMaterialDto;
 
 import java.util.List;
 
@@ -16,4 +17,7 @@ public interface MaterialService {
     void deleteMaterial(Long materialId);
 
     List<MaterialDto> searchMaterial(String query);
+
+    MaterialDto updateInventory(Long materialId, UpdateMaterialDto updateMaterialDto);
+
 }

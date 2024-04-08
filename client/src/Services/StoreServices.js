@@ -11,6 +11,8 @@ export const editMaterial = (materialId, material) => axios.put('http://localhos
 
 export const searchMaterial = (query) => axios.get(`http://localhost:8080/api/material/searchMaterial?query=${query}`);
 
+export const inventoryUpdate = (materialId, material) => axios.put('http://localhost:8080/api/material/updateInventory'+ materialId, material);
+
 //Equipment
 export const listEquipment = () => axios.get('http://localhost:8080/api/equipment/getAllEquipment');
 

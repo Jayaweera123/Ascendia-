@@ -1,6 +1,10 @@
 package com.Ascendia.server.service.Store.impl;
 
 import com.Ascendia.server.dto.Store.MaterialDto;
+import com.Ascendia.server.dto.Store.UpdateMaterialDto;
+import com.Ascendia.server.entity.Store.UpdateMaterial;
+import com.Ascendia.server.mapper.Store.UpdateMaterialMapper;
+import com.Ascendia.server.repository.Store.UpdateMaterialRepository;
 import com.Ascendia.server.service.Store.MaterialService;
 import com.Ascendia.server.entity.Store.Material;
 import com.Ascendia.server.exceptions.Store.ResourceNotFoundException;
@@ -11,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +26,8 @@ public class MaterialServiceImpl implements MaterialService {
     @Autowired
     private MaterialRepository materialRepository;
 
+    @Autowired
+    private UpdateMaterialRepository updateMaterialRepository;
     @Override
     public MaterialDto createMaterial(MaterialDto materialDto) {
 
@@ -40,7 +47,8 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public List<MaterialDto> getAllMaterials() {
+    public List<MaterialDto>
+    getAllMaterials() {
         List<Material> materials = materialRepository.findAll();
         return materials.stream().map((material) -> MaterialMapper.mapToMaterialDto(material))
                 .collect(Collectors.toList());
@@ -79,5 +87,36 @@ public class MaterialServiceImpl implements MaterialService {
         List<Material> materials =  materialRepository.searchMaterial(query);
         return materials.stream().map((material) -> MaterialMapper.mapToMaterialDto(material))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MaterialDto updateInventory(Long materialId, UpdateMaterialDto updateMaterialDto) {
+        Material material = materialRepository.findById(materialId).orElseThrow(() ->
+                new ResourceNotFoundException("Material not found with id: " + materialId));
+
+        int updatedQuantity;
+        if ("add".equalsIgnoreCase(updateMaterialDto.getAction())) {
+            updatedQuantity = material.getQuantity() + updateMaterialDto.getUpdatedQuantity();
+        } else if ("issue".equalsIgnoreCase(updateMaterialDto.getAction())) {
+            updatedQuantity = material.getQuantity() - updateMaterialDto.getUpdatedQuantity();
+        } else {
+            throw new IllegalArgumentException("Invalid action provided.");
+        }
+
+        if (updatedQuantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative.");
+        }
+
+        material.setQuantity(updatedQuantity);
+        materialRepository.save(material);
+
+        // Create entry in UpdateMaterial table
+        UpdateMaterial updateMaterial = UpdateMaterialMapper.mapToUpdateMaterial(updateMaterialDto);
+        updateMaterial.setMaterialCode(material.getMaterialCode());
+        updateMaterial.setMaterialName(material.getMaterialName());
+        updateMaterial.setUpdatedDate(LocalDateTime.now());
+        updateMaterialRepository.save(updateMaterial);
+
+        return MaterialMapper.mapToMaterialDto(material);
     }
 }

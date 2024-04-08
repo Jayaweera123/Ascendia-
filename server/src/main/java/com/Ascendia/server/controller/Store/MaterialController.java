@@ -1,6 +1,7 @@
 package com.Ascendia.server.controller.Store;
 
 import com.Ascendia.server.dto.Store.MaterialDto;
+import com.Ascendia.server.dto.Store.UpdateMaterialDto;
 import com.Ascendia.server.service.Store.MaterialService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class MaterialController {
 
     @Autowired
     private MaterialService materialService;
+
+
 
     //Build AddMaterial REST API
     @PostMapping("/createMaterial")
@@ -58,8 +61,18 @@ public class MaterialController {
 
     }
 
+    //Build search REST API
     @GetMapping("/searchMaterial")
     public ResponseEntity<List<MaterialDto>> searchMaterial(@RequestParam("query") String query){
         return ResponseEntity.ok(materialService.searchMaterial(query));
+    }
+
+    //Build Update inventory REST API
+    @PutMapping("/updateInventory{id}")
+    public ResponseEntity<MaterialDto> updateInventory(
+            @PathVariable("id") Long materialId,
+            @RequestBody UpdateMaterialDto updateMaterialDto) {
+        MaterialDto materialDto = materialService.updateInventory(materialId, updateMaterialDto);
+        return ResponseEntity.ok(materialDto);
     }
 }
