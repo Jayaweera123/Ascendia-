@@ -4,10 +4,10 @@ import { Link, useParams } from "react-router-dom";
 import { LuClipboardEdit, LuCalendarClock } from "react-icons/lu";
 import DeleteModal from "./DeleteModal.jsx";
 
-const TaskCardforProject = (projectId) => {
+const TaskCardforProject = ({ projectId }) => {
   const [tasks, setTasks] = useState([]);
   //const { projectId } = useParams(); // Destructure projectId from useParams
-  const projectId = projectId;
+  //const projectId = projectId ;
 
   useEffect(() => {
     // Fetch tasks for the project when projectId changes

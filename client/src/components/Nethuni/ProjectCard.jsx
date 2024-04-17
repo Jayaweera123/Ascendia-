@@ -3,7 +3,6 @@ import { getAllProjectCards } from "../../services/ProjectService.jsx";
 import { Link } from "react-router-dom";
 
 const ProjectCard = () => {
-  // Define dummy data using useState hook
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {

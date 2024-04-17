@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useParams } from "react-router-dom";
 import Home from "./pages/Home";
 
 import SideNavigation from "./components/Nethuni/SideNavigationPM";
@@ -33,6 +33,17 @@ const App = () => {
         <Route path="/edit-task/:id" element={<AddTask />} />
         <Route path="/employees" element={<Employees />} />
         <Route path="/progress" element={<ProjectProgress />} />
+        {/** 
+       <Route
+          path="/projects/:projectId/tasks"
+          element={<TasksForProject />}
+        />
+
+        <Route
+          path="/projects/:projectId/tasks"
+          element={<TasksForProject projectId={3} />}
+        />
+      */}
         <Route
           path="/projects/:projectId/tasks"
           element={<TasksForProject />}
