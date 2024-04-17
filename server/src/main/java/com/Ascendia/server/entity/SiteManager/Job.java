@@ -1,7 +1,6 @@
-package com.Ascendia.server.dto.ProjectManager;
+package com.Ascendia.server.entity.SiteManager;
 
-import com.Ascendia.server.entity.Project.Project;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,13 +12,18 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskDto {
-    private Long taskId;
-    private String taskName;
+@Entity
+@Table (name = "jobs")
+public class Job {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long jobId;
+    private String jobName;
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
+    @Column(name = "job_status", nullable = false )
     private String status;
-    private Project project;
 
 }

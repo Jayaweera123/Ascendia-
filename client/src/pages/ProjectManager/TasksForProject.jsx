@@ -4,12 +4,22 @@ import TopNavigation from "../../components/Nethuni/TopNavigation";
 import PageTitle from "../../components/Nethuni/PageTitle";
 import TaskCard from "../../components/Nethuni/TaskCard";
 import { Link } from "react-router-dom";
+import { useState, useParams } from "react";
 
 import { BsClipboard2PlusFill } from "react-icons/bs";
 import AddButton from "../../components/Nethuni/AddButton";
 import TaskCardforProject from "../../components/Nethuni/TaskCard copy";
 
-function Tasks() {
+function TasksForProject() {
+  const [projectId, setProjectId] = useState(null);
+
+  // Extract projectId from URL params
+  const { projectId: urlProjectId } = useParams();
+
+  useEffect(() => {
+    // Set projectId state
+    setProjectId(urlProjectId);
+  }, [urlProjectId]);
   return (
     <>
       <TopNavigation />
@@ -22,11 +32,11 @@ function Tasks() {
             <AddButton />
           </div>
 
-          <TaskCard />
+          <TaskCardforProject projectId={projectId} />
         </div>
       </section>
     </>
   );
 }
 
-export default Tasks;
+export default TasksForProject;

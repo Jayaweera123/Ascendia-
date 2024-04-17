@@ -94,7 +94,12 @@ const AddTaskForm = () => {
 
   // Determine if the form is invalid
   const isFormInvalid =
-    !taskName || !startDate || !endDate || endDate < startDate;
+    !taskName ||
+    !startDate ||
+    !endDate ||
+    endDate < startDate ||
+    description.length > 999 ||
+    taskName.length > 99;
 
   function formTitle() {
     if (id) {
@@ -159,12 +164,19 @@ const AddTaskForm = () => {
                 name="taskName"
                 required
                 value={taskName}
+                maxLength={100}
                 onChange={(e) => setTaskName(e.target.value)}
                 className="bg-gray-50 outline-none py-1 px-2 text-base border-2 border-gray-300 focus:border-sky-300 text-gray-900 rounded-md w-full"
               />
               {/* Conditional rendering to display the required message */}
               {taskName.trim().length === 0 && (
                 <span className="mt-2 text-sm text-red-500">*required</span>
+              )}
+              {/* Error message */}
+              {taskName.length > 99 && (
+                <span className="mt-2 text-sm text-red-500">
+                  Description can't be more than 100 characters
+                </span>
               )}
             </div>
 
@@ -181,7 +193,7 @@ const AddTaskForm = () => {
                 id="description"
                 name="description"
                 value={description}
-                maxLength={255} // Limit the number of characters
+                maxLength={1000} // Limit the number of characters
                 required
                 onChange={(e) => setDescription(e.target.value)}
                 className="bg-gray-50 outline-none py-1 px-2 text-base border-2 border-gray-300 focus:border-sky-300 text-gray-900 rounded-md w-full h-32 resize-none"
@@ -191,9 +203,9 @@ const AddTaskForm = () => {
                 <span className="mt-2 text-sm text-red-500">*required</span>
               )}
               {/* Error message */}
-              {description.length > 254 && (
+              {description.length > 999 && (
                 <span className="mt-2 text-sm text-red-500">
-                  Description can't be more than 255 characters
+                  Description can't be more than 1000 characters
                 </span>
               )}
             </div>

@@ -12,6 +12,7 @@ import Employees from "./pages/ProjectManager/Employees";
 import ProjectProgress from "./pages/ProjectManager/ProjectProgress";
 import AddTaskForm from "./components/Nethuni/AddTaskForm";
 import AddTask from "./pages/ProjectManager/AddTask";
+import TasksForProject from "./pages/ProjectManager/TasksForProject";
 
 //import SideNavigationPM from "./components/Nethuni/SideNavigationPM";
 
@@ -32,6 +33,10 @@ const App = () => {
         <Route path="/edit-task/:id" element={<AddTask />} />
         <Route path="/employees" element={<Employees />} />
         <Route path="/progress" element={<ProjectProgress />} />
+        <Route
+          path="/projects/:projectId/tasks"
+          element={<TasksForProject />}
+        />
       </Routes>
     </div>
   );

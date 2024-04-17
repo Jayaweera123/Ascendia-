@@ -19,6 +19,8 @@ public interface TaskService {
     // TaskService.java
     void calculateStatus(TaskDto taskDto);
 
+    List<TaskDto> getTasksByProjectId(Long projectId);
+
 
 
 }

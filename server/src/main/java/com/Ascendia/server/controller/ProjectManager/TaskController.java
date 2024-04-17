@@ -57,6 +57,13 @@ public class TaskController {
         return ResponseEntity.ok("Task deleted successfully");
     }
 
+    //CHat GPT get task for the projectID
+    @GetMapping("/api/project/{projectId}/tasks")
+    public ResponseEntity<List<TaskDto>> getTasksByProjectId(@PathVariable Long projectId) {
+        List<TaskDto> tasks = taskService.getTasksByProjectId(projectId);
+        return ResponseEntity.ok(tasks);
+    }
+
 
 }
 

@@ -15,3 +15,6 @@ export const updateTask = (taskId, task) =>
 
 export const deleteTask = (taskId) =>
   axios.delete(REST_API_BASE_URL0 + "/" + taskId);
+
+export const getTasksForProject = (ProjectId) =>
+  axios.get(REST_API_BASE_URL0 + "/api/project/" + ProjectId + "/tasks");

@@ -10,7 +10,8 @@ public class TaskMapper {
                 task.getDescription(),
                 task.getStartDate(),
                 task.getEndDate(),
-                task.getStatus()
+                task.getStatus(),
+                task.getProject()
         );
     }
 
@@ -21,7 +22,22 @@ public class TaskMapper {
                 taskDto.getDescription(),
                 taskDto.getStartDate(),
                 taskDto.getEndDate(),
-                taskDto.getStatus()
+                taskDto.getStatus(),
+                taskDto.getProject()
         );
+    }
+
+    //From ChapGPT
+    public static TaskDto mapToTaskDtoProjection(Task task) {
+        TaskDto taskDto = new TaskDto();
+        taskDto.setTaskId(task.getTaskId());
+        taskDto.setTaskName(task.getTaskName());
+        taskDto.setDescription(task.getDescription());
+        taskDto.setStartDate(task.getStartDate());
+        taskDto.setEndDate(task.getEndDate());
+        taskDto.setStatus(task.getStatus());
+        // Optionally include only necessary fields from the associated Project entity
+        // taskDto.setProjectName(task.getProject().getName());
+        return taskDto;
     }
 }

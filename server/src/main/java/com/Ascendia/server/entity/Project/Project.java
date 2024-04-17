@@ -20,13 +20,15 @@ public class Project {
     private Long projectId;
     @Column(nullable = false)
     private String projectName;
+    @Column(length = 1000)
     private String pDiscription;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String status;
     @Column(nullable = false)
     private LocalDate createdDate;
     @Column(nullable = false)
     private Long pmId;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String image;
+
 }

@@ -42,10 +42,15 @@ public class  TaskServiceImpl implements TaskService {
 
 
     @Override
-    public List<TaskDto> getAllTasks() {
+    /*public List<TaskDto> getAllTasks() {
         List<Task> tasks = taskRepository.findAll();
         return tasks.stream().map((task) -> TaskMapper.mapToTaskDto(task))
                 .collect(Collectors.toList());
+    }*/
+    //From Chat gpt
+    public List<TaskDto> getAllTasks() {
+        List<Task> tasks = taskRepository.findAll();
+        return tasks.stream().map(TaskMapper::mapToTaskDtoProjection).collect(Collectors.toList());
     }
 
     @Override
@@ -82,6 +87,11 @@ public class  TaskServiceImpl implements TaskService {
         } else {
             taskDto.setStatus("Ongoing");
         }
+    }
+    @Override
+    public List<TaskDto> getTasksByProjectId(Long projectId) {
+        List<Task> tasks = taskRepository.findByProjectProjectId(projectId);
+        return tasks.stream().map(TaskMapper::mapToTaskDto).collect(Collectors.toList());
     }
 
 
