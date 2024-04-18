@@ -1,7 +1,7 @@
 package com.Ascendia.server.repository;
 
-import com.Ascendia.server.dto.ProjectManagerDto;
+import com.Ascendia.server.entity.Project;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProjectRepository {
-    ProjectManagerDto createProjectManager(ProjectManagerDto projectManagerDto);
+public interface ProjectRepository extends JpaRepository<Project, Long >{
 }

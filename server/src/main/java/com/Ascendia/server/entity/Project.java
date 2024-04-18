@@ -1,4 +1,4 @@
-package com.Ascendia.server.entity.Project;
+package com.Ascendia.server.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,22 +17,34 @@ import java.time.LocalDate;
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long projectId;
+    private Long projectId; // Change the type to Long or Integer, as per your preference
 
     @Column(nullable = false)
-    private String projectName;
+    private String pTitle; // Updated field name to follow Java naming conventions
+
+    private String pType;
 
     private String pDescription;
 
     @Column(nullable = false)
-    private String status;
+    private String pStatus;
 
     @Column(nullable = false)
     private LocalDate createdDate;
 
+    private LocalDate endDate;
+
     @Column(nullable = false)
-    private long emp_Id;
+    private String pmId; // Changed field name to follow Java naming conventions
+
+    private String gmId;
 
     @Column(nullable = false)
     private String image;
+
 }
+
+
+
+
+
