@@ -28,8 +28,6 @@ public class  TaskServiceImpl implements TaskService {
         return TaskMapper.mapToTaskDto(savedTask);
     }
 
-
-
     @Override
     public TaskDto getTaskId(Long taskId) {
         Task task = taskRepository.findById(taskId)
