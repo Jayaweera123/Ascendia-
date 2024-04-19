@@ -9,6 +9,7 @@ import { FiMessageSquare, FiFolder, FiShoppingCart } from "react-icons/fi";
 
 const SideNavigation = () => {
   const menus = [
+    
     { name: "dashboard", link: "/", icon: MdOutlineDashboard },
     { name: "user", link: "/", icon: AiOutlineUser },
     { name: "messages", link: "/", icon: FiMessageSquare },
