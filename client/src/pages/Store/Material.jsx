@@ -16,6 +16,8 @@ function Material() {
 
     const [search, setSearch] = useState("");
 
+    const givenProjectId = 1;
+
 
     //Pagination
     const [currentPage, setCurrentPage] = useState(1);
@@ -28,7 +30,7 @@ function Material() {
 
     //Get all materials
     useEffect(() => {
-        listMaterial().then((response) => {
+        listMaterial(givenProjectId).then((response) => {
             setMaterial(response.data);
         }).catch(error => {
             console.error(error);
@@ -37,23 +39,18 @@ function Material() {
 
     //Search materials
     useEffect(() => {
-        if (search.trim() !== '') {
-            searchMaterial(search)
-                .then((response) => {
-                    setMaterial(response.data);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+        if (search !== "") {
+            searchMaterial(givenProjectId, search).then(response => {
+                setMaterial(response.data);
+            }).catch(error => {
+                console.error('There was an error!', error);
+            });
         } else {
-            // If search query is empty, fetch all materials
-            listMaterial()
-                .then((response) => {
-                    setMaterial(response.data);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+            listMaterial(givenProjectId).then(response => {
+                setMaterial(response.data);
+            }).catch(error => {
+                console.error('There was an error!', error);
+            });
         }
     }, [search]);
 
@@ -138,6 +135,7 @@ function Material() {
                             <tbody className="text-blue-gray-900">
                                 {
                                     records
+                                    // .filter(material => material.projectId === givenProjectId)
                                     .map(material =>
                                         <tr className="bg-white border-b border-blue-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600" key={material.materialId}>
                                             <td class="w-4 p-4">

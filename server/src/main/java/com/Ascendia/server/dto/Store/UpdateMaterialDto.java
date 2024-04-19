@@ -13,10 +13,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UpdateMaterialDto {
     private Long id;
-    private String materialCode;
-    private String materialName;
     private int updatedQuantity;
     private String action; //Add or Issue
     private LocalDateTime UpdatedDate;
+    private Long materialId;
 
 }

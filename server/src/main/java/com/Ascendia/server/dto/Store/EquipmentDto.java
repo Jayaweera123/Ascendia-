@@ -19,5 +19,6 @@ public class EquipmentDto {
     private int quantity;
     private String description;
     private LocalDateTime createdDate;
+    private Long projectId;
 
 }

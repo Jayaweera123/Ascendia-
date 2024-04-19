@@ -14,6 +14,8 @@ function AddMaterialComponent() {
   const [description, setDescription] = useState('')
   const [createdDate, setCreatedDate] = useState('')
 
+  const projectId = 3;
+
   const {id} = useParams();
 
   const  [errors, setErrors] = useState({
@@ -51,7 +53,7 @@ function AddMaterialComponent() {
 
     if(validateForm()){
 
-      const material = {materialCode, materialName,quantity,measuringUnit,minimumLevel,description, createdDate}
+      const material = {materialCode, materialName,quantity,measuringUnit,minimumLevel,description, createdDate, projectId}
       console.log(material)
 
       if(id){

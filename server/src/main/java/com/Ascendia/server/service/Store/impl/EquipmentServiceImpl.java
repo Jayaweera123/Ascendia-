@@ -1,9 +1,11 @@
 package com.Ascendia.server.service.Store.impl;
 
 import com.Ascendia.server.dto.Store.EquipmentDto;
+import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.entity.Store.Equipment;
 import com.Ascendia.server.exceptions.Store.ResourceNotFoundException;
 import com.Ascendia.server.mapper.Store.EquipmentMapper;
+import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.repository.Store.EquipmentRepository;
 import com.Ascendia.server.service.Store.EquipmentService;
 import jakarta.transaction.Transactional;
@@ -23,10 +25,20 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Autowired
     private EquipmentRepository equipmentRepository;
 
+    @Autowired
+    private ProjectRepository projectRepository;
+
     @Override
     public EquipmentDto createEquipment(EquipmentDto equipmentDto) {
 
-        Equipment equipment = EquipmentMapper.mapToEquipment(equipmentDto);
+
+        // Fetch the Project entity from the database
+        Project project = projectRepository.findById(equipmentDto.getProjectId())
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + equipmentDto.getProjectId()));
+
+        Equipment equipment = EquipmentMapper.mapToEquipment(equipmentDto, project);
+
+
         Equipment savedEquipment = equipmentRepository.save(equipment);
 
         return EquipmentMapper.mapToEquipmentDto(savedEquipment);

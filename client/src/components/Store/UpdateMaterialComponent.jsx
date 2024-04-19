@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import SideNavigationStore from "./SideNavigationStore"; // Adjust the path based on your project structure
 import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
-import { getMaterial } from '../../services/StoreServices'
+import { getMaterial, inventoryUpdateMaterial } from '../../services/StoreServices'
 import { useNavigate, useParams } from 'react-router-dom'
 import Popup from "./Popup";
-import { inventoryUpdate } from "../../services/StoreServices";
 
 function UpdateMaterialComponent() {
   const [open, setOpen] = useState(true);
@@ -56,7 +55,7 @@ function UpdateMaterialComponent() {
     //   })
     // alert("Successfully updated")
     // navigator('/material')
-        inventoryUpdate(id, material).then((response) => {
+        inventoryUpdateMaterial(id, material).then((response) => {
           console.log(response.data)
           
           navigator('/material')

@@ -1,5 +1,6 @@
 package com.Ascendia.server.entity.Store;
 
+import com.Ascendia.server.entity.Project.Project;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,12 +19,13 @@ public class UpdateMaterial {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String materialCode;
-    private String materialName;
     private int updatedQuantity;
     private String action; //Add or Issue
     private LocalDateTime UpdatedDate;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "materialId" , referencedColumnName = "materialId")
+    private Material material;
 
 
 }

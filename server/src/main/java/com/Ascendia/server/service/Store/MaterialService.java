@@ -10,13 +10,13 @@ public interface MaterialService {
 
     MaterialDto getMaterialById(Long materialId);
 
-    List<MaterialDto> getAllMaterials();
+    public List<MaterialDto> getAllMaterials(Long projectId);
 
     MaterialDto editMaterial(Long materialId, MaterialDto editedMaterial);
 
     void deleteMaterial(Long materialId);
 
-    List<MaterialDto> searchMaterial(String query);
+    List<MaterialDto> searchMaterial(Long projectId, String query);
 
     MaterialDto updateInventory(Long materialId, UpdateMaterialDto updateMaterialDto);
 

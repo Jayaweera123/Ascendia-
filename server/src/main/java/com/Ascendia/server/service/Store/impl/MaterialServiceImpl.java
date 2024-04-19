@@ -2,8 +2,10 @@ package com.Ascendia.server.service.Store.impl;
 
 import com.Ascendia.server.dto.Store.MaterialDto;
 import com.Ascendia.server.dto.Store.UpdateMaterialDto;
+import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.entity.Store.UpdateMaterial;
 import com.Ascendia.server.mapper.Store.UpdateMaterialMapper;
+import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.repository.Store.UpdateMaterialRepository;
 import com.Ascendia.server.service.Store.MaterialService;
 import com.Ascendia.server.entity.Store.Material;
@@ -27,11 +29,19 @@ public class MaterialServiceImpl implements MaterialService {
     private MaterialRepository materialRepository;
 
     @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
     private UpdateMaterialRepository updateMaterialRepository;
     @Override
     public MaterialDto createMaterial(MaterialDto materialDto) {
 
-        Material material = MaterialMapper.mapToMaterial(materialDto);
+        // Fetch the Project entity from the database
+        Project project = projectRepository.findById(materialDto.getProjectId())
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + materialDto.getProjectId()));
+
+        Material material = MaterialMapper.mapToMaterial(materialDto, project);
+
         Material savedMaterial = materialRepository.save(material);
 
         return MaterialMapper.mapToMaterialDto(savedMaterial);
@@ -47,10 +57,11 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public List<MaterialDto>
-    getAllMaterials() {
-        List<Material> materials = materialRepository.findAll();
-        return materials.stream().map((material) -> MaterialMapper.mapToMaterialDto(material))
+    public List<MaterialDto> getAllMaterials(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + projectId));
+        List<Material> materials = materialRepository.findAllByProject(project);
+        return materials.stream().map(MaterialMapper::mapToMaterialDto)
                 .collect(Collectors.toList());
     }
 
@@ -83,9 +94,9 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    public List<MaterialDto> searchMaterial(String query) {
-        List<Material> materials =  materialRepository.searchMaterial(query);
-        return materials.stream().map((material) -> MaterialMapper.mapToMaterialDto(material))
+    public List<MaterialDto> searchMaterial(Long projectId, String query) {
+        List<Material> materials =  materialRepository.searchMaterial(projectId, query);
+        return materials.stream().map(MaterialMapper::mapToMaterialDto)
                 .collect(Collectors.toList());
     }
 
@@ -112,9 +123,7 @@ public class MaterialServiceImpl implements MaterialService {
 
         // Create entry in UpdateMaterial table
         UpdateMaterial updateMaterial = UpdateMaterialMapper.mapToUpdateMaterial(updateMaterialDto);
-        updateMaterial.setMaterialCode(material.getMaterialCode());
-        updateMaterial.setMaterialName(material.getMaterialName());
-        updateMaterial.setUpdatedDate(LocalDateTime.now());
+        updateMaterial.setMaterial(material); // Set the Material entity
         updateMaterialRepository.save(updateMaterial);
 
         return MaterialMapper.mapToMaterialDto(material);

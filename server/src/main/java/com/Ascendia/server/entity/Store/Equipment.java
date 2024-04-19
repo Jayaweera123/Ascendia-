@@ -1,5 +1,6 @@
 package com.Ascendia.server.entity.Store;
 
+import com.Ascendia.server.entity.Project.Project;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,5 +32,8 @@ public class Equipment {
     @CreationTimestamp
     private LocalDateTime createdDate;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "projectId" , referencedColumnName = "projectId")
+    private Project project;
 
 }
