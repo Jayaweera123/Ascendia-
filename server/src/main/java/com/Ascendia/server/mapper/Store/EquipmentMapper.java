@@ -2,6 +2,7 @@ package com.Ascendia.server.mapper.Store;
 
 import com.Ascendia.server.dto.Store.EquipmentDto;
 import com.Ascendia.server.entity.Store.Equipment;
+import com.Ascendia.server.entity.Project.Project;
 
 public class EquipmentMapper {
 
@@ -12,18 +13,20 @@ public class EquipmentMapper {
                 equipment.getEquipmentName(),
                 equipment.getQuantity(),
                 equipment.getDescription(),
-                equipment.getCreatedDate()
+                equipment.getCreatedDate(),
+                equipment.getProject().getProjectId()
         );
     }
 
-    public static Equipment mapToEquipment(EquipmentDto equipmentDto){
+    public static Equipment mapToEquipment(EquipmentDto equipmentDto, Project project){
         return new Equipment(
                 equipmentDto.getEquipmentId(),
                 equipmentDto.getEquipmentCode(),
                 equipmentDto.getEquipmentName(),
                 equipmentDto.getQuantity(),
                 equipmentDto.getDescription(),
-                equipmentDto.getCreatedDate()
+                equipmentDto.getCreatedDate(),
+                project
         );
     }
 

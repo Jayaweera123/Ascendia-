@@ -21,8 +21,6 @@ public class MaterialController {
     @Autowired
     private MaterialService materialService;
 
-
-
     //Build AddMaterial REST API
     @PostMapping("/createMaterial")
     public ResponseEntity<MaterialDto> createMaterial(@RequestBody MaterialDto materialDto){
@@ -31,29 +29,27 @@ public class MaterialController {
     }
 
     //Build get material REST API
-
-    @GetMapping("/getMaterialById{id}")
+    @GetMapping("/getMaterialById/{id}")
     public ResponseEntity<MaterialDto> getMaterialById(@PathVariable("id") Long materialId){
         MaterialDto materialDto = materialService.getMaterialById(materialId);
         return ResponseEntity.ok(materialDto);
     }
 
     //Build Get all material REST API
-    @GetMapping("getAllMaterials")
-    public ResponseEntity<List<MaterialDto>> getAllMaterials(){
-        List<MaterialDto> materials =  materialService.getAllMaterials();
+    @GetMapping("getAllMaterials/{projectId}")
+    public ResponseEntity<List<MaterialDto>> getAllMaterials(@PathVariable Long projectId){
+        List<MaterialDto> materials =  materialService.getAllMaterials(projectId);
         return ResponseEntity.ok(materials);
     }
-
     //Build Edit material REST API
-    @PutMapping("/editMaterial{id}")
+    @PutMapping("/editMaterial/{id}")
     public ResponseEntity<MaterialDto> editMaterial(@PathVariable("id") Long materialId, @RequestBody MaterialDto editedMaterial) {
         MaterialDto materialDto = materialService.editMaterial(materialId, editedMaterial);
         return ResponseEntity.ok(materialDto);
     }
 
     //Build delete material REST API
-    @DeleteMapping("/deleteMaterial{id}")
+    @DeleteMapping("/deleteMaterial/{id}")
     public ResponseEntity<String> deleteMaterial (@PathVariable("id") Long materialId){
         materialService.deleteMaterial(materialId);
 
@@ -62,13 +58,13 @@ public class MaterialController {
     }
 
     //Build search REST API
-    @GetMapping("/searchMaterial")
-    public ResponseEntity<List<MaterialDto>> searchMaterial(@RequestParam("query") String query){
-        return ResponseEntity.ok(materialService.searchMaterial(query));
+    @GetMapping("/searchMaterial/{projectId}")
+    public ResponseEntity<List<MaterialDto>> searchMaterial(@PathVariable Long projectId, @RequestParam("query") String query){
+        return ResponseEntity.ok(materialService.searchMaterial(projectId, query));
     }
 
     //Build Update inventory REST API
-    @PutMapping("/updateInventory{id}")
+    @PutMapping("/updateInventory/material/{id}")
     public ResponseEntity<MaterialDto> updateInventory(
             @PathVariable("id") Long materialId,
             @RequestBody UpdateMaterialDto updateMaterialDto) {

@@ -2,6 +2,7 @@ package com.Ascendia.server.controller.Store;
 
 import com.Ascendia.server.dto.Store.EquipmentDto;
 
+import com.Ascendia.server.dto.Store.UpdateEquipmentDto;
 import com.Ascendia.server.service.Store.EquipmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,21 +32,21 @@ public class EquipmentController {
     //Build get Equipment REST API
     @CrossOrigin
 
-    @GetMapping("/getEquipmentById{id}")
+    @GetMapping("/getEquipmentById/{id}")
     public ResponseEntity<EquipmentDto> getEquipmentById(@PathVariable("id") Long equipmentId){
         EquipmentDto equipmentDto = equipmentService.getEquipmentById(equipmentId);
         return ResponseEntity.ok(equipmentDto);
     }
 
     //Build Get all Equipment REST API
-    @GetMapping("/getAllEquipment")
-    public ResponseEntity<List<EquipmentDto>> getAllEquipment(){
-        List<EquipmentDto> equipment =  equipmentService.getAllEquipment();
+    @GetMapping("/getAllEquipment/{projectId}")
+    public ResponseEntity<List<EquipmentDto>> getAllEquipment(@PathVariable Long projectId){
+        List<EquipmentDto> equipment =  equipmentService.getAllEquipment(projectId);
         return ResponseEntity.ok(equipment);
     }
 
     //Build Edit Equipment REST API
-    @PutMapping("/editEquipment{id}")
+    @PutMapping("/editEquipment/{id}")
     public ResponseEntity<EquipmentDto> editEquipment(@PathVariable("id") Long equipmentId, @RequestBody EquipmentDto editedEquipment) {
         EquipmentDto equipmentDto = equipmentService.editEquipment(equipmentId, editedEquipment);
         return ResponseEntity.ok(equipmentDto);
@@ -60,9 +61,19 @@ public class EquipmentController {
 
     }
 
-    @GetMapping("/searchEquipment")
-    public ResponseEntity<List<EquipmentDto>> searchEquipment(@RequestParam("query") String query){
-        return ResponseEntity.ok(equipmentService.searchEquipment(query));
+    //Build search REST API
+    @GetMapping("/searchEquipment/{projectId}")
+    public ResponseEntity<List<EquipmentDto>> searchEquipment(@PathVariable Long projectId, @RequestParam("query") String query){
+        return ResponseEntity.ok(equipmentService.searchEquipment(projectId, query));
+    }
+
+    //Build Update inventory REST API
+    @PutMapping("/updateInventory/equipment/{id}")
+    public ResponseEntity<EquipmentDto> updateInventory(
+            @PathVariable("id") Long equipmentId,
+            @RequestBody UpdateEquipmentDto updateEquipmentDto) {
+        EquipmentDto equipmentDto = equipmentService.updateInventory(equipmentId, updateEquipmentDto);
+        return ResponseEntity.ok(equipmentDto);
     }
 
 }

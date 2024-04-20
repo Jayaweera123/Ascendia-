@@ -12,6 +12,8 @@ function EquipmentComponent() {
   const [description, setDescription] = useState('')
   const [createdDate, setCreatedDate] = useState('')
 
+  const projectId = 1;
+
   const {id} = useParams();
 
   const  [errors, setErrors] = useState({
@@ -19,9 +21,8 @@ function EquipmentComponent() {
     equipmentCode: '',
     equipmentName: '',
     quantity: '',
-    description: '',
-    createdDate: ''
-
+    description: ''
+    
   })
 
   const navigator = useNavigate();
@@ -45,9 +46,9 @@ function EquipmentComponent() {
   function saveOrEditEquipment(e){
     e.preventDefault();
 
-    // if(validateForm){
+    if(validateForm()){
 
-      const equipment = {equipmentCode, equipmentName,quantity,description,createdDate}
+      const equipment = {equipmentCode, equipmentName,quantity,description,createdDate, projectId}
       console.log(equipment)
 
       if(id){
@@ -68,7 +69,7 @@ function EquipmentComponent() {
       }
   
       
-    // }
+    }
 
   }
 
@@ -76,64 +77,56 @@ function handleCancel(e){
   navigator('/equipment')
 }
 
-// function validateForm(){
-//   let valid = true;
+//Form validation
+function validateForm(){
+  let valid = true;
 
-//   const errorsCopy = {...errors}
+  const errorsCopy = {... errors} //spread operator- copy errors object into errorsCopy 
 
-//   if(materialCode.trim()){
-//     errorsCopy.materialCode = '';
-//   }else{
-//     errorsCopy.materialCode = 'Material code is required'
-//     valid = false;
-//   }
+  if(equipmentCode.trim()){
+    errorsCopy.equipmentCode = '';
+  }else{
+    errorsCopy.equipmentCode = '*Equipment code is required';
+    valid = false;
+  }
 
-//   if(materialName.trim()){
-//     errorsCopy.materialName = '';
-//   }else{
-//     errorsCopy.materialName = 'Material name is required'
-//     valid = false;
-//   }
+  if(equipmentName.trim()){
+    errorsCopy.equipmentName = '';
+  }else{
+    errorsCopy.equipmentName = '*Equipment name is required';
+    valid = false;
+  }
 
-//   if(materialCode.trim()){
-//     errorsCopy.materialCode = '';
-//   }else{
-//     errorsCopy.materialCode = 'Material code is required'
-//     valid = false;
-//   }
+  if(equipmentCode.trim()){
+    errorsCopy.equipmentCode = '';
+  }else{
+    errorsCopy.equipmentCode = '*Equipment code is required';
+    valid = false;
+  }
 
-//   if(quantity.trim()){
-//     errorsCopy.quantity = '';
-//   }else{
-//     errorsCopy.quantity = 'Quantity is required'
-//     valid = false;
-//   }
+  if(!isNaN(quantity) && Number.isInteger(Number(quantity))){
+    if(quantity >= 0 ){
+      errorsCopy.quantity = '';
+    }else{
+      errorsCopy.quantity = '*Quantity cannot be minus';
+      valid = false;
+    }
+  }else{
+      errorsCopy.quantity = '*Quantity must be a whole number';
+      valid = false;
+  }
 
-//   if(measuringUnit.trim()){
-//     errorsCopy.measuringUnit = '';
-//   }else{
-//     errorsCopy.measuringUnit = 'Measuring Unit is required'
-//     valid = false;
-//   }
+  if(description.length >= 0 && description.length < 100){
+    errorsCopy.description = '';
+  }else{
+    errorsCopy.description = '*Description cannot be more than 100 characters';
+    valid = false;
+  }
+ 
+  setErrors(errorsCopy);
 
-//   if(minimumLevel.trim()){
-//     errorsCopy.minimumLevel = '';
-//   }else{
-//     errorsCopy.minimumLevel = 'Minimum Level is required'
-//     valid = false;
-//   }
-
-//   if(createdDate.trim()){
-//     errorsCopy.createdDate = '';
-//   }else{
-//     errorsCopy.createdDate = 'Created date is required'
-//     valid = false;
-//   }
-
-//   setErrors(errorsCopy);
-
-//   return valid;
-// }
+  return valid;
+}
 
 function formTitle(){
  if(id){
@@ -176,8 +169,11 @@ function formTitle(){
                     id="equipmentCode"
                     value={equipmentCode}
                     onChange={(e) => setEquipmentCode(e.target.value)}
-                    className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "
+                    className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                      errors.equipmentCode ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   />
+                  {errors.equipmentCode && <div className="mt-1 text-sm text-red-500">{errors.equipmentCode}</div>}
                 </div>
           </div>
 
@@ -196,8 +192,11 @@ function formTitle(){
                     id="equipmentName"
                     value={equipmentName}
                     onChange={(e) => setEquipmentName(e.target.value)}
-                    className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                      errors.equipmentName ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   />
+                  {errors.equipmentName && <div className="mt-1 text-sm text-red-500">{errors.equipmentName}</div>}
                 </div>
           </div>
 
@@ -216,8 +215,11 @@ function formTitle(){
                     id="quantity"
                     value={quantity}
                     onChange={(e) => setQuantity(e.target.value)}
-                    className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                      errors.quantity ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   />
+                  {errors.quantity && <div className="mt-1 text-sm text-red-500">{errors.quantity}</div>}
                 </div>
           </div>
 
@@ -234,9 +236,13 @@ function formTitle(){
                     placeholder='Enter Discription'
                     id="description"
                     value={description}
+                    maxLength={100} // Limit the number of characters
                     onChange={(e) => setDescription(e.target.value)}
-                    className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 h-24"
+                    className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 h-24 ${
+                      errors.description ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   />
+                  {errors.description && <p className="mt-1 text-sm text-red-500">{errors.description}</p>}
                 </div>
           </div>
 

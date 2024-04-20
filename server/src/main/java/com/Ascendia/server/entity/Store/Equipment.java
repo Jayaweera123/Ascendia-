@@ -1,5 +1,6 @@
 package com.Ascendia.server.entity.Store;
 
+import com.Ascendia.server.entity.Project.Project;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,9 +21,9 @@ public class Equipment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long equipmentId;
-    @Column(name= "equipment_code", nullable = false, unique = true)
+    @Column(name= "equipment_code", nullable = false)
     private String equipmentCode;
-    @Column(name = "equipment_name", nullable = false, unique = true)
+    @Column(name = "equipment_name", nullable = false)
     private String equipmentName;
     @Column(name = "equipment_quantity", nullable = false)
     private int quantity;
@@ -31,5 +32,8 @@ public class Equipment {
     @CreationTimestamp
     private LocalDateTime createdDate;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "projectId" , referencedColumnName = "projectId")
+    private Project project;
 
 }

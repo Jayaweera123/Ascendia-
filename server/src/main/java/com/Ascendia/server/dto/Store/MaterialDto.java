@@ -20,5 +20,6 @@ public class MaterialDto {
     private int minimumLevel;
     private String description;
     private LocalDateTime createdDate;
+    private Long projectId;
 
 }

@@ -11,14 +11,11 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EquipmentDto {
-
+public class UpdateEquipmentDto {
+    private Long id;
+    private int updatedQuantity;
+    private String action; //Add,Issue, or return
+    private LocalDateTime UpdatedDate;
     private Long equipmentId;
-    private String equipmentCode;
-    private String equipmentName;
-    private int quantity;
-    private String description;
-    private LocalDateTime createdDate;
-    private Long projectId;
 
 }

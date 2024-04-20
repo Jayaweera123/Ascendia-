@@ -1,6 +1,5 @@
 package com.Ascendia.server.entity.Store;
 
-import com.Ascendia.server.entity.Project.Project;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,23 +8,21 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
-@Table(name = "UpdatedMaterial")
-public class UpdateMaterial {
+@Table(name = "update_equipment")
+public class UpdateEquipment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private int updatedQuantity;
-    private String action; //Add or Issue
+    private String action; //Add ,Issue, or return
     private LocalDateTime UpdatedDate;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "materialId" , referencedColumnName = "materialId")
-    private Material material;
-
-
+    @JoinColumn(name = "equipmentId" , referencedColumnName = "equipmentId")
+    private Equipment equipment;
 }

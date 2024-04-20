@@ -1,6 +1,7 @@
 package com.Ascendia.server.mapper.Store;
 
 import com.Ascendia.server.dto.Store.MaterialDto;
+import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.entity.Store.Material;
 
 public class MaterialMapper {
@@ -14,12 +15,13 @@ public class MaterialMapper {
                 material.getMeasuringUnit(),
                 material.getMinimumLevel(),
                 material.getDescription(),
-                material.getCreatedDate()
+                material.getCreatedDate(),
+                material.getProject().getProjectId()
         );
     }
 
 
-    public static Material mapToMaterial(MaterialDto materialDto){
+    public static Material mapToMaterial(MaterialDto materialDto ,Project project){
         return new Material(
                 materialDto.getMaterialId(),
                 materialDto.getMaterialCode(),
@@ -28,7 +30,8 @@ public class MaterialMapper {
                 materialDto.getMeasuringUnit(),
                 materialDto.getMinimumLevel(),
                 materialDto.getDescription(),
-                materialDto.getCreatedDate()
+                materialDto.getCreatedDate(),
+                project
         );
     }
 }
