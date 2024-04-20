@@ -43,7 +43,7 @@ const AddTaskForm = () => {
     console.log(endDateObj);
 
     if (endDateObj < currentDate) {
-      newStatus = "Completed";
+      newStatus = "OverDue";
     } else if (startDateObj > currentDate) {
       newStatus = "Upcoming";
     } else {

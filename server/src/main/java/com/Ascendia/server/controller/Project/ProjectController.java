@@ -19,7 +19,7 @@ import java.util.List;
 public class ProjectController {
 
 
-    private TaskService taskService;
+
     private ProjectService projectService;
 
     @GetMapping("/all")

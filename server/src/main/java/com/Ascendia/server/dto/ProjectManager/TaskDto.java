@@ -1,7 +1,6 @@
 package com.Ascendia.server.dto.ProjectManager;
 
 import com.Ascendia.server.entity.Project.Project;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
