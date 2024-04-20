@@ -9,6 +9,16 @@ import { FiMessageSquare, FiFolder, FiShoppingCart } from "react-icons/fi";
 
 const SideNavigation = () => {
   const menus = [
+
+    // { name: "Home", link: "/", icon: MdOutlineDashboard },
+    // { name: "Dashboard", link: "/dashboard", icon: MdOutlineDashboard },
+    // { name: "Materials & Equipments", link: "/materialsAndEquipments", icon: MdOutlineDashboard },
+    // { name: "Update Inventory", link: "/updateInventory", icon: AiOutlineUser },
+    // { name: "History", link: "/viewHistory", icon: FiMessageSquare },
+    // { name: "Timeline", link: "/", icon: TbReportAnalytics, margin: true },
+    // { name: "Notifications", link: "/", icon: FiFolder },
+
+
     { name: "dashboard", link: "/", icon: MdOutlineDashboard },
     { name: "user", link: "/", icon: AiOutlineUser },
     { name: "messages", link: "/", icon: FiMessageSquare },
@@ -22,13 +32,11 @@ const SideNavigation = () => {
 
   return (
     <div
-      className={`min-h-screen ${
-        open ? "w-72" : "w-16"
-      } duration-500 text-gray-100 px-4`}
-      style={{
-        background: "linear-gradient(to right, #0f172a, #1e293b)",
-      }}
-    >
+  className={`min-h-screen bg-[#101d3f] ${
+    open ? "w-72" : "w-16"
+  } duration-500 text-gray-100 px-4`}
+  
+>
       <div className="flex justify-end py-3">
         <HiMenuAlt3
           size={26}
