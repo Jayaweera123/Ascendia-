@@ -91,45 +91,62 @@ function validateForm(){
   if(materialCode.trim()){
     errorsCopy.materialCode = '';
   }else{
-    errorsCopy.materialCode = 'Material code is required'
+    errorsCopy.materialCode = '*Material code is required';
     valid = false;
   }
 
   if(materialName.trim()){
     errorsCopy.materialName = '';
   }else{
-    errorsCopy.materialName = 'Material name is required'
+    errorsCopy.materialName = '*Material name is required';
     valid = false;
   }
 
   if(materialCode.trim()){
     errorsCopy.materialCode = '';
   }else{
-    errorsCopy.materialCode = 'Material code is required'
+    errorsCopy.materialCode = '*Material code is required';
     valid = false;
   }
 
-  if(quantity > 0 || quantity == 0 ){
-    errorsCopy.quantity = '';
+  if(!isNaN(quantity) && Number.isInteger(Number(quantity))){
+    if(quantity >= 0 ){
+      errorsCopy.quantity = '';
+    }else{
+      errorsCopy.quantity = '*Quantity cannot be minus';
+      valid = false;
+    }
   }else{
-    errorsCopy.quantity = 'Quantity cannot be minus'
-    valid = false;
+      errorsCopy.quantity = '*Quantity must be a whole number';
+      valid = false;
   }
 
   if(measuringUnit.trim()){
     errorsCopy.measuringUnit = '';
   }else{
-    errorsCopy.measuringUnit = 'Measuring Unit is required'
+    errorsCopy.measuringUnit = '*Measuring Unit is required';
     valid = false;
   }
 
-  if(minimumLevel > 0 ){
-    errorsCopy.minimumLevel = '';
+  if(!isNaN(minimumLevel) && Number.isInteger(Number(minimumLevel))){
+    if(minimumLevel > 0 ){
+      errorsCopy.minimumLevel = '';
+    }else{
+      errorsCopy.minimumLevel = '*Minimum Level is required';
+      valid = false;
+    }
+}else{
+    errorsCopy.minimumLevel = '*Minimum Level must be a whole number';
+    valid = false;
+}
+    
+  if(description.length >= 0 && description.length < 100){
+    errorsCopy.description = '';
   }else{
-    errorsCopy.minimumLevel = 'Minimum Level is required'
+    errorsCopy.description = '*Description cannot be more than 100 characters';
     valid = false;
   }
-
+ 
   setErrors(errorsCopy);
 
   return valid;
@@ -267,10 +284,13 @@ function formTitle(){
                         placeholder='Enter Discription'
                         id="description"
                         value={description}
+                        maxLength={100} // Limit the number of characters
                         onChange={(e) => setDescription(e.target.value)}
-                        className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 h-24"
+                        className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 h-24 ${
+                          errors.description ? 'border-red-500' : 'border-gray-300'
+                        }`}
                       />
-                      
+                      {errors.description && <p className="mt-1 text-sm text-red-500">{errors.description}</p>}
                     </div>
               </div>
 

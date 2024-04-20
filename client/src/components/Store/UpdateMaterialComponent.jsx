@@ -17,11 +17,7 @@ function UpdateMaterialComponent() {
 
   const  [errors, setErrors] = useState({
     
-    materialCode: '',
-    materialName: '',
-    quantity: '',
-    action: '',
-    updatedDate: ''
+    updatedQuantity: ''
 
   })
 
@@ -40,12 +36,13 @@ function UpdateMaterialComponent() {
       }
 
   }, [id]) 
+
   //Handle function to update inventory
 
   function handleinventoryUpdate(e){
      e.preventDefault();
 
-    // // if(validateForm){
+    if(validateForm()){
 
       const material = {updatedQuantity,action}
       console.log(material,"id:",id)
@@ -66,7 +63,7 @@ function UpdateMaterialComponent() {
       }
   
       
-    // }
+    }
 
 
 
@@ -74,64 +71,29 @@ function handleCancel(e){
   navigator('/material')
 }
 
-// function validateForm(){
-//   let valid = true;
+//Form validation
 
-//   const errorsCopy = {...errors}
+function validateForm(){
+  let valid = true;
 
-//   if(materialCode.trim()){
-//     errorsCopy.materialCode = '';
-//   }else{
-//     errorsCopy.materialCode = 'Material code is required'
-//     valid = false;
-//   }
+  const errorsCopy = {... errors} //spread operator- copy errors object into errorsCopy 
 
-//   if(materialName.trim()){
-//     errorsCopy.materialName = '';
-//   }else{
-//     errorsCopy.materialName = 'Material name is required'
-//     valid = false;
-//   }
+  if(!isNaN(updatedQuantity) && Number.isInteger(Number(updatedQuantity))){
+    if(updatedQuantity > 0 ){
+      errorsCopy.updatedQuantity = '';
+    }else{
+      errorsCopy.updatedQuantity = '*Quantity must be possitive whole number';
+      valid = false;
+    }
+  }else{
+      errorsCopy.updatedQuantity = '*Quantity must be a whole number';
+      valid = false;
+  }
 
-//   if(materialCode.trim()){
-//     errorsCopy.materialCode = '';
-//   }else{
-//     errorsCopy.materialCode = 'Material code is required'
-//     valid = false;
-//   }
+  setErrors(errorsCopy);
 
-//   if(quantity.trim()){
-//     errorsCopy.quantity = '';
-//   }else{
-//     errorsCopy.quantity = 'Quantity is required'
-//     valid = false;
-//   }
-
-//   if(measuringUnit.trim()){
-//     errorsCopy.measuringUnit = '';
-//   }else{
-//     errorsCopy.measuringUnit = 'Measuring Unit is required'
-//     valid = false;
-//   }
-
-//   if(minimumLevel.trim()){
-//     errorsCopy.minimumLevel = '';
-//   }else{
-//     errorsCopy.minimumLevel = 'Minimum Level is required'
-//     valid = false;
-//   }
-
-//   if(createdDate.trim()){
-//     errorsCopy.createdDate = '';
-//   }else{
-//     errorsCopy.createdDate = 'Created date is required'
-//     valid = false;
-//   }
-
-//   setErrors(errorsCopy);
-
-//   return valid;
-// }
+  return valid;
+}
 
 
 function onClosePopup() {
@@ -212,8 +174,11 @@ function onClosePopup() {
                     id="updatedQuantity"
                     value={updatedQuantity}
                     onChange={(e) => setUpdatedQuantity(e.target.value)}
-                    className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                      errors.updatedQuantity ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   />
+                  {errors.updatedQuantity && <p className="mt-1 text-sm text-red-500">{errors.updatedQuantity}</p>}
                 </div>
           </div>
 
