@@ -118,11 +118,15 @@ public class MaterialServiceImpl implements MaterialService {
             throw new IllegalArgumentException("Quantity cannot be negative.");
         }
 
+        // Create entry in UpdateMaterial table
+        UpdateMaterial updateMaterial = UpdateMaterialMapper.mapToUpdateMaterial(updateMaterialDto);
+
         material.setQuantity(updatedQuantity);
+        updateMaterial.setUpdatedDate(LocalDateTime.now()); // Set the updatedDate to the current date and time
         materialRepository.save(material);
 
         // Create entry in UpdateMaterial table
-        UpdateMaterial updateMaterial = UpdateMaterialMapper.mapToUpdateMaterial(updateMaterialDto);
+//        UpdateMaterial updateMaterial = UpdateMaterialMapper.mapToUpdateMaterial(updateMaterialDto);
         updateMaterial.setMaterial(material); // Set the Material entity
         updateMaterialRepository.save(updateMaterial);
 

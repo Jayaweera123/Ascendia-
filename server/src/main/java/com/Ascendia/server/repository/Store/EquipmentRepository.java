@@ -1,5 +1,6 @@
 package com.Ascendia.server.repository.Store;
 
+import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.entity.Store.Equipment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,9 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
 
     @Query(
             "SELECT p FROM Equipment p WHERE " +
-                    "p.equipmentCode LIKE CONCAT('%',:query, '%')" +
-                    "Or p.equipmentName LIKE CONCAT('%',:query, '%')")
-    List<Equipment> searchEquipment(String query);
+                    "p.project.projectId = :projectId AND " +
+                    "(p.equipmentCode LIKE CONCAT('%',:query, '%') OR " +
+                    "p.equipmentName LIKE CONCAT('%',:query, '%'))")
+    List<Equipment> searchEquipment(Long projectId, String query);
+    List<Equipment> findAllByProject(Project project);
 }

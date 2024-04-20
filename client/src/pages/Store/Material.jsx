@@ -16,7 +16,7 @@ function Material() {
 
     const [search, setSearch] = useState("");
 
-    const givenProjectId = 1;
+    const givenProjectId = 3;
 
 
     //Pagination
@@ -46,6 +46,7 @@ function Material() {
                 console.error('There was an error!', error);
             });
         } else {
+            //if search bar is empty, get all materials
             listMaterial(givenProjectId).then(response => {
                 setMaterial(response.data);
             }).catch(error => {

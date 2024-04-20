@@ -39,7 +39,7 @@ function UpdateMaterialComponent() {
 
   //Handle function to update inventory
 
-  function handleinventoryUpdate(e){
+  function handleInventoryUpdate(e){
      e.preventDefault();
 
     if(validateForm()){
@@ -78,23 +78,27 @@ function validateForm(){
 
   const errorsCopy = {... errors} //spread operator- copy errors object into errorsCopy 
 
-  if(!isNaN(updatedQuantity) && Number.isInteger(Number(updatedQuantity))){
+ 
+  if(updatedQuantity == null){
+    errorsCopy.updatedQuantity = '*Quantity is required';
+    valid = false;
+  } else if(!isNaN(updatedQuantity) && Number.isInteger(Number(updatedQuantity))){
     if(updatedQuantity > 0 ){
       errorsCopy.updatedQuantity = '';
-    }else{
-      errorsCopy.updatedQuantity = '*Quantity must be possitive whole number';
+    } else {
+      errorsCopy.updatedQuantity = '*Quantity must be positive whole number';
       valid = false;
     }
-  }else{
-      errorsCopy.updatedQuantity = '*Quantity must be a whole number';
-      valid = false;
+  } else {
+    errorsCopy.updatedQuantity = '*Quantity must be a whole number';
+    valid = false;
   }
-
+  
   setErrors(errorsCopy);
-
+  
   return valid;
+  
 }
-
 
 function onClosePopup() {
     setShowPopup(false);
@@ -212,7 +216,7 @@ function onClosePopup() {
            <div className="mt-24">
             <button
               type="submit"
-              onClick={handleinventoryUpdate}
+              onClick={handleInventoryUpdate}
               className="text-white bg-[#001b5e] hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
             >
               Submit

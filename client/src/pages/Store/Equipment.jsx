@@ -16,6 +16,8 @@ function Equipment() {
 
     const [search, setSearch] = useState("");
 
+    const givenProjectId = 3;
+
 
     //Pagination
     const [currentPage, setCurrentPage] = useState(1);
@@ -28,7 +30,7 @@ function Equipment() {
 
     //Get all equipment
     useEffect(() => {
-        listEquipment().then((response) => {
+        listEquipment(givenProjectId).then((response) => {
             setEquipment(response.data);
         }).catch(error => {
             console.error(error);
@@ -37,23 +39,19 @@ function Equipment() {
 
     //Search equipment
     useEffect(() => {
-        if (search.trim() !== '') {
-            searchEquipment (search)
-                .then((response) => {
-                    setEquipment(response.data);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+        if (search !== "") {
+            searchEquipment(givenProjectId, search).then(response => {
+                setEquipment(response.data);
+            }).catch(error => {
+                console.error('There was an error!', error);
+            });
         } else {
-            // If search query is empty, fetch all Equipment
-            listEquipment()
-                .then((response) => {
-                    setEquipment(response.data);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+            //if search is empty fetch all equipment
+            listEquipment(givenProjectId).then(response => {
+                setEquipment(response.data);
+            }).catch(error => {
+                console.error('There was an error!', error);
+            });
         }
     }, [search]);
 

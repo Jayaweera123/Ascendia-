@@ -10,7 +10,7 @@ public interface MaterialService {
 
     MaterialDto getMaterialById(Long materialId);
 
-    public List<MaterialDto> getAllMaterials(Long projectId);
+    List<MaterialDto> getAllMaterials(Long projectId);
 
     MaterialDto editMaterial(Long materialId, MaterialDto editedMaterial);
 

@@ -15,7 +15,6 @@ public class EquipmentMapper {
                 equipment.getDescription(),
                 equipment.getCreatedDate(),
                 equipment.getProject().getProjectId()
-
         );
     }
 

@@ -21,9 +21,9 @@ public class Equipment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long equipmentId;
-    @Column(name= "equipment_code", nullable = false, unique = true)
+    @Column(name= "equipment_code", nullable = false)
     private String equipmentCode;
-    @Column(name = "equipment_name", nullable = false, unique = true)
+    @Column(name = "equipment_name", nullable = false)
     private String equipmentName;
     @Column(name = "equipment_quantity", nullable = false)
     private int quantity;
