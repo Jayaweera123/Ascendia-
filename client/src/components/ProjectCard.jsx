@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { getAllProjectCards } from "../../services/ProjectService.jsx";
+import { getAllProjectCards } from "../services/ProjectService.jsx";
 import { Link } from "react-router-dom";
 
 const ProjectCard = () => {
-  // Define dummy data using useState hook
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
@@ -15,6 +14,7 @@ const ProjectCard = () => {
         console.error(error);
       });
   }, []);
+
   return (
     <>
       <div className="mt-10">
@@ -40,6 +40,7 @@ const ProjectCard = () => {
                               </h3>
                             </div>
                           </div>
+
                           <p className="text-sm font-medium">
                             <div
                               className={`bg-indigo-100  text-indigo-500 rounded-md pl-1 pr-1 status-label-${project.status.toLowerCase()}`}
@@ -60,16 +61,20 @@ const ProjectCard = () => {
           </main>
         </div>
       </div>
+
       {/* Style tag for embedding CSS */}
       <style>{`
         .status-label-completed {
           background-color: #34d399; /* Green color for completed projects */
           color: #ffffff;
         }
+
         .status-label-ongoing {
             background-color: #60a5fa; /* Blue color for ongoing projects */
+
           color: #ffffff;
         }
+
         .status-label-upcoming {
           background-color: #fcd34d; /* Yellow color for upcoming projects */
           color: #ffffff;
@@ -78,4 +83,5 @@ const ProjectCard = () => {
     </>
   );
 };
+
 export default ProjectCard;
