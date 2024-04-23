@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAllProjectCards } from "../services/ProjectService.jsx";
+import { getAllProjectCards } from "../../services/ProjectService.jsx";
 import { Link } from "react-router-dom";
 
 const ProjectCard = () => {

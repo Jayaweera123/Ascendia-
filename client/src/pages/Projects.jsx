@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import SideNavigation from "../components/SideNavigation";
 import TopNavigation from "../components/TopNavigation";
-import ProjectCard from "../components/ProjectCard";
+import ProjectCard from "../components/project/ProjectCard";
 
 function Projects() {
   return (
