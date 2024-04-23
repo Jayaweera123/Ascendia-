@@ -4,7 +4,7 @@ import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based 
 import { createMaterial, editMaterial, getMaterial } from '../../services/StoreServices'
 import { useNavigate, useParams } from 'react-router-dom'
 
-function AddMaterialComponent() {
+function MaterialForm() {
   const [open, setOpen] = useState(true);
   const [materialCode, setMaterialCode] = useState('')
   const [materialName, setMaterialName] = useState('')
@@ -349,7 +349,7 @@ function formTitle(){
   );
 };
 
-export default AddMaterialComponent;
+export default MaterialForm;
 
 
 

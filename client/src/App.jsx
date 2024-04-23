@@ -8,11 +8,11 @@ import TopNavigation from "./components/TopNavigation";
 import Dashboard from "./pages/Store/Dashboard";
 import ViewHistory from "./pages/Store/ViewHistory";
 import Material from "./pages/Store/Material";
-import MaterialComponent from "./components/Store/MaterialComponent";
+import MaterialForm from "./components/Store/MaterialForm";
 import Equipment from "./pages/Store/Equipment";
-import EquipmentComponent from "./components/Store/EquipmentComponent";
-import UpdateMaterialComponent from "./components/Store/UpdateMaterialComponent";
-import UpdateEquipmentComponent from "./components/Store/UpdateEquipmentComponent";
+import EquipmentForm from "./components/Store/EquipmentForm";
+import UpdateMaterialForm from "./components/Store/UpdateMaterialForm";
+import UpdateEquipmentForm from "./components/Store/UpdateEquipmentForm";
 
 
 const App = () => {
@@ -28,13 +28,13 @@ const App = () => {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/material" element={<Material/>} />
       <Route path="/viewHistory" element={<ViewHistory />} />
-      <Route path="/addMaterial" element={<MaterialComponent />} />
-      <Route path="/editMaterial/:id" element = {<MaterialComponent/>}/>
+      <Route path="/addMaterial" element={<MaterialForm />} />
+      <Route path="/editMaterial/:id" element = {<MaterialForm/>}/>
       <Route path="/equipment" element={<Equipment/>} />
-      <Route path="/addEquipment" element={<EquipmentComponent />} />
-      <Route path="/editEquipment/:id" element={<EquipmentComponent />} />
-      <Route path="/updateMaterial/:id" element={<UpdateMaterialComponent />} />
-      <Route path="/updateEquipment/:id" element={<UpdateEquipmentComponent />} />
+      <Route path="/addEquipment" element={<EquipmentForm />} />
+      <Route path="/editEquipment/:id" element={<EquipmentForm />} />
+      <Route path="/updateMaterial/:id" element={<UpdateMaterialForm />} />
+      <Route path="/updateEquipment/:id" element={<UpdateEquipmentForm />} />
       
       </Routes>
     </div>

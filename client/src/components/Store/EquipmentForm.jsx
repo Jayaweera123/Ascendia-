@@ -4,7 +4,7 @@ import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based 
 import { createEquipment, editEquipment, getEquipment } from '../../services/StoreServices'
 import { useNavigate, useParams } from 'react-router-dom'
 
-function EquipmentComponent() {
+function EquipmentForm() {
   const [open, setOpen] = useState(true);
   const [equipmentCode, setEquipmentCode] = useState('')
   const [equipmentName, setEquipmentName] = useState('')
@@ -275,7 +275,7 @@ function formTitle(){
   );
 };
 
-export default EquipmentComponent;
+export default EquipmentForm;
 
 
 

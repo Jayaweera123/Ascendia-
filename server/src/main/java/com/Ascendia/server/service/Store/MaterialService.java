@@ -20,5 +20,6 @@ public interface MaterialService {
 
     MaterialDto updateInventory(Long materialId, UpdateMaterialDto updateMaterialDto);
 
+
+
 }
-//comment

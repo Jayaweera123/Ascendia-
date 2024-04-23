@@ -1,15 +1,14 @@
-//comment
 import React, { useEffect, useState } from "react";
 import SideNavigationStore from "./SideNavigationStore"; // Adjust the path based on your project structure
 import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
-import { getMaterial, inventoryUpdateMaterial } from '../../services/StoreServices'
+import { getEquipment, inventoryUpdateEquipment } from '../../services/StoreServices'
 import { useNavigate, useParams } from 'react-router-dom'
 import Popup from "./Popup";
 
-function UpdateMaterialComponent() {
+function UpdateEquipmentForm() {
   const [open, setOpen] = useState(true);
-  const [materialCode, setMaterialCode] = useState('')
-  const [materialName, setMaterialName] = useState('')
+  const [equipmentCode, setEquipmentCode] = useState('')
+  const [equipmentName, setEquipmentName] = useState('')
   const [updatedQuantity, setUpdatedQuantity] = useState('')
   const [action, setAction] = useState('Issue')
   const [showPopup, setShowPopup] = useState(false);
@@ -17,70 +16,50 @@ function UpdateMaterialComponent() {
   const {id} = useParams();
 
   const  [errors, setErrors] = useState({
-    
     updatedQuantity: ''
-
   })
 
   const navigator = useNavigate();
 
   useEffect(() => {
-    
-
       if(id){
-        getMaterial(id).then((response) => {
-          setMaterialCode(response.data.materialCode);
-          setMaterialName(response.data.materialName);
+        getEquipment(id).then((response) => {
+          setEquipmentCode(response.data.equipmentCode);
+          setEquipmentName(response.data.equipmentName);
           setUpdatedQuantity(response.data.updatedQuantity);
         }).catch(error => {
           console.error(error);
         })
       }
-
   }, [id]) 
 
   //Handle function to update inventory
-
   function handleInventoryUpdate(e){
      e.preventDefault();
 
     if(validateForm()){
+      const equipment = {updatedQuantity,action}
+      console.log(equipment,"id:",id)
 
-      const material = {updatedQuantity,action}
-      console.log(material,"id:",id)
-
-    //   then((response) => {
-    //     setShowPopup(true);
-    //   })
-    // alert("Successfully updated")
-    // navigator('/material')
-        inventoryUpdateMaterial(id, material).then((response) => {
+        inventoryUpdateEquipment(id, equipment).then((response) => {
           console.log(response.data)
-          
-          navigator('/material')
+          navigator('/equipment')
         }).catch(error => {
           console.error(error)
         })
-  
       }
-  
-      
     }
 
-
-
 function handleCancel(e){
-  navigator('/material')
+  navigator('/equipment')
 }
 
 //Form validation
-
 function validateForm(){
   let valid = true;
 
   const errorsCopy = {... errors} //spread operator- copy errors object into errorsCopy 
 
- 
   if(updatedQuantity == null){
     errorsCopy.updatedQuantity = '*Quantity is required';
     valid = false;
@@ -125,20 +104,20 @@ function onClosePopup() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
           <label
-          htmlFor="materialCode"
+          htmlFor="equipmentCode"
                   className="block text-base font-medium leading-6 text-gray-900"
                 >
-                  Material Code:
+                  Equipment Code:
                 </label>
                 <div className="mt-3">
                   <input
                     type="text"
-                    placeholder="Enter Material Code"
-                    name="materialCode"
-                    id="materialCode"
-                    value={materialCode}
+                    placeholder="Enter Equipment Code"
+                    name="equipmentCode"
+                    id="equipmentCode"
+                    value={equipmentCode}
                     disabled
-                    onChange={(e) => setMaterialCode(e.target.value)}
+                    onChange={(e) => setEquipmentCode(e.target.value)}
                     className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "
                   />
                 </div>
@@ -146,19 +125,19 @@ function onClosePopup() {
 
           <div>
           <label
-                  htmlFor="materialName"
+                  htmlFor="equipmentName"
                   className="block text-base font-medium leading-6 text-gray-900"
                 >
-                  Material Name:
+                  Equipment Name:
                 </label>
                 <div className="mt-3">
                   <input
                     type="text"
-                    placeholder="Enter Material Name"
-                    name="materialName"
-                    id="materialName"
-                    value={materialName}
-                    onChange={(e) => setMaterialName(e.target.value)}
+                    placeholder="Enter Equipment Name"
+                    name="equipmentName"
+                    id="equipmentName"
+                    value={equipmentName}
+                    onChange={(e) => setEquipmentName(e.target.value)}
                     disabled
                     className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
@@ -175,7 +154,7 @@ function onClosePopup() {
                 <div className="mt-3">
                   <input
                     type="text"
-                    placeholder='Enter Quantity of material'
+                    placeholder='Enter Quantity of equipment'
                     name="updatedQuantity"
                     id="updatedQuantity"
                     value={updatedQuantity}
@@ -193,7 +172,7 @@ function onClosePopup() {
                   htmlFor="action"
                   className="block text-base font-medium leading-6 text-gray-900"
                 >
-                  Add/Issue:
+                  Add/Issue/Return:
                 </label>
                 <div className="mt-3">
                   
@@ -205,6 +184,7 @@ function onClosePopup() {
                     >
                         <option value="Issue">Issue</option>
                         <option value="Add">Add</option>
+                        <option value="Return">Return</option>
                     </select>
                 </div>
           </div>
@@ -241,12 +221,7 @@ function onClosePopup() {
       {showPopup && <Popup message="Successfully updated inventory" onClose={onClosePopup} />}
     </div>
   );
+
 };
 
-export default UpdateMaterialComponent;
-
-
-
-
-
-
+export default UpdateEquipmentForm;
