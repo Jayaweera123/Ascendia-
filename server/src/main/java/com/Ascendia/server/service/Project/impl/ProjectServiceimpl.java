@@ -5,20 +5,33 @@ import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.mapper.Project.ProjectMapper;
 import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.service.Project.ProjectService;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-@Transactional
-public class ProjectServiceimpl implements ProjectService{
+public class ProjectServiceImpl implements ProjectService {
+
     private ProjectRepository projectRepository;
+
     @Override
     public ProjectDto createProject(ProjectDto projectDto) {
-
         Project project = ProjectMapper.mapProject(projectDto);
-        Project savedProject =  projectRepository.save(project);
+        project.setCreatedDate(LocalDate.now()); // set the createdDate here
+        Project savedProject = projectRepository.save(project);
+
         return ProjectMapper.mapToProjectDto(savedProject);
+    }
+
+    @Override
+    public List<ProjectDto> getAllProjects() {
+        List<Project> projects = projectRepository.findAll();
+        return projects.stream().map((project) -> ProjectMapper.mapToProjectDto(project))
+                .collect(Collectors.toList());
+
     }
 }

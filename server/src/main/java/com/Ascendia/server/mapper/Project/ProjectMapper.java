@@ -3,7 +3,6 @@ package com.Ascendia.server.mapper.Project;
 import com.Ascendia.server.dto.Project.ProjectDto;
 import com.Ascendia.server.entity.Project.Project;
 
-import java.time.LocalDate;
 
 public class ProjectMapper {
     public static ProjectDto mapToProjectDto(Project project) {
