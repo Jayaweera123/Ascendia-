@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Swal from 'sweetalert2';
 import SideNavigationStore from "./SideNavigationStore"; // Adjust the path based on your project structure
 import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
 import { createMaterial, editMaterial, getMaterial } from '../../services/StoreServices'
@@ -63,16 +64,25 @@ function MaterialForm() {
         }).catch(error => {
           console.error(error)
         })
-      }else{
-          createMaterial(material).then((response) => {
-          console.log(response.data);
-          navigator('/material')
-        }).catch(error => {
-           console.error(error)
-        })
-  
+
+
+        
+      } else {
+        createMaterial(material)
+          .then((response) => {
+            console.log(response.data);
+            Swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: 'Material created successfully!',
+            }).then(() => {
+              navigator('/material');
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
-  
       
     }
 
