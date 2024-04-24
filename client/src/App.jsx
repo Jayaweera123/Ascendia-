@@ -19,6 +19,7 @@ import UpdateEquipmentForm from "./components/Store/UpdateEquipmentForm";
 const App = () => {
   return (
     <div>
+       <BrowserRouter>
       <Routes>
       {/* Ravindu */}
         <Route path="/" element={<Home />} />
@@ -38,6 +39,7 @@ const App = () => {
       <Route path="/updateEquipment/:id" element={<UpdateEquipmentForm />} />
       
       </Routes>
+      </BrowserRouter>
     </div>
   );
 };
