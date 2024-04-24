@@ -25,7 +25,7 @@ public class Project {
     @Column(name = "project_type", nullable = false)
     private String projectType;
 
-    @Column(name = "project_description", nullable = false)
+    @Column(name = "project_description", nullable = false, length = 1000)
     private String projectDescription;
 
     @Column(name = "project_status", nullable = false)
