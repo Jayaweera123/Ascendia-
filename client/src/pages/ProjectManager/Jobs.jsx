@@ -1,8 +1,8 @@
 import React from "react";
-import SideNavigation from "../../components/Nethuni/SideNavigation";
-import TopNavigation from "../../components/Nethuni/TopNavigation";
-import PageTitle from "../../components/Nethuni/PageTitle";
-import JobCard from "../../components/Nethuni/JobCard";
+import SideNavigation from "../../components/ProjectManager/SideNavigation";
+import TopNavigation from "../../components/ProjectManager/TopNavigation";
+import PageTitle from "../../components/ProjectManager/PageTitle";
+import JobCard from "../../components/ProjectManager/JobCard";
 import { useParams } from "react-router-dom";
 
 function Jobs() {

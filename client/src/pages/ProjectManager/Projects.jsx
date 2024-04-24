@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import SideNavigation from "../../components/Nethuni/SideNavigationPM";
-import TopNavigation from "../../components/Nethuni/TopNavigation";
-import PageTitle from "../../components/Nethuni/PageTitle";
-import ProjectCard from "../../components/Nethuni/ProjectCard";
+import SideNavigation from "../../components/ProjectManager/SideNavigationPM";
+import TopNavigation from "../../components/ProjectManager/TopNavigation";
+import PageTitle from "../../components/ProjectManager/PageTitle";
+import ProjectCard from "../../components/ProjectManager/ProjectCard";
 
 function Projects() {
   return (

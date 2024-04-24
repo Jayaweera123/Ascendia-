@@ -1,15 +1,15 @@
 import React from "react";
-import SideNavigation from "../../components/Nethuni/SideNavigation";
-import TopNavigation from "../../components/Nethuni/TopNavigation";
-import PageTitle from "../../components/Nethuni/PageTitle";
-import TaskCard from "../../components/Nethuni/TaskCard";
+import SideNavigation from "../../components/ProjectManager/SideNavigation";
+import TopNavigation from "../../components/ProjectManager/TopNavigation";
+import PageTitle from "../../components/ProjectManager/PageTitle";
+import TaskCard from "../../components/ProjectManager/TaskCard";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { BsClipboard2PlusFill } from "react-icons/bs";
-import AddButton from "../../components/Nethuni/AddButton";
-import TaskCardforProject from "../../components/Nethuni/TaskCard copy";
+import AddButton from "../../components/ProjectManager/AddButton";
+import TaskCardforProject from "../../components/ProjectManager/TaskCard copy";
 
 //function TasksForProject({ projectId }) {
 function TasksForProject() {

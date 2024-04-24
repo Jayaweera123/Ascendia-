@@ -2,20 +2,20 @@ import React from "react";
 import { Routes, Route, useParams } from "react-router-dom";
 import Home from "./pages/Home";
 
-import SideNavigation from "./components/Nethuni/SideNavigationPM";
-import TopNavigation from "./components/Nethuni/TopNavigation";
+import SideNavigation from "./components/ProjectManager/SideNavigationPM";
+import TopNavigation from "./components/ProjectManager/TopNavigation";
 import Projects from "./pages/ProjectManager/Projects";
 import HomePM from "./pages/ProjectManager/HomePM";
 import ProjectDashboard from "./pages/ProjectManager/ProjectDashboard";
 import Tasks from "./pages/ProjectManager/Tasks";
 import Employees from "./pages/ProjectManager/Employees";
 import ProjectProgress from "./pages/ProjectManager/ProjectProgress";
-import AddTaskForm from "./components/Nethuni/AddTaskForm";
+import AddTaskForm from "./components/ProjectManager/AddTaskForm";
 import AddTask from "./pages/ProjectManager/AddTask";
 import TasksForProject from "./pages/ProjectManager/TasksForProject";
 import Jobs from "./pages/ProjectManager/Jobs";
 
-//import SideNavigationPM from "./components/Nethuni/SideNavigationPM";
+//import SideNavigationPM from "./components/ProjectManager/SideNavigationPM";
 
 const App = () => {
   return (
@@ -25,7 +25,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/sideNavigation" element={<SideNavigation />} />
         <Route path="/topNavigation" element={<TopNavigation />} />
-        {/*Nethuni */}
+        {/*ProjectManager */}
         <Route path="/pmhome" element={<HomePM />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/pmdashboard" element={<ProjectDashboard />} />

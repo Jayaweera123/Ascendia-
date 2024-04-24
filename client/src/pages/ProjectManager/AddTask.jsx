@@ -1,8 +1,8 @@
 import React from "react";
-import SideNavigation from "../../components/Nethuni/SideNavigation";
-import TopNavigation from "../../components/Nethuni/TopNavigation";
-import PageTitle from "../../components/Nethuni/PageTitle";
-import AddTaskForm from "../../components/Nethuni/AddTaskForm";
+import SideNavigation from "../../components/ProjectManager/SideNavigation";
+import TopNavigation from "../../components/ProjectManager/TopNavigation";
+import PageTitle from "../../components/ProjectManager/PageTitle";
+import AddTaskForm from "../../components/ProjectManager/AddTaskForm";
 import { useParams } from "react-router-dom";
 
 const AddTask = () => {
