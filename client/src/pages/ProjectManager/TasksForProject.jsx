@@ -1,6 +1,6 @@
 import React from "react";
-import SideNavigation from "../../components/ProjectManager/SideNavigation";
-import TopNavigation from "../../components/ProjectManager/TopNavigation";
+import SideNavigationPM from "../../components/ProjectManager/SideNavigation";
+import TopNavigationPM from "../../components/ProjectManager/TopNavigation";
 import PageTitle from "../../components/ProjectManager/PageTitle";
 import TaskCard from "../../components/ProjectManager/TaskCard";
 import { Link } from "react-router-dom";
@@ -25,9 +25,9 @@ function TasksForProject() {
   }, [urlProjectId]);*/
   return (
     <>
-      <TopNavigation />
+      <TopNavigationPM />
       <section className="flex">
-        <SideNavigation />
+        <SideNavigationPM />
         <div className="ml-3.5 mt-10">
           <div></div>
           <div className="flex justify-between m-0">

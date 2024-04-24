@@ -1,14 +1,14 @@
 import React from "react";
-import SideNavigation from "../../components/ProjectManager/SideNavigation";
-import TopNavigation from "../../components/ProjectManager/TopNavigation";
+import SideNavigationPM from "../../components/ProjectManager/SideNavigation";
+import TopNavigationPM from "../../components/ProjectManager/TopNavigation";
 import PageTitle from "../../components/ProjectManager/PageTitle";
 
 function ProjectDashboard() {
   return (
     <>
-      <TopNavigation />
+      <TopNavigationPM />
       <section className="flex">
-        <SideNavigation />
+        <SideNavigationPM />
         <PageTitle title="Dashboard" />
       </section>
     </>

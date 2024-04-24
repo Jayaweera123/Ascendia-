@@ -1,20 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import SideNavigation from "../../components/ProjectManager/SideNavigationPM";
-import TopNavigation from "../../components/ProjectManager/TopNavigation";
+import SideNavigationPM from "../../components/ProjectManager/SideNavigationPM";
+import TopNavigationPM from "../../components/ProjectManager/TopNavigation";
 import PageTitle from "../../components/ProjectManager/PageTitle";
 import ProjectCard from "../../components/ProjectManager/ProjectCard";
 
 function Projects() {
   return (
     <>
-      <TopNavigation />
+      <TopNavigationPM />
       <section className="flex">
-        <SideNavigation />
+        <SideNavigationPM />
         <div className="ml-3.5 mt-10">
           <PageTitle title="Projects" />
 
-          <ProjectCard />
+        <ProjectCard />
 
           {/*<Link to="/projects/tasks">
             <button

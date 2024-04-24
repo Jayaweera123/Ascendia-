@@ -14,11 +14,11 @@ import Equipment from "./pages/Store/Equipment";
 import EquipmentForm from "./components/Store/EquipmentForm";
 import UpdateMaterialForm from "./components/Store/UpdateMaterialForm";
 import UpdateEquipmentForm from "./components/Store/UpdateEquipmentForm";
-import { Routes, Route, useParams } from "react-router-dom";
-import Home from "./pages/Home";
+/*import { Routes, Route, useParams } from "react-router-dom";*/
+/*import Home from "./pages/Home";*/
 {/*Nethuni*/}
-import SideNavigation from "./components/ProjectManager/SideNavigationPM";
-import TopNavigation from "./components/ProjectManager/TopNavigation";
+import SideNavigationPM from "./components/ProjectManager/SideNavigationPM";
+import TopNavigationPM from "./components/ProjectManager/TopNavigation";
 import Projects from "./pages/ProjectManager/Projects";
 import HomePM from "./pages/ProjectManager/HomePM";
 import ProjectDashboard from "./pages/ProjectManager/ProjectDashboard";

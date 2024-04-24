@@ -29,10 +29,10 @@ const ProjectCard = () => {
                   >
                     <div
                       key={project.projectId}
-                      className="mb-6 rounded-lg bg-white  shadow-lg"
+                      className="mb-6 bg-white rounded-lg shadow-lg"
                     >
-                      <div className="pb-6 pl-6 pr-6 pt-2">
-                        <div className="flex items-center justify-between border-b-2 border-gray-300 pb-2">
+                      <div className="pt-2 pb-6 pl-6 pr-6">
+                        <div className="flex items-center justify-between pb-2 border-b-2 border-gray-300">
                           <div className="flex items-center">
                             <div>
                               <h3 className="text-lg font-semibold text-gray-700">
@@ -43,14 +43,14 @@ const ProjectCard = () => {
 
                           <p className="text-sm font-medium">
                             <div
-                              className={`bg-indigo-100  text-indigo-500 rounded-md pl-1 pr-1 status-label-${project.status.toLowerCase()}`}
+                              className={`bg-indigo-100  text-indigo-500 rounded-md pl-1 pr-1 status-label-${project.projectStatus.toLowerCase()}`}
                             >
-                              {project.status}
+                              {project.projectStatus}
                             </div>
                           </p>
                         </div>
                         <p className="my-6 text-sm font-normal text-gray-500">
-                          {project.pdiscription}
+                          {project.projectDescription}
                         </p>
                       </div>
                     </div>
