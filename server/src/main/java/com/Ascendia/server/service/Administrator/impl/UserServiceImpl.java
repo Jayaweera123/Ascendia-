@@ -1,10 +1,10 @@
-package com.Ascendia.server.service.Admin.impl;
+package com.Ascendia.server.service.Administrator.impl;
 
-import com.Ascendia.server.dto.Admin.UserDto;
-import com.Ascendia.server.entity.Admin.User;
-import com.Ascendia.server.mapper.Admin.UserMapper;
-import com.Ascendia.server.repository.Admin.UserRepository;
-import com.Ascendia.server.service.Admin.UserService;
+import com.Ascendia.server.dto.Administrator.UserDto;
+import com.Ascendia.server.entity.Administrator.User;
+import com.Ascendia.server.mapper.Administrator.UserMapper;
+import com.Ascendia.server.repository.Administrator.UserRepository;
+import com.Ascendia.server.service.Administrator.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

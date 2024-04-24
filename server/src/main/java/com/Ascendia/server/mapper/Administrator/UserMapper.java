@@ -1,7 +1,7 @@
-package com.Ascendia.server.mapper.Admin;
+package com.Ascendia.server.mapper.Administrator;
 
-import com.Ascendia.server.dto.Admin.UserDto;
-import com.Ascendia.server.entity.Admin.User;
+import com.Ascendia.server.dto.Administrator.UserDto;
+import com.Ascendia.server.entity.Administrator.User;
 
 public class UserMapper {
         public static UserDto mapToUserDto(User user) {

@@ -1,6 +1,6 @@
-package com.Ascendia.server.repository.Admin;
+package com.Ascendia.server.repository.Administrator;
 
-import com.Ascendia.server.entity.Admin.User;
+import com.Ascendia.server.entity.Administrator.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

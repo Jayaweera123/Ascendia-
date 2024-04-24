@@ -1,11 +1,11 @@
-package com.Ascendia.server.controller.Admin;
+package com.Ascendia.server.controller.Administrator;
 
-import com.Ascendia.server.dto.Admin.UserDto;
-import com.Ascendia.server.service.Admin.UserService;
+import com.Ascendia.server.dto.Administrator.UserDto;
+import com.Ascendia.server.service.Administrator.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.Ascendia.server.service.Admin.UserService;
+
 import java.util.List;
 
 @CrossOrigin("*")

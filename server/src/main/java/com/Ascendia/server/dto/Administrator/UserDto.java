@@ -1,4 +1,4 @@
-package com.Ascendia.server.dto.Admin;
+package com.Ascendia.server.dto.Administrator;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

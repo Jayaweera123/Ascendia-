@@ -1,6 +1,6 @@
-package com.Ascendia.server.service.Admin;
+package com.Ascendia.server.service.Administrator;
 
-import com.Ascendia.server.dto.Admin.UserDto;
+import com.Ascendia.server.dto.Administrator.UserDto;
 
 import java.util.List;
 

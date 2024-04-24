@@ -9,25 +9,28 @@ public class ProjectMapper {
         return new ProjectDto(
                 project.getProjectId(),
                 project.getProjectName(),
-                project.getPDiscription(),
-                project.getStatus(),
+                project.getProjectType(),
+                project.getProjectDescription(),
+                project.getProjectStatus(),
                 project.getCreatedDate(),
+                project.getEndDate(),
                 project.getPmId(),
                 project.getImage()
-
         );
     }
 
-    public static Project mapToProject(ProjectDto projectDto) {
-        return new Project (
-                projectDto.getProjectId(),
+    public static Project mapProject(ProjectDto projectDto) {
+        return new Project(
+                projectDto.getProjectId(), // Convert String to Long
                 projectDto.getProjectName(),
-                projectDto.getPDiscription(),
-                projectDto.getStatus(),
+                projectDto.getProjectType(),
+                projectDto.getProjectDescription(),
+                projectDto.getProjectStatus(),
                 projectDto.getCreatedDate(),
+                projectDto.getEndDate(),
                 projectDto.getPmId(),
                 projectDto.getImage()
-
         );
     }
+
 }
