@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import TopNavigationAdmin from "../../components/Admin/TopNavigationadmin";
+import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin";
 import constructionc from "../../assets/constructionc.jpg";
 import { FaUserTie } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
@@ -29,7 +29,7 @@ const Login = () => {
         
              
         <div className="flex flex-col object-right pr-20">
-            <form className="mt-5 w-96 bg-slate-100 h-fit gap-9 rounded-lg shadow-md">
+            <form className="mt-5 rounded-lg shadow-md w-96 bg-slate-100 h-fit gap-9">
         <div className="flex flex-col items-center justify-center object-center mt-7 sm:mx-auto sm:w-full sm:max-w-sm">
           <FaUserTie size={100} color="#001b5e"/>
           <h1 className="text-4xl font-bold leading-9 tracking-tight text-center text-gray-900">
