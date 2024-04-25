@@ -6,8 +6,11 @@ import { RiSettings4Line } from "react-icons/ri";
 import { TbReportAnalytics } from "react-icons/tb";
 import { AiOutlineUser, AiOutlineHeart } from "react-icons/ai";
 import { FiMessageSquare, FiFolder, FiShoppingCart } from "react-icons/fi";
+import { MdOutlineRateReview } from "react-icons/md";
+import { TbTimelineEventExclamation } from "react-icons/tb";
+import { GiProgression } from "react-icons/gi";
 
-const SideNavigation = () => {
+const SideNavigationClient = () => {
   const menus = [
     
     { name: "dashboard", link: "/", icon: MdOutlineDashboard },
@@ -18,6 +21,12 @@ const SideNavigation = () => {
     { name: "Cart", link: "/", icon: FiShoppingCart },
     { name: "Saved", link: "/", icon: AiOutlineHeart, margin: true },
     { name: "Setting", link: "/", icon: RiSettings4Line },
+    { name: "Dashboard", link: "/client/dashboard", icon: MdOutlineDashboard },
+    { name: "Add Review", link: "/addreview", icon: MdOutlineRateReview },
+    { name: "View Timeline", link: "/", icon: TbTimelineEventExclamation },
+    { name: "Project Progress", link: "/progress", icon: GiProgression, margin: true },
+   
+    { name: "Settings", link: "/", icon: RiSettings4Line },
   ];
   const [open, setOpen] = useState(true);
 
@@ -69,4 +78,4 @@ const SideNavigation = () => {
   );
 };
 
-export default SideNavigation;
+export default SideNavigationClient;

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+import java.sql.Blob;
 import java.time.LocalDate;
 
 @Getter
@@ -29,8 +30,14 @@ public class User {
     @Column(name="lastName",nullable=false)
     private String lastName;
 
-    @Column(name="userName",nullable=false)
-    private String userName;
+    @Column(name="designation", nullable = false)
+    private String designation;
+
+    @Column(name="department")
+    private String department;
+
+    @Column(name="username",nullable=false)
+    private String username;
 
     @Column(name="password",nullable=false, unique = true)
     private String password;
@@ -44,16 +51,18 @@ public class User {
     @Column(name="addedDate")
     private LocalDate addedDate;
 
-    @Column(name="designation")
-    private String designation;
+    @Column(name = "profile_pic_url", nullable = false)
+    private String profilePicUrl;
 
-    @Column(name = "is_available", nullable=false)
-    private boolean available; // Flag indicating availability
-
-    @Column(name="department")
-    private String department;
-
-    @Column(name="profilePhotoURL")
-    private String profilePhotoURL;
-
+    @Column(name = "availability", nullable = false)
+    private boolean availability; // Flag indicating availability
 }
+
+
+
+
+
+
+
+
+
