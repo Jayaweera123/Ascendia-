@@ -54,6 +54,7 @@ import AddTaskForm from "./components/ProjectManager/AddTaskForm";
 import AddTask from "./pages/ProjectManager/AddTask";
 import TasksForProject from "./pages/ProjectManager/TasksForProject";
 import Jobs from "./pages/ProjectManager/Jobs";
+import AddProject from "./pages/ProjectCreationTeam/AddProject";
 
 
 
@@ -66,6 +67,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/sideNavigation" element={<SideNavigation />} />
         <Route path="/topNavigation" element={<TopNavigation />} />
+        <Route path="/addProject" element={<AddProject/>}/>
         {/*ProjectManager */}
         <Route path="/pmhome" element={<HomePM />} />
         <Route path="/topNavigationPM" element={<TopNavigationPM />} />
