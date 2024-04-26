@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import SideNavigation from "../components/SideNavigation";
+import SideNavigation from "../components/ProjectManager/SideNavigation";
 import TopNavigation from "../components/TopNavigation";
 import ProjectCard from "../components/project/ProjectCard";
 
-function Projects() {
+{/*function Projects() {
   return (
     <>
       <TopNavigation />
@@ -23,11 +23,11 @@ function Projects() {
               Tasks
             </button>
           </Link>{" "}
-  */}
+  
         </div>
       </section>
     </>
   );
 }
 
-export default Projects;
+export default Projects; */}

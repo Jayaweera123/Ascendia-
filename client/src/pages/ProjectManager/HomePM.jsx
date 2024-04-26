@@ -1,6 +1,6 @@
 import React from "react";
 import SideNavigationPM from "../../components/ProjectManager/SideNavigationPM";
-import TopNavigationPM from "../../components/ProjectManager/TopNavigation";
+import TopNavigationPM from "../../components/ProjectManager/TopNavigationPM";
 import PageTitle from "../../components/ProjectManager/PageTitle";
 import DeleteModal from "../../components/ProjectManager/DeleteModal";
 

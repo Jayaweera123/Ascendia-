@@ -1,6 +1,6 @@
 import React from "react";
 import SideNavigationPM from "../../components/ProjectManager/SideNavigation";
-import TopNavigationPM from "../../components/ProjectManager/TopNavigation";
+import TopNavigationPM from "../../components/ProjectManager/TopNavigationPM";
 import PageTitle from "../../components/ProjectManager/PageTitle";
 import AddTaskForm from "../../components/ProjectManager/AddTaskForm";
 import { useParams } from "react-router-dom";

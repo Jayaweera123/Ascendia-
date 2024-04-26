@@ -1,6 +1,6 @@
 import React from "react";
 
-const TopNavigation = () => {
+const TopNavigationPM = () => {
   return (
     <nav className="relative border-gray-200 dark:bg-gray-900">
       <div
@@ -92,4 +92,4 @@ const TopNavigation = () => {
   );
 };
 
-export default TopNavigation;
+export default TopNavigationPM;

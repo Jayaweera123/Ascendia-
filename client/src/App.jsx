@@ -1,8 +1,11 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import SideNavigation from "./components/SideNavigation";
-//import TopNavigation from "./components/TopNavigation";
+import SideNavigation from "./components/ProjectManager/SideNavigation";
+
+import TopNavigation from "./components/TopNavigation";
+
+
 import ContactForm from "./pages/ContactForm";
 import SideNavigationClient from "./components/Client/SideNavigationClient";
 import SideNavigationAdmin from "./components/Admin/SideNavigationAdmin";
@@ -24,7 +27,7 @@ import AdDashboard from "./pages/Admin/AdDashboard";
 import UserList from "./pages/Admin/UserList";
 
 {/* Rashmi - Client */}
-import ClDashboard from "./pages/Client/ClDashboard";
+//import ClDashboard from "./pages/Client/ClDashboard";
 import AddReview from "./pages/Client/AddReview";
 
 {/*Deshani*/}
@@ -40,7 +43,7 @@ import UpdateEquipmentForm from "./components/Store/UpdateEquipmentForm";
 /*import Home from "./pages/Home";*/
 {/*Nethuni*/}
 import SideNavigationPM from "./components/ProjectManager/SideNavigationPM";
-import TopNavigationPM from "./components/ProjectManager/TopNavigation";
+import TopNavigationPM from "./components/ProjectManager/TopNavigationPM";
 import Projects from "./pages/ProjectManager/Projects";
 import HomePM from "./pages/ProjectManager/HomePM";
 import ProjectDashboard from "./pages/ProjectManager/ProjectDashboard";
@@ -52,7 +55,7 @@ import AddTask from "./pages/ProjectManager/AddTask";
 import TasksForProject from "./pages/ProjectManager/TasksForProject";
 import Jobs from "./pages/ProjectManager/Jobs";
 
-//import SideNavigationPM from "./components/ProjectManager/SideNavigationPM";
+
 
 const App = () => {
   return (
@@ -65,6 +68,8 @@ const App = () => {
         <Route path="/topNavigation" element={<TopNavigation />} />
         {/*ProjectManager */}
         <Route path="/pmhome" element={<HomePM />} />
+        <Route path="/topNavigationPM" element={<TopNavigationPM />} />
+        <Route path="/sideNavigationPM" element={<SideNavigationPM />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/pmdashboard" element={<ProjectDashboard />} />
         <Route path="/tasks" element={<Tasks />} />
@@ -113,14 +118,14 @@ const App = () => {
 
 
       {/* Rashmi - Client */}
-        <Route path="/client/dashboard" element={<ClDashboard/>}/>
+        {/*<Route path="/client/dashboard" element={<ClDashboard/>}/>*/}
         <Route path="/addreview" element={<AddReview />} />
 
       {/* Rashmi - Login */}
-      <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
 
       {/* Rashmi - Progress */}
-      <Route path="/progress" element={<Progress />} />
+        <Route path="/progress" element={<Progress />} />
 
    
        

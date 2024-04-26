@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Base URL for the REST API
-const REST_API_BASE_URL = 'http://localhost:2024/api/users';
+const REST_API_BASE_URL = 'http://localhost:2026/api/users';
 
 // Function to fetch the list of users
 export const userList = () => axios.get(REST_API_BASE_URL);

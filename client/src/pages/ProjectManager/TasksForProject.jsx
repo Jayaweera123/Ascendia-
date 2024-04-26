@@ -1,6 +1,6 @@
 import React from "react";
 import SideNavigationPM from "../../components/ProjectManager/SideNavigation";
-import TopNavigationPM from "../../components/ProjectManager/TopNavigation";
+import TopNavigationPM from "../../components/ProjectManager/TopNavigationPM";
 import PageTitle from "../../components/ProjectManager/PageTitle";
 import TaskCard from "../../components/ProjectManager/TaskCard";
 import { Link } from "react-router-dom";
