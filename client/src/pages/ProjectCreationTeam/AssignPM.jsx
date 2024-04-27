@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+/*import React, { useState } from "react";
 import TopNavigation from "../../components/TopNavigation";
 import SideNavigation from "../../components/ProjectManager/SideNavigation";
 import { MdAssignmentAdd } from "react-icons/md";
@@ -92,10 +92,11 @@ const AssignPM = () => {
         </div>
     </div>
 </div>
-
-        <div className="ml-28"> {/* Reduced margin from ml-60 to ml-4 */}
-            <label htmlFor="PhoneNo" className="block text-base font-medium leading-6 text-gray-900">
-
+*
+/*
+        <div className="ml-28"> {/* Reduced margin from ml-60 to ml-4 */
+           // <label htmlFor="PhoneNo" className="block text-base font-medium leading-6 text-gray-900">
+/*
 @@ -118,28 +113,6 @@ const AssignPM = () => {
     </div>
 </div>
@@ -174,7 +175,8 @@ const AssignPM = () => {
             class="block w-full py-2 text-gray-900 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
     </div>
- </div>   */}   
+ </div>   */
+ /*
 
 <div class="mt-8">
     <label for="image" class="block text-base font-medium leading-6 text-gray-900">
@@ -211,7 +213,8 @@ const AssignPM = () => {
     </div>
   </div>
 </div>
-  {/* Assign buttons */}
+  {/* Assign buttons */
+  /*
   <div className="mt-16">
   <button onClick={handleAssignGeneralManager} className="px-4 py-2 mr-4 font-bold text-white bg-blue-500 rounded hover:bg-green-700">
     Assign General Manager
@@ -238,7 +241,8 @@ const AssignPM = () => {
     </div>
 </div>
 
-            {/* Buttons for adding or deleting user */}
+            {/* Buttons for adding or deleting user */
+            /*
       <div className="flex items-center justify-end mt-6 mb-5 mr-5 gap-x-6">
                         <button
                           type="submit"
@@ -272,4 +276,4 @@ const AssignPM = () => {
       </section>
     </div>
   );
-};
+
