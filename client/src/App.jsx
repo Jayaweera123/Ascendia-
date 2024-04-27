@@ -1,19 +1,23 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import SideNavigation from "./components/ProjectManager/SideNavigation";
 
+import SideNavigation from "./components/ProjectManager/SideNavigation";
 import TopNavigation from "./components/TopNavigation";
 
 
+{/*Ravindu*/}
+import AddProject from "./pages/ProjectCreationTeam/AddProject";
+import AssignEmployee from "./pages/ProjectCreationTeam/AssignEmployee";
+
 import ContactForm from "./pages/ContactForm";
+
+{/*Rashmi*/}
 import SideNavigationClient from "./components/Client/SideNavigationClient";
 import SideNavigationAdmin from "./components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "./components/Admin/TopNavigationAdmin";
 import TopNavigationClient from "./components/Client/TopNavigationClient";
 import { useParams } from "react-router-dom";
-
-
 
 {/* Rashmi - Login */}
 import Login from "./pages/Login/Login";
@@ -40,7 +44,7 @@ import EquipmentForm from "./components/Store/EquipmentForm";
 import UpdateMaterialForm from "./components/Store/UpdateMaterialForm";
 import UpdateEquipmentForm from "./components/Store/UpdateEquipmentForm";
 /*import { Routes, Route, useParams } from "react-router-dom";*/
-/*import Home from "./pages/Home";*/
+
 {/*Nethuni*/}
 import SideNavigationPM from "./components/ProjectManager/SideNavigationPM";
 import TopNavigationPM from "./components/ProjectManager/TopNavigationPM";
@@ -54,7 +58,7 @@ import AddTaskForm from "./components/ProjectManager/AddTaskForm";
 import AddTask from "./pages/ProjectManager/AddTask";
 import TasksForProject from "./pages/ProjectManager/TasksForProject";
 import Jobs from "./pages/ProjectManager/Jobs";
-import AddProject from "./pages/ProjectCreationTeam/AddProject";
+
 
 
 
@@ -68,6 +72,8 @@ const App = () => {
         <Route path="/sideNavigation" element={<SideNavigation />} />
         <Route path="/topNavigation" element={<TopNavigation />} />
         <Route path="/addProject" element={<AddProject/>}/>
+        <Route path="/assignEmployee" element={<AssignEmployee/>}/>
+
         {/*ProjectManager */}
         <Route path="/pmhome" element={<HomePM />} />
         <Route path="/topNavigationPM" element={<TopNavigationPM />} />
