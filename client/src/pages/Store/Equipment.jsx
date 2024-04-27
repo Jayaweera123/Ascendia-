@@ -16,7 +16,7 @@ function Equipment() {
 
     const [search, setSearch] = useState("");
 
-    const givenProjectId = 3;
+    const givenProjectId = 1;
 
 
     //Pagination

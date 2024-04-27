@@ -153,7 +153,7 @@ function onClosePopup() {
                 </label>
                 <div className="mt-3">
                   <input
-                    type="text"
+                    type="number"
                     placeholder='Enter Quantity of equipment'
                     name="updatedQuantity"
                     id="updatedQuantity"

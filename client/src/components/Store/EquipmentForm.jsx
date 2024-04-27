@@ -209,7 +209,7 @@ function formTitle(){
                 </label>
                 <div className="mt-3">
                   <input
-                    type="text"
+                    type="number"
                     placeholder='Enter Quantity of equipment'
                     name="quantity"
                     id="quantity"
