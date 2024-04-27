@@ -1,15 +1,12 @@
 package com.Ascendia.server.service.Administrator.impl;
 
-import lombok.AllArgsConstructor;
+import com.Ascendia.server.service.Administrator.UserService;
 import org.springframework.stereotype.Service;
-
 import com.Ascendia.server.dto.Administrator.UserDto;
 import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.exception.Administrator.ResourceNotFoundException;
 import com.Ascendia.server.mapper.Administrator.UserMapper;
 import com.Ascendia.server.repository.Administrator.UserRepository;
-import com.Ascendia.server.service.Administrator.UserService;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,7 +15,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +22,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
-//@AllArgsConstructor
 @Transactional
 public class UserServiceImpl implements UserService {
 
@@ -83,6 +78,10 @@ public class UserServiceImpl implements UserService {
             userDto.setAddedDate(LocalDate.now());
         }
 
+        // Set active to true by default
+        userDto.setActive(true);
+
+
         User user = UserMapper.mapToUser(userDto);
         User savedUser = userRepository.save(user);
         return UserMapper.mapToUserDto(savedUser);
@@ -112,11 +111,8 @@ public class UserServiceImpl implements UserService {
 
         user.setFirstName(updatedUser.getFirstName());
         user.setLastName(updatedUser.getLastName());
-        user.setUsername(updatedUser.getUsername());
-        user.setPassword(updatedUser.getPassword());
         user.setEmail(updatedUser.getEmail());
         user.setPhoneNumber(updatedUser.getPhoneNumber());
-        user.setAddedDate(updatedUser.getAddedDate());
         user.setDesignation(updatedUser.getDesignation());
         user.setDepartment(updatedUser.getDepartment());
         user.setProfilePicUrl(updatedUser.getProfilePicUrl());
@@ -127,14 +123,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long userID) {
+    public void deactivateUser(Long userID) {
+        // Find the user by ID
+        User user = userRepository.findById(userID)
+                .orElseThrow(() -> new ResourceNotFoundException("User is not exists with given Id : " + userID));
 
-        User user = userRepository.findById(userID).orElseThrow(
-                () -> new ResourceNotFoundException("User is not exists with given Id : "+userID)
-        );
+        // Set the user's status to deactivated
+        user.setActive(false); // Assuming there's a field named 'active' indicating user status
 
-        userRepository.deleteById(userID);
-
+        // Save the updated user entity
+        userRepository.save(user);
     }
 
     // Helper method to generate username
@@ -172,6 +170,15 @@ public class UserServiceImpl implements UserService {
 
         // Append userID to the password
         passwordBuilder.append(userDto.getUserID());
+
+        // Extract month and date from addedDate
+        LocalDate addedDate = userDto.getAddedDate();
+        int month = addedDate.getMonthValue();
+        int day = addedDate.getDayOfMonth();
+
+        // Append month and date to the password
+        passwordBuilder.append(month < 10 ? "0" + month : month); // Add leading zero if month < 10
+        passwordBuilder.append(day < 10 ? "0" + day : day); // Add leading zero if day < 10
 
         return passwordBuilder.toString();
     }

@@ -5,9 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-
-import java.sql.Blob;
 import java.time.LocalDate;
 
 @Getter
@@ -56,13 +53,7 @@ public class User {
 
     @Column(name = "availability", nullable = false)
     private boolean availability; // Flag indicating availability
+
+    @Column(name = "active", nullable = false)
+    private boolean active;
 }
-
-
-
-
-
-
-
-
-

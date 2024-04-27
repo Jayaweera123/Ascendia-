@@ -1,8 +1,6 @@
 package com.Ascendia.server.mapper.Administrator;
 
-
-import  com.Ascendia.server.dto.Administrator.UserDto;
-
+import com.Ascendia.server.dto.Administrator.UserDto;
 import com.Ascendia.server.entity.Administrator.User;
 
 public class UserMapper {
@@ -13,13 +11,14 @@ public class UserMapper {
                 user.getLastName(),
                 user.getDesignation(),
                 user.getDepartment(),
-                user.getUsername(),
-                user.getPassword(),
+                user.getUsername(), // Keep the username as it is, since it's already generated in the backend
+                user.getPassword(), // Keep the password as it is, since it's already generated in the backend
                 user.getEmail(),
                 user.getPhoneNumber(),
                 user.getAddedDate(),
                 user.getProfilePicUrl(),
-                user.isAvailability()
+                user.isAvailability(), // Keep the availability as it is, since it's already generated in the backend
+                user.isActive()
         );
     }
 
@@ -30,23 +29,14 @@ public class UserMapper {
                 userDto.getLastName(),
                 userDto.getDesignation(),
                 userDto.getDepartment(),
-                userDto.getUsername(),
-                userDto.getPassword(),
+                userDto.getUsername(), // Keep the username as it is, since it's already generated in the backend
+                userDto.getPassword(), // Keep the password as it is, since it's already generated in the backend
                 userDto.getEmail(),
                 userDto.getPhoneNumber(),
                 userDto.getAddedDate(),
                 userDto.getProfilePicUrl(),
-                userDto.isAvailability()
-
+                userDto.isAvailability(), // Keep the availability as it is, since it's already generated in the backend
+                userDto.isActive()
         );
     }
 }
-
-
-
-
-
-
-
-
-

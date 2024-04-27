@@ -9,7 +9,7 @@ import TopNavigation from "./components/TopNavigation";
 {/*Ravindu*/}
 import AddProject from "./pages/ProjectCreationTeam/AddProject";
 import AssignEmployee from "./pages/ProjectCreationTeam/AssignEmployee";
-
+import AssignPM from "./pages/ProjectCreationTeam/AssignPM";
 import ContactForm from "./pages/ContactForm";
 
 {/*Rashmi*/}
@@ -73,6 +73,7 @@ const App = () => {
         <Route path="/topNavigation" element={<TopNavigation />} />
         <Route path="/addProject" element={<AddProject/>}/>
         <Route path="/assignEmployee" element={<AssignEmployee/>}/>
+        <Route path="/assignPM" element={<AssignPM/>}/>
 
         {/*ProjectManager */}
         <Route path="/pmhome" element={<HomePM />} />
@@ -85,6 +86,7 @@ const App = () => {
         <Route path="/edit-task/:id" element={<AddTask />} />
         <Route path="/employees" element={<Employees />} />
         <Route path="/progress" element={<ProjectProgress />} />
+      
         {/** 
        <Route
           path="/projects/:projectId/tasks"

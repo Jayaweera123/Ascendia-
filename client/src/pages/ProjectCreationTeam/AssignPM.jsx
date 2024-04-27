@@ -1,12 +1,11 @@
-// Home.jsx
 import React, { useState } from "react";
 import TopNavigation from "../../components/TopNavigation";
 import SideNavigation from "../../components/ProjectManager/SideNavigation";
 import { MdAssignmentAdd } from "react-icons/md";
-import { RiUserAddFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
+import { RiUserAddFill } from "react-icons/ri";
 
-const AddProject = () => {
+const AssignPM = () => {
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
 
@@ -32,39 +31,93 @@ const AddProject = () => {
         <form method="POST" encType="multipart/form-data">
         <div className="space-y-5">
         <div className="flex flex-row gap-3 pt-2 pb-2 border-b items-centerd border-gray-900/10">
-    <MdAssignmentAdd size={90} color="#001b5e"/>
-          <div><h1 className="place-items-baseline py-4 text-4xl font-bold leading-relaxed text-left text-[#001b5e]">Create Project</h1></div>
+    <RiUserAddFill size={50} color="#001b5e"/>
+          <div><h1 className="place-items-baseline py-2 text-3xl font-bold leading-relaxed text-left text-[#001b5e]">Assign Project Manager</h1></div>
         </div>
                 
-                <div className="relative m-32 overflow-x-auto bg-white shadow-md rouwinded-lg">
-                  <div className="border-b border-red-600 pb-80">
-                    <div className="grid grid-cols-1 m-5 mt-10 gap-x-6 gap-y-8 sm:grid-cols-12">   
-                       
-   <div class="flex flex-col sm:col-span-8">
+        <div className="relative flex justify-end overflow-x-auto bg-white rounded-lg shadow-md m-44" style={{ maxWidth: "800px", marginRight:"10px" }}>
+    <div className="border-b border-red-600 pb-80">
+        <div className="grid grid-cols-1 m-5 mt-10 gap-x-6 gap-y-8 sm:grid-cols-12">
+   <div class="flex flex-col sm:col-span-8 items-center justify-center">
         <div class=" flex justify-end mb-8 mt-8">
-        <h1 class="text-4xl font-bold">Project Creation Form</h1>
+        <h1 class="text-4xl font-bold ml-40 ">Assign Form</h1>
         </div>
     <div>
         
  
-          
- <div className="flex flex-col mt-12 ml-24 sm:col-span-8">
- <div>
-    <label htmlFor="Project-ID" className="block text-base font-medium leading-6 text-gray-900">
-        Project ID
-    </label>
-    <div className="mt-2">
-        <input
-            type="text"
-            name="project-id"
-            id="project-id"
-            autoComplete="given-Id"
-            readOnly // Set the input field as read-only
-            value="Auto-generated value" // Set the auto-generated value here
-            className="block w-1/2 h-10 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:Lending-6"
-        />
+    <div className="flex flex-col mt-12 ml-6 sm:col-span-8">
+    <div className="flex">
+        <div>
+            <label htmlFor="Project-ID" className="block text-base font-medium leading-6 text-gray-900">
+                Project ID
+            </label>
+            <div className="mt-2">
+                <input
+                    type="text"
+                    name="project-id"
+                    id="project-id"
+                    autoComplete="given-Id"
+                    readOnly // Set the input field as read-only
+                    value="Auto-generated value" // Set the auto-generated value here
+                    className="block w-40 h-10 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:Lending-6"
+                />
+            </div>
+        </div>
+
+        <div className="ml-28"> {/* Reduced margin from ml-60 to ml-4 */}
+            <label htmlFor="PhoneNo" className="block text-base font-medium leading-6 text-gray-900">
+                Project Name
+            </label>
+            <div className="mt-2">
+                <input
+                    type="text"
+                    name="phoneno."
+                    id="phoneno."
+                    autoComplete="given-no" 
+                    className="block w-64 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />  
+            </div>
+        </div>
     </div>
 </div>
+
+
+<div className="flex flex-col mt-12 ml-6 sm:col-span-8">
+    <div className="flex">
+        <div>
+            <label htmlFor="Project-ID" className="block text-base font-medium leading-6 text-gray-900">
+                Project ID
+            </label>
+            <div className="mt-2">
+                <input
+                    type="text"
+                    name="project-id"
+                    id="project-id"
+                    autoComplete="given-Id"
+                    readOnly // Set the input field as read-only
+                    value="Auto-generated value" // Set the auto-generated value here
+                    className="block w-40 h-10 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:Lending-6"
+                />
+            </div>
+        </div>
+
+        <div className="ml-28"> {/* Reduced margin from ml-60 to ml-4 */}
+            <label htmlFor="PhoneNo" className="block text-base font-medium leading-6 text-gray-900">
+                Project Name
+            </label>
+            <div className="mt-2">
+                <input
+                    type="text"
+                    name="phoneno."
+                    id="phoneno."
+                    autoComplete="given-no" 
+                    className="block w-64 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                />  
+            </div>
+        </div>
+    </div>
+</div>
+
 
     <div className="mt-8">
     <label htmlFor="project-type" className="block text-base font-medium leading-6 text-gray-900">
@@ -75,7 +128,7 @@ const AddProject = () => {
             id="project-type"
             name="project-type"
             autoComplete="off"
-            className="block w-1/2 h-10 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:Lending-6"
+            className="block w-1/2 h-10 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         >
             <option value="" disabled selected>Select Project Type</option>
             <option value="web">Web Development</option>
@@ -262,10 +315,10 @@ const AddProject = () => {
 
       
       </div>  
-      </div> 
+      
     </form>
   
-  
+
           </div>
         </div>
       </section>
@@ -273,10 +326,5 @@ const AddProject = () => {
   );
 };
 
-export default AddProject;
-
-
-
-
-
+export default AssignPM;
 

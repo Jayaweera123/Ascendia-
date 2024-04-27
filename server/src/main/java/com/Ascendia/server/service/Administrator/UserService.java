@@ -16,22 +16,10 @@ public interface UserService {
 
     UserDto updateUser(Long userID, UserDto updatedUser);
 
-    void deleteUser(Long userID);
+    void deactivateUser(Long userID);
 
     String generateUsername(String firstName, String lastName, String department, long userId);
 
     String generatePassword(UserDto userDto);
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
