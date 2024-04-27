@@ -33,6 +33,7 @@ import UserList from "./pages/Admin/UserList";
 {/* Rashmi - Client */}
 //import ClDashboard from "./pages/Client/ClDashboard";
 import AddReview from "./pages/Client/AddReview";
+import Reviews from "./pages/Reviews/Reviews";
 
 {/*Deshani*/}
 import Dashboard from "./pages/Store/Dashboard";

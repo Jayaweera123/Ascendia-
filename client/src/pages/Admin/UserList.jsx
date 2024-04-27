@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import SideNavigationAdmin from "../../components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin";
 import { FaUsers } from "react-icons/fa";
-import { userList, deleteUser } from "../../services/UserService";
+import { userList, deactivateUser } from "../../services/UserService";
 import { useNavigate } from "react-router-dom";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { TiUserAddOutline } from "react-icons/ti";
@@ -25,7 +25,9 @@ const UserList = () => {
   function getAllUsers() {
     userList()
       .then((response) => {
-        setUsers(response.data);
+        // Filter out inactive users
+        const activeUsers = response.data.filter(user => user.active);
+        setUsers(activeUsers);
       })
       .catch((error) => {
         console.error(error);
@@ -44,9 +46,11 @@ const UserList = () => {
 
   // Function to remove a user from the list
   function removeUser(userID) {
-    deleteUser(userID)
-      .then((response) => {
-        getAllUsers(); // Fetch updated user list after deletion
+    // Deactivate the user instead of deleting
+    deactivateUser(userID)
+      .then(() => {
+        // Fetch updated user list after deactivation
+        getAllUsers();
       })
       .catch((error) => {
         console.error(error);
@@ -133,16 +137,19 @@ const UserList = () => {
                       Name
                     </th>
                     <th scope="col" className="w-56 px-4 py-3">
-                      Phone Number
-                    </th>
-                    <th scope="col" className="px-4 py-3 w-52">
-                      Username
-                    </th>
-                    <th scope="col" className="w-20 px-4 py-3">
                       Designation
                     </th>
-                    <th scope="col" className="w-10 px-4 py-3">
+                    <th scope="col" className="px-4 py-3 w-52">
                       Department
+                    </th>
+                    <th scope="col" className="w-20 px-4 py-3">
+                      Phone Number
+                    </th>
+                    <th scope="col" className="w-10 px-4 py-3">
+                      Username
+                    </th>
+                    <th scope="col" className="px-5 py-3 w-15">
+                      Profile Picture
                     </th>
                     <th scope="col" className="px-5 py-3 w-15">
                       Actions
@@ -163,7 +170,7 @@ const UserList = () => {
                         class="flex items-center px-5 py-3 text-gray-900 whitespace-nowrap dark:text-black"
                       >
                         <img
-                          src={user.profilePicUrl}
+                          src={user.profilePicUrl} // Assuming `profileImage` is the URL or base64 data received from the backend
                           className="w-10 h-10 rounded-full"
                           alt={`Profile of ${user.firstName} ${user.lastName}`}
                         />
@@ -179,8 +186,9 @@ const UserList = () => {
                       </th>
                       <td class="px-4 py-3 w-40">{user.designation}</td>
                       <td class="px-4 py-3">{user.department}</td>
-                      <td class="px-4 py-3">{user.username}</td>
                       <td class="px-4 py-3">{user.phoneNumber}</td>
+                      <td class="px-4 py-3">{user.username}</td>
+                      <td class="px-4 py-3">{user.profilePicUrl}</td> {/* Display profile pic URL */}
                       {/* Buttons for editing and deleting users */}
                       <td class="px-2 py-3">
                         <button

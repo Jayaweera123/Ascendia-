@@ -16,5 +16,5 @@ export const getUser = (userID) => axios.get(REST_API_BASE_URL + '/' + userID);
 export const editUser = (userID, user) => axios.put(REST_API_BASE_URL + '/' + userID, user);
 
 // Function to delete a user by ID
-export const deleteUser = (userID) => axios.delete(REST_API_BASE_URL + '/' + userID);
+export const deactivateUser = (userID) => axios.delete(REST_API_BASE_URL + '/' + userID);
 

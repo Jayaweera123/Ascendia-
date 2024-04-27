@@ -21,15 +21,13 @@ const AddUser = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [designation, setDesignation] = useState('');
   const [department, setDepartment] = useState('');
-  const [profilePhoto, setProfilePhoto] = useState('');
-  const [addedDate, setAddedDate] = useState('');
+  const [profileImage, setProfileImage] = useState(null); // State variable to hold the profile image file
   const { userID } = useParams(); // Get the user ID from the URL parameters
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
     email: '',
     phoneNumber: '',
-    addedDate: '',
   });
   const navigator = useNavigate();
 
@@ -45,14 +43,15 @@ const AddUser = () => {
           setPhoneNumber(response.data.phoneNumber);
           setDesignation(response.data.designation);
           setDepartment(response.data.department);
-          setProfilePhoto(response.data.profilePhoto);
-          setAddedDate(response.data.addedDate);
+          
+          // Do not set addedDate here, as it will be obtained automatically when adding a new user
         })
         .catch((error) => {
           console.error(error);
         });
     }
-  }, [userID]);
+  }, [userID]); // Remove addedDate from the dependency array
+
 
   
 
@@ -63,24 +62,18 @@ const AddUser = () => {
     // Validate form inputs
     if (validateForm()) {
       
-        /*const today = new Date();
-        const formattedDate = `${today.getFullYear()}-${(
-          today.getMonth() + 1
-        ).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-  
-        const user = {
-          firstName,
-          lastName,
-          email,
-          phoneNumber,
-          addedDate: formattedDate, // Set today's date
-          department,
-          designation,
-          profilePhoto,
-        };*/
+        // Set addedDate to the current date
+      const today = new Date();
+      const formattedDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
 
-      const user = { firstName, lastName, email, phoneNumber, addedDate, department, designation, profilePhoto }
-      console.log(user)
+      const user = { firstName, lastName, email, phoneNumber, addedDate: formattedDate, designation, department};
+      // Append profileImage to the user object if it exists
+      if (profileImage) {
+        user.profileImage = profileImage;
+      }
+      console.log(user);
+
+      
 
       if (userID) {
         // If editing an existing user, call editUser function from the service
@@ -106,18 +99,49 @@ const AddUser = () => {
     }
   }
 
+  function handleProfileImageChange(e) {
+    // Update the profile image state variable when a new image is selected
+    setProfileImage(e.target.files[0]);
+  }
+
+  
+
+  // Function to deactivate user account and clear form fields
+    async function removeUser() {
+    try {
+      // Deactivate user account (update status in the database)
+      await deactivateUser(userID); // Pass the user ID to identify the user to deactivate
+
+      // Clear form fields
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setPhoneNumber('');
+      setDesignation('');
+      setDepartment('');
+      setProfileImage('');
+
+      // Optionally, provide feedback to the user (e.g., toast message)
+      // Notify the user that their account has been deactivated
+
+    } catch (error) {
+      console.error('Error deactivating user:', error);
+      // Optionally, handle errors and provide feedback to the user
+    }
+  }
+
+
   // Function to reset form fields
-  function removeUser() {
+  {/*function removeUser() {
     setFirstName('');
     setLastName('');
     setEmail('');
     setPhoneNumber('');
     setDesignation('');
     setDepartment('');
-    setProfilePhoto('');
-    setAddedDate('');
+    setProfileImage('');
     window.location.reload(); // Reload the page to reset the form
-  }
+  } */}
 
   // Function to validate form inputs
   function validateForm() {
@@ -130,7 +154,7 @@ const AddUser = () => {
     if (firstName.trim()) {
       errorsCopy.firstName = '';
     } else {
-      errorsCopy.firstName = 'First name is required!';
+      errorsCopy.firstName = 'First Name is required!';
       valid = false;
     }
 
@@ -138,7 +162,7 @@ const AddUser = () => {
     if (lastName.trim()) {
       errorsCopy.lastName = '';
     } else {
-      errorsCopy.lastName = 'Last name is required!';
+      errorsCopy.lastName = 'Last Name is required!';
       valid = false;
     }
 
@@ -154,17 +178,10 @@ const AddUser = () => {
     if (phoneNumber.trim()) {
       errorsCopy.phoneNumber = '';
     } else {
-      errorsCopy.phoneNumber = 'Phone number is required!';
+      errorsCopy.phoneNumber = 'Phone Number is required!';
       valid = false;
     }
 
-    // Validate added date
-    if (addedDate.trim()) {
-      errorsCopy.addedDate = '';
-    } else {
-      errorsCopy.addedDate = 'Added date is required!';
-      valid = false;
-    }
 
     // Update errors state
     setErrors(errorsCopy);
@@ -332,44 +349,21 @@ const AddUser = () => {
               </div>
             </div>
 
-            <div className="col-span-7">
-            <label htmlFor="photo" className="block text-base font-medium leading-6 text-gray-900">
-                Profile Photo
-              </label>
-              <div className="relative inline-flex items-center justify-center w-20 h-20 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-200">
-                <span className="font-medium text-gray-600 dark:text-gray-500">RJ</span>
-              </div>
-              <input
-                type="file" // Change the input type to 'file' for uploading a photo
-                id="pp"
-                name="pp"
-                onChange={(e) => setProfilePhoto(e.target.files[0])} // Capture the selected file
-                className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
-            />
-
-              
-      </div>
-
-            
-
-            <div className="sm:col-span-4">
-              <label htmlFor="added-date" className="block text-base font-medium leading-6 text-gray-900">
-                Added Date
-              </label>
-              <div className="mt-2">
-                <input
-                  type="date"
-                  name="added-date"
-                  id="added-date"
-                  autoComplete="added-date"
-                  onChange={(e) => setAddedDate(e.target.value)}
-                  className={`form-input ${errors.addedDate ? 'border-red-500' : '' } block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 tracking-wide`}
-                />
-                {errors.addedDate && <div className='text-red-500'> {errors.addedDate}</div>}
-              </div>
-            </div>
-
-            
+            <div className="sm:col-span-7">
+                  <label htmlFor="profileImage" className="block text-base font-medium leading-6 text-gray-900">
+                    Profile Image
+                  </label>
+                  <div className="mt-2">
+                    <input
+                      type="file"
+                      id="profileImage"
+                      name="profileImage"
+                      onChange={handleProfileImageChange}
+                      className="form-input block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    />
+                  </div>
+                </div>
+      
             <br></br>
 
           </div>

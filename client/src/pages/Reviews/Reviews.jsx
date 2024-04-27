@@ -4,16 +4,60 @@ import SideNavigationClient from "../../components/Client/SideNavigationClient";
 import TopNavigationClient from "../../components/Client/TopNavigationClient";
 import { MdOutlineRateReview } from "react-icons/md";
 import { MdOutlineAddBox } from "react-icons/md";
+import { FaRegComments } from "react-icons/fa";
+import { TfiComments } from "react-icons/tfi";
+import { LiaCommentsSolid } from "react-icons/lia";
 
 import { format } from 'date-fns'; // Import date-fns for formatting dates
+import { reviewList } from "../../services/ReviewService";
 
-const AddReview = () => {
+const Reviews = () => {
   const [open, setOpen] = useState(true);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [reviewText, setReviewText] = useState('');
   const handlePopoverToggle = () => {
     setIsPopoverOpen(!isPopoverOpen);
   };
+
+  
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [designation, setDesignation] = useState('');
+  const [department, setDepartment] = useState('');
+  const [profilePhoto, setProfilePhoto] = useState('');
+  const [addedDate, setAddedDate] = useState('');
+  const { userID } = useParams(); // Get the user ID from the URL parameters
+  const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    addedDate: '',
+  });
+  const navigator = useNavigate();
+
+  // useEffect hook to fetch user data if editing an existing user
+  useEffect(() => {
+    if (userID) {
+      reviewList(userID)
+        .then((response) => {
+          // Set state with user data fetched from the server
+          setFirstName(response.data.firstName);
+          setLastName(response.data.lastName);
+          setEmail(response.data.email);
+          setPhoneNumber(response.data.phoneNumber);
+          setDesignation(response.data.designation);
+          setDepartment(response.data.department);
+          setProfilePhoto(response.data.profilePhoto);
+          setAddedDate(response.data.addedDate);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [userID]);
 
   const handleCancelClick = () => {
     // Add logic here to clear the form data
@@ -116,151 +160,53 @@ const AddReview = () => {
       
         <div className="max-w-2xl mx-auto lg:mx-0">
         <div className="flex flex-row gap-3 pt-2 pb-1 border-b items-centered border-gray-900/10">
-            <MdOutlineRateReview size={100} color="#001b5e"/>
-            <div><h1 className="place-items-baseline text-4xl leading-relaxed py-4 font-bold text-left text-[#001b5e]">Add Review</h1></div>
+            <LiaCommentsSolid size={100} color="#001b5e"/>
+            <div><h1 className="place-items-baseline text-4xl leading-relaxed py-4 font-bold text-left text-[#001b5e]">Reviews</h1></div>
         </div>
           <p className="mt-2 text-lg leading-8 text-gray-600">
           Your valuable review is instrumental in ensuring that our project aligns seamlessly with your expectations and aspirations.
           </p>
         </div>
 
-        {/*Popover*/}
-        <div className="relative pt-3">
-      <button
-        className="flex flex-row p-2 gap-1 text-white bg-[#001b5e] rounded-md hover:bg-blue-900"
-        onClick={handlePopoverToggle}
-      >
-        <div className="flex flex-row leading-relaxed text-white items-centered">
-              <div><MdOutlineAddBox size={30} /></div>
-            </div>
-        <div className="place-items-baseline">Add New Review</div> 
-      </button>
-
-      {isPopoverOpen && (
-        <form action="https://getform.io/f/7675bf41-8d9b-43d9-99d7-c52b46d7cd96" method="POST" encType="multipart/form-data">
-        
-            
-            <div className="grid grid-cols-1 mt-10 gap-x-6 gap-y-8 sm:grid-cols-12">
-       
-              <div className="sm:col-span-5">
-                <label htmlFor="uid" className="block text-base font-medium leading-6 text-gray-900">
-                  User Id
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="uid"
-                    name="uid"
-                    type="uid"
-                    autoComplete="uid"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-  
-              <div className="sm:col-span-4">
-                <label htmlFor="created-date" className="block text-base font-medium leading-6 text-gray-900">
-                  Date
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="date"
-                    name="created-date"
-                    id="created-date"
-                    autoComplete="created-date"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 tracking-wide"
-                  />
-                </div>
-              </div>
-  
-              
-              <br></br>
-  
-
-              <div className="sm:col-span-9">
-                <label htmlFor="RTitle" className="block text-base font-medium leading-6 text-gray-900">
-                  Title
-                </label>
-                <div className="mt-2">
-                  <input
-                    type="text"
-                    name="RTitle"
-                    id="RTitle"
-                    autoComplete="RTitle"
-                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  />
-                </div>
-              </div>
-              <br></br>
-
-              <div className="col-span-full">
-              <label htmlFor="content" className="block text-base font-medium leading-6 text-gray-900">
-                Content
-              </label>
-              <div className="mt-2">
-                <textarea
-                  id="content"
-                  name="content"
-                  rows={7}
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                  defaultValue={''}
-                />
-              </div>
-            </div>   
-          </div>
- 
-        <div className="flex items-center justify-end mt-6 gap-x-6">
-          <button
-            type="button"
-            className="px-3 py-2 text-xl font-semibold leading-6 text-gray-900 bg-gray-300 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            onClick={handleCancelClick}
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="px-3 py-2 text-xl font-semibold text-white bg-[#001b5e] rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-            Add
-          </button>
-        </div>
-        
-      </form>
-      )}
-    </div>
+      
 
         {/*Reviews*/}
         <div className="grid max-w-2xl grid-cols-1 pt-10 pb-20 mx-auto mt-2 border-t border-gray-200 gap-x-8 gap-y-16 sm:mt-16 sm:pt-16 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-          {posts.map((post) => (
-            <article key={post.id} className="flex flex-col items-start justify-between max-w-xl">
+          {reviews.map((review) => (
+            <article key={review.id} className="flex flex-col items-start justify-between max-w-xl">
               <div className="flex items-center text-xs gap-x-4">
-                <time dateTime={post.datetime} className="text-gray-500">
-                  {post.date}
+                <time dateTime={review.datetime} className="text-gray-500">
+                  {review.date}
                 </time>
-                <a
+                {/*<a
                   href={post.category.href}
                   className="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100"
                 >
                   {post.category.title}
-                </a>
+          </a>*/}
               </div>
               <div className="relative group">
                 <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
-                  <a href={post.href}>
+                  <a href={review.href}>
                     <span className="absolute inset-0" />
-                    {post.title}
+                    {review.title}
                   </a>
                 </h3>
-                <p className="mt-5 text-sm leading-6 text-gray-600 line-clamp-3">{post.description}</p>
+                <p className="mt-5 text-sm leading-6 text-gray-600 line-clamp-3">{review.description}</p>
               </div>
               <div className="relative flex items-center mt-8 gap-x-4">
-                <img src={post.author.imageUrl} alt="" className="w-10 h-10 rounded-full bg-gray-50" />
+                <img src={review.user.profilePicUrl} alt="" className="w-10 h-10 rounded-full bg-gray-50" />
                 <div className="text-sm leading-6">
                   <p className="font-semibold text-gray-900">
-                    <a href={post.author.href}>
+                    <a href={review.author.href}>
                       <span className="absolute inset-0" />
-                      {post.author.name}
+                      <div className="flex flex-row text-base font-semibold">
+                            <div>{user.firstName}</div>
+                            <div className="ml-1">{user.lastName}</div>
+                      </div>
                     </a>
                   </p>
-                  <p className="text-gray-600">{post.author.id}</p>
+                  <p className="text-gray-600">{user.userId}</p>
                 </div>
               </div>
             </article>
@@ -275,4 +221,4 @@ const AddReview = () => {
   );
 };
 
-export default AddReview;
+export default Reviews;
