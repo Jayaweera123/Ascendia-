@@ -1,18 +1,23 @@
 package com.Ascendia.server.service.ProjectManager.impl;
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
+import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.exceptions.ResourceNotFoundException;
 import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
+import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.repository.ProjectManager.TaskRepository;
+import com.Ascendia.server.repository.SiteManager.JobRepository;
 import com.Ascendia.server.service.ProjectManager.TaskService;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.PublicKey;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,11 +26,35 @@ public class  TaskServiceImpl implements TaskService {
 
     private TaskRepository taskRepository;
 
-    @Override
+    /*@Override
     public TaskDto createTask(TaskDto taskDto) {
         Task task = TaskMapper.mapToTask(taskDto);
         Task savedTask = taskRepository.save(task);
         return TaskMapper.mapToTaskDto(savedTask);
+    }*/
+
+    @Autowired
+    private ProjectRepository projectRepository; // Assuming you have a repository for projects
+
+    @Override
+    public TaskDto createTask(TaskDto taskDto) {
+        // Assuming taskDto contains projectId
+        // Retrieve project details from the database based on projectId
+        Optional<Project> projectOptional = projectRepository.findById(taskDto.getProject().getProjectId());
+
+        // Check if the project exists
+        if (projectOptional.isPresent()) {
+            // Set the project details in the taskDto
+            taskDto.setProject(projectOptional.get());
+
+            Task task = TaskMapper.mapToTask(taskDto);
+            Task savedTask = taskRepository.save(task);
+            return TaskMapper.mapToTaskDto(savedTask);
+        } else {
+            // Handle the case where the project does not exist
+            // For example, throw an exception or return null
+            throw new ResourceNotFoundException("Project not found with ID: " + taskDto.getProject().getProjectId());
+        }
     }
 
     @Override
@@ -92,5 +121,14 @@ public class  TaskServiceImpl implements TaskService {
         return tasks.stream().map(TaskMapper::mapToTaskDto).collect(Collectors.toList());
     }
 
+    @Autowired
+    private JobRepository jobRepository; // Assuming you have a repository for jobs
+
+    // Other methods...
+
+    @Override
+    public int getJobCountForTask(Long taskId) {
+        return jobRepository.countJobsByTask_TaskId(taskId);
+    }
 
 }

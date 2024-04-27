@@ -18,3 +18,9 @@ export const deleteTask = (taskId) =>
 
 export const getTasksForProject = (ProjectId) =>
   axios.get(REST_API_BASE_URL0 + "/api/project/" + ProjectId + "/tasks");
+
+/*export const getJobCountForTask = (taskId) =>
+  axios.get(REST_API_BASE_URL0 + "/" + taskId + "/jobCount");*/
+
+export const getJobCountForTask = () =>
+  axios.get("http://localhost:8080/api/task/3/jobcount");

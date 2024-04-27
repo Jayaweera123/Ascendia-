@@ -16,7 +16,6 @@ function Tasks() {
       <section className="flex">
         <SideNavigation />
         <div className="ml-3.5 mt-10">
-          <div></div>
           <div className="flex justify-between m-0">
             <PageTitle title="Tasks" />
             <AddButton />

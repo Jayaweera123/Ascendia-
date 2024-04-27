@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { deleteTask, getTasksForProject } from "../../services/TaskService.jsx";
+import {
+  deleteTask,
+  getTasksForProject,
+  getJobCountForTask,
+} from "../../services/TaskService.jsx";
 import { Link, useParams } from "react-router-dom";
 import { LuClipboardEdit, LuCalendarClock } from "react-icons/lu";
 import DeleteModal from "./DeleteModal.jsx";
 
 const TaskCardforProject = ({ projectId }) => {
   const [tasks, setTasks] = useState([]);
+  const [jobCounts, setJobCounts] = useState({});
 
   useEffect(() => {
     // Fetch tasks for the project when projectId changes
@@ -18,6 +23,16 @@ const TaskCardforProject = ({ projectId }) => {
       });
   }, [projectId]);
 
+  /* function getJobCount(id) {
+    getJobCountForTask(id)
+      .then(() => {
+        setJobCounts(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }*/
+
   function removeTask(id) {
     deleteTask(id)
       .then(() => {
@@ -28,6 +43,17 @@ const TaskCardforProject = ({ projectId }) => {
         console.error(error);
       });
   }
+
+  /*useEffect(() => {
+    // Fetch tasks for the project when projectId changes
+    getJobCountForTask(id)
+      .then((response) => {
+        setJobCounts(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [projectId]);*/
 
   return (
     <div className="mt-10 mx-auto">
@@ -76,7 +102,7 @@ const TaskCardforProject = ({ projectId }) => {
                     </div>
                     <div className="mt-6 flex items-center justify-between text-sm font-semibold mb-0">
                       <div className="flex">
-                        <span className="mr-1">40</span> Jobs
+                        <span className="mr-1"> 6 Jobs </span>
                       </div>
                       <div className="flex items-center text-red-500">
                         <LuCalendarClock className="mr-2 text-lg" />
