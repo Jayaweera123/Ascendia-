@@ -24,11 +24,7 @@ public class ProjectMapper {
                 projectDto.getProjectType(),
                 projectDto.getProjectDescription(),
                 projectDto.getProjectStatus(),
-                projectDto.getProjectType(),
-                projectDto.getProjectDescription(),
-                projectDto.getProjectStatus(),
                 projectDto.getCreatedDate(),
-                projectDto.getEndDate(),
                 projectDto.getEndDate(),
                 projectDto.getPmId(),
                 projectDto.getImage());
