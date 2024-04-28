@@ -11,10 +11,10 @@ function Projects() {
       <TopNavigationPM />
       <section className="flex">
         <SideNavigationPM />
-        <div className="ml-3.5 mt-10">
+        <div className="ml-3.5 mt-10 w-screen">
           <PageTitle title="Projects" />
 
-        <ProjectCard />
+          <ProjectCard />
 
           {/*<Link to="/projects/tasks">
             <button
