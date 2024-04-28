@@ -11,6 +11,7 @@ import AddProject from "./pages/ProjectCreationTeam/AddProject";
 import AssignEmployee from "./pages/ProjectCreationTeam/AssignEmployee";
 import AssignPM from "./pages/ProjectCreationTeam/AssignPM";
 import ContactForm from "./pages/ContactForm";
+import ProjectsList from "./pages/ProjectCreationTeam/ProjectList";
 
 {/*Rashmi*/}
 import SideNavigationClient from "./components/Client/SideNavigationClient";
@@ -62,6 +63,7 @@ import Jobs from "./pages/ProjectManager/Jobs";
 
 
 
+
 const App = () => {
   return (
     <div>
@@ -74,6 +76,7 @@ const App = () => {
         <Route path="/addProject" element={<AddProject/>}/>
         <Route path="/assignEmployee" element={<AssignEmployee/>}/>
         <Route path="/assignPM" element={<AssignPM/>}/>
+        <Route path="/projectslist" element={<ProjectsList/>}/>
        
 
         {/*ProjectManager */}
