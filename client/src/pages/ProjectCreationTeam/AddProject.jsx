@@ -7,49 +7,57 @@ import { RiUserAddFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 import axios  from "axios";// import axios for making http requests
 
-  const AddProject = () => {
+const AddProject = () => {
   const [open, setOpen] = useState(true);
   const navigate = useNavigate();
 
-
-
-  //Define State Variables(using usestate hook)
-  const [projectId, setProjectId] = useState("auto-genarated value");
+  const [projectId, setProjectId] = useState("");
   const [projectType, setProjectType] = useState("");
   const [projectName, setProjectName] = useState("");
   const [projectDescription, setProjectDescription] = useState("");
   const [projectStatus, setProjectStatus] = useState("");
   const [projectImage, setProjectImage] = useState(null);
-  const [startedDate, setStartedDate] = useState("");
-  const [estimateEndDate, setEstimateEndDate] = useState("");
-  
-  
+  const [createdDate, setCreatedDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
-  //  "Assign General Manager" button
   const handleAssignGeneralManager = () => {
-    // Open the page to assign a general manager
     navigate("/assign-general-manager");
   };
-  //  "Assign Project Manager" button
+
   const handleAssignProjectManager = () => {
-    // Open the page to assign a project manager
     navigate("/assign-project-manager");
   };
 
-  
-  function saveProject(e){
-   e.preventDefault();//prevent default activities
-   
-   const project ={projectId, projectDescription, projectName, projectType, estimateEndDate, startedDate, projectStatus,projectImage}
+  const saveProject = async (e) => {
+    e.preventDefault();
 
-  console.log(project)
-  
+    const project = {
+      projectId,
+      projectDescription,
+      projectName,
+      projectType,
+      endDate,
+      createdDate,
+      projectStatus,
+      projectImage,
+    };
 
- }
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/project/createProject",
+        project
+      );
 
-  
-  
-
+      if (response.status === 200) {
+        console.log("Project created successfully!");
+        navigate("/projects");
+      } else {
+        console.error("Failed to create project");
+      }
+    } catch (error) {
+      console.error("Error creating project:", error);
+    }
+  };
   return (
    <div>
     <TopNavigation />
@@ -83,12 +91,13 @@ import axios  from "axios";// import axios for making http requests
         </label>
           <div className="mt-2">
            <input
-             type="text"
+             type="number"
              name="project-id"
              id="project-id"
-             autoComplete="given-Id"
-             readOnly // Set the input field as read-only
+             //autoComplete="given-Id"
+             //readOnly // Set the input field as read-only
              value={projectId} // Use the state variablefor this value
+             onChange={(e) => setProjectId(e.target.value)}
              className="block w-1/2 h-10 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:Lending-6"
               />
            </div>
@@ -101,6 +110,7 @@ import axios  from "axios";// import axios for making http requests
        <div className="mt-2">
         <select
             id="project-type"
+            type="text"
             name="project-type"
             autoComplete="off"
             value={projectType}
@@ -147,6 +157,7 @@ import axios  from "axios";// import axios for making http requests
         <textarea
            id="comment"
            name="comment"
+           type="text"
            autoComplete="off"
            rows="6"
            value={projectDescription}
@@ -167,6 +178,7 @@ import axios  from "axios";// import axios for making http requests
         <select
            id="project-status"
            name="project-status"
+           type="text"
            autoComplete="off"
            value={projectStatus}
            onChange={(e) => setProjectStatus(e.target.value)}
@@ -223,15 +235,15 @@ import axios  from "axios";// import axios for making http requests
               name="added-date"
               id="added-date"
               autoComplete="added-date"
-              value={startedDate}
-              onChange={(e) => setStartedDate(e.target.value)}
+              value={createdDate}
+              onChange={(e) => setCreatedDate(e.target.value)}
             class="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 tracking-wide"
             />
           </div>
      </div>
     <div class="sm:w-1/2 mt-4 sm:mt-0"> 
       <label for="end-date" class="block text-base font-medium leading-6 text-gray-900">
-        Estimate End Date
+        Estimated End Date
       </label>
           <div class="mt-4"> 
            <input
@@ -239,8 +251,8 @@ import axios  from "axios";// import axios for making http requests
               name="end-date"
               id="end-date"
               autoComplete="end-date"
-              value={estimateEndDate}
-              onChange={(e) => setEstimateEndDate(e.target.value)}
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
            class="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 tracking-wide"
            />
            </div>
@@ -306,9 +318,3 @@ import axios  from "axios";// import axios for making http requests
 };
 
 export default AddProject;
-
-
-
-
-
-
