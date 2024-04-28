@@ -16,7 +16,7 @@ function Material() {
 
     const [search, setSearch] = useState("");
 
-    const givenProjectId = 3;
+    const givenProjectId = 2;
 
 
     //Pagination

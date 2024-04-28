@@ -15,7 +15,7 @@ function MaterialForm() {
   const [description, setDescription] = useState('')
   const [createdDate, setCreatedDate] = useState('')
 
-  const projectId = 3;
+  const projectId = 2;
 
   const {id} = useParams();
 
@@ -244,7 +244,7 @@ function formTitle(){
                     </label>
                     <div className="mt-3">
                       <input
-                        type="text"
+                        type="number"
                         placeholder='Enter Quantity of material'
                         name="quantity"
                         id="quantity"
@@ -313,7 +313,7 @@ function formTitle(){
                     </label>
                     <div className="mt-3">
                       <input
-                        type="text"
+                        type="number"
                         placeholder='Enter Minimum Level'
                         name="minimumLevel"
                         id="minimumLevel"
@@ -360,9 +360,3 @@ function formTitle(){
 };
 
 export default MaterialForm;
-
-
-
-
-
-
