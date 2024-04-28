@@ -11,15 +11,10 @@ import { PiProjectorScreenChartBold } from "react-icons/pi";
 const SideNavigation = () => {
   const menus = [
     { name: "Home", link: "/pmhome", icon: IoHome },
-    { name: "Pojects", link: "/projects", icon: PiProjectorScreenChartBold },
-    {
-      name: "Dashboard",
-      link: "/pmdashboard",
-      icon: MdOutlineDashboard,
-      margin: true,
-    },
-    { name: "Tasks", link: "/tasks", icon: FaRegClipboard },
-    { name: "Employees", link: "/employees", icon: FaClipboardUser },
+    { name: "Dashboard", link: "/creationDashboard", icon: PiProjectorScreenChartBold },
+    { name: "Projects",link: "/projectList",icon: MdOutlineDashboard, margin: true,},
+    { name: "Create Project", link: "/addProjects", icon: FaRegClipboard },
+   // { name: "Employees", link: "/employees", icon: FaClipboardUser },
     { name: "Progress", link: "/progress", icon: GiProgression },
   ];
   const [open, setOpen] = useState(true);

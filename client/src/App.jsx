@@ -12,6 +12,10 @@ import AssignEmployee from "./pages/ProjectCreationTeam/AssignEmployee";
 import AssignPM from "./pages/ProjectCreationTeam/AssignPM";
 import ContactForm from "./pages/ContactForm";
 import ProjectsList from "./pages/ProjectCreationTeam/ProjectList";
+import CreationDashboard from "./pages/ProjectCreationTeam/CreationDashboard";
+
+
+
 
 {/*Rashmi*/}
 import SideNavigationClient from "./components/Client/SideNavigationClient";
@@ -77,9 +81,10 @@ const App = () => {
         <Route path="/assignEmployee" element={<AssignEmployee/>}/>
         <Route path="/assignPM" element={<AssignPM/>}/>
         <Route path="/projectslist" element={<ProjectsList/>}/>
+        <Route path="/creationDashboard" element={<CreationDashboard/>}/>
        
 
-        {/*ProjectManager */}
+        
         <Route path="/pmhome" element={<HomePM />} />
         <Route path="/topNavigationPM" element={<TopNavigationPM />} />
         <Route path="/sideNavigationPM" element={<SideNavigationPM />} />
