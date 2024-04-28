@@ -20,14 +20,7 @@ const AddProject = () => {
   const [createdDate, setCreatedDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-  const handleAssignGeneralManager = () => {
-    navigate("/assign-general-manager");
-  };
-
-  const handleAssignProjectManager = () => {
-    navigate("/assign-project-manager");
-  };
-
+  // Function to send project data to the server
   const saveProject = async (e) => {
     e.preventDefault();
 
@@ -42,22 +35,35 @@ const AddProject = () => {
       projectImage,
     };
 
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/api/project/createProject",
-        project
-      );
+  try {
+    // Send project data to the server
+    const response = await axios.post(
+      "http://localhost:8080/api/project/createProject",
+      project
+    );
 
-      if (response.status === 200) {
-        console.log("Project created successfully!");
-        navigate("/projects");
-      } else {
-        console.error("Failed to create project");
-      }
-    } catch (error) {
-      console.error("Error creating project:", error);
+    // Check response status
+    if (response.status === 200) {
+      console.log("Project created successfully!");
+      // Optionally, redirect to another page after successful creation
+      navigate("/projects");
+    } else {
+      console.error("Failed to create project");
     }
-  };
+  } catch (error) {
+    console.error("Error creating project:", error);
+  }
+};
+
+
+const handleAssignGeneralManager = () => {
+  navigate("/assign-general-manager");
+};
+
+const handleAssignProjectManager = () => {
+  navigate("/assign-project-manager");
+};
+
   return (
    <div>
     <TopNavigation />
