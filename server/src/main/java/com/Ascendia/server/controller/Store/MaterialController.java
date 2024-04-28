@@ -1,6 +1,7 @@
 package com.Ascendia.server.controller.Store;
 
 import com.Ascendia.server.dto.Store.MaterialDto;
+import com.Ascendia.server.dto.Store.MaterialHistoryDto;
 import com.Ascendia.server.dto.Store.UpdateMaterialDto;
 import com.Ascendia.server.repository.Store.UpdateMaterialRepository;
 import com.Ascendia.server.service.Store.MaterialService;
@@ -76,10 +77,5 @@ public class MaterialController {
         return ResponseEntity.ok(materialDto);
     }
 
-    //Build Get material history REST API
-    @GetMapping("/all/{projectId}")
-    public List<UpdateMaterialDto> getAllUpdatedMaterialsByProjectId(@PathVariable Long projectId) {
-        return updateMaterialRepository.findAllUpdatedMaterialsByProjectId(projectId);
-    }
 
 }
