@@ -60,13 +60,16 @@ function MaterialForm() {
       if(id){
         editMaterial(id, material).then((response) => {
           console.log(response.data);
-          navigator('/material')
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Material edited successfully!',
+          }).then(() => {
+            navigator('/material');
+          });
         }).catch(error => {
           console.error(error)
         })
-
-
-        
       } else {
         createMaterial(material)
           .then((response) => {

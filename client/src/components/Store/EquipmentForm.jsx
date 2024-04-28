@@ -3,6 +3,7 @@ import SideNavigationStore from "./SideNavigationStore"; // Adjust the path base
 import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
 import { createEquipment, editEquipment, getEquipment } from '../../services/StoreServices'
 import { useNavigate, useParams } from 'react-router-dom'
+import Swal from 'sweetalert2';
 
 function EquipmentForm() {
   const [open, setOpen] = useState(true);
@@ -54,14 +55,26 @@ function EquipmentForm() {
       if(id){
         editEquipment(id, equipment).then((response) => {
           console.log(response.data)
-          navigator('/equipment')
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Equipment edited successfully!',
+          }).then(() => {
+            navigator('/equipment');
+          });
         }).catch(error => {
           console.error(error)
         })
       }else{
           createEquipment(equipment).then((response) => {
           console.log(response.data);
-          navigator('/equipment')
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Equipment created successfully!',
+          }).then(() => {
+            navigator('/equipment');
+          });
         }).catch(error => {
            console.error(error)
         })
