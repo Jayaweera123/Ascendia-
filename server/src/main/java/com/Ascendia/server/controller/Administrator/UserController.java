@@ -1,16 +1,13 @@
 package com.Ascendia.server.controller.Administrator;
 
 import lombok.AllArgsConstructor;
-
 import  com.Ascendia.server.dto.Administrator.UserDto;
-
 import com.Ascendia.server.service.Administrator.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 
@@ -31,13 +28,6 @@ public class UserController {
         UserDto savedUser = userService.addUser(userDto, profileImage);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
-
-    /*@PostMapping("/create")
-    public ResponseEntity<UserDto> createUser(@ModelAttribute UserDto userDto,
-                                              @RequestParam("profileImage") MultipartFile profileImage) {
-        UserDto createdUser = userService.createUser(userDto, profileImage);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-    }*/
 
 
     //Build Get User REST API

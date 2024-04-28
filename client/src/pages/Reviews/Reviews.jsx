@@ -10,17 +10,18 @@ import { LiaCommentsSolid } from "react-icons/lia";
 
 import { format } from 'date-fns'; // Import date-fns for formatting dates
 import { reviewList } from "../../services/ReviewService";
+import { useParams } from "react-router-dom";
 
 const Reviews = () => {
   const [open, setOpen] = useState(true);
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [reviews, setReviews] = useState([]);
   const [reviewText, setReviewText] = useState('');
-  const handlePopoverToggle = () => {
-    setIsPopoverOpen(!isPopoverOpen);
-  };
+  const { user } = useParams();
+  const { firstName } = useParams();
+  
 
   
-  const [firstName, setFirstName] = useState('');
+  
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -28,7 +29,7 @@ const Reviews = () => {
   const [department, setDepartment] = useState('');
   const [profilePhoto, setProfilePhoto] = useState('');
   const [addedDate, setAddedDate] = useState('');
-  const { userID } = useParams(); // Get the user ID from the URL parameters
+  
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
@@ -38,30 +39,19 @@ const Reviews = () => {
   });
   const navigator = useNavigate();
 
-  // useEffect hook to fetch user data if editing an existing user
   useEffect(() => {
-    if (userID) {
-      reviewList(userID)
-        .then((response) => {
-          // Set state with user data fetched from the server
-          setFirstName(response.data.firstName);
-          setLastName(response.data.lastName);
-          setEmail(response.data.email);
-          setPhoneNumber(response.data.phoneNumber);
-          setDesignation(response.data.designation);
-          setDepartment(response.data.department);
-          setProfilePhoto(response.data.profilePhoto);
-          setAddedDate(response.data.addedDate);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-  }, [userID]);
+    reviewList().then((response) => {
+        setReviews(response.data);
+    }).catch(error => {
+        console.error(error);
+    })
+    
+  }, []);
+
 
   const handleCancelClick = () => {
     // Add logic here to clear the form data
-    console.log('Form data cleared!');
+    console.log('Form data cleared!'); 
   };
 
   const handleSubmit = () => {
@@ -198,15 +188,15 @@ const Reviews = () => {
                 <img src={review.user.profilePicUrl} alt="" className="w-10 h-10 rounded-full bg-gray-50" />
                 <div className="text-sm leading-6">
                   <p className="font-semibold text-gray-900">
-                    <a href={review.author.href}>
+                    {/*<a href={review.author.href}>*/}
                       <span className="absolute inset-0" />
                       <div className="flex flex-row text-base font-semibold">
-                            <div>{user.firstName}</div>
-                            <div className="ml-1">{user.lastName}</div>
+                            <div>{review.user.firstName}</div>
+                            <div className="ml-1">{review.user.lastName}</div>
                       </div>
-                    </a>
+                    
                   </p>
-                  <p className="text-gray-600">{user.userId}</p>
+                  <p className="text-gray-600">{review.user.userID}</p>
                 </div>
               </div>
             </article>

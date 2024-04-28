@@ -1,5 +1,5 @@
 // Home.jsx
-import React, { useState } from "react";
+import React, { useState, useParams } from "react";
 import SideNavigationClient from "../../components/Client/SideNavigationClient"; // Adjust the path based on your project structure
 import TopNavigationClient from "../../components/Client/TopNavigationClient";
 import { MdOutlineRateReview } from "react-icons/md";
@@ -14,6 +14,7 @@ const AddReview = () => {
   const handlePopoverToggle = () => {
     setIsPopoverOpen(!isPopoverOpen);
   };
+  const { userID } = useParams();
 
   const handleCancelClick = () => {
     // Add logic here to clear the form data
