@@ -1,4 +1,3 @@
-// Home.jsx
 import React, { useState } from "react"; //Usestate
 import TopNavigation from "../../components/TopNavigation";
 import SideNavigation from "../../components/ProjectManager/SideNavigation";

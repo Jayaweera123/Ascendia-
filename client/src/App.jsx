@@ -82,9 +82,12 @@ const App = () => {
         <Route path="/assignPM" element={<AssignPM/>}/>
         <Route path="/projectslist" element={<ProjectsList/>}/>
         <Route path="/creationDashboard" element={<CreationDashboard/>}/>
-       
+        <Route path="/addEmployee" element={<AssignPM/>}/>
+    
 
-        
+
+
+
         <Route path="/pmhome" element={<HomePM />} />
         <Route path="/topNavigationPM" element={<TopNavigationPM />} />
         <Route path="/sideNavigationPM" element={<SideNavigationPM />} />
