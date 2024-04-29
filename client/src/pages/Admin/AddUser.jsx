@@ -87,7 +87,7 @@ const AddUser = () => {
   };
 
   // Function to handle form submission for adding or editing a user
-  async function saveOrEditUser(e) {
+  {/*async function saveOrEditUser(e) {
     e.preventDefault(); // Prevent default form submission behavior
 
     // Validate form inputs
@@ -138,7 +138,7 @@ const AddUser = () => {
         console.error(error);
       }
     }
-  }
+  } */}
 
   // Function to generate a random 5-digit user ID
   {/*function generateRandomUserID() {
@@ -507,7 +507,7 @@ const AddUser = () => {
                   <div className="flex items-center justify-end mt-6 mb-5 mr-5 gap-x-6">
                     <button
                       type="submit"
-                      onClick={saveOrEditUser}
+                      onClick={handleSubmit}
                       className="px-3 py-2 text-xl font-semibold text-white bg-[#101d3f] rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
                       {userID ? 'Update' : 'Add'}
