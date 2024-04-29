@@ -130,27 +130,25 @@ const UserList = () => {
                 <thead className="text-sm text-white uppercase bg-gray-500 ">
                   {/* Table headers */}
                   <tr>
-                    <th scope="col" className="px-5 py-3 w-28">
+                    <th scope="col" className="w-5 px-5 py-3">
                       User Id
                     </th>
                     <th scope="col" className="w-24 px-5 py-3">
                       Name
                     </th>
-                    <th scope="col" className="w-56 px-4 py-3">
+                    <th scope="col" className="w-64 px-4 py-3">
                       Designation
                     </th>
-                    <th scope="col" className="px-4 py-3 w-52">
+                    <th scope="col" className="w-10 px-3 py-3">
                       Department
                     </th>
-                    <th scope="col" className="w-20 px-4 py-3">
+                    <th scope="col" className="w-10 px-4 py-3">
                       Phone Number
                     </th>
-                    <th scope="col" className="w-10 px-4 py-3">
+                    <th scope="col" className="px-4 py-3 w-30">
                       Username
                     </th>
-                    <th scope="col" className="w-32 px-5 py-3">
-                      Profile Image
-                    </th>
+                
                     <th scope="col" className="px-5 py-3 w-15">
                       Actions
                     </th>
