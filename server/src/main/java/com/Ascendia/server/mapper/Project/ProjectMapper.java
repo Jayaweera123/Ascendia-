@@ -7,7 +7,6 @@ import com.Ascendia.server.entity.Project.Project;
 public class ProjectMapper {
     public static ProjectDto mapToProjectDto(Project project) {
         return new ProjectDto(
-                project.getProjectId(),
                 project.getProjectName(),
                 project.getProjectType(),
                 project.getProjectDescription(),
@@ -21,7 +20,6 @@ public class ProjectMapper {
 
     public static Project mapProject(ProjectDto projectDto) {
         return new Project(
-                projectDto.getProjectId(), // Convert String to Long
                 projectDto.getProjectName(),
                 projectDto.getProjectType(),
                 projectDto.getProjectDescription(),

@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectDto {
-    private Long projectId;
     private String projectName;
     private String projectType;
     private String projectDescription;

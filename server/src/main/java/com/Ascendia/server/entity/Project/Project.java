@@ -42,4 +42,15 @@ public class Project {
 
     @Column(name = "image")
     private String image;
+
+    public Project(String projectName, String projectType, String projectDescription, String projectStatus, LocalDate createdDate, LocalDate endDate, String pmId, String image) {
+        this.projectName = projectName;
+        this.projectType = projectType;
+        this.projectDescription = projectDescription;
+        this.projectStatus = projectStatus;
+        this.createdDate = createdDate;
+        this.endDate = endDate;
+        this.pmId = pmId;
+        this.image = image;
+    }
 }
