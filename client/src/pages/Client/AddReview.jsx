@@ -9,12 +9,15 @@ import { format } from 'date-fns'; // Import date-fns for formatting dates
 
 const AddReview = () => {
   const [open, setOpen] = useState(true);
+
+  const [reviews, setReviews] = usestate
+  
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [reviewText, setReviewText] = useState('');
   const handlePopoverToggle = () => {
     setIsPopoverOpen(!isPopoverOpen);
   };
-  const { userID } = useParams();
+  //const { userID } = useParams();
 
   const handleCancelClick = () => {
     // Add logic here to clear the form data
@@ -29,7 +32,7 @@ const AddReview = () => {
     setIsPopoverOpen(false); // Close the popover after submission
   };
 
-  const posts = [{
+  {/*const posts = [{
     id: 1,
     title: 'Timely Delivery',
     href: '#',
@@ -100,7 +103,7 @@ const AddReview = () => {
         'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
     },
   },
-]
+]*/}
 
 
   return (

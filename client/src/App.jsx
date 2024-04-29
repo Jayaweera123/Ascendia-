@@ -29,11 +29,12 @@ import Progress from "./pages/Progress/Progress";
 import AddUser from "./pages/Admin/AddUser";
 import AdDashboard from "./pages/Admin/AdDashboard";
 import UserList from "./pages/Admin/UserList";
+import AddUserWork from "./pages/Admin/AddUserWork";
 
 {/* Rashmi - Client */}
 //import ClDashboard from "./pages/Client/ClDashboard";
 import AddReview from "./pages/Client/AddReview";
-import Reviews from "./pages/Reviews/Reviews";
+//import Reviews from "./pages/Reviews/Reviews";
 
 {/*Deshani*/}
 import Dashboard from "./pages/Store/Dashboard";
@@ -126,11 +127,15 @@ const App = () => {
         <Route path="/edituser/:id" element={<AddUser/>}/>
         <Route path="/admin/dashboard" element={<AdDashboard/>}/>
         <Route path="/userlist" element={<UserList/>}/>
+        <Route path="/adduserwork" element={<AddUserWork/>}/>
+
 
 
       {/* Rashmi - Client */}
         {/*<Route path="/client/dashboard" element={<ClDashboard/>}/>*/}
         <Route path="/addreview" element={<AddReview />} />
+        
+
 
       {/* Rashmi - Login */}
         <Route path="/login" element={<Login />} />

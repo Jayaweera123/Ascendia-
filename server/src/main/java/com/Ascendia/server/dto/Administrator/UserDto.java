@@ -27,6 +27,13 @@ public class UserDto {
     private boolean active;
 
 
+
+    // Getter for userID
+    public Long getUserID() {
+        return userID;
+    }
+
+
     // Setter for username (not obtained from frontend)
     public void setUsername(String username) {
         this.username = username;

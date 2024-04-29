@@ -42,6 +42,7 @@ public class ReviewController {
             this.userDto = userDto;
         }
     }
+    */}
 
 
     //Build AddReview REST API
@@ -51,7 +52,7 @@ public class ReviewController {
         return new ResponseEntity<>(savedReview, HttpStatus.CREATED);
     }
 
-    */}
+
 
     @GetMapping("{id}")
     public ResponseEntity<ReviewDto> getReviewById(@PathVariable("id") Long reviewID){

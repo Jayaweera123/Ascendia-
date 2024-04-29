@@ -148,8 +148,8 @@ const UserList = () => {
                     <th scope="col" className="w-10 px-4 py-3">
                       Username
                     </th>
-                    <th scope="col" className="px-5 py-3 w-15">
-                      Profile Picture
+                    <th scope="col" className="w-32 px-5 py-3">
+                      Profile Image
                     </th>
                     <th scope="col" className="px-5 py-3 w-15">
                       Actions
@@ -170,7 +170,7 @@ const UserList = () => {
                         class="flex items-center px-5 py-3 text-gray-900 whitespace-nowrap dark:text-black"
                       >
                         <img
-                          src={user.profilePicUrl} // Assuming `profileImage` is the URL or base64 data received from the backend
+                          src={user.profileImage} 
                           className="w-10 h-10 rounded-full"
                           alt={`Profile of ${user.firstName} ${user.lastName}`}
                         />
@@ -188,13 +188,13 @@ const UserList = () => {
                       <td class="px-4 py-3">{user.department}</td>
                       <td class="px-4 py-3">{user.phoneNumber}</td>
                       <td class="px-4 py-3">{user.username}</td>
-                      <td class="px-4 py-3">{user.profilePicUrl}</td> {/* Display profile pic URL */}
+                      
                       {/* Buttons for editing and deleting users */}
                       <td class="px-2 py-3">
                         <button
                           class="inline-flex flex-row gap-1 pb-2 pl-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-[#101d3f] dark:text-white dark:border-gray-100 dark:hover:bg-gray-400 dark:hover:border-gray-100 dark:focus:ring-gray-100"
                           type="button"
-                          onClick={() => editUser(user.userId)}
+                          onClick={() => editUser(user.userID)}
                         >
                           <div>
                             <LiaUserEditSolid size={20} />
@@ -204,7 +204,7 @@ const UserList = () => {
                         <button
                           class="inline-flex flex-row gap-1 pb-2 pl-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-red-600 dark:text-white dark:border-gray-100 dark:hover:bg-gray-400 dark:hover:border-gray-100 dark:focus:ring-gray-100"
                           type="button"
-                          onClick={() => removeUser(user.userId)}
+                          onClick={() => removeUser(user.userID)}
                         >
                           <div>
                             <LiaUserTimesSolid size={20} />
