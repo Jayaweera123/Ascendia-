@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { getAllProjectCards } from "../../services/ProjectService.jsx";
 import { Link } from "react-router-dom";
 import { MdEdit, MdDelete } from "react-icons/md";
+import Swal from "sweetalert2";
+
 
 const ProjectCard = () => {
   const [projects, setProjects] = useState([]);
@@ -15,6 +17,7 @@ const ProjectCard = () => {
         console.error(error);
       });
   }, []);
+  
 
   return (
     <>

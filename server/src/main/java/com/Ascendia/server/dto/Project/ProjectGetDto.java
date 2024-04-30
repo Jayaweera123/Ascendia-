@@ -14,7 +14,9 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectDto {
+
+public class ProjectGetDto {
+    private Long projectId;
     private String projectName;
     private String projectType;
     private String projectDescription;
@@ -23,6 +25,4 @@ public class ProjectDto {
     private LocalDate endDate;
     private String pmId;
     private String image;
-
-
 }

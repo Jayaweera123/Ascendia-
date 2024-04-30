@@ -1,7 +1,9 @@
 package com.Ascendia.server.service.Project.impl;
 
 import com.Ascendia.server.dto.Project.ProjectDto;
+import com.Ascendia.server.dto.Project.ProjectGetDto;
 import com.Ascendia.server.entity.Project.Project;
+import com.Ascendia.server.mapper.Project.ProjectGetMapper;
 import com.Ascendia.server.mapper.Project.ProjectMapper;
 import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.service.Project.ProjectService;
@@ -58,10 +60,43 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectDto> getAllProjects() {
+    public List<ProjectGetDto> getAllProjects() {
         List<Project> projects = projectRepository.findAll();
-        return projects.stream().map((project) -> ProjectMapper.mapToProjectDto(project))
+        return projects.stream().map((project) -> ProjectGetMapper.mapToProjectGetDto(project))
                 .collect(Collectors.toList());
 
+    }
+
+    public void deleteProjectById(Long projectId) {
+        Project project = projectRepository.findByProjectId(projectId);
+        if (project != null) {
+            projectRepository.delete(project);
+        } else {
+            // Handle case where project with given name doesn't exist
+            throw new IllegalArgumentException("Project with name " + projectId + " not found");
+        }
+    }
+    @Override
+    public ProjectDto updateProjectById(Long projectId, ProjectDto projectDto) {
+        Project existingProject = projectRepository.findByProjectId(projectId);
+        if (existingProject != null) {
+            // Update the fields of existing project entity with the values from DTO
+            existingProject.setProjectType(projectDto.getProjectType());
+            existingProject.setProjectDescription(projectDto.getProjectDescription());
+            existingProject.setProjectStatus(projectDto.getProjectStatus());
+            existingProject.setCreatedDate(projectDto.getCreatedDate());
+            existingProject.setEndDate(projectDto.getEndDate());
+            existingProject.setPmId(projectDto.getPmId());
+            existingProject.setImage(projectDto.getImage());
+
+            // Save the updated project entity
+            Project updatedProject = projectRepository.save(existingProject);
+
+            // Map the updated project entity back to DTO and return
+            return ProjectMapper.mapToProjectDto(updatedProject);
+        } else {
+            // Handle case where project with given name doesn't exist
+            throw new IllegalArgumentException("Project with name " + projectId + " not found");
+        }
     }
 }
