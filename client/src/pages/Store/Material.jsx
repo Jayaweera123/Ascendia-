@@ -123,7 +123,7 @@ function Material() {
                         <table className="min-w-full text-sm bg-white">
                             <thead>
                                 <tr className="text-gray-700 border-b bg-blue-gray-100 border-blue-gray-50 border-y">
-                                <th scope="col" className="p-4"> </th>
+                                {/* <th scope="col" className="p-4"> </th> */}
                                 <th className="px-4 py-5 text-left">Material Code</th>
                                 <th className="px-4 py-5 text-left">Material Name</th>
                                 <th className="px-4 py-5 text-left">Quantity</th>
@@ -136,15 +136,14 @@ function Material() {
                             <tbody className="text-blue-gray-900">
                                 {
                                     records
-                                    // .filter(material => material.projectId === givenProjectId)
                                     .map(material =>
                                         <tr className="bg-white border-b border-blue-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600" key={material.materialId}>
-                                            <td class="w-4 p-4">
+                                            {/* <td class="w-4 p-4">
                                                 <div class="flex items-center">
                                                     <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onChange={() => handleCheckboxChange(material.materialCode)}/>
                                                     <label for="checkbox-table-search-1" className="sr-only">checkbox</label>
                                                 </div>
-                                            </td>
+                                            </td> */}
                                             <td className="px-4 py-3">{material.materialCode}</td>
                                             <td className="px-4 py-3">{material.materialName}</td>
                                             <td className="px-4 py-3">{material.quantity}</td>
@@ -167,7 +166,7 @@ function Material() {
                                                         </svg>
 
                                                     </button>
-                                                    <div className="absolute hidden px-4 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
+                                                    <div className="absolute hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
                                                         Edit
                                                     </div>
                                                 </div>
@@ -192,8 +191,8 @@ function Material() {
 
 
                                                     </button>
-                                                    <div className="absolute hidden px-4 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
-                                                        Update
+                                                    <div className="absolute hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
+                                                        Add/Issue
                                                     </div>
                                                 </div>
 

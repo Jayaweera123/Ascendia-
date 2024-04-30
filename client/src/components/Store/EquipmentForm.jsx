@@ -4,6 +4,7 @@ import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based 
 import { createEquipment, editEquipment, getEquipment } from '../../services/StoreServices'
 import { useNavigate, useParams } from 'react-router-dom'
 import Swal from 'sweetalert2';
+import { searchEquipment } from '../../services/StoreServices';
 
 function EquipmentForm() {
   const [open, setOpen] = useState(true);
@@ -44,47 +45,70 @@ function EquipmentForm() {
 
   }, [id]) 
 
-  function saveOrEditEquipment(e){
+  function saveOrEditEquipment(e) {
     e.preventDefault();
+  
+    if (validateForm()) {
+      const equipment = { equipmentCode, equipmentName, quantity, description, createdDate, projectId };
+  
+      const confirmationOptions = {
+        title: 'Edit this equipment?',
+        text: 'Are you sure you want to edit this equipment?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#001b5e',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Edit',
+        cancelButtonText: 'Cancel',
+      };
 
-    if(validateForm()){
+      const editEquipmentAndShowConfirmation = () => {
+        editEquipment(id, equipment)
+          .then((response) => {
+            console.log(response.data);
+            Swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: 'Equipment edited successfully!',
+              confirmButtonColor: '#001b5e'
+            }).then(() => {
+              navigator('/equipment');
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
 
-      const equipment = {equipmentCode, equipmentName,quantity,description,createdDate, projectId}
-      console.log(equipment)
+      const createEquipmentAndShowSuccess = () => {
+        createEquipment(equipment)
+          .then((response) => {
+            console.log(response.data);
+            Swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: 'Equipment created successfully!',
+              confirmButtonColor: '#001b5e'
+            }).then(() => {
+              navigator('/equipment');
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
 
       if(id){
-        editEquipment(id, equipment).then((response) => {
-          console.log(response.data)
-          Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: 'Equipment edited successfully!',
-          }).then(() => {
-            navigator('/equipment');
-          });
-        }).catch(error => {
-          console.error(error)
+        Swal.fire(confirmationOptions).then((result) => {
+          if (result.isConfirmed) {
+            editEquipmentAndShowConfirmation();
+          }
         })
-      }else{
-          createEquipment(equipment).then((response) => {
-          console.log(response.data);
-          Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: 'Equipment created successfully!',
-          }).then(() => {
-            navigator('/equipment');
-          });
-        }).catch(error => {
-           console.error(error)
-        })
-  
+      } else {
+        createEquipmentAndShowSuccess();
       }
-  
-      
     }
-
-  }
+}
 
 function handleCancel(e){
   navigator('/equipment')
@@ -97,26 +121,30 @@ function validateForm(){
   const errorsCopy = {... errors} //spread operator- copy errors object into errorsCopy 
 
   if(equipmentCode.trim()){
+    // Check for duplicate equipmentCode and equipmentName only for new equipment creation
+    if (equipmentCodeExists(equipmentCode, projectId)) {
+      errorsCopy.equipmentCode = '*Equipment code already taken';
+      valid = false;
+    } else {
     errorsCopy.equipmentCode = '';
+    }
   }else{
     errorsCopy.equipmentCode = '*Equipment code is required';
     valid = false;
   }
 
   if(equipmentName.trim()){
+    if (equipmentNameExists(equipmentName, projectId)) {
+      errorsCopy.equipmentName = '*Equipment name already taken';
+      valid = false;
+    } else {
     errorsCopy.equipmentName = '';
+    }
   }else{
     errorsCopy.equipmentName = '*Equipment name is required';
     valid = false;
   }
-
-  if(equipmentCode.trim()){
-    errorsCopy.equipmentCode = '';
-  }else{
-    errorsCopy.equipmentCode = '*Equipment code is required';
-    valid = false;
-  }
-
+  
   if(!isNaN(quantity) && Number.isInteger(Number(quantity))){
     if(quantity >= 0 ){
       errorsCopy.quantity = '';
@@ -140,6 +168,28 @@ function validateForm(){
 
   return valid;
 }
+
+// Function to check if equipmentCode already exists
+const equipmentCodeExists = async (code, projectId) => {
+  try {
+    const response = await searchEquipment(projectId, code);
+    return response.data.trim();
+  } catch (error) {
+    console.error('Error checking equipmentCode existence:', error);
+    return true; // Treat errors as if the code exists to avoid false negatives
+  }
+};
+
+// Function to check if equipmentName already exists
+const equipmentNameExists = async (name, projectId) => {
+  try {
+    const response = await searchEquipment(projectId, name);
+    return response.data.trim();
+  } catch (error) {
+    console.error('Error checking equipmentName existence:', error);
+    return true; // Treat errors as if the name exists to avoid false negatives
+  }
+};
 
 function formTitle(){
  if(id){
@@ -222,7 +272,7 @@ function formTitle(){
                 </label>
                 <div className="mt-3">
                   <input
-                    type="text"
+                    type="number"
                     placeholder='Enter Quantity of equipment'
                     name="quantity"
                     id="quantity"

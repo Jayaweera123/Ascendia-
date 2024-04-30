@@ -4,6 +4,7 @@ import SideNavigationStore from "./SideNavigationStore"; // Adjust the path base
 import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
 import { createMaterial, editMaterial, getMaterial } from '../../services/StoreServices'
 import { useNavigate, useParams } from 'react-router-dom'
+import { searchMaterial } from '../../services/StoreServices'
 
 function MaterialForm() {
   const [open, setOpen] = useState(true);
@@ -57,20 +58,35 @@ function MaterialForm() {
       const material = {materialCode, materialName,quantity,measuringUnit,minimumLevel,description, createdDate, projectId}
       console.log(material)
 
-      if(id){
+      const confirmationOptions = {
+        title: 'Edit this material?',
+        text: 'Are you sure you want to edit this material?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#001b5e',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Edit',
+        cancelButtonText: 'Cancel',
+        
+      };
+
+      const editMaterialAndShowConfirmation = () => {
         editMaterial(id, material).then((response) => {
           console.log(response.data);
           Swal.fire({
             icon: 'success',
             title: 'Success!',
             text: 'Material edited successfully!',
+            confirmButtonColor: '#001b5e'
           }).then(() => {
             navigator('/material');
           });
         }).catch(error => {
           console.error(error)
         })
-      } else {
+      }
+
+      const createMaterialAndShowSuccess = () => {
         createMaterial(material)
           .then((response) => {
             console.log(response.data);
@@ -78,6 +94,7 @@ function MaterialForm() {
               icon: 'success',
               title: 'Success!',
               text: 'Material created successfully!',
+              confirmButtonColor: '#001b5e'
             }).then(() => {
               navigator('/material');
             });
@@ -86,39 +103,51 @@ function MaterialForm() {
             console.error(error);
           });
       }
-      
-    }
 
-  }
+      if(id){
+        Swal.fire(confirmationOptions).then((result) => {
+          if (result.isConfirmed) {
+            editMaterialAndShowConfirmation();
+          }
+        })
+      } else {
+        createMaterialAndShowSuccess();
+      }
+    }
+}
 
 function handleCancel(e){
   navigator('/material')
 }
 
 //Form validation
-function validateForm(){
+async function validateForm(){
   let valid = true;
 
   const errorsCopy = {... errors} //spread operator- copy errors object into errorsCopy 
 
   if(materialCode.trim()){
+    // Check for duplicate materialCode and materialName only for new material creation
+    if (materialCodeExists(materialCode, projectId)) {
+      errorsCopy.materialCode = '*Material code already taken';
+      valid = false;
+    } else {
     errorsCopy.materialCode = '';
+    }
   }else{
     errorsCopy.materialCode = '*Material code is required';
     valid = false;
   }
 
   if(materialName.trim()){
+    if (materialNameExists(materialName, projectId)) {
+      errorsCopy.materialName = '*Material name already taken';
+      valid = false;
+    } else {
     errorsCopy.materialName = '';
+    }
   }else{
     errorsCopy.materialName = '*Material name is required';
-    valid = false;
-  }
-
-  if(materialCode.trim()){
-    errorsCopy.materialCode = '';
-  }else{
-    errorsCopy.materialCode = '*Material code is required';
     valid = false;
   }
 
@@ -164,6 +193,28 @@ function validateForm(){
 
   return valid;
 }
+
+// Function to check if materialCode already exists
+const materialCodeExists = async (code, projectId) => {
+  try {
+    const response = await searchMaterial(projectId, code);
+    return response.data.trim();
+  } catch (error) {
+    console.error('Error checking materialCode existence:', error);
+    return true; // Treat errors as if the code exists to avoid false negatives
+  }
+};
+
+// Function to check if materialName already exists
+const materialNameExists = async (name, projectId) => {
+  try {
+    const response = await searchMaterial(projectId, name);
+    return response.data.trim();
+  } catch (error) {
+    console.error('Error checking materialName existence:', error);
+    return true; // Treat errors as if the name exists to avoid false negatives
+  }
+};
 
 function formTitle(){
  if(id){
@@ -247,7 +298,7 @@ function formTitle(){
                     </label>
                     <div className="mt-3">
                       <input
-                        type="text"
+                        type="number"
                         placeholder='Enter Quantity of material'
                         name="quantity"
                         id="quantity"
@@ -316,7 +367,7 @@ function formTitle(){
                     </label>
                     <div className="mt-3">
                       <input
-                        type="text"
+                        type="number"
                         placeholder='Enter Minimum Level'
                         name="minimumLevel"
                         id="minimumLevel"
