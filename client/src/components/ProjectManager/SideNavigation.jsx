@@ -11,8 +11,8 @@ const SideNavigation = () => {
   const menus = [
     { name: 'Home', link: '/pmhome', icon: IoHome },
     { name: 'Dashboard', link: '/creationDashboard', icon: PiProjectorScreenChartBold },
-    { name: 'Projects', link: '/projectList', icon: MdOutlineDashboard, margin: true,},
-    { name: 'Create Project', link: '/addProjects', icon: FaRegClipboard },
+    { name: 'Projects', link: '/projectslist', icon: MdOutlineDashboard, margin: true,},
+    { name: 'Create Project', link: '/addproject', icon: FaRegClipboard },
     { name: 'Progress', link: '/progress', icon: GiProgression },
   ];
   const [open, setOpen] = React.useState(true);
