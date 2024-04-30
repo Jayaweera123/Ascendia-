@@ -1,6 +1,5 @@
 package com.Ascendia.server.controller.Client;
 
-import com.Ascendia.server.dto.Administrator.UserDto;
 import com.Ascendia.server.dto.Client.ReviewDto;
 import com.Ascendia.server.service.Client.ReviewService;
 import lombok.AllArgsConstructor;
@@ -8,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @CrossOrigin("*")
@@ -15,55 +15,26 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping("/api/reviews")
 public class ReviewController {
+    private final ReviewService reviewService;
 
-
-    private ReviewService reviewService;
-    {/*
-    //New DTO to encapsulate ReviewDto and UserDto
-    public static class ReviewUserDto {
-        private ReviewDto reviewDto;
-        private UserDto userDto;
-
-        // Getters and setters
-        // You can generate these using your IDE or manually
-        public ReviewDto getReviewDto() {
-            return reviewDto;
-        }
-
-        public void setReviewDto(ReviewDto reviewDto) {
-            this.reviewDto = reviewDto;
-        }
-
-        public UserDto getUserDto() {
-            return userDto;
-        }
-
-        public void setUserDto(UserDto userDto) {
-            this.userDto = userDto;
-        }
-    }
-    */}
-
-
-    //Build AddReview REST API
-    @PostMapping("/create")
+    // Build AddReview REST API
+    @PostMapping("/add")
     public ResponseEntity<ReviewDto> addReview(@RequestBody ReviewDto reviewDto){
+        // Set reviewed date to current date if not provided
+        if (reviewDto.getReviewedDate() == null) {
+            reviewDto.setReviewedDate(LocalDate.now());
+        }
+
         ReviewDto savedReview = reviewService.addReview(reviewDto);
         return new ResponseEntity<>(savedReview, HttpStatus.CREATED);
     }
 
+    // Other endpoints for getting, updating, and deleting reviews can be added here
 
-
-    @GetMapping("{id}")
-    public ResponseEntity<ReviewDto> getReviewById(@PathVariable("id") Long reviewID){
-        ReviewDto reviewDto = reviewService.getReviewById(reviewID);
-        return ResponseEntity.ok(reviewDto);
-    }
-
-
-    @GetMapping
-    public ResponseEntity<List<ReviewDto>>  getAllReviews() {
-        List<ReviewDto> reviews = reviewService.getAllReviews();
-        return ResponseEntity.ok(reviews);
+    // For getAllReviews endpoint
+    @GetMapping("/getAll")
+    public ResponseEntity<List<ReviewDto>> getAllReviews() {
+        List<ReviewDto> reviewDtos = reviewService.getAllReviews();
+        return ResponseEntity.ok(reviewDtos);
     }
 }

@@ -148,7 +148,6 @@ const UserList = () => {
                     <th scope="col" className="px-4 py-3 w-30">
                       Username
                     </th>
-                
                     <th scope="col" className="px-5 py-3 w-15">
                       Actions
                     </th>

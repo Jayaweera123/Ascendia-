@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +37,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto addUser(UserDto userDto, MultipartFile profileImage) {
+        // Generate userID (example: using UUID)
+        Long userId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        userDto.setUserID(userId);
 
+        // Convert UserDto to User entity
+        User user = UserMapper.mapToUser(userDto);
+
+        // Generate password
+        String password = generatePassword(userDto);
+        user.setPassword(password); // Set the generated password
 
         // Check if a profile image is provided
         if (profileImage != null && !profileImage.isEmpty()) {
@@ -58,10 +68,6 @@ public class UserServiceImpl implements UserService {
         String username = generateUsername(userDto.getFirstName(), userDto.getLastName(), userDto.getDepartment(), userDto.getUserID());
         userDto.setUsername(username);
 
-        // Generate password
-        String password = generatePassword(userDto);
-        userDto.setPassword(password);
-
         // Set isAvailability based on designation
         String designation = userDto.getDesignation();
         if (designation != null) {
@@ -76,17 +82,18 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        {/*if (userDto.getAddedDate() == null) {
-            userDto.setAddedDate(LocalDate.now());
-        }*/}
+        // Generate addedDate as today's date
+        userDto.setAddedDate(LocalDate.now());
 
         // Set active to true by default
         userDto.setActive(true);
 
-        // Map UserDto to User entity
-        User user = UserMapper.mapToUser(userDto);
-        // Save user entity
+        // Save user entity to generate userID
         User savedUser = userRepository.save(user);
+
+        // Set the generated userID to the UserDto
+        userDto.setUserID(savedUser.getUserID());
+
         // Map saved User entity back to UserDto
         return UserMapper.mapToUserDto(savedUser);
     }

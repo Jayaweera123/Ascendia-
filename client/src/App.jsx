@@ -12,6 +12,9 @@ import AssignEmployee from "./pages/ProjectCreationTeam/AssignEmployee";
 //import AssignPM from "./pages/ProjectCreationTeam/AssignPM";
 import ContactForm from "./pages/ContactForm";
 
+{/* Ravindu - Progress */}
+import Progress from "./pages/Progress/Progress";
+
 {/*Rashmi*/}
 import SideNavigationClient from "./components/Client/SideNavigationClient";
 import SideNavigationAdmin from "./components/Admin/SideNavigationAdmin";
@@ -22,9 +25,6 @@ import { useParams } from "react-router-dom";
 {/* Rashmi - Login */}
 import Login from "./pages/Login/Login";
 
-{/* Rashmi - Progress */}
-import Progress from "./pages/Progress/Progress";
-
 {/* Rashmi - Admin */}
 import AddUser from "./pages/Admin/AddUser";
 import AdDashboard from "./pages/Admin/AdDashboard";
@@ -34,7 +34,7 @@ import AddUserWork from "./pages/Admin/AddUserWork";
 {/* Rashmi - Client */}
 //import ClDashboard from "./pages/Client/ClDashboard";
 import AddReview from "./pages/Client/AddReview";
-//import Reviews from "./pages/Reviews/Reviews";
+//import Reviews from "./pages/Client/Reviews";
 
 {/*Deshani*/}
 import Dashboard from "./pages/Store/Dashboard";
@@ -75,6 +75,9 @@ const App = () => {
         <Route path="/topNavigation" element={<TopNavigation />} />
         <Route path="/addProject" element={<AddProject/>}/>
         <Route path="/assignEmployee" element={<AssignEmployee/>}/>
+
+        {/* Ravindu - Progress */}
+        <Route path="/progress" element={<Progress />} />
        
 
         {/*ProjectManager */}
@@ -134,16 +137,15 @@ const App = () => {
       {/* Rashmi - Client */}
         {/*<Route path="/client/dashboard" element={<ClDashboard/>}/>*/}
         <Route path="/addreview" element={<AddReview />} />
+      {/*<Route path="/reviews" element={<Reviews />} /> */}
         
 
 
       {/* Rashmi - Login */}
         <Route path="/login" element={<Login />} />
 
-      {/* Rashmi - Progress */}
-        <Route path="/progress" element={<Progress />} />
+      
 
-   
        
       </Routes>
       </BrowserRouter>

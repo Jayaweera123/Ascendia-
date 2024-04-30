@@ -1,6 +1,5 @@
 package com.Ascendia.server.dto.Client;
 
-import com.Ascendia.server.dto.Administrator.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,13 +12,24 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ReviewDto {
 
-    private Long reviewID;
     private String reviewTitle;
     private String reviewContent;
     private LocalDate reviewedDate;
-    private UserDto user; // Change the type to UserDto
+
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String profilePicUrl;
 
 
 
-    // Constructors, getters, and setters
+
+    public LocalDate getReviewedDate() {
+        return reviewedDate;
+    }
+
+    public void setReviewedDate(LocalDate reviewedDate) {
+        this.reviewedDate = reviewedDate;
+    }
+
 }

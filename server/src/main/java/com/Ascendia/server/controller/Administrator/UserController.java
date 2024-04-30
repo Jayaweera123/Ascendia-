@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -22,9 +24,14 @@ public class UserController {
     private UserService userService;
 
     // Build Add User REST API
-    @PostMapping("/create")
+    @PostMapping("/add")
     public ResponseEntity<UserDto> addUser(@ModelAttribute UserDto userDto,
                                            @RequestParam("profileImage") MultipartFile profileImage){
+
+        // Set added date to current date if not provided
+        if (userDto.getAddedDate() == null) {
+            userDto.setAddedDate(LocalDate.now());
+        }
         UserDto savedUser = userService.addUser(userDto, profileImage);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
@@ -38,7 +45,7 @@ public class UserController {
     }
 
     //Build Get All Employees REST API
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<List<UserDto>> getAllUsers(){
         List<UserDto> users = userService.getAllUsers();
         return ResponseEntity.ok(users);

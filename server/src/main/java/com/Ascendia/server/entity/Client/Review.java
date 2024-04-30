@@ -18,7 +18,7 @@ import java.time.LocalDate;
 public class Review {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy= GenerationType.IDENTITY) // Use auto-increment strategy
     @Column(name="reviewID")
     private Long reviewID;
 
@@ -31,7 +31,7 @@ public class Review {
     @Column(name="reviewedDate")
     private LocalDate reviewedDate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userID")
     private User user;
 

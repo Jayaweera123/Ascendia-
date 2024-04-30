@@ -4,7 +4,7 @@ import SideNavigationAdmin from "../../components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin";
 import { RiUserAddFill } from "react-icons/ri";
 import { FaUserEdit } from "react-icons/fa";
-import { addUser, editUser, getUser, deactivateUser } from "../../services/UserService";
+import { addUser, editUser, getUser } from "../../services/UserService";
 import { useNavigate, useParams } from "react-router-dom"; // Assuming react-router-dom is used for routing
 
 
@@ -167,26 +167,17 @@ const AddUser = () => {
       });
   }*/}
 
-  // Function to deactivate user account and clear form fields
+  // Function to clear form fields
   const removeUser = async () => {
     try {
-      await deactivateUser(userID);
-      setFormData({
-        firstName: '',
-        lastName: '',
-        phoneNumber: '',
-        email: '',
-        designation: '',
-        department: '',
-        addedDate: '',
-        profileImage: null
-      });
+    
       navigator('/userlist');
+      window.location.reload();
     } catch (error) {
-      console.error('Error deactivating user:', error);
+      console.error(error);
     }
   };
-
+  
 
   // Function to validate form inputs
   function validateForm() {

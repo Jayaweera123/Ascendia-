@@ -5,38 +5,38 @@ import com.Ascendia.server.entity.Administrator.User;
 
 public class UserMapper {
     public static UserDto mapToUserDto(User user){
-        return new UserDto(
-                user.getUserID(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getDesignation(),
-                user.getDepartment(),
-                user.getUsername(), // Keep the username as it is, since it's already generated in the backend
-                user.getPassword(), // Keep the password as it is, since it's already generated in the backend
-                user.getEmail(),
-                user.getPhoneNumber(),
-                user.getAddedDate(),
-                user.getProfilePicUrl(),
-                user.isAvailability(), // Keep the availability as it is, since it's already generated in the backend
-                user.isActive()
-        );
+        UserDto userDto = new UserDto();
+
+        userDto.setUserID(user.getUserID());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setDesignation(user.getDesignation());
+        userDto.setDepartment(user.getDepartment());
+        userDto.setUsername(user.getUsername());
+        userDto.setPassword(user.getPassword());
+        userDto.setEmail(user.getEmail());
+        userDto.setPhoneNumber(user.getPhoneNumber());
+        userDto.setProfilePicUrl(user.getProfilePicUrl());
+        userDto.setAvailability(user.isAvailability());
+        userDto.setActive(user.isActive());
+
+        return userDto;
     }
 
     public static User mapToUser(UserDto userDto){
-        return new User(
-                userDto.getUserID(),
-                userDto.getFirstName(),
-                userDto.getLastName(),
-                userDto.getDesignation(),
-                userDto.getDepartment(),
-                userDto.getUsername(), // Keep the username as it is, since it's already generated in the backend
-                userDto.getPassword(), // Keep the password as it is, since it's already generated in the backend
-                userDto.getEmail(),
-                userDto.getPhoneNumber(),
-                userDto.getAddedDate(),
-                userDto.getProfilePicUrl(),
-                userDto.isAvailability(), // Keep the availability as it is, since it's already generated in the backend
-                userDto.isActive()
-        );
+        User user = new User();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setDesignation(userDto.getDesignation());
+        user.setDepartment(userDto.getDepartment());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword());
+        user.setEmail(userDto.getEmail());
+        user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setProfilePicUrl(userDto.getProfilePicUrl());
+        user.setAvailability(userDto.isAvailability());
+        user.setActive(userDto.isActive());
+
+        return user;
     }
 }

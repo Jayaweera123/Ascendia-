@@ -15,7 +15,7 @@ const SideNavigationAdmin = () => {
     { name: "User List", link: "/userlist", icon: LuUsers2 },
     { name: "Add User", link: "/adduser", icon: RiUserAddLine },
     
-    { name: "Settings", link: "/", icon: RiSettings4Line },
+    
   ];
   const [open, setOpen] = useState(true);
 

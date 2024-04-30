@@ -2,31 +2,27 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
-import { RiSettings4Line } from "react-icons/ri";
+
 import { TbReportAnalytics } from "react-icons/tb";
 import { AiOutlineUser, AiOutlineHeart } from "react-icons/ai";
 import { FiMessageSquare, FiFolder, FiShoppingCart } from "react-icons/fi";
 import { MdOutlineRateReview } from "react-icons/md";
 import { TbTimelineEventExclamation } from "react-icons/tb";
 import { GiProgression } from "react-icons/gi";
+import { PiFilesFill } from "react-icons/pi";
 
 const SideNavigationClient = () => {
   const menus = [
     
-    { name: "dashboard", link: "/", icon: MdOutlineDashboard },
-    { name: "user", link: "/", icon: AiOutlineUser },
-    { name: "messages", link: "/", icon: FiMessageSquare },
-    { name: "analytics", link: "/", icon: TbReportAnalytics, margin: true },
-    { name: "File Manager", link: "/", icon: FiFolder },
-    { name: "Cart", link: "/", icon: FiShoppingCart },
-    { name: "Saved", link: "/", icon: AiOutlineHeart, margin: true },
-    { name: "Setting", link: "/", icon: RiSettings4Line },
     { name: "Dashboard", link: "/client/dashboard", icon: MdOutlineDashboard },
-    { name: "Add Review", link: "/addreview", icon: MdOutlineRateReview },
-    { name: "View Timeline", link: "/", icon: TbTimelineEventExclamation },
     { name: "Project Progress", link: "/progress", icon: GiProgression, margin: true },
+    { name: "Reviews", link: "/reviews", icon: PiFilesFill },
+    { name: "Add Review", link: "/addreview", icon: MdOutlineRateReview },
+    
+   // { name: "View Timeline", link: "/", icon: TbTimelineEventExclamation },
+    
    
-    { name: "Settings", link: "/", icon: RiSettings4Line },
+    
   ];
   const [open, setOpen] = useState(true);
 
