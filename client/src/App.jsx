@@ -34,7 +34,7 @@ import AddUserWork from "./pages/Admin/AddUserWork";
 {/* Rashmi - Client */}
 //import ClDashboard from "./pages/Client/ClDashboard";
 import AddReview from "./pages/Client/AddReview";
-//import Reviews from "./pages/Client/Reviews";
+import Reviews from "./pages/Client/Reviews";
 
 {/*Deshani*/}
 import Dashboard from "./pages/Store/Dashboard";
@@ -137,7 +137,7 @@ const App = () => {
       {/* Rashmi - Client */}
         {/*<Route path="/client/dashboard" element={<ClDashboard/>}/>*/}
         <Route path="/addreview" element={<AddReview />} />
-      {/*<Route path="/reviews" element={<Reviews />} /> */}
+      <Route path="/reviews" element={<Reviews />} /> 
         
 
 

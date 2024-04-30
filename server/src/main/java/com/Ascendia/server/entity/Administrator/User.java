@@ -48,7 +48,7 @@ public class User {
     @Column(name="addedDate")
     private LocalDate addedDate;
 
-    @Column(name = "profile_pic_url")
+    @Column(name = "profile_pic_url", nullable = false)
     private String profilePicUrl;
 
     @Column(name = "availability", nullable = false)

@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,17 +36,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto addUser(UserDto userDto, MultipartFile profileImage) {
-        // Generate userID (example: using UUID)
-        Long userId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
-        userDto.setUserID(userId);
-
-        // Convert UserDto to User entity
-        User user = UserMapper.mapToUser(userDto);
-
-        // Generate password
-        String password = generatePassword(userDto);
-        user.setPassword(password); // Set the generated password
-
         // Check if a profile image is provided
         if (profileImage != null && !profileImage.isEmpty()) {
             try {
@@ -68,6 +56,10 @@ public class UserServiceImpl implements UserService {
         String username = generateUsername(userDto.getFirstName(), userDto.getLastName(), userDto.getDepartment(), userDto.getUserID());
         userDto.setUsername(username);
 
+        // Generate password
+        String password = generatePassword(userDto);
+        userDto.setPassword(password);
+
         // Set isAvailability based on designation
         String designation = userDto.getDesignation();
         if (designation != null) {
@@ -82,19 +74,16 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        // Generate addedDate as today's date
-        userDto.setAddedDate(LocalDate.now());
+        if (userDto.getAddedDate() == null) {
+            userDto.setAddedDate(LocalDate.now());
+        }
 
         // Set active to true by default
         userDto.setActive(true);
 
-        // Save user entity to generate userID
+
+        User user = UserMapper.mapToUser(userDto);
         User savedUser = userRepository.save(user);
-
-        // Set the generated userID to the UserDto
-        userDto.setUserID(savedUser.getUserID());
-
-        // Map saved User entity back to UserDto
         return UserMapper.mapToUserDto(savedUser);
     }
 
@@ -113,9 +102,6 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-
-
-
     @Override
     public UserDto updateUser(Long userID, UserDto updatedUser) {
 
@@ -123,42 +109,18 @@ public class UserServiceImpl implements UserService {
                 () -> new ResourceNotFoundException("User is not exists with given Id : "+userID)
         );
 
-        // Check if the firstName field is updated
-        if (updatedUser.getFirstName() != null && !updatedUser.getFirstName().isEmpty()) {
-            user.setFirstName(updatedUser.getFirstName());
-            // Since firstName is updated, generate a new username
-            String username = generateUsername(updatedUser.getFirstName(), user.getLastName(), user.getDepartment(), user.getUserID());
-            user.setUsername(username);
-        }
-
-        // Check if the lastName field is updated
-        if (updatedUser.getLastName() != null && !updatedUser.getLastName().isEmpty()) {
-            user.setLastName(updatedUser.getLastName());
-            // Since lastName is updated, generate a new username
-            String username = generateUsername(user.getFirstName(), updatedUser.getLastName(), user.getDepartment(), user.getUserID());
-            user.setUsername(username);
-        }
-
-        // Check if the department field is updated
-        if (updatedUser.getDepartment() != null && !updatedUser.getDepartment().isEmpty()) {
-            user.setDepartment(updatedUser.getDepartment());
-            // Since department is updated, generate a new username
-            String username = generateUsername(user.getFirstName(), user.getLastName(), updatedUser.getDepartment(), user.getUserID());
-            user.setUsername(username);
-        }
-
-        // Update other fields
-        user.setDesignation(updatedUser.getDesignation());
+        user.setFirstName(updatedUser.getFirstName());
+        user.setLastName(updatedUser.getLastName());
         user.setEmail(updatedUser.getEmail());
         user.setPhoneNumber(updatedUser.getPhoneNumber());
+        user.setDesignation(updatedUser.getDesignation());
+        user.setDepartment(updatedUser.getDepartment());
         user.setProfilePicUrl(updatedUser.getProfilePicUrl());
 
-        // Save the updated user entity
         User updatedUserObj = userRepository.save(user);
 
         return UserMapper.mapToUserDto(updatedUserObj);
     }
-
 
     @Override
     public void deactivateUser(Long userID) {

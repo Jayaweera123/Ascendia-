@@ -17,6 +17,13 @@ const AddReview = () => {
   const [reviewTitle, setReviewTitle] = useState('')
   const [reviewContent, setReviewContent] = useState('')
 
+  const [errors, setErrors] = useState({
+    email: '',
+    reviewTitle: '',
+    reviewContent: '',
+  });
+
+
   // React router navigate function
   const navigator = useNavigate();
   
@@ -34,7 +41,10 @@ const AddReview = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Create review object
+    // Validate form inputs
+    if (validateForm()) {
+      
+      // Create review object
     const review = { email, reviewTitle, reviewContent };
     console.log(review);
 
@@ -42,12 +52,52 @@ const AddReview = () => {
     addReview(review)
         .then((response) => {
             console.log(response.data);
-            navigator('/reviews'); // Redirect to reviews page after successful submission
+            //navigator('/reviews'); // Redirect to reviews page after successful submission
         })
         .catch((error) => {
             console.error('Error adding review:', error);
         });
+    };
+
+    
   }
+
+    // Function to validate form inputs
+    function validateForm() {
+      let valid = true;
+  
+      // Copy errors object to prevent mutation of state directly
+      const errorsCopy = { ...errors };
+  
+      // Validate each form field
+      
+      if (email.trim()) {
+        errorsCopy.email = 'Email is required!';
+        valid = false;
+      } else {
+        errorsCopy.email = '';
+      }
+      
+      if (reviewTitle.trim()) {
+        errorsCopy.reviewTitle = 'Title is required!';
+        valid = false;
+      } else {
+        errorsCopy.reviewTitle = '';
+      }
+  
+      
+      if (reviewContent.trim()) {
+        errorsCopy.reviewContent = 'Content is required!';
+        valid = false;
+      } else {
+        errorsCopy.reviewContent = '';
+      }
+      
+      // Update errors state
+      setErrors(errorsCopy);
+  
+      return valid;
+    }
 
   return (
     <div>
@@ -83,7 +133,7 @@ const AddReview = () => {
                 {isPopoverOpen && (
                   <form method="POST" encType="multipart/form-data">
                     <div className="grid grid-cols-1 mt-10 gap-x-6 gap-y-8 sm:grid-cols-12">
-                      <div className="sm:col-span-6">
+                      <div className="sm:col-span-8">
                         <label htmlFor="email" className="block text-base font-medium leading-6 text-gray-900">
                           Email Address
                         </label>
@@ -94,8 +144,9 @@ const AddReview = () => {
                             type="email"
                             autoComplete="email"
                             onChange={(e) => setEmail(e.target.value)}
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            className={`form-input ${errors.email ? 'border-red-500' : '' } block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                           />
+                          {errors.email && <div className='text-red-500'> {errors.email}</div>}
                         </div>
                       </div>
                       <div className="sm:col-span-9">
@@ -109,8 +160,9 @@ const AddReview = () => {
                             id="RTitle"
                             autoComplete="RTitle"
                             onChange={(e) => setReviewTitle(e.target.value)}
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            className={`form-input ${errors.reviewTitle? 'border-red-500' : '' } block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                           />
+                          {errors.reviewTitle && <div className='text-red-500'> {errors.reviewTitle}</div>}
                         </div>
                       </div>
                       <div className="col-span-full">
@@ -122,10 +174,11 @@ const AddReview = () => {
                             id="content"
                             name="ReviewContent"
                             rows={7}
-                            onChange={(e) => setReviewContent(e.target.value)}
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            onChange={(e) => setReviewContent(e.target.value)}                           
                             defaultValue={''}
+                            className={`form-input ${errors.reviewContent ? 'border-red-500' : '' } block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                           />
+                          {errors.reviewContent && <div className='text-red-500'> {errors.reviewContent}</div>}
                         </div>
                       </div>   
                     </div>

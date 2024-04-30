@@ -21,25 +21,30 @@ public class UserDto {
     private String password;
     private String email;
     private String phoneNumber;
-
+    private LocalDate addedDate;
     private String profilePicUrl;
     private boolean availability;
     private boolean active;
 
-    private LocalDate addedDate; // Add addedDate field
 
-    // Setter for addedDate
-    public void setAddedDate(LocalDate addedDate) {
-        this.addedDate = addedDate;
+    // Setter for username (not obtained from frontend)
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    // Setter for userID
-    public void setUserID(Long userID) {
-        this.userID = userID;
+    // Setter for password (not obtained from frontend)
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    // Getter for userID
-    public Long getUserID() {
-        return userID;
+    // Setter for availability (not obtained from frontend)
+    public void setAvailability(boolean availability) {
+        this.availability = availability;
     }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+
 }
