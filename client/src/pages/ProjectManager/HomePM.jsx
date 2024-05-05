@@ -12,7 +12,6 @@ function HomePM() {
         <SideNavigationPM />
         <div>
           <PageTitle title="Home" />
-          <DeleteModal />
         </div>
       </section>
     </>

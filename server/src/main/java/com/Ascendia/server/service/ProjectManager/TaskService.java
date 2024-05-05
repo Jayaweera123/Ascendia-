@@ -14,12 +14,16 @@ public interface TaskService {
 
     TaskDto updateTask(Long taskId, TaskDto updateTask);
 
-     void deleteTask(Long taskId);
+     void deleteTaskById(Long taskId);
 
     // TaskService.java
-    void calculateStatus(TaskDto taskDto);
+    //void calculateStatus(TaskDto taskDto);
 
     List<TaskDto> getTasksByProjectId(Long projectId);
+
+     int getJobCountForTask(Long taskId);
+
+    void updateTaskStatus(Long taskId);
 
 
 

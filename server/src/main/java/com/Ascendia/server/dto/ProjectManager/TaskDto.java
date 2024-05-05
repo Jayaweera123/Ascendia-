@@ -1,6 +1,7 @@
 package com.Ascendia.server.dto.ProjectManager;
 
 import com.Ascendia.server.entity.Project.Project;
+import com.Ascendia.server.entity.ProjectManager.Task;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,21 @@ public class TaskDto {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
+    private Task.TaskStatus taskStatus;
     private String status;
     private Project project;
+
+
+    // Method to calculate and set status based on start and end dates
+   /* public void calculateAndSetStatus() {
+        LocalDate currentDate = LocalDate.now();
+        if (currentDate.isBefore(startDate)) {
+            setStatus("Scheduled");
+        } else if (currentDate.isAfter(endDate)) {
+            setStatus("Completed");
+        } else {
+            setStatus("In Progress");
+        }
+    }*/
 
 }

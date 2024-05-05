@@ -7,18 +7,21 @@ import { FaRegClipboard } from "react-icons/fa6";
 import { FaClipboardUser } from "react-icons/fa6";
 import { GiProgression } from "react-icons/gi";
 import { PiProjectorScreenChartBold } from "react-icons/pi";
+import { useParams } from "react-router-dom";
 
 const SideNavigation = () => {
+  const { projectId } = useParams();
+
   const menus = [
     { name: "Home", link: "/pmhome", icon: IoHome },
-    { name: "Pojects", link: "/projects", icon: PiProjectorScreenChartBold },
+    { name: "Pojects", link: "/project", icon: PiProjectorScreenChartBold },
     {
       name: "Dashboard",
       link: "/pmdashboard",
       icon: MdOutlineDashboard,
       margin: true,
     },
-    { name: "Tasks", link: "/tasks", icon: FaRegClipboard },
+    { name: "Tasks", link: "/task", icon: FaRegClipboard },
     { name: "Employees", link: "/employees", icon: FaClipboardUser },
     { name: "Progress", link: "/progress", icon: GiProgression },
   ];

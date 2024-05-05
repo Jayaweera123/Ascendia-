@@ -11,31 +11,23 @@ import { BsClipboard2PlusFill } from "react-icons/bs";
 import AddButton from "../../components/ProjectManager/AddButton";
 import TaskCardforProject from "../../components/ProjectManager/TaskCard copy";
 
-//function TasksForProject({ projectId }) {
 function TasksForProject() {
   const { projectId } = useParams();
-  /* const [projectId, setProjectId] = useState(null);
 
-  // Extract projectId from URL params
-  const { projectId: urlProjectId } = useParams();
-
-  useEffect(() => {
-    // Set projectId state
-    setProjectId(urlProjectId);
-  }, [urlProjectId]);*/
   return (
     <>
       <TopNavigationPM />
       <section className="flex">
         <SideNavigationPM />
-        <div className="ml-3.5 mt-10">
-          <div></div>
+        <div className="ml-3.5 mr-3.5 mt-10 w-9/12 flex-grow">
           <div className="flex justify-between m-0">
             <PageTitle title="Tasks" />
-            <AddButton />
+            <div className=""></div>
+            <AddButton projectId={projectId} />
           </div>
-
-          <TaskCardforProject projectId={projectId} />
+          <div ClassName="flex-grow">
+            <TaskCardforProject projectId={projectId} />
+          </div>
         </div>
       </section>
     </>

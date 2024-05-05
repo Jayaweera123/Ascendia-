@@ -21,9 +21,6 @@ const JobCard = ({ taskId }) => {
 
   return (
     <>
-      <div>
-        <TaskTitleForJobs title={"Foundation"} />
-      </div>
       <div className="grid grid-cols-1">
         {jobs.map((job) => (
           <div

@@ -1,6 +1,7 @@
 package com.Ascendia.server.controller.Project;
 
 import com.Ascendia.server.dto.Project.ProjectDto;
+import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.service.Project.ProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,12 @@ public class ProjectController {
     public ResponseEntity<ProjectDto> createProject(@RequestBody ProjectDto projectDto){
         ProjectDto savedProject = projectService.createProject(projectDto);
         return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ProjectDto> getProjectById(@PathVariable("id") Long projectId) {
+        ProjectDto projectDto = projectService.getProjectId(projectId);
+        return ResponseEntity.ok(projectDto);
     }
 
     @GetMapping("/all")

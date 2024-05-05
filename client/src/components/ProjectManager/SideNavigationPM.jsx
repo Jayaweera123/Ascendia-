@@ -8,7 +8,7 @@ import { PiProjectorScreenChartBold } from "react-icons/pi";
 const SideNavigationPM = () => {
   const menus = [
     { name: "Home", link: "/pmhome", icon: IoHome },
-    { name: "Pojects", link: "/projects", icon: PiProjectorScreenChartBold },
+    { name: "Pojects", link: "/project", icon: PiProjectorScreenChartBold },
   ];
   const [open, setOpen] = useState(true);
 

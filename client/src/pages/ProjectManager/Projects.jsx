@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import SideNavigationPM from "../../components/ProjectManager/SideNavigationPM";
 import TopNavigationPM from "../../components/ProjectManager/TopNavigationPM";
 import PageTitle from "../../components/ProjectManager/PageTitle";
-import ProjectCard from "../../components/ProjectManager/ProjectCard";
+import ProjectCard from "../../components/ProjectManager/ProjectCardCopy";
 
 function Projects() {
   return (
@@ -11,7 +11,7 @@ function Projects() {
       <TopNavigationPM />
       <section className="flex">
         <SideNavigationPM />
-        <div className="ml-3.5 mt-10 w-screen">
+        <div className="ml-3.5 mr-3.5 mt-10 w-9/12 flex-grow">
           <PageTitle title="Projects" />
 
           <ProjectCard />
