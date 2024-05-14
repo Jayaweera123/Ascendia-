@@ -1,5 +1,7 @@
 package com.Ascendia.server.service.Administrator.impl;
 
+import com.Ascendia.server.entity.ProjectManager.Task;
+import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.service.Administrator.UserService;
 import org.springframework.stereotype.Service;
 import com.Ascendia.server.dto.Administrator.UserDto;
@@ -181,5 +183,12 @@ public class UserServiceImpl implements UserService {
         passwordBuilder.append(day < 10 ? "0" + day : day); // Add leading zero if day < 10
 
         return passwordBuilder.toString();
+    }
+
+    //Nethuni
+    @Override
+    public List<UserDto> getAllAvailableUsers() {
+        List<User> users = userRepository.findByAvailabilityTrue();
+        return users.stream().map(UserMapper::mapToUserDto).collect(Collectors.toList());
     }
 }

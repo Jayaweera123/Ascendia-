@@ -38,8 +38,9 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
+    //Nethuni
     @GetMapping("pm/{pmId}")
-    public ResponseEntity<List<ProjectDto>>  getProjectsByPMId(@PathVariable("pmId") String pmId){
+    public ResponseEntity<List<ProjectDto>>  getProjectsByPMId(@PathVariable("pmId") Long pmId){
         List<ProjectDto> projects = projectService.getProjectsByPmId(pmId);
         return ResponseEntity.ok(projects);
     }

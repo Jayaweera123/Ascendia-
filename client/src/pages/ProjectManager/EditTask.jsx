@@ -8,11 +8,14 @@ import { useParams } from "react-router-dom";
 
 const EditTask = () => {
   const { taskId } = useParams();
+  const { projectId } = useParams();
+
   return (
     <>
       <TopNavigationPM />
+
       <section className="flex">
-        <SideNavigationPM />
+        <SideNavigationPM projectId={projectId} />
 
         <div className="w-8/12 ml-3.5 mr-3.5 mt-5 flex-grow">
           <EditTaskForm id={taskId} />

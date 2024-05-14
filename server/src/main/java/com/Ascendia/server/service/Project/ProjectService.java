@@ -13,7 +13,7 @@ public interface ProjectService {
 
     ProjectDto getProjectId(Long projectId);
 
-    List<ProjectDto> getProjectsByPmId(String pmId);
+    List<ProjectDto> getProjectsByPmId(Long pmId);
 
 
 }

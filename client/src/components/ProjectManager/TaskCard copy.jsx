@@ -17,6 +17,12 @@ const TaskCardforProject = ({ projectId }) => {
   const navigator = useNavigate();
   //const { projectId } = useParams();
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return date.toLocaleDateString("en-US", options);
+  };
+
   useEffect(() => {
     // Fetch tasks for the project when projectId changes
     getTasksForProject(projectId)
@@ -127,7 +133,9 @@ const TaskCardforProject = ({ projectId }) => {
                             </div>
                           </p>
                           <div className="flex">
-                            <Link to={`/edit-task/${task.taskId}`}>
+                            <Link
+                              to={`/${task.project.projectId}/edit-task/${task.taskId}`}
+                            >
                               <LuClipboardEdit className="text-slate-600" />
                             </Link>
 
@@ -151,10 +159,10 @@ const TaskCardforProject = ({ projectId }) => {
                       </div>
                       <div className="">
                         <p className="my-6 text-sm font-normal text-gray-500">
-                          {task.description.length >= 130
-                            ? task.description.substring(0, 130) + "..." // truncate if longer
+                          {task.description.length >= 150
+                            ? task.description.substring(0, 150) + "..." // truncate if longer
                             : task.description +
-                              Array(130 - task.description.length)
+                              Array(150 - task.description.length)
                                 .fill("\u00A0")
                                 .join(" ")}
                           {/* Add whitespace if shorter */}
@@ -167,7 +175,7 @@ const TaskCardforProject = ({ projectId }) => {
                         </div>
                         <div className="flex items-center text-red-500">
                           <LuCalendarClock className="mr-2 text-lg" />
-                          {task.endDate}
+                          {formatDate(task.endDate)}
                         </div>
                       </div>
                     </div>

@@ -15,6 +15,7 @@ function Jobs() {
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [project, setProject] = useState("");
 
   useEffect(() => {
     // Call Taskdetails function when component mounts
@@ -31,6 +32,7 @@ function Jobs() {
         setDescription(response.data.description);
         setStartDate(response.data.startDate);
         setEndDate(response.data.endDate);
+        setProject(response.data.project); // Set the project data
       })
       .catch((error) => {
         console.error(error);
@@ -41,13 +43,13 @@ function Jobs() {
     <>
       <TopNavigationPM />
       <section className="flex">
-        <SideNavigationPM />
-        <div className="ml-3.5  mrml-3.5 mr-3.5 mt-10 w-9/12 flex-grow ">
+        <SideNavigationPM projectId={project.projectId} />
+        <div className="ml-3.5 mr-3.5 mt-10 w-9/12 flex-grow">
           <div className="flex">
             <PageTitle title="Jobs" />
           </div>
 
-          <div className="ml-7 mt-5">
+          <div className="ml-3.5">
             <div className="w-11/12 mb-5">
               <h2 className="text-xl font-semibold">{taskName}</h2>
               <p className="text-gray-600 mt-1">{description}</p>
@@ -56,7 +58,7 @@ function Jobs() {
                 <div className="absolute top-0 right-0">{endDate}</div>
               </div>
             </div>
-            <div className="">
+            <div className="flex-grow">
               <JobCard taskId={taskId} />
             </div>
           </div>

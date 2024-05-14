@@ -18,7 +18,7 @@ function TasksForProject() {
     <>
       <TopNavigationPM />
       <section className="flex">
-        <SideNavigationPM />
+        <SideNavigationPM projectId={projectId} />
         <div className="ml-3.5 mr-3.5 mt-10 w-9/12 flex-grow">
           <div className="flex justify-between m-0">
             <PageTitle title="Tasks" />

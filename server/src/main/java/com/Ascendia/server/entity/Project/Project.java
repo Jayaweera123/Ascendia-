@@ -38,7 +38,7 @@ public class Project {
     private LocalDate endDate;
 
     @Column(name = "pm_id", nullable = false)
-    private String pmId; // Changed field name to follow Java naming conventions
+    private Long pmId; // Changed field name to follow Java naming conventions
 
     @Column(name = "image")
     private String image;

@@ -153,6 +153,8 @@ public class  TaskServiceImpl implements TaskService {
         return tasks.stream().map(TaskMapper::mapToTaskDto).collect(Collectors.toList());
     }
 
+
+
     @Autowired
     private JobRepository jobRepository; // Assuming you have a repository for jobs
 

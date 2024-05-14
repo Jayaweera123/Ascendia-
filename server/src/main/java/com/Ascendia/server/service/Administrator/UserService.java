@@ -22,4 +22,7 @@ public interface UserService {
 
     String generatePassword(UserDto userDto);
 
+    //Nethuni
+    List<UserDto> getAllAvailableUsers();
+
 }

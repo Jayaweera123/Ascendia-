@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { getAllProjectCards } from "../../services/ProjectService.jsx";
+import {
+  getAllProjectCards,
+  getProjectForPM,
+} from "../../services/ProjectService.jsx";
 import { Link } from "react-router-dom";
 
-const ProjectCard = () => {
+const ProjectCard = ({ projectManagerId }) => {
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
-    getAllProjectCards()
+    getProjectForPM(projectManagerId)
       .then((response) => {
         setProjects(response.data);
+        console.log(projects);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [projectManagerId]);
 
   return (
     <>
@@ -25,7 +29,7 @@ const ProjectCard = () => {
                 {projects.map((project) => (
                   <Link
                     key={project.projectId}
-                    to={`/project/${project.projectId}/task`}
+                    to={`/project/${project.projectId}/dashboard`}
                   >
                     <div
                       key={project.projectId}
