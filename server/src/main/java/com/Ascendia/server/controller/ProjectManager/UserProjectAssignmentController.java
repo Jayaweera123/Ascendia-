@@ -36,7 +36,7 @@ public class UserProjectAssignmentController {
         return ResponseEntity.ok("User Removed from the project successfully");
     }
 
-    @DeleteMapping("remove/all//{projectId}/")
+    @DeleteMapping("/{projectId}/remove/all")
     public ResponseEntity<String> deleteAllAssignmentsForProject(@PathVariable Long projectId) {
         userProjectAssignmentService.deleteAssignmentsByProjectId(projectId);
         return ResponseEntity.ok("All the users Removed from the project "+ projectId + " successfully");

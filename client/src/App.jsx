@@ -74,6 +74,7 @@ import AddTask from "./pages/ProjectManager/AddTask";
 import TasksForProject from "./pages/ProjectManager/TasksForProject";
 import Jobs from "./pages/ProjectManager/Jobs";
 import EditTask from "./pages/ProjectManager/EditTask";
+import AddEmployee from "./pages/ProjectManager/AddEmployee";
 
 const App = () => {
   return (
@@ -95,8 +96,10 @@ const App = () => {
           <Route path="/pmdashboard" element={<ProjectDashboard />} />
           <Route path="/task" element={<Tasks />} />
           <Route path="/:projectId/addtask" element={<AddTask />} />
-
           <Route path=":projectId/edit-task/:taskId" element={<EditTask />} />
+
+          <Route path="/:projectId/addemployee" element={<AddEmployee />} />
+
           <Route path="/employees" element={<Employees />} />
           <Route path="/progress" element={<ProjectProgress />} />
           <Route
