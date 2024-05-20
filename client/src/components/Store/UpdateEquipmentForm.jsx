@@ -3,7 +3,6 @@ import SideNavigationStore from "./SideNavigationStore"; // Adjust the path base
 import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
 import { getEquipment, inventoryUpdateEquipment } from '../../services/StoreServices'
 import { useNavigate, useParams } from 'react-router-dom'
-import Popup from "./Popup";
 import Swal from 'sweetalert2';
 
 
@@ -13,7 +12,7 @@ function UpdateEquipmentForm() {
   const [equipmentName, setEquipmentName] = useState('')
   const [updatedQuantity, setUpdatedQuantity] = useState('')
   const [action, setAction] = useState('Issue')
-  const [showPopup, setShowPopup] = useState(false);
+  
 
   const {id} = useParams();
 
@@ -104,7 +103,6 @@ function validateForm(){
   return valid;
   
 }
-
 
   return (
     <div>

@@ -115,36 +115,33 @@ function handleCancel(e){
 }
 
 //Form validation
+//Form validation
 function validateForm(){
   let valid = true;
 
   const errorsCopy = {... errors} //spread operator- copy errors object into errorsCopy 
 
   if(equipmentCode.trim()){
-    // Check for duplicate equipmentCode and equipmentName only for new equipment creation
-    if (equipmentCodeExists(equipmentCode, projectId)) {
-      errorsCopy.equipmentCode = '*Equipment code already taken';
-      valid = false;
-    } else {
     errorsCopy.equipmentCode = '';
-    }
   }else{
     errorsCopy.equipmentCode = '*Equipment code is required';
     valid = false;
   }
 
   if(equipmentName.trim()){
-    if (equipmentNameExists(equipmentName, projectId)) {
-      errorsCopy.equipmentName = '*Equipment name already taken';
-      valid = false;
-    } else {
     errorsCopy.equipmentName = '';
-    }
   }else{
     errorsCopy.equipmentName = '*Equipment name is required';
     valid = false;
   }
-  
+
+  if(equipmentCode.trim()){
+    errorsCopy.equipmentCode = '';
+  }else{
+    errorsCopy.equipmentCode = '*Equipment code is required';
+    valid = false;
+  }
+
   if(!isNaN(quantity) && Number.isInteger(Number(quantity))){
     if(quantity >= 0 ){
       errorsCopy.quantity = '';
@@ -168,28 +165,6 @@ function validateForm(){
 
   return valid;
 }
-
-// Function to check if equipmentCode already exists
-const equipmentCodeExists = async (code, projectId) => {
-  try {
-    const response = await searchEquipment(projectId, code);
-    return response.data.trim();
-  } catch (error) {
-    console.error('Error checking equipmentCode existence:', error);
-    return true; // Treat errors as if the code exists to avoid false negatives
-  }
-};
-
-// Function to check if equipmentName already exists
-const equipmentNameExists = async (name, projectId) => {
-  try {
-    const response = await searchEquipment(projectId, name);
-    return response.data.trim();
-  } catch (error) {
-    console.error('Error checking equipmentName existence:', error);
-    return true; // Treat errors as if the name exists to avoid false negatives
-  }
-};
 
 function formTitle(){
  if(id){

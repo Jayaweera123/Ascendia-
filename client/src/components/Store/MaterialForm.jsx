@@ -121,33 +121,30 @@ function handleCancel(e){
 }
 
 //Form validation
-async function validateForm(){
+//Form validation
+function validateForm(){
   let valid = true;
 
   const errorsCopy = {... errors} //spread operator- copy errors object into errorsCopy 
 
   if(materialCode.trim()){
-    // Check for duplicate materialCode and materialName only for new material creation
-    if (materialCodeExists(materialCode, projectId)) {
-      errorsCopy.materialCode = '*Material code already taken';
-      valid = false;
-    } else {
     errorsCopy.materialCode = '';
-    }
   }else{
     errorsCopy.materialCode = '*Material code is required';
     valid = false;
   }
 
   if(materialName.trim()){
-    if (materialNameExists(materialName, projectId)) {
-      errorsCopy.materialName = '*Material name already taken';
-      valid = false;
-    } else {
     errorsCopy.materialName = '';
-    }
   }else{
     errorsCopy.materialName = '*Material name is required';
+    valid = false;
+  }
+
+  if(materialCode.trim()){
+    errorsCopy.materialCode = '';
+  }else{
+    errorsCopy.materialCode = '*Material code is required';
     valid = false;
   }
 
@@ -194,27 +191,6 @@ async function validateForm(){
   return valid;
 }
 
-// Function to check if materialCode already exists
-const materialCodeExists = async (code, projectId) => {
-  try {
-    const response = await searchMaterial(projectId, code);
-    return response.data.trim();
-  } catch (error) {
-    console.error('Error checking materialCode existence:', error);
-    return true; // Treat errors as if the code exists to avoid false negatives
-  }
-};
-
-// Function to check if materialName already exists
-const materialNameExists = async (name, projectId) => {
-  try {
-    const response = await searchMaterial(projectId, name);
-    return response.data.trim();
-  } catch (error) {
-    console.error('Error checking materialName existence:', error);
-    return true; // Treat errors as if the name exists to avoid false negatives
-  }
-};
 
 function formTitle(){
  if(id){
