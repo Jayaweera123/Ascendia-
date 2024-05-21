@@ -3,6 +3,7 @@ import {
   deleteTask,
   getTasksForProject,
   getJobCountForTask,
+  setStatusLable,
 } from "../../services/TaskService.jsx";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { LuClipboardEdit, LuCalendarClock } from "react-icons/lu";
@@ -43,6 +44,19 @@ const TaskCardforProject = ({ projectId }) => {
             ...prevCounts,
             [task.taskId]: response.data, // Store job count for the task
           }));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+  }, [tasks]); // Trigger effect when tasks change
+
+  useEffect(() => {
+    // Fetch job counts for each task
+    tasks.forEach((task) => {
+      setStatusLable(task.taskId)
+        .then((response) => {
+          console.log("Status Lable Updted : ", response.data);
         })
         .catch((error) => {
           console.error(error);
@@ -193,8 +207,8 @@ const TaskCardforProject = ({ projectId }) => {
     height: fit-content;
     }
 .status-label-completed {
-    background-color: #34d399; /* Green color for completed projects */
-    color: #ffffff;
+    background-color: #D5F5E3 ; /* Green color for completed projects */
+    color: #239B56  ;
   }
 
 .status-label-overdue {

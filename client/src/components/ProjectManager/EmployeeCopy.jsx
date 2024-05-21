@@ -5,6 +5,9 @@ import { RiUserSearchLine } from "react-icons/ri";
 import { MdOutlinePersonSearch } from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
 import { getAllEmploeesForProject } from "../../services/ProjectService";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { deleteAssignment } from "../../services/EmployeeService";
+import Swal from "sweetalert2";
 
 function EmployeeCopy({ projectId }) {
   const [employees, setEmployees] = useState([]);
@@ -39,6 +42,40 @@ function EmployeeCopy({ projectId }) {
           (employee) =>
             employee.assignedUser.designation === selectedDesignation
         );
+
+  function removeEmployee(id) {
+    deleteAssignment(id)
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Task deleted successfully!",
+        }).then(() => {});
+        getAllEmploeesForProject(projectId);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  function popUpWarning(id) {
+    Swal.fire({
+      icon: "warning",
+      title: "Warning!",
+      text: "Are you sure? You won't be able to revert this!",
+      showCancelButton: true,
+    })
+      .then((result) => {
+        if (result.isConfirmed) {
+          // If the user clicks "OK", call removeTask function
+          removeEmployee(id);
+        } else {
+          // If the user clicks "Cancel" or closes the modal without confirming, do nothing
+          console.log("Employee Removal canceled");
+        }
+      })
+      .then(() => {});
+  }
 
   return (
     <div>
@@ -95,6 +132,7 @@ function EmployeeCopy({ projectId }) {
                     <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                       Status
                     </th>
+                    <th className="border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -153,6 +191,12 @@ function EmployeeCopy({ projectId }) {
                             {employee.assignmentStatus}
                           </span>
                         </span>
+                      </td>
+                      <td>
+                        <RiDeleteBin6Line
+                          className="text-slate-600 cursor-pointer"
+                          onClick={() => popUpWarning(employee.id)}
+                        />
                       </td>
                     </tr>
                   ))}

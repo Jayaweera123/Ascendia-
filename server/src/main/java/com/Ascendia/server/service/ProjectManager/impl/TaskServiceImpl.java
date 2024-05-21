@@ -14,6 +14,7 @@ import com.Ascendia.server.repository.SiteManager.JobRepository;
 import com.Ascendia.server.service.ProjectManager.TaskService;
 import com.Ascendia.server.service.SiteManager.JobService;
 import jakarta.persistence.Column;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,9 @@ public class  TaskServiceImpl implements TaskService {
 
     private TaskRepository taskRepository;
     private JobService jobService;
+
+    @Autowired
+    private JobRepository jobRepository;
 
     /*@Override
     public TaskDto createTask(TaskDto taskDto) {
@@ -154,12 +158,6 @@ public class  TaskServiceImpl implements TaskService {
     }
 
 
-
-    @Autowired
-    private JobRepository jobRepository; // Assuming you have a repository for jobs
-
-    // Other methods...
-
     @Override
     public int getJobCountForTask(Long taskId) {
         return jobRepository.countJobsByTask_TaskId(taskId);
@@ -167,7 +165,43 @@ public class  TaskServiceImpl implements TaskService {
 
     @Override
     public void updateTaskStatus(Long taskId) {
+        Task task = taskRepository.findById(taskId).orElseThrow(
+                () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
+        );
+        // Recalculate task status
+        Task.TaskStatus newStatus = task.calculateStatus();
 
+        // If the task status is different, update it
+        if (newStatus != task.getTaskStatus()) {
+            task.setTaskStatus(newStatus);
+            // Optionally, update the status string if needed
+            // task.setStatus(newStatus.toString());
+        }
+        // Save the updated task
+        taskRepository.save(task);
+    }
+
+    @Transactional
+    @Override
+    public boolean checkCompletionOrStatusUpdate(Long taskId) {
+        int jobCount = getJobCountForTask(taskId);
+        boolean allJobsCompleted = false;
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found"));
+        if (jobCount != 0) {
+            allJobsCompleted = jobRepository.areAllJobsCompletedForTask(taskId);
+            if (allJobsCompleted) {
+                task.setTaskStatus(Task.TaskStatus.COMPLETED);
+                task.setStatus("Completed");
+                taskRepository.save(task);
+            }   else {
+                updateTaskStatus(taskId);
+            }
+        }
+        else {
+            updateTaskStatus(taskId);
+        }
+
+        return allJobsCompleted;
     }
 
 

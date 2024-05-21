@@ -22,3 +22,6 @@ export const getTasksForProject = (ProjectId) =>
 
 export const getJobCountForTask = (taskId) =>
   axios.get(REST_API_BASE_URL0 + "/" + taskId + "/jobcount");
+
+export const setStatusLable = (taskId) =>
+  axios.get(REST_API_BASE_URL0 + "/" + taskId + "/set-status");

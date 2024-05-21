@@ -23,6 +23,8 @@ public interface TaskService {
 
      int getJobCountForTask(Long taskId);
 
+    boolean checkCompletionOrStatusUpdate(Long taskId);
+
     void updateTaskStatus(Long taskId);
 
 

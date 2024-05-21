@@ -12,3 +12,6 @@ export const getAllAvailableUsers = () =>
 
 export const addAssignment = (assignment) =>
   axios.post("http://localhost:8080/api/project/user/add", assignment);
+
+export const deleteAssignment = (assignmentId) =>
+  axios.delete("http://localhost:8080/api/project/user/remove/" + assignmentId);

@@ -88,6 +88,11 @@ public class TaskController {
         return ResponseEntity.ok(jobCount);
     }
 
+    @GetMapping("/{taskId}/set-status")
+    public boolean setTaskStatusLable(@PathVariable Long taskId) {
+        return taskService.checkCompletionOrStatusUpdate(taskId);
+    }
+
     /*@GetMapping("/{taskId}/jobcount")
     public ResponseEntity<Object> getJobCountForTask(@PathVariable Long taskId) {
         int jobCount = taskService.getJobCountForTask(taskId);

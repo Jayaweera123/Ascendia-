@@ -19,4 +19,8 @@ public interface JobService {
     //void calculateStatus(JobDto jobDto);
 
     List<JobDto> getJobsByTaskId(Long taskId);
+
+    boolean areAllJobsCompletedForTask(Long taskId);
+
+
 }
