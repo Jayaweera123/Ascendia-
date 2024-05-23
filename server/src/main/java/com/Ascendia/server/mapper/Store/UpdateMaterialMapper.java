@@ -8,12 +8,16 @@ import com.Ascendia.server.entity.Store.UpdateMaterial;
 public class UpdateMaterialMapper {
 
     public static UpdateMaterialDto mapToUpdateMaterialDto(UpdateMaterial updateMaterial){
+        Material material = updateMaterial.getMaterial();
         return new UpdateMaterialDto(
                 updateMaterial.getId(),
                 updateMaterial.getUpdatedQuantity(),
                 updateMaterial.getAction(),
                 updateMaterial.getUpdatedDate(),
-                updateMaterial.getMaterial().getMaterialId()
+                updateMaterial.getMaterial().getMaterialId(),
+                material.getMaterialCode(),
+                material.getMaterialName(),
+                material.getMeasuringUnit()
         );
     }
 

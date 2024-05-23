@@ -20,6 +20,6 @@ public interface MaterialService {
 
     MaterialDto updateInventory(Long materialId, UpdateMaterialDto updateMaterialDto);
 
-
+    List<UpdateMaterialDto> getAllUpdatedMaterials(Long projectId);
 
 }

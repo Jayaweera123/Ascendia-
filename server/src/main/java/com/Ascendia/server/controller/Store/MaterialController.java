@@ -41,6 +41,7 @@ public class MaterialController {
         List<MaterialDto> materials =  materialService.getAllMaterials(projectId);
         return ResponseEntity.ok(materials);
     }
+
     //Build Edit material REST API
     @PutMapping("/editMaterial/{id}")
     public ResponseEntity<MaterialDto> editMaterial(@PathVariable("id") Long materialId, @RequestBody MaterialDto editedMaterial) {
@@ -70,5 +71,11 @@ public class MaterialController {
             @RequestBody UpdateMaterialDto updateMaterialDto) {
         MaterialDto materialDto = materialService.updateInventory(materialId, updateMaterialDto);
         return ResponseEntity.ok(materialDto);
+    }
+
+    @GetMapping("/getAllUpdatedMaterials/{projectId}")
+    public ResponseEntity<List<UpdateMaterialDto>> getUpdatedMaterials(@PathVariable Long projectId) {
+        List<UpdateMaterialDto> updatedMaterials = materialService.getAllUpdatedMaterials(projectId);
+        return ResponseEntity.ok(updatedMaterials);
     }
 }

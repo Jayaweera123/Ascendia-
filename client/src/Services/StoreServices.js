@@ -13,6 +13,8 @@ export const searchMaterial = (projectId, query) => axios.get(`http://localhost:
 
 export const inventoryUpdateMaterial = (materialId, material) => axios.put('http://localhost:8080/api/material/updateInventory/material/'+ materialId, material);
 
+export const getAllUpdatedMaterials = (projectId) => axios.get('http://localhost:8080/api/material/getAllUpdatedMaterials/' + projectId);
+
 //Equipment
 export const listEquipment = (projectId) => axios.get('http://localhost:8080/api/equipment/getAllEquipment/' + projectId);
 

@@ -17,5 +17,8 @@ public class UpdateMaterialDto {
     private String action; //Add or Issue
     private LocalDateTime UpdatedDate;
     private Long materialId;
+    private String materialCode;
+    private String materialName;
+    private String measuringUnit;
 
 }
