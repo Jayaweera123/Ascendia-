@@ -5,6 +5,7 @@ import com.Ascendia.server.dto.SiteManager.JobDto;
 import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.entity.SiteManager.Job;
 import com.Ascendia.server.exceptions.ResourceNotFoundException;
+import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.mapper.SiteManager.JobMapper;
 import com.Ascendia.server.repository.ProjectManager.TaskRepository;
 import com.Ascendia.server.repository.SiteManager.JobRepository;
@@ -13,6 +14,7 @@ import jakarta.transaction.Transactional; //can import this from spring framewor
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +45,63 @@ public class JobServiceImpl implements JobService {
         return jobRepository.areAllJobsCompletedForTask(taskId);
 
     }
+
+    @Override
+    public List<JobDto> searchJob(Long taskId, String query) {
+        List<Job> jobs =  jobRepository.searchJob(taskId, query);
+        return jobs.stream().map(JobMapper::mapToJobDto)
+                .collect(Collectors.toList());
+    }
+
+
+   @Override
+    public void markJobAsCompletedById(Long jobId) {
+        Job job = jobRepository.findById(jobId).orElseThrow(
+                () -> new ResourceNotFoundException("Job is not in exists with given id : " + jobId)
+        );
+
+        // Update job properties
+        job.setDone(true);
+        job.setStatus("Completed");
+
+        // Save the updated task
+        Job updatedJob = jobRepository.save(job);
+    }
+
+    @Override
+    public String updateJobStatus(Long jobId) {
+        Job job = jobRepository.findById(jobId).orElseThrow(
+                () -> new ResourceNotFoundException("Job does not exist with given id: " + jobId)
+        );
+
+        // Calculate and update the job status
+        String newStatus = calculateStatus(job);
+
+        // If the job status is different, update it
+        if (!newStatus.equals(job.getStatus())) {
+            job.setStatus(newStatus);
+            jobRepository.save(job);
+        }
+
+        return newStatus;
+    }
+
+
+    public String calculateStatus(Job job) {
+        LocalDate currentDate = LocalDate.now();
+        if (!job.isDone()) {
+            if (currentDate.isBefore(job.getStartDate())) {
+                return "Scheduled";
+            } else if (currentDate.isAfter(job.getEndDate())) {
+                return "Overdue";
+            } else {
+                return "In-Progress";
+            }
+        } else {
+            return "Completed";
+        }
+    }
+
 
 
 

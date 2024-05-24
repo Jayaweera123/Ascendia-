@@ -1,6 +1,7 @@
 package com.Ascendia.server.service.SiteManager;
 
 
+import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.SiteManager.JobDto;
 
 import java.util.List;
@@ -21,6 +22,12 @@ public interface JobService {
     List<JobDto> getJobsByTaskId(Long taskId);
 
     boolean areAllJobsCompletedForTask(Long taskId);
+
+    List<JobDto> searchJob(Long TaskId, String query);
+
+    void markJobAsCompletedById(Long jobId);
+
+    String updateJobStatus(Long jobId);
 
 
 }

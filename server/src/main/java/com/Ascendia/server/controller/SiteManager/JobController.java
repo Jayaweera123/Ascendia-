@@ -1,5 +1,6 @@
 package com.Ascendia.server.controller.SiteManager;
 
+import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.SiteManager.JobDto;
 import com.Ascendia.server.service.SiteManager.JobService;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,26 @@ public class JobController {
         List<JobDto> jobs = jobService.getJobsByTaskId(taskId);
         return ResponseEntity.ok(jobs);
     }
+
+    @GetMapping("/search/{taskId}")
+    public ResponseEntity<List<JobDto>> searchJob(@PathVariable Long taskId, @RequestParam("query") String query){
+        return ResponseEntity.ok(jobService.searchJob(taskId, query));
+    }
+
+    @PutMapping("/complete/{jobId}")
+    public ResponseEntity<Void> completeJobById(@PathVariable Long jobId) {
+        jobService.markJobAsCompletedById(jobId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/updateStatus/{jobId}")
+    public ResponseEntity<String> updateJobStatus(@PathVariable Long jobId) {
+        String newStatus = jobService.updateJobStatus(jobId);
+        return ResponseEntity.ok(newStatus);
+    }
+
+
+
 
 
 
