@@ -1,6 +1,7 @@
 package com.Ascendia.server.controller.ProjectManager;
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
+import com.Ascendia.server.dto.Store.EquipmentDto;
 import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.service.ProjectManager.TaskService;
@@ -82,6 +83,7 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
+    //Get the job Count REST API
     @GetMapping("/{taskId}/jobcount")
     public ResponseEntity<Integer> getJobCountForTask(@PathVariable Long taskId) {
         int jobCount = taskService.getJobCountForTask(taskId);
@@ -89,9 +91,23 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}/set-status")
-    public boolean setTaskStatusLable(@PathVariable Long taskId) {
+    public String setTaskStatusLable(@PathVariable Long taskId) {
         return taskService.checkCompletionOrStatusUpdate(taskId);
     }
+
+    //Build search REST API
+    @GetMapping("/search/{projectId}")
+    public ResponseEntity<List<TaskDto>> searchTask(@PathVariable Long projectId, @RequestParam("query") String query){
+        return ResponseEntity.ok(taskService.searchTask(projectId, query));
+    }
+
+    //Get the time between the deadline
+    @GetMapping("/{taskId}/time-difference")
+    public String getTimeDifference(@PathVariable("taskId") Long taskId) {
+        TaskDto taskDto = taskService.getTaskId(taskId);
+        return taskService.calculateTimeDifference(taskDto);
+    }
+
 
     /*@GetMapping("/{taskId}/jobcount")
     public ResponseEntity<Object> getJobCountForTask(@PathVariable Long taskId) {
@@ -100,11 +116,6 @@ public class TaskController {
     }*/
 
 
-    //Manual json format
-   /* @GetMapping("/{taskId}/jobCount")
-    public ResponseEntity<Object> getJobCountForTask(@PathVariable Long taskId) {
-        int jobCount = taskService.getJobCountForTask(taskId);
-        return ResponseEntity.ok().body("{\"jobCount\": " + jobCount + "}");
-    }*/
+
 }
 

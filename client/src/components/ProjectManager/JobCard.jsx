@@ -4,9 +4,13 @@ import { IoConstruct } from "react-icons/io5";
 import { LuCalendar } from "react-icons/lu";
 import { MdOutlineComment } from "react-icons/md";
 import { getJobsForTask } from "../../services/JobService";
+import { IoSearch } from "react-icons/io5";
+import AddEmployeeButton from "./AddEmployeeButton";
+import SearchBar from "../../components/ProjectManager/SearchBar";
 
 const JobCard = ({ taskId }) => {
   const [jobs, setJobs] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     // Fetch jobs for the task when taskId changes
@@ -21,6 +25,28 @@ const JobCard = ({ taskId }) => {
 
   return (
     <>
+      <div className="flex items-center justify-between pb-6">
+        <SearchBar search={search} setSearch={setSearch} />
+
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            <select
+              className="border border-[#101D3F] text-[#101D3F] font-bold py-2 px-4 rounded-md flex items-center"
+              //value={selectedDesignation}
+              //onChange={handleDesignationChange}
+            >
+              <option value="all">All</option>
+              <option value="Civil Engineer">Site Engineer</option>
+              <option value="Technical Officer">Technical Officer</option>
+              <option value="Supervisor">Supervisor</option>
+              <option value="Store Keeper">Store Keeper</option>
+            </select>
+          </div>
+
+          <AddEmployeeButton />
+        </div>
+      </div>
+
       <div className="grid grid-cols-1">
         {jobs.map((job) => (
           <div

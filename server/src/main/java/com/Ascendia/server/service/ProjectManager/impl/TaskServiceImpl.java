@@ -2,12 +2,15 @@ package com.Ascendia.server.service.ProjectManager.impl;
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.SiteManager.JobDto;
+import com.Ascendia.server.dto.Store.MaterialDto;
 import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.entity.SiteManager.Job;
+import com.Ascendia.server.entity.Store.Material;
 import com.Ascendia.server.exceptions.ResourceNotFoundException;
 import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.mapper.SiteManager.JobMapper;
+import com.Ascendia.server.mapper.Store.MaterialMapper;
 import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.repository.ProjectManager.TaskRepository;
 import com.Ascendia.server.repository.SiteManager.JobRepository;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.PublicKey;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,7 +47,7 @@ public class  TaskServiceImpl implements TaskService {
     }*/
 
     @Autowired
-    private ProjectRepository projectRepository; // Assuming you have a repository for projects
+    private ProjectRepository projectRepository;
 
     @Override
     public TaskDto createTask(TaskDto taskDto) {
@@ -128,12 +132,11 @@ public class  TaskServiceImpl implements TaskService {
 
     @Override
     public void deleteTaskById(Long taskId) {
-        Task task = taskRepository.findById(taskId).orElseThrow(
+        /*Task task = taskRepository.findById(taskId).orElseThrow(
                 () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
-        );
+        );*/
 
         taskRepository.deleteById(taskId);
-        return;
     }
 
 
@@ -181,11 +184,11 @@ public class  TaskServiceImpl implements TaskService {
         taskRepository.save(task);
     }
 
-    @Transactional
+
     @Override
-    public boolean checkCompletionOrStatusUpdate(Long taskId) {
+    public String checkCompletionOrStatusUpdate(Long taskId) {
         int jobCount = getJobCountForTask(taskId);
-        boolean allJobsCompleted = false;
+        boolean allJobsCompleted;
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found"));
         if (jobCount != 0) {
             allJobsCompleted = jobRepository.areAllJobsCompletedForTask(taskId);
@@ -200,11 +203,31 @@ public class  TaskServiceImpl implements TaskService {
         else {
             updateTaskStatus(taskId);
         }
-
-        return allJobsCompleted;
+        Task updatedTask = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found"));
+        return updatedTask.getStatus();
     }
 
+    @Override
+    public List<TaskDto> searchTask(Long projectId, String query) {
+        List<Task> tasks =  taskRepository.searchTask(projectId, query);
+        return tasks.stream().map(TaskMapper::mapToTaskDto)
+                .collect(Collectors.toList());
+    }
 
+    @Override
+    public String calculateTimeDifference(TaskDto taskDto) {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate endDate = taskDto.getEndDate();
 
+        Period period;
+
+        if (currentDate.isBefore(endDate)) {
+            period = Period.between(currentDate, endDate);
+            return String.format("Time remaining: %d years, %d months, and %d days", period.getYears(), period.getMonths(), period.getDays());
+        } else {
+            period = Period.between(endDate, currentDate);
+            return String.format("Time passed: %d years, %d months, and %d days", period.getYears(), period.getMonths(), period.getDays());
+        }
+    }
 
 }

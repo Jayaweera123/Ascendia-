@@ -3,6 +3,7 @@ package com.Ascendia.server.entity.ProjectManager;
 
 import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.entity.Project.Project;
+import java.time.Period;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,8 +50,6 @@ public class AssignmentHistory {
     private LocalDate assignmentEndDate;
 
 
-    @Column(name = "duration")
-    private Long duration; // Duration in days, months, or any other appropriate unit
 
 
 

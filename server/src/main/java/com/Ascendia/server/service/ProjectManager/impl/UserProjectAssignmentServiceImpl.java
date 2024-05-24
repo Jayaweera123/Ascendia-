@@ -1,22 +1,28 @@
 package com.Ascendia.server.service.ProjectManager.impl;
 
 
+import com.Ascendia.server.dto.ProjectManager.AssignmentHistoryDto;
+import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.ProjectManager.UserProjectAssignmentDto;
 import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.entity.Project.Project;
+import com.Ascendia.server.entity.ProjectManager.AssignmentHistory;
 import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.entity.ProjectManager.UserProjectAssignment;
 import com.Ascendia.server.exceptions.ResourceNotFoundException;
+import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.mapper.ProjectManager.UserProjectAssignmentMapper;
 import com.Ascendia.server.repository.Administrator.UserRepository;
 import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
+import com.Ascendia.server.service.ProjectManager.AssignmentHistoryService;
 import com.Ascendia.server.service.ProjectManager.UserProjectAssignmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,10 +32,13 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
 
     private UserProjectAssignmentRepository userProjectAssignmentRepository;
 
+    private final AssignmentHistoryService assignmentHistoryService;
+
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired
     private UserRepository userRepository;
+
 
     @Override
     public UserProjectAssignmentDto addAssignment(UserProjectAssignmentDto assignmentDto) {
@@ -38,7 +47,7 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
         Project project = projectRepository.findById(assignmentDto.getProject().getProjectId())
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found with ID: " + assignmentDto.getProject().getProjectId()));
 
-        // Retrieve user details from the database based on userId
+        // Retrieve user details from the database based on userId (for Assignee)
         User assignedUser = userRepository.findById(assignmentDto.getAssignedUser().getUserID())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + assignmentDto.getAssignedUser().getUserID()));
 
@@ -47,8 +56,10 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
             throw new ResourceNotFoundException("User with ID " + assignedUser.getUserID() + " is not available for assignment.");
         }
 
+        // Retrieve user details from the database based on userId(Assigned by :)
         User assignedByUser = userRepository.findById(assignmentDto.getAssignedByUser().getUserID())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + assignmentDto.getAssignedByUser().getUserID()));
+
 
         // Set user availability to false
         assignedUser.setAvailability(false);
@@ -121,6 +132,18 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
         // Save the updated user
         userRepository.save(assignedUser);
 
+        //Save the record in history
+        AssignmentHistoryDto removalRecord = new AssignmentHistoryDto();
+        removalRecord.setProject(assignment.getProject());
+        removalRecord.setAssignedUser(assignment.getAssignedUser());
+        removalRecord.setAssignmentType(assignment.getAssignedUser().getDesignation());
+        removalRecord.setAssignedByUser(assignment.getAssignedByUser());
+        removalRecord.setRemovedByUser(assignment.getAssignedByUser()); //This should come from the front end
+        removalRecord.setAssignmentStartDate(assignment.getAssignedDate());
+
+        assignmentHistoryService.createHistoryRecord(removalRecord);
+
+
         // Delete the assignment
         userProjectAssignmentRepository.deleteById(assignmentId);
     }
@@ -152,6 +175,17 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
             throw new RuntimeException("Failed to delete assignments for project with ID: " + projectId, e);
         }
     }
+
+    @Override
+    public List<UserProjectAssignmentDto> searchAssignment(Long projectId, String query) {
+        List<UserProjectAssignment> assignments =  userProjectAssignmentRepository.searchAssignment(projectId, query);
+        return assignments.stream().map(UserProjectAssignmentMapper::mapToUserProjectAssignmentDto)
+                .collect(Collectors.toList());
+    }
+
+
+
+
 
 
 

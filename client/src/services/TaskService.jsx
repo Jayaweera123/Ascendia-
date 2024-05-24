@@ -23,5 +23,11 @@ export const getTasksForProject = (ProjectId) =>
 export const getJobCountForTask = (taskId) =>
   axios.get(REST_API_BASE_URL0 + "/" + taskId + "/jobcount");
 
-export const setStatusLable = (taskId) =>
+export const setStatusLabel = (taskId) =>
   axios.get(REST_API_BASE_URL0 + "/" + taskId + "/set-status");
+
+export const searchTask = (projectId, query) =>
+  axios.get(REST_API_BASE_URL0 + "/search/" + projectId + "?query=" + query);
+
+export const getTimeBetween = (taskId) =>
+  axios.get(REST_API_BASE_URL0 + "/" + taskId + "/time-difference");

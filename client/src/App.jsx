@@ -75,6 +75,7 @@ import TasksForProject from "./pages/ProjectManager/TasksForProject";
 import Jobs from "./pages/ProjectManager/Jobs";
 import EditTask from "./pages/ProjectManager/EditTask";
 import AddEmployee from "./pages/ProjectManager/AddEmployee";
+import EmployeeHistory from "./pages/ProjectManager/EmployeeHistory";
 
 const App = () => {
   return (
@@ -102,6 +103,10 @@ const App = () => {
 
           <Route path="/employees" element={<Employees />} />
           <Route path="/progress" element={<ProjectProgress />} />
+          <Route
+            path="/:projectId/employee-history"
+            element={<EmployeeHistory />}
+          />
           <Route
             path="/project/:projectId/dashboard"
             element={<ProjectDashboard />}

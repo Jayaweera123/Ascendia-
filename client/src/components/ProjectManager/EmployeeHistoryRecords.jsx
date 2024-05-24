@@ -5,23 +5,23 @@ import { RiUserSearchLine } from "react-icons/ri";
 import { MdOutlinePersonSearch } from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
 import {
-  getAllEmployeesForProject,
-  deleteAssignment,
-  searchAssignment,
+  getAllPreviousEmployees,
+  getDurationForEmployee,
 } from "../../services/EmployeeService";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 import Swal from "sweetalert2";
-import SearchBar from "../../components/ProjectManager/SearchBar";
+import SearchBar from "./SearchBar";
 
-function EmployeeCopy({ projectId }) {
+function EmployeeHistoryRecords({ projectId }) {
   const [employees, setEmployees] = useState([]);
   const [selectedDesignation, setSelectedDesignation] = useState("all");
   const [search, setSearch] = useState("");
+  const [duration, setDuration] = useState("");
 
   useEffect(() => {
     // Fetch tasks for the project when projectId changes
-    getAllEmployeesForProject(projectId)
+    getAllPreviousEmployees(projectId)
       .then((response) => {
         setEmployees(response.data);
         console.log(response.data);
@@ -49,43 +49,6 @@ function EmployeeCopy({ projectId }) {
             employee.assignedUser.designation === selectedDesignation
         );
 
-  function removeEmployee(id) {
-    deleteAssignment(id)
-      .then(() => {
-        Swal.fire({
-          icon: "success",
-          title: "Success!",
-          text: "Task deleted successfully!",
-        }).then(() => {
-          setEmployees((prevEmployees) =>
-            prevEmployees.filter((employee) => employee.id !== id)
-          );
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
-  function popUpWarning(id) {
-    Swal.fire({
-      icon: "warning",
-      title: "Warning!",
-      text: "Are you sure? You won't be able to revert this!",
-      showCancelButton: true,
-    })
-      .then((result) => {
-        if (result.isConfirmed) {
-          // If the user clicks "OK", call removeTask function
-          removeEmployee(id);
-        } else {
-          // If the user clicks "Cancel" or closes the modal without confirming, do nothing
-          console.log("Employee Removal canceled");
-        }
-      })
-      .then(() => {});
-  }
-
   //Search employee
   useEffect(() => {
     if (search !== "") {
@@ -98,7 +61,7 @@ function EmployeeCopy({ projectId }) {
         });
     } else {
       //if search is empty fetch all employees
-      getAllEmployeesForProject(projectId)
+      getAllPreviousEmployees(projectId)
         .then((response) => {
           setEmployees(response.data);
         })
@@ -107,6 +70,22 @@ function EmployeeCopy({ projectId }) {
         });
     }
   }, [search]);
+
+  useEffect(() => {
+    // Fetch duration for each employee
+    employees.forEach((employee) => {
+      getDurationForEmployee(employee.recordId)
+        .then((response) => {
+          setDuration((prevDuration) => ({
+            ...prevDuration,
+            [employee.recordId]: response.data, // Store job count for the task
+          }));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+  }, [employees]); // Trigger effect when tasks change
 
   return (
     <div>
@@ -127,8 +106,6 @@ function EmployeeCopy({ projectId }) {
                 <option value="Store Keeper">Store Keeper</option>
               </select>
             </div>
-
-            <AddEmployeeButton projectId={projectId} />
           </div>
         </div>
 
@@ -137,7 +114,7 @@ function EmployeeCopy({ projectId }) {
             <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
               {filteredEmployees.length === 0 ? (
                 <p className="py-1 sm:py-2 text-center text-gray-500">
-                  <em>No Employees </em>
+                  <em>No history available </em>
                 </p>
               ) : (
                 <table className="min-w-full leading-normal">
@@ -150,13 +127,13 @@ function EmployeeCopy({ projectId }) {
                         Department
                       </th>
                       <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Contact
+                        Period
                       </th>
                       <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Added on
+                        From
                       </th>
                       <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Status
+                        To
                       </th>
                       <th className="border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
                     </tr>
@@ -176,7 +153,7 @@ function EmployeeCopy({ projectId }) {
                                         "/"
                                       )}`
                                     : ""
-                                } //"https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
+                                }
                                 alt=""
                               />
                             </div>
@@ -186,7 +163,7 @@ function EmployeeCopy({ projectId }) {
                                 {employee.assignedUser.lastName}
                               </p>
                               <p className="text-gray-600 text-xs whitespace-no-wrap">
-                                {employee.assignedUser.designation}{" "}
+                                {employee.assignedUser.assignmentType}{" "}
                               </p>
                             </div>
                           </div>
@@ -199,30 +176,18 @@ function EmployeeCopy({ projectId }) {
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {employee.assignedUser.phoneNumber}
+                            {duration[employee.recordId]}
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
-                            {formatDate(employee.assignedDate)}
+                            {formatDate(employee.assignmentStartDate)}
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                          <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                            <span
-                              aria-hidden
-                              className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
-                            ></span>
-                            <span className="relative">
-                              {employee.assignmentStatus}
-                            </span>
-                          </span>
-                        </td>
-                        <td>
-                          <RiDeleteBin6Line
-                            className="text-slate-600 cursor-pointer"
-                            onClick={() => popUpWarning(employee.id)}
-                          />
+                          <p className="text-gray-900 whitespace-no-wrap">
+                            {formatDate(employee.assignmentEndDate)}
+                          </p>
                         </td>
                       </tr>
                     ))}
@@ -251,4 +216,4 @@ function EmployeeCopy({ projectId }) {
   );
 }
 
-export default EmployeeCopy;
+export default EmployeeHistoryRecords;

@@ -14,5 +14,5 @@ public interface UserProjectAssignmentService {
 
     void deleteAssignmentsByProjectId(Long projectId);
 
-
+    List<UserProjectAssignmentDto> searchAssignment(Long projectId, String query);
 }

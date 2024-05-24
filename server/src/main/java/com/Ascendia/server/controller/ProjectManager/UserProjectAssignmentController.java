@@ -31,8 +31,8 @@ public class UserProjectAssignmentController {
     }
 
     @DeleteMapping("/remove/{id}")
-    public ResponseEntity<String> deleteAssignment(@PathVariable("id") Long assignmetnId) {
-        userProjectAssignmentService.deleteAssignmentById(assignmetnId);
+    public ResponseEntity<String> deleteAssignment(@PathVariable("id") Long assignmentId) {
+        userProjectAssignmentService.deleteAssignmentById(assignmentId);
         return ResponseEntity.ok("User Removed from the project successfully");
     }
 
@@ -41,6 +41,15 @@ public class UserProjectAssignmentController {
         userProjectAssignmentService.deleteAssignmentsByProjectId(projectId);
         return ResponseEntity.ok("All the users Removed from the project "+ projectId + " successfully");
     }
+
+    //search REST API
+
+    @GetMapping("/search/{projectId}")
+    public ResponseEntity<List<UserProjectAssignmentDto>> searchEmployeeInProject(@PathVariable Long projectId, @RequestParam("query") String query){
+        return ResponseEntity.ok(userProjectAssignmentService.searchAssignment(projectId, query));
+    }
+
+
 
 
 

@@ -16,8 +16,8 @@ public class AssignmentHistoryMapper {
                 historyRecord.getAssignedByUser(),
                 historyRecord.getRemovedByUser(),
                 historyRecord.getAssignmentStartDate(),
-                historyRecord.getAssignmentEndDate(),
-                historyRecord.getDuration()
+                historyRecord.getAssignmentEndDate()
+
         );
     }
 
@@ -30,8 +30,8 @@ public class AssignmentHistoryMapper {
                 historyRecordDto.getAssignedByUser(),
                 historyRecordDto.getRemovedByUser(),
                 historyRecordDto.getAssignmentStartDate(),
-                historyRecordDto.getAssignmentEndDate(),
-                historyRecordDto.getDuration()
+                historyRecordDto.getAssignmentEndDate()
+
         );
     }
 }

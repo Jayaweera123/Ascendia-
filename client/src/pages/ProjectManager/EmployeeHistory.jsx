@@ -5,11 +5,10 @@ import PageTitle from "../../components/ProjectManager/PageTitle";
 import EmployeeCard from "../../components/ProjectManager/EmployeeCard";
 import AddEmployeeButton from "../../components/ProjectManager/AddEmployeeButton";
 import { useParams } from "react-router-dom";
-import EmployeeCopy from "../../components/ProjectManager/EmployeeCopy";
+import EmployeeHistoryRecords from "../../components/ProjectManager/EmployeeHistoryRecords";
 import Example from "../../components/ProjectManager/example";
-import PreviousEmployeesButton from "../../components/ProjectManager/PreviousEmployeesButton";
 
-function Employees() {
+function EmployeeHistory() {
   const { projectId } = useParams();
   return (
     <>
@@ -18,16 +17,15 @@ function Employees() {
         <SideNavigationPM projectId={projectId} />
         <div className="ml-3.5 mt-10 w-9/12 flex-grow">
           <div className="flex justify-between mr-5">
-            <PageTitle title="Employees" />
+            <PageTitle title="Employee History" />
             {/*<AddEmployeeButton projectId={projectId} />*/}
-            <PreviousEmployeesButton projectId={projectId} />
           </div>
           {/* <EmployeeCard projectId={projectId} />*/}
-          <EmployeeCopy projectId={projectId} />
+          <EmployeeHistoryRecords projectId={projectId} />
         </div>
       </section>
     </>
   );
 }
 
-export default Employees;
+export default EmployeeHistory;

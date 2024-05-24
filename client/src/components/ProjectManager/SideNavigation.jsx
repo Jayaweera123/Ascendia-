@@ -18,14 +18,16 @@ const SideNavigation = ({ projectId }) => {
   const [projectManagerId, setProjectManagerId] = useState(null);
 
   useEffect(() => {
-    getProjectById(projectId)
-      .then((response) => {
-        //console.log(response.data);
-        setProjectManagerId(response.data.pmId);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    if (projectId != null) {
+      getProjectById(projectId)
+        .then((response) => {
+          //console.log(response.data);
+          setProjectManagerId(response.data.pmId);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   }, [projectId]);
   //============================================
 
@@ -57,6 +59,9 @@ const SideNavigation = ({ projectId }) => {
   ];
   const [open, setOpen] = useState(true);
 
+  /*if (projectId === null) {
+    return <div>Loading...</div>; // Or handle the null case appropriately
+  } else {*/
   return (
     <div
       className={`min-h-screen ${

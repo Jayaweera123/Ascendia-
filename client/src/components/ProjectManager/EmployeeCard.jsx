@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from "react";
-import { getAllEmploeesForProject } from "../../services/ProjectService";
+import { getAllEmployeesForProject } from "../../services/EmployeeService";
 
 function EmployeeCard({ projectId }) {
   const [employees, setEmployees] = useState([]);

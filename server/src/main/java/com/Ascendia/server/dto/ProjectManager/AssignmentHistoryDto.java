@@ -9,6 +9,7 @@ import lombok.Setter;
 
 
 import java.time.LocalDate;
+import java.time.Period;
 
 @Getter
 @Setter
@@ -24,7 +25,7 @@ public class AssignmentHistoryDto {
     private User removedByUser;
     private LocalDate assignmentStartDate;
     private LocalDate assignmentEndDate;
-    private Long duration;
+
 
 
 }

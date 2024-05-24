@@ -11,8 +11,5 @@ export const getProjectById = (projectId) =>
 
 export const getAllProjectCards = () => axios.get(REST_API_BASE_URL);
 
-export const getAllEmploeesForProject = (projectId) =>
-  axios.get("http://localhost:8080/api/project/user/" + projectId + "/all");
-
 export const getProjectForPM = (ProjectManagerId) =>
   axios.get("http://localhost:8080/api/project/pm/" + ProjectManagerId);
