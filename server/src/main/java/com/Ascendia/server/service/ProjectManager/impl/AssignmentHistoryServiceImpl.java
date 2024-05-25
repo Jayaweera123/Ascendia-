@@ -2,13 +2,16 @@ package com.Ascendia.server.service.ProjectManager.impl;
 
 import com.Ascendia.server.dto.ProjectManager.AssignmentHistoryDto;
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
+import com.Ascendia.server.dto.ProjectManager.UserProjectAssignmentDto;
 import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.entity.ProjectManager.AssignmentHistory;
 import com.Ascendia.server.entity.ProjectManager.Task;
+import com.Ascendia.server.entity.ProjectManager.UserProjectAssignment;
 import com.Ascendia.server.exceptions.ResourceNotFoundException;
 import com.Ascendia.server.mapper.ProjectManager.AssignmentHistoryMapper;
 import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
+import com.Ascendia.server.mapper.ProjectManager.UserProjectAssignmentMapper;
 import com.Ascendia.server.repository.Administrator.UserRepository;
 import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.repository.ProjectManager.AssignmentHistoryRepository;
@@ -93,15 +96,49 @@ public class AssignmentHistoryServiceImpl implements AssignmentHistoryService {
         int months = period.getMonths();
         int days = period.getDays();
 
-        if (years == 0) {
-            if (months == 0) {
-                return days + " days";
-            } else {
-                return months + " months, " + days + " days";
+        StringBuilder result = new StringBuilder();
+
+        if (years > 0) {
+            result.append(years).append(" year");
+            if (years > 1) {
+                result.append("s");
             }
-        } else {
-            return years + " years, " + months + " months, " + days + " days";
         }
+
+        if (months > 0) {
+            if (result.length() > 0) {
+                result.append(", ");
+            }
+            result.append(months).append(" month");
+            if (months > 1) {
+                result.append("s");
+            }
+        }
+
+        if (days > 0) {
+            if (result.length() > 0) {
+                result.append(", ");
+            }
+            result.append(days).append(" day");
+            if (days > 1) {
+                result.append("s");
+            }
+        }
+
+        // Handle case when the period is zero (e.g., same day)
+        if (result.length() == 0) {
+            result.append("0 days");
+        }
+
+        return result.toString();
     }
+
+    @Override
+    public List<AssignmentHistoryDto> searchRecord(Long projectId, String query) {
+        List<AssignmentHistory> records = assignmentHistoryRepository.searchRecord(projectId, query);
+        return records.stream().map(AssignmentHistoryMapper::mapToAssignmentHistoryDto)
+                .collect(Collectors.toList());
+    }
+
 }
 

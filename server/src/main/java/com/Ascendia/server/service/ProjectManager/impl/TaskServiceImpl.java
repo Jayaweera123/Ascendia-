@@ -219,15 +219,52 @@ public class  TaskServiceImpl implements TaskService {
         LocalDate currentDate = LocalDate.now();
         LocalDate endDate = taskDto.getEndDate();
 
-        Period period;
 
+        Period period;
         if (currentDate.isBefore(endDate)) {
             period = Period.between(currentDate, endDate);
-            return String.format("Time remaining: %d years, %d months, and %d days", period.getYears(), period.getMonths(), period.getDays());
         } else {
             period = Period.between(endDate, currentDate);
-            return String.format("Time passed: %d years, %d months, and %d days", period.getYears(), period.getMonths(), period.getDays());
         }
-    }
 
+        int years = period.getYears();
+        int months = period.getMonths();
+        int days = period.getDays();
+
+        StringBuilder result = new StringBuilder();
+
+        if (years > 0) {
+            result.append(years).append(" year");
+            if (years > 1) {
+                result.append("s");
+            }
+        }
+
+        if (months > 0) {
+            if (result.length() > 0) {
+                result.append(", ");
+            }
+            result.append(months).append(" month");
+            if (months > 1) {
+                result.append("s");
+            }
+        }
+
+        if (days > 0) {
+            if (result.length() > 0) {
+                result.append(", ");
+            }
+            result.append(days).append(" day");
+            if (days > 1) {
+                result.append("s");
+            }
+        }
+
+        // Handle case when the period is zero (e.g., same day)
+        if (result.length() == 0) {
+            result.append("0 days");
+        }
+
+        return result.toString();
+    }
 }

@@ -23,8 +23,13 @@ export const getAllEmployeesForProject = (projectId) =>
 export const searchAssignment = (projectId, query) =>
   axios.get(REST_API_BASE_URL1 + "search/" + projectId + "?query=" + query);
 
+const REST_API_BASE_URL2 = "http://localhost:8080/api/history/";
+
 export const getAllPreviousEmployees = (projectId) =>
-  axios.get("http://localhost:8080/api/history/" + projectId + "/records");
+  axios.get(REST_API_BASE_URL2 + projectId + "/records");
 
 export const getDurationForEmployee = (recordId) =>
-  axios.get("http://localhost:8080/api/history/" + recordId + "/duration");
+  axios.get(REST_API_BASE_URL2 + recordId + "/duration");
+
+export const searchHistory = (projectId, query) =>
+  axios.get(REST_API_BASE_URL2 + "search/" + projectId + "?query=" + query);

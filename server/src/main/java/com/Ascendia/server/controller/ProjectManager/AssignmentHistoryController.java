@@ -39,4 +39,10 @@ public class AssignmentHistoryController {
         AssignmentHistoryDto assignmentHistoryDto = assignmentHistoryService.getRecordById(Id);
         return assignmentHistoryService.calculateDuration(assignmentHistoryDto);
     }
+
+    @GetMapping("/search/{projectId}")
+    public ResponseEntity<List<AssignmentHistoryDto>> searchRecordbyNameORDep(@PathVariable Long projectId, @RequestParam("query") String query){
+        return ResponseEntity.ok(assignmentHistoryService.searchRecord(projectId, query));
+    }
+
 }

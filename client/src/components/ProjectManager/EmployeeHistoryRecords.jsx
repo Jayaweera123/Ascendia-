@@ -7,6 +7,7 @@ import { IoSearch } from "react-icons/io5";
 import {
   getAllPreviousEmployees,
   getDurationForEmployee,
+  searchHistory,
 } from "../../services/EmployeeService";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
@@ -49,10 +50,26 @@ function EmployeeHistoryRecords({ projectId }) {
             employee.assignedUser.designation === selectedDesignation
         );
 
-  //Search employee
+  useEffect(() => {
+    // Fetch duration for each employee
+    employees.forEach((employee) => {
+      getDurationForEmployee(employee.recordId)
+        .then((response) => {
+          setDuration((prevDuration) => ({
+            ...prevDuration,
+            [employee.recordId]: response.data, // Store job count for the task
+          }));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+  }, [employees]); // Trigger effect when tasks change
+
+  //Search record
   useEffect(() => {
     if (search !== "") {
-      searchAssignment(projectId, search)
+      searchHistory(projectId, search)
         .then((response) => {
           setEmployees(response.data);
         })
@@ -70,22 +87,6 @@ function EmployeeHistoryRecords({ projectId }) {
         });
     }
   }, [search]);
-
-  useEffect(() => {
-    // Fetch duration for each employee
-    employees.forEach((employee) => {
-      getDurationForEmployee(employee.recordId)
-        .then((response) => {
-          setDuration((prevDuration) => ({
-            ...prevDuration,
-            [employee.recordId]: response.data, // Store job count for the task
-          }));
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    });
-  }, [employees]); // Trigger effect when tasks change
 
   return (
     <div>

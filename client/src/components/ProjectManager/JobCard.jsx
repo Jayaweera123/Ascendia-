@@ -16,6 +16,7 @@ const JobCard = ({ taskId }) => {
   const [jobs, setJobs] = useState([]);
   const [search, setSearch] = useState("");
   const [jobStatus, setJobStatus] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("all");
 
   useEffect(() => {
     // Fetch jobs for the task when taskId changes
@@ -66,6 +67,16 @@ const JobCard = ({ taskId }) => {
     });
   }, [jobs]); // Trigger effect when jobs change*/
 
+  //sort according to the status
+  const handleStatusChange = (e) => {
+    setSelectedStatus(e.target.value);
+  };
+
+  const filteredJobs =
+    selectedStatus === "all"
+      ? jobs
+      : jobs.filter((job) => jobStatus[job.jobId] === selectedStatus);
+
   return (
     <>
       <div className="flex items-center justify-between pb-6">
@@ -75,14 +86,14 @@ const JobCard = ({ taskId }) => {
           <div className="relative">
             <select
               className="border border-[#101D3F] text-[#101D3F] font-bold py-2 px-4 rounded-md flex items-center"
-              //value={selectedDesignation}
-              //onChange={handleDesignationChange}
+              value={selectedStatus}
+              onChange={handleStatusChange}
             >
               <option value="all">All</option>
-              <option value="Civil Engineer">Site Engineer</option>
-              <option value="Technical Officer">Technical Officer</option>
-              <option value="Supervisor">Supervisor</option>
-              <option value="Store Keeper">Store Keeper</option>
+              <option value="Overdue">Overdue</option>
+              <option value="In-Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+              <option value="Scheduled">Scheduled</option>
             </select>
           </div>
 
@@ -91,7 +102,7 @@ const JobCard = ({ taskId }) => {
       </div>
 
       <div className="grid grid-cols-1">
-        {jobs.map((job) => (
+        {filteredJobs.map((job) => (
           <div
             key={job.jobId}
             className="flex items-center p-5 bg-white border rounded-lg shadow-md w-11/12 mb-4"
