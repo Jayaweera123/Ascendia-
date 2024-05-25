@@ -141,7 +141,7 @@ function EmployeeHistoryRecords({ projectId }) {
                   </thead>
                   <tbody>
                     {filteredEmployees.map((employee) => (
-                      <tr key={employee.id}>
+                      <tr key={employee.recordId}>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 w-10 h-10">
@@ -164,7 +164,7 @@ function EmployeeHistoryRecords({ projectId }) {
                                 {employee.assignedUser.lastName}
                               </p>
                               <p className="text-gray-600 text-xs whitespace-no-wrap">
-                                {employee.assignedUser.assignmentType}{" "}
+                                {employee.assignmentType}{" "}
                               </p>
                             </div>
                           </div>
