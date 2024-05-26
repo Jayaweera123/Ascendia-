@@ -5,7 +5,6 @@ import { LuClipboardEdit } from "react-icons/lu";
 import { LuCalendarClock } from "react-icons/lu";
 import { ImBin } from "react-icons/im";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import DeleteModal from "./DeleteModal.jsx";
 
 const TaskCard = () => {
   // Define dummy data using useState hook
