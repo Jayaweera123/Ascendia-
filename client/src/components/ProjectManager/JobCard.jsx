@@ -79,7 +79,7 @@ const JobCard = ({ taskId }) => {
 
   return (
     <>
-      <div className="flex items-center justify-between pb-6">
+      <div className="flex items-center justify-between pb-6 w-11/12">
         <SearchBar search={search} setSearch={setSearch} />
 
         <div className="flex items-center space-x-4">

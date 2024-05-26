@@ -109,6 +109,16 @@ public class TaskController {
     }
 
 
+    @PutMapping("/{taskId}/mark-as-done")
+    public void markAsDone(@PathVariable Long taskId) {
+        taskService.markAsCompleted(taskId);
+    }
+
+    @PutMapping("/{taskId}/mark-as-undone")
+    public void markAsUndone(@PathVariable Long taskId) {
+        taskService.markAsUncompleted(taskId);
+    }
+
     /*@GetMapping("/{taskId}/jobcount")
     public ResponseEntity<Object> getJobCountForTask(@PathVariable Long taskId) {
         int jobCount = taskService.getJobCountForTask(taskId);

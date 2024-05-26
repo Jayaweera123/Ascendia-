@@ -76,6 +76,7 @@ import Jobs from "./pages/ProjectManager/Jobs";
 import EditTask from "./pages/ProjectManager/EditTask";
 import AddEmployee from "./pages/ProjectManager/AddEmployee";
 import EmployeeHistory from "./pages/ProjectManager/EmployeeHistory";
+import EditTask0 from "./pages/ProjectManager/EditTask0";
 
 const App = () => {
   return (
@@ -98,6 +99,10 @@ const App = () => {
           <Route path="/task" element={<Tasks />} />
           <Route path="/:projectId/addtask" element={<AddTask />} />
           <Route path=":projectId/edit-task/:taskId" element={<EditTask />} />
+          <Route
+            path="/t/:projectId/edit-task/:taskId"
+            element={<EditTask0 />}
+          />
 
           <Route path="/:projectId/addemployee" element={<AddEmployee />} />
 

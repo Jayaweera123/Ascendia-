@@ -6,7 +6,7 @@ import AddTaskForm from "../../components/ProjectManager/AddTaskCopyCopy";
 import EditTaskForm from "../../components/ProjectManager/EditTaskForm";
 import { useParams, useLocation } from "react-router-dom";
 
-const EditTask = () => {
+const EditTask0 = () => {
   const { taskId, projectId } = useParams();
   const location = useLocation();
 
@@ -26,11 +26,11 @@ const EditTask = () => {
         <SideNavigationPM projectId={projectId} />
 
         <div className="w-8/12 ml-3.5 mr-3.5 mt-5 flex-grow">
-          <EditTaskForm id={taskId} prePageNavigator={navigator2} />
+          <EditTaskForm id={taskId} prePageNavigator={navigator1} />
         </div>
       </section>
     </>
   );
 };
 
-export default EditTask;
+export default EditTask0;

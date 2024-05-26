@@ -114,7 +114,7 @@ const ProjectCard = ({ projectManagerId }) => {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
-          transition: white-space 0.3s; /* Smooth transition for white-space change */
+          transition: white-space 2s; /* Smooth transition for white-space change */
       
           /* Additional styles for hover */
           &:hover {

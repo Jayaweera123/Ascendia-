@@ -26,6 +26,7 @@ import java.security.PublicKey;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -187,24 +188,24 @@ public class  TaskServiceImpl implements TaskService {
 
     @Override
     public String checkCompletionOrStatusUpdate(Long taskId) {
-        int jobCount = getJobCountForTask(taskId);
-        boolean allJobsCompleted;
-        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found"));
-        if (jobCount != 0) {
-            allJobsCompleted = jobRepository.areAllJobsCompletedForTask(taskId);
-            if (allJobsCompleted) {
-                task.setTaskStatus(Task.TaskStatus.COMPLETED);
-                task.setStatus("Completed");
-                taskRepository.save(task);
-            }   else {
+        if (!isCompleted(taskId)) {
+            int jobCount = getJobCountForTask(taskId);
+            boolean allJobsCompleted;
+            if (jobCount != 0) {
+                allJobsCompleted = jobRepository.areAllJobsCompletedForTask(taskId);
+                if (allJobsCompleted) {
+                    markAsCompleted(taskId);
+                } else {
+                    updateTaskStatus(taskId);
+                }
+            } else {
                 updateTaskStatus(taskId);
             }
+            Task updatedTask = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found"));
+            return updatedTask.getStatus();
         }
-        else {
-            updateTaskStatus(taskId);
-        }
-        Task updatedTask = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found"));
-        return updatedTask.getStatus();
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found"));
+        return task.getStatus();
     }
 
     @Override
@@ -214,57 +215,98 @@ public class  TaskServiceImpl implements TaskService {
                 .collect(Collectors.toList());
     }
 
+
+
     @Override
     public String calculateTimeDifference(TaskDto taskDto) {
-        LocalDate currentDate = LocalDate.now();
-        LocalDate endDate = taskDto.getEndDate();
+        if (!isCompleted(taskDto.getTaskId())) {
+            LocalDate currentDate = LocalDate.now();
+            LocalDate endDate = taskDto.getEndDate();
 
 
-        Period period;
-        if (currentDate.isBefore(endDate)) {
-            period = Period.between(currentDate, endDate);
-        } else {
-            period = Period.between(endDate, currentDate);
+            Period period;
+
+            if (currentDate.isBefore(endDate)) {
+                period = Period.between(currentDate, endDate);
+            } else {
+                period = Period.between(endDate, currentDate);
+            }
+
+            int years = period.getYears();
+            int months = period.getMonths();
+            int days = period.getDays();
+
+            StringBuilder result = new StringBuilder();
+
+            if (years > 0) {
+                result.append(years).append(" year");
+                if (years > 1) {
+                    result.append("s");
+                }
+            }
+
+            if (months > 0) {
+                if (!result.isEmpty()) {
+                    result.append(", ");
+                }
+                result.append(months).append(" month");
+                if (months > 1) {
+                    result.append("s");
+                }
+            }
+
+            if (days > 0) {
+                if (!result.isEmpty()) {
+                    result.append(", ");
+                }
+                result.append(days).append(" day");
+                if (days > 1) {
+                    result.append("s");
+                }
+            }
+
+            // Handle case when the period is zero (e.g., same day)
+            if (result.isEmpty()) {
+                result.append("0 days");
+            }
+
+            return result.toString();
+        }
+        else {
+            return ("Completed");
+        }
+    }
+
+    @Override
+    public boolean isCompleted(Long taskId) {
+        Task task = taskRepository.findById(taskId).orElseThrow(
+                () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
+        );
+        return Objects.equals(task.getStatus(), "Completed");
+    }
+
+    //Robust method to mark as completed
+    @Override
+    public void markAsCompleted(Long taskId) {
+        Task task = taskRepository.findById(taskId).orElseThrow(
+                () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
+        );
+        if (!isCompleted(taskId)) {
+            task.setTaskStatus(Task.TaskStatus.COMPLETED);
+            task.setStatus("Completed");
+            taskRepository.save(task);
+        }
+    }
+
+    @Override
+    public void markAsUncompleted(Long taskId) {
+        Task task = taskRepository.findById(taskId).orElseThrow(
+                () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
+        );
+        if (isCompleted(taskId)) {
+            updateTaskStatus(taskId);
+
         }
 
-        int years = period.getYears();
-        int months = period.getMonths();
-        int days = period.getDays();
-
-        StringBuilder result = new StringBuilder();
-
-        if (years > 0) {
-            result.append(years).append(" year");
-            if (years > 1) {
-                result.append("s");
-            }
-        }
-
-        if (months > 0) {
-            if (result.length() > 0) {
-                result.append(", ");
-            }
-            result.append(months).append(" month");
-            if (months > 1) {
-                result.append("s");
-            }
-        }
-
-        if (days > 0) {
-            if (result.length() > 0) {
-                result.append(", ");
-            }
-            result.append(days).append(" day");
-            if (days > 1) {
-                result.append("s");
-            }
-        }
-
-        // Handle case when the period is zero (e.g., same day)
-        if (result.length() == 0) {
-            result.append("0 days");
-        }
-
-        return result.toString();
     }
 }

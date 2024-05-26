@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { getTask } from "../../services/TaskService";
 import { IoIosArrowForward } from "react-icons/io";
 import TaskDetails from "../../components/ProjectManager/TaskDetailsinJobPage";
+import BreadCrumb from "../../components/ProjectManager/BreadCrumb";
 
 function Jobs() {
   const { taskId } = useParams();
@@ -50,7 +51,8 @@ function Jobs() {
       <TopNavigationPM />
       <section className="flex">
         <SideNavigationPM projectId={projectId} />
-        <div className="ml-3.5 mr-3.5 mt-10 w-9/12 flex-grow">
+        <div className="ml-3.5 mr-3.5 mt-5 w-9/12 flex-grow">
+          <BreadCrumb previousPage={"Tasks"} currentPage={"Jobs"} />
           <div className="flex">
             <PageTitle title="Jobs" />
           </div>

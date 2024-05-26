@@ -9,7 +9,7 @@ import {
 } from "../../services/TaskService.jsx";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { LuClipboardEdit, LuCalendarClock } from "react-icons/lu";
-import DeleteModal from "./DeleteModal.jsx";
+
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Swal from "sweetalert2";
 import SearchBar from "../../components/ProjectManager/SearchBar";
@@ -264,7 +264,7 @@ const TaskCardforProject = ({ projectId }) => {
                         </div>
                         <div className="flex">
                           <Link
-                            to={`/${task.project.projectId}/edit-task/${task.taskId}`}
+                            to={`/t/${task.project.projectId}/edit-task/${task.taskId}`}
                             className="group"
                           >
                             <LuClipboardEdit className="text-slate-600 transition-transform duration-300 transform hover:scale-150" />
@@ -351,7 +351,7 @@ const TaskCardforProject = ({ projectId }) => {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    transition: white-space 0.3s; /* Smooth transition for white-space change */
+    transition: white-space 1.5s; /* Smooth transition for white-space change */
 
     /* Additional styles for hover */
     &:hover {

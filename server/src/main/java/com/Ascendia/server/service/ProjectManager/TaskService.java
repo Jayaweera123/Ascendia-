@@ -35,6 +35,12 @@ public interface TaskService {
 
     String calculateTimeDifference(TaskDto taskDto);
 
+    boolean isCompleted(Long taskId);
+
+    void markAsCompleted(Long taskId);
+
+    void markAsUncompleted(Long taskId);
+
 
 
 
