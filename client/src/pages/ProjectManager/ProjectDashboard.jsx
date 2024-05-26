@@ -5,11 +5,12 @@ import PageTitle from "../../components/ProjectManager/PageTitle";
 import { useParams } from "react-router-dom";
 
 function ProjectDashboard() {
+  const { projectId } = useParams();
   return (
     <>
       <TopNavigationPM />
       <section className="flex">
-        <SideNavigationPM />
+        <SideNavigationPM projectId={projectId} />
         <PageTitle title="Dashboard" />
       </section>
     </>

@@ -3,19 +3,35 @@ import {
   deleteTask,
   getTasksForProject,
   getJobCountForTask,
+  setStatusLabel,
+  getAllTaskCards,
+  searchTask,
 } from "../../services/TaskService.jsx";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { LuClipboardEdit, LuCalendarClock } from "react-icons/lu";
-import DeleteModal from "./DeleteModal.jsx";
+
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Swal from "sweetalert2";
+import SearchBar from "../../components/ProjectManager/SearchBar";
+import AddButton from "../../components/ProjectManager/AddButton";
+
+import AddEmployeeButton from "./AddEmployeeButton";
 
 const TaskCardforProject = ({ projectId }) => {
   const [tasks, setTasks] = useState([]);
   const [jobCounts, setJobCounts] = useState({});
+  const [taskStatus, setTaskStatus] = useState("");
+  const [search, setSearch] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("all");
 
   const navigator = useNavigate();
   //const { projectId } = useParams();
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    return date.toLocaleDateString("en-US", options);
+  };
 
   useEffect(() => {
     // Fetch tasks for the project when projectId changes
@@ -27,6 +43,56 @@ const TaskCardforProject = ({ projectId }) => {
         console.error(error);
       });
   }, [projectId]);
+
+  /*useEffect(() => {
+    const updateStatusLabels = async () => {
+      try {
+        const updatedTasks = await Promise.all(
+          tasks.map(async (task) => {
+            const response = await setStatusLabel(task.taskId);
+            console.log("Status Label Updated: ", response.data);
+            return {
+              ...task,
+              status: response.data, // Assuming response.data contains the status label
+            };
+          })
+        );
+        setTasks(updatedTasks);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    updateStatusLabels();
+  }, [tasks]);*/
+
+  /*useEffect(() => {
+    tasks.forEach((task) => {
+      setStatusLabel(task.taskId)
+        .then((response) => {
+          console.log("Status Label Updated: ", response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+  }, [tasks]);*/
+
+  useEffect(() => {
+    // Fetch status for each task
+    tasks.forEach((task) => {
+      setStatusLabel(task.taskId)
+        .then((response) => {
+          setTaskStatus((prevTaskStatus) => ({
+            ...prevTaskStatus,
+            [task.taskId]: response.data, // Store status for the task
+          }));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+  }, [tasks]); // Trigger effect when tasks change*/
 
   useEffect(() => {
     // Fetch job counts for each task
@@ -63,10 +129,15 @@ const TaskCardforProject = ({ projectId }) => {
           title: "Success!",
           text: "Task deleted successfully!",
         }).then(() => {
+          // Update the tasks list to remove the deleted task
+          setTasks((prevTasks) =>
+            prevTasks.filter((task) => task.taskId !== id)
+          );
+          // Navigate to the task list after successful deletion
           navigator("/project/" + projectId + "/task");
         });
         // After deleting, fetch tasks again
-        getTasksForProject(projectId);
+        //getTasksForProject(projectId);
       })
       .catch((error) => {
         console.error(error);
@@ -94,67 +165,136 @@ const TaskCardforProject = ({ projectId }) => {
       });
   }
 
+  //Search task
+  useEffect(() => {
+    if (search !== "") {
+      searchTask(projectId, search)
+        .then((response) => {
+          setTasks(response.data);
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+        });
+    } else {
+      //if search is empty fetch all equipment
+      getTasksForProject(projectId)
+        .then((response) => {
+          setTasks(response.data);
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+        });
+    }
+  }, [search]);
+
+  //sort according to the status
+  const handleStatusChange = (e) => {
+    setSelectedStatus(e.target.value);
+  };
+
+  const filteredTasks =
+    selectedStatus === "all"
+      ? tasks
+      : tasks.filter((task) => taskStatus[task.taskId] === selectedStatus);
+
   return (
     <>
       <div className="mt-10 mx-auto">
         <main className="">
           <div className="px-4">
-            <div className="grid sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3">
-              {tasks.map((task) => (
-                <Link key={task.taskId} to={`/task/${task.taskId}/job`}>
-                  <div
-                    key={task.taskId}
-                    className="mb-6 rounded-lg bg-white shadow-md task-card "
+            <div className="flex items-center justify-between pb-6">
+              <SearchBar search={search} setSearch={setSearch} />
+
+              <div className="flex items-center space-x-4">
+                <div className="relative">
+                  <select
+                    className="border border-[#101D3F] text-[#101D3F] font-bold py-2 px-4 rounded-md flex items-center"
+                    value={selectedStatus}
+                    onChange={handleStatusChange}
                   >
-                    <div className="pb-6 pl-6 pr-6 pt-2">
-                      <div className="flex items-center justify-between border-b-2 border-gray-300 pb-2">
-                        <div className="flex items-center w-1/2">
-                          <div class="task-name-container">
-                            <h3 class="text-lg font-semibold text-gray-700 task-name">
+                    <option value="all">All</option>
+                    <option value="Overdue">Overdue</option>
+                    <option value="In-Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Scheduled">Scheduled</option>
+                  </select>
+                </div>
+
+                <AddButton projectId={projectId} />
+              </div>
+            </div>
+            {/* Mapping task cards to a grid */}
+            <div className="grid sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3">
+              {filteredTasks.map((task) => (
+                <div
+                  key={task.taskId}
+                  className="mb-6 rounded-lg bg-white shadow-md task-card "
+                >
+                  <div className="pb-6 pl-6 pr-6 pt-2">
+                    <div className="flex items-center justify-between border-b-2 border-gray-300 pb-2">
+                      <div className="flex items-center w-1/2">
+                        <div className="task-name-container">
+                          <Link
+                            key={task.taskId}
+                            to={`/task/${task.taskId}/job`}
+                          >
+                            <h3 className="text-lg font-semibold text-gray-700 task-name cursor-pointer">
                               {/*{task.taskName.length >= 14
                                 ? task.taskName.substring(0, 14) + "..." // truncate if longer
                                 : task.taskName}*/}
                               {task.taskName}
                             </h3>
-                          </div>
-                        </div>
-                        <div className="flex justify-end pt-1.5">
-                          <p className="text-sm font-medium">
-                            <div
-                              className={`bg-indigo-100 text-indigo-500 rounded-md mr-1 pl-1 pr-1 status-label-${task.status.toLowerCase()}`}
-                            >
-                              {task.status}
-                            </div>
-                          </p>
-                          <div className="flex">
-                            <Link to={`/edit-task/${task.taskId}`}>
-                              <LuClipboardEdit className="text-slate-600" />
-                            </Link>
-
-                            <RiDeleteBin6Line
-                              className="text-slate-600"
-                              onClick={() => {
-                                const jobCount = jobCounts[task.taskId];
-                                if (
-                                  jobCount >
-                                  0 /* condition for the first function */
-                                ) {
-                                  // Execute the first function
-                                  noDeleteWarning(task.taskId);
-                                } else {
-                                  popUpWarning(task.taskId);
-                                }
-                              }}
-                            />
-                          </div>
+                          </Link>
                         </div>
                       </div>
+                      <div className="flex justify-end pt-1.5">
+                        <div className="text-sm font-medium">
+                          <div
+                            className={`bg-indigo-100 text-indigo-500 rounded-md mr-1 pl-1 pr-1 ${
+                              taskStatus[task.taskId]
+                                ? `status-label-${taskStatus[
+                                    task.taskId
+                                  ].toLowerCase()}`
+                                : ""
+                            }`}
+                          >
+                            {taskStatus[task.taskId]}
+                            {/*{task.status}*/}
+                          </div>
+                        </div>
+                        <div className="flex">
+                          <Link
+                            to={`/t/${task.project.projectId}/edit-task/${task.taskId}`}
+                            className="group"
+                          >
+                            <LuClipboardEdit className="text-slate-600 transition-transform duration-300 transform hover:scale-150" />
+                          </Link>
+
+                          <RiDeleteBin6Line
+                            className="text-slate-600 cursor-pointer transition-transform duration-300 transform hover:scale-150"
+                            onClick={() => {
+                              const jobCount = jobCounts[task.taskId];
+                              if (
+                                jobCount >
+                                0 /* condition for the first function */
+                              ) {
+                                // Execute the first function
+                                noDeleteWarning(task.taskId);
+                              } else {
+                                popUpWarning(task.taskId);
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <Link key={task.taskId} to={`/task/${task.taskId}/job`}>
                       <div className="">
                         <p className="my-6 text-sm font-normal text-gray-500">
-                          {task.description.length >= 130
-                            ? task.description.substring(0, 130) + "..." // truncate if longer
+                          {task.description.length >= 150
+                            ? task.description.substring(0, 150) + "..." // truncate if longer
                             : task.description +
-                              Array(130 - task.description.length)
+                              Array(150 - task.description.length)
                                 .fill("\u00A0")
                                 .join(" ")}
                           {/* Add whitespace if shorter */}
@@ -167,12 +307,12 @@ const TaskCardforProject = ({ projectId }) => {
                         </div>
                         <div className="flex items-center text-red-500">
                           <LuCalendarClock className="mr-2 text-lg" />
-                          {task.endDate}
+                          {formatDate(task.endDate)}
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           </div>
@@ -185,8 +325,8 @@ const TaskCardforProject = ({ projectId }) => {
     height: fit-content;
     }
 .status-label-completed {
-    background-color: #34d399; /* Green color for completed projects */
-    color: #ffffff;
+    background-color: #D5F5E3 ; /* Green color for completed projects */
+    color: #239B56  ;
   }
 
 .status-label-overdue {
@@ -200,10 +340,10 @@ const TaskCardforProject = ({ projectId }) => {
   }
 
   .task-name-container {
-    max-height: calc(2 * 0.9em); /* 2 lines * line-height */
+    max-height: calc(10 * 0.9em); /* 2 lines * line-height */
     overflow: hidden;
     position: relative;
-}
+  }
 
 .task-name {
     display: -webkit-box;
@@ -211,8 +351,13 @@ const TaskCardforProject = ({ projectId }) => {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
+    transition: white-space 1.5s; /* Smooth transition for white-space change */
 
+    /* Additional styles for hover */
+    &:hover {
+      white-space: normal; /* Make overflowing text visible when hovered */
+    }
+    
 `}</style>
     </>
   );

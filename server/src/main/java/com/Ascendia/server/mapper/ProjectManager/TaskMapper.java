@@ -16,7 +16,7 @@ public class TaskMapper {
                 task.getTaskStatus(),
                 task.getStatus(),
                 task.getProject()
-
+                //ORDER MUST BE THERE AS SAME THE DTO CLASS
         );
     }
 
@@ -30,6 +30,7 @@ public class TaskMapper {
                 taskDto.getTaskStatus(),
                 taskDto.getStatus(),
                 taskDto.getProject()
+                //ORDER MUST BE THERE AS SAME THE ENTITY CLASS
         );
     }
 

@@ -3,7 +3,7 @@ import { createTask, getTask, updateTask } from "../../services/TaskService";
 import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
 
-function EditTaskForm({ id }) {
+function EditTaskForm({ id, prePageNavigator }) {
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -11,6 +11,10 @@ function EditTaskForm({ id }) {
   const [pID, setPID] = useState(""); // State for project ID
 
   const navigator = useNavigate();
+
+  const goToPreviousPage = () => {
+    history.goBack(); // This will navigate back to the previous page
+  };
 
   useEffect(() => {
     if (id) {
@@ -50,7 +54,7 @@ function EditTaskForm({ id }) {
               title: "Success!",
               text: "Task updated successfully!",
             }).then(() => {
-              navigator("/project/" + pID + "/task");
+              navigator(prePageNavigator /*"/project/" + pID + "/task"*/);
             });
           })
           .catch((error) => {
@@ -69,7 +73,7 @@ function EditTaskForm({ id }) {
   }
 
   function handleCancel(e) {
-    navigator("/project/" + pID + "/task");
+    navigator(prePageNavigator); //navigator("/project/" + pID + "/task");
   }
 
   // Determine if the form is invalid

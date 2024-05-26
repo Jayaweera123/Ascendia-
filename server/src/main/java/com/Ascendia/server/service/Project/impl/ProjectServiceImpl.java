@@ -46,4 +46,11 @@ public class ProjectServiceImpl implements ProjectService {
                         new ResourceNotFoundException("Project not found with the given ID : " + projectId));
         return ProjectMapper.mapToProjectDto(project);
     }
+
+    @Override
+    public List<ProjectDto> getProjectsByPmId(Long pmId) {
+        List<Project> projects = projectRepository.findByPmId(pmId);
+        return projects.stream().map((project) -> ProjectMapper.mapToProjectDto(project))
+                .collect(Collectors.toList());
+    }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
@@ -8,25 +8,60 @@ import { FaClipboardUser } from "react-icons/fa6";
 import { GiProgression } from "react-icons/gi";
 import { PiProjectorScreenChartBold } from "react-icons/pi";
 import { useParams } from "react-router-dom";
+import { getProjectById } from "../../services/ProjectService";
 
-const SideNavigation = () => {
-  const { projectId } = useParams();
+const SideNavigation = ({ projectId }) => {
+  //============================================
+  /*Need the ID of the project manager who is logged in to the system*/
+  //For now I'm using the pmId from the project data.
+
+  const [projectManagerId, setProjectManagerId] = useState(null);
+
+  useEffect(() => {
+    if (projectId != null) {
+      getProjectById(projectId)
+        .then((response) => {
+          //console.log(response.data);
+          setProjectManagerId(response.data.pmId);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [projectId]);
+  //============================================
 
   const menus = [
-    { name: "Home", link: "/pmhome", icon: IoHome },
-    { name: "Pojects", link: "/project", icon: PiProjectorScreenChartBold },
+    { name: "Home", link: `/${projectManagerId}/pmhome`, icon: IoHome },
+    {
+      name: "Pojects",
+      link: `/${projectManagerId}/project`,
+      icon: PiProjectorScreenChartBold,
+    },
+
     {
       name: "Dashboard",
-      link: "/pmdashboard",
+      link: `/project/${projectId}/dashboard`,
       icon: MdOutlineDashboard,
       margin: true,
     },
-    { name: "Tasks", link: "/task", icon: FaRegClipboard },
-    { name: "Employees", link: "/employees", icon: FaClipboardUser },
-    { name: "Progress", link: "/progress", icon: GiProgression },
+    { name: "Tasks", link: `/project/${projectId}/task`, icon: FaRegClipboard },
+    {
+      name: "Employees",
+      link: `/project/${projectId}/employee`,
+      icon: FaClipboardUser,
+    },
+    {
+      name: "Progress",
+      link: `/project/${projectId}/progress`,
+      icon: GiProgression,
+    },
   ];
   const [open, setOpen] = useState(true);
 
+  /*if (projectId === null) {
+    return <div>Loading...</div>; // Or handle the null case appropriately
+  } else {*/
   return (
     <div
       className={`min-h-screen ${

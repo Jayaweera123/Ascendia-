@@ -74,6 +74,9 @@ import AddTask from "./pages/ProjectManager/AddTask";
 import TasksForProject from "./pages/ProjectManager/TasksForProject";
 import Jobs from "./pages/ProjectManager/Jobs";
 import EditTask from "./pages/ProjectManager/EditTask";
+import AddEmployee from "./pages/ProjectManager/AddEmployee";
+import EmployeeHistory from "./pages/ProjectManager/EmployeeHistory";
+import EditTask0 from "./pages/ProjectManager/EditTask0";
 
 const App = () => {
   return (
@@ -88,16 +91,27 @@ const App = () => {
           <Route path="/assignEmployee" element={<AssignEmployee />} />
 
           {/*ProjectManager */}
-          <Route path="/pmhome" element={<HomePM />} />
+          <Route path="/:pmId/pmhome" element={<HomePM />} />
           <Route path="/topNavigationPM" element={<TopNavigationPM />} />
           <Route path="/sideNavigationPM" element={<SideNavigationPM />} />
-          <Route path="/project" element={<Projects />} />
+          <Route path="/:pmId/project" element={<Projects />} />
           <Route path="/pmdashboard" element={<ProjectDashboard />} />
           <Route path="/task" element={<Tasks />} />
           <Route path="/:projectId/addtask" element={<AddTask />} />
-          <Route path="/edit-task/:taskId" element={<EditTask />} />
+          <Route path=":projectId/edit-task/:taskId" element={<EditTask />} />
+          <Route
+            path="/t/:projectId/edit-task/:taskId"
+            element={<EditTask0 />}
+          />
+
+          <Route path="/:projectId/addemployee" element={<AddEmployee />} />
+
           <Route path="/employees" element={<Employees />} />
           <Route path="/progress" element={<ProjectProgress />} />
+          <Route
+            path="/:projectId/employee-history"
+            element={<EmployeeHistory />}
+          />
           <Route
             path="/project/:projectId/dashboard"
             element={<ProjectDashboard />}
@@ -107,6 +121,12 @@ const App = () => {
             path="/project/:projectId/task"
             element={<TasksForProject />}
           />
+          <Route path="/project/:projectId/employee" element={<Employees />} />
+          <Route
+            path="/project/:projectId/progress"
+            element={<ProjectProgress />}
+          />
+
           <Route path="/task/:taskId/job" element={<Jobs />} />
 
           {/** 

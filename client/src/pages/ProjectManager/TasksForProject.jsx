@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { BsClipboard2PlusFill } from "react-icons/bs";
 import AddButton from "../../components/ProjectManager/AddButton";
 import TaskCardforProject from "../../components/ProjectManager/TaskCard copy";
+import SearchBar from "../../components/ProjectManager/SearchBar";
 
 function TasksForProject() {
   const { projectId } = useParams();
@@ -18,14 +19,12 @@ function TasksForProject() {
     <>
       <TopNavigationPM />
       <section className="flex">
-        <SideNavigationPM />
+        <SideNavigationPM projectId={projectId} />
         <div className="ml-3.5 mr-3.5 mt-10 w-9/12 flex-grow">
           <div className="flex justify-between m-0">
             <PageTitle title="Tasks" />
-            <div className=""></div>
-            <AddButton projectId={projectId} />
           </div>
-          <div ClassName="flex-grow">
+          <div className="flex-grow">
             <TaskCardforProject projectId={projectId} />
           </div>
         </div>

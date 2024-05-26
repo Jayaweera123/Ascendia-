@@ -5,10 +5,14 @@ import { MdOutlineDashboard } from "react-icons/md";
 import { IoHome } from "react-icons/io5";
 import { PiProjectorScreenChartBold } from "react-icons/pi";
 
-const SideNavigationPM = () => {
+const SideNavigationPM = ({ pmId }) => {
   const menus = [
-    { name: "Home", link: "/pmhome", icon: IoHome },
-    { name: "Pojects", link: "/project", icon: PiProjectorScreenChartBold },
+    { name: "Home", link: `/${pmId}/pmhome`, icon: IoHome },
+    {
+      name: "Pojects",
+      link: `/${pmId}/project`,
+      icon: PiProjectorScreenChartBold,
+    },
   ];
   const [open, setOpen] = useState(true);
 

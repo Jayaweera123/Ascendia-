@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { getAllProjectCards } from "../../services/ProjectService.jsx";
+import {
+  getAllProjectCards,
+  getProjectForPM,
+} from "../../services/ProjectService.jsx";
 import { Link } from "react-router-dom";
 
-const ProjectCard = () => {
+const ProjectCard = ({ projectManagerId }) => {
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
-    getAllProjectCards()
+    getProjectForPM(projectManagerId)
       .then((response) => {
         setProjects(response.data);
+        console.log(projects);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [projectManagerId]);
 
   return (
     <>
@@ -25,7 +29,7 @@ const ProjectCard = () => {
                 {projects.map((project) => (
                   <Link
                     key={project.projectId}
-                    to={`/project/${project.projectId}/task`}
+                    to={`/project/${project.projectId}/dashboard`}
                   >
                     <div
                       key={project.projectId}
@@ -35,21 +39,21 @@ const ProjectCard = () => {
                         {" "}
                         {/* Added flex and justify-between to manage content height */}
                         <div>
-                          <div className="flex items-center justify-between pb-2 border-b-2 border-gray-300">
-                            <div className="flex items-center">
-                              <div>
-                                <h3 className="text-lg font-semibold text-gray-700">
+                          <div className="flex items-center justify-between pb-2 border-b-2 border-gray-300 ">
+                            <div className="flex items-center w-2/3">
+                              <div className=".project-name-container ">
+                                <h3 className="text-lg font-semibold text-gray-700 truncate">
                                   {project.projectName}
                                 </h3>
                               </div>
                             </div>
-                            <p className="text-sm font-medium">
+                            <div className="text-sm font-medium">
                               <div
                                 className={`bg-indigo-100  text-indigo-500 rounded-md pl-1 pr-1 status-label-${project.projectStatus.toLowerCase()}`}
                               >
                                 {project.projectStatus}
                               </div>
-                            </p>
+                            </div>
                           </div>
                           <p className="my-6 text-sm font-normal text-gray-500">
                             {project.projectDescription.length > 150
@@ -84,6 +88,33 @@ const ProjectCard = () => {
           background-color: #FFFEC7; /* Yellow color for upcoming projects */
           color: #EEAF32;
         }
+
+        .truncate {
+          width: 100%; /* or adjust to your desired width */
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .project-name-container {
+          max-height: calc(10 * 0.9em); /* 2 lines * line-height */
+          overflow: hidden;
+          position: relative;
+          
+        }
+      
+      .project-name {
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          transition: white-space 0.3s; /* Smooth transition for white-space change */
+      
+          /* Additional styles for hover */
+          &:hover {
+            white-space: normal; /* Make overflowing text visible when hovered */
+          }
       `}</style>
     </>
   );

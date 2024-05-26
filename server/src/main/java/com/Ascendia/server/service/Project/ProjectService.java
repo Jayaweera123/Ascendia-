@@ -13,6 +13,7 @@ public interface ProjectService {
 
     ProjectDto getProjectId(Long projectId);
 
+    List<ProjectDto> getProjectsByPmId(Long pmId);
 
 
 }
