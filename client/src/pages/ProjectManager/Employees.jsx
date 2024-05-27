@@ -14,16 +14,18 @@ function Employees() {
   return (
     <>
       <TopNavigationPM />
-      <section className="flex">
+      <section className="flex ">
         <SideNavigationPM projectId={projectId} />
-        <div className="ml-3.5 mt-10 w-9/12 flex-grow">
-          <div className="flex justify-between mr-5">
-            <PageTitle title="Employees" />
-            {/*<AddEmployeeButton projectId={projectId} />*/}
-            <PreviousEmployeesButton projectId={projectId} />
+        <div className="flex-auto">
+          <div className="mx-10 my-5 ">
+            <div className="flex justify-between">
+              <PageTitle title="Employees" />
+              {/*<AddEmployeeButton projectId={projectId} />*/}
+              <PreviousEmployeesButton projectId={projectId} />
+            </div>
+            {/* <EmployeeCard projectId={projectId} />*/}
+            <EmployeeCopy projectId={projectId} />
           </div>
-          {/* <EmployeeCard projectId={projectId} />*/}
-          <EmployeeCopy projectId={projectId} />
         </div>
       </section>
     </>

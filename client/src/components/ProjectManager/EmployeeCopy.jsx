@@ -19,8 +19,9 @@ function EmployeeCopy({ projectId }) {
   const [selectedDesignation, setSelectedDesignation] = useState("all");
   const [search, setSearch] = useState("");
 
+  //Get employees details
   useEffect(() => {
-    // Fetch tasks for the project when projectId changes
+    // Fetch employees for the project when projectId changes
     getAllEmployeesForProject(projectId)
       .then((response) => {
         setEmployees(response.data);
@@ -31,16 +32,19 @@ function EmployeeCopy({ projectId }) {
       });
   }, [projectId]);
 
-  const handleDesignationChange = (e) => {
-    setSelectedDesignation(e.target.value);
-  };
-
+  //format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { year: "numeric", month: "long", day: "numeric" };
     return date.toLocaleDateString("en-US", options);
   };
 
+  //select employees based on designation
+  const handleDesignationChange = (e) => {
+    setSelectedDesignation(e.target.value);
+  };
+
+  //filter selected employees
   const filteredEmployees =
     selectedDesignation === "all"
       ? employees
@@ -49,6 +53,7 @@ function EmployeeCopy({ projectId }) {
             employee.assignedUser.designation === selectedDesignation
         );
 
+  //remove employees
   function removeEmployee(id) {
     deleteAssignment(id)
       .then(() => {
@@ -67,6 +72,7 @@ function EmployeeCopy({ projectId }) {
       });
   }
 
+  //popups
   function popUpWarning(id) {
     Swal.fire({
       icon: "warning",
@@ -85,6 +91,32 @@ function EmployeeCopy({ projectId }) {
       })
       .then(() => {});
   }
+
+  //Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 4;
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = filteredEmployees.slice(firstIndex, lastIndex);
+  const numberOfPages = Math.ceil(filteredEmployees.length / recordsPerPage);
+  const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
+
+  //Pagination
+  const prePage = () => {
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const changeCurrentPage = (id) => {
+    setCurrentPage(id);
+  };
+
+  const nextPage = () => {
+    if (currentPage !== numberOfPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   //Search employee
   useEffect(() => {
@@ -110,8 +142,8 @@ function EmployeeCopy({ projectId }) {
 
   return (
     <div>
-      <div className="bg-white  p-8 rounded-md w-full">
-        <div className="flex items-center justify-between pb-6">
+      <div className="bg-white shadow-md p-7 rounded-md ">
+        <div className="flex items-center justify-between pb-4">
           <SearchBar search={search} setSearch={setSearch} />
           <div className="flex items-center space-x-4">
             <div className="relative">
@@ -162,9 +194,9 @@ function EmployeeCopy({ projectId }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredEmployees.map((employee) => (
+                    {records.map((employee) => (
                       <tr key={employee.id}>
-                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <td className="px-5 py-4 border-b border-gray-200 bg-white text-sm">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 w-10 h-10">
                               <img
@@ -229,7 +261,54 @@ function EmployeeCopy({ projectId }) {
                   </tbody>
                 </table>
               )}
-              {/*<div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
+              <div className="flex items-center justify-between p-4 border-t border-blue-gray-50">
+                <button
+                  className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none"
+                  onClick={prePage}
+                >
+                  Previous
+                </button>
+
+                <div className="flex items-center gap-2">
+                  {/************************************************* Pagination *********************************************/}
+                  {/*{numbers.map((n, i) => (
+                    <button
+                      className={`${
+                        currentPage === n
+                          ? "px-3 py-1 text-sm border rounded-full border-blue-gray-500 focus:outline-none bg-slate-200"
+                          : "px-3 py-1 text-sm focus:outline-none border rounded-full border-blue-gray-500"
+                      }`}
+                      key={i}
+                      onClick={() => changeCurrentPage(n)}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>*/}
+
+                  <div className="text-sm text-gray-600">
+                    Page{"    "}
+                    <span className="px-3 py-1 text-sm border rounded-full border-blue-gray-500 focus:outline-none bg-slate-200">
+                      {currentPage}
+                    </span>
+                    {"    "}
+                    of{"    "}
+                    <span className="px-3 py-1 text-sm focus:outline-none border rounded-full border-blue-gray-500">
+                      {numberOfPages}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none"
+                  onClick={nextPage}
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+
+            {/*<div className="px-5 py-5 bg-white border-t flex flex-col xs:flex-row items-center xs:justify-between">
                 <span className="text-xs xs:text-sm text-gray-900">
                   Showing 1 to 4 of 50 Entries
                 </span>
@@ -243,7 +322,6 @@ function EmployeeCopy({ projectId }) {
                   </button>
                 </div>
   </div>*/}
-            </div>
           </div>
         </div>
       </div>

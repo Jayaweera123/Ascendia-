@@ -11,15 +11,17 @@ const PreviousEmployeesButton = ({ projectId }) => {
   }
 
   return (
-    <button
-      className="bg-[#101d3f] hover:bg-[#476ac0] text-white font-bold rounded-md"
-      onClick={gotoHistory}
-    >
-      <div className="flex items-center">
-        <div className="flex items-center justify-center"></div>
-        Previous Employees
-      </div>
-    </button>
+    <div className="py-3">
+      <button
+        className="bg-[#101d3f] hover:bg-[#476ac0] text-white font-bold rounded-md p-2.5"
+        onClick={gotoHistory}
+      >
+        <div className="flex items-center">
+          <div className="flex items-center justify-center"></div>
+          Previous Employees
+        </div>
+      </button>
+    </div>
   );
 };
 
