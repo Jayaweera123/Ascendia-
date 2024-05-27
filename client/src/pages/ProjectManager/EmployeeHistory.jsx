@@ -15,13 +15,16 @@ function EmployeeHistory() {
       <TopNavigationPM />
       <section className="flex">
         <SideNavigationPM projectId={projectId} />
-        <div className="ml-3.5 mt-10 w-9/12 flex-grow">
-          <div className="flex justify-between mr-5">
-            <PageTitle title="Employee History" />
-            {/*<AddEmployeeButton projectId={projectId} />*/}
+        <div className="flex-auto">
+          <div className="mx-10 my-5 ">
+            <div className="flex justify-between mb-2">
+              <PageTitle title="Employee History" />
+              {/*<AddEmployeeButton projectId={projectId} />*/}
+            </div>
+
+            {/* <EmployeeCard projectId={projectId} />*/}
+            <EmployeeHistoryRecords projectId={projectId} />
           </div>
-          {/* <EmployeeCard projectId={projectId} />*/}
-          <EmployeeHistoryRecords projectId={projectId} />
         </div>
       </section>
     </>

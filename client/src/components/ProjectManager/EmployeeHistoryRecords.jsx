@@ -116,8 +116,8 @@ function EmployeeHistoryRecords({ projectId }) {
 
   return (
     <div>
-      <div className="bg-white  p-8 rounded-md w-full">
-        <div className="flex items-center justify-between pb-6">
+      <div className="bg-white shadow-md  p-7 rounded-md">
+        <div className="flex items-center justify-between pb-4">
           <SearchBar search={search} setSearch={setSearch} />
           <div className="flex items-center space-x-4">
             <div className="relative">
@@ -168,7 +168,7 @@ function EmployeeHistoryRecords({ projectId }) {
                   <tbody>
                     {records.map((employee) => (
                       <tr key={employee.recordId}>
-                        <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                        <td className="px-5 py-4 border-b border-gray-200 bg-white text-sm">
                           <div className="flex items-center">
                             <div className="flex-shrink-0 w-10 h-10">
                               <img

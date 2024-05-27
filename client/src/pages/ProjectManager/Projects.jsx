@@ -14,7 +14,7 @@ function Projects() {
       <TopNavigationPM />
       <section className="flex">
         <SideNavigationPM pmId={pmId} />
-        <div>{pmId}</div>
+
         <div className="ml-3.5 mr-3.5 mt-10 w-9/12 flex-grow">
           <PageTitle title="Projects" />
 
