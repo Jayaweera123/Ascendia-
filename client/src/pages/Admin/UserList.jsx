@@ -167,10 +167,11 @@ const UserList = () => {
                         class="flex items-center px-5 py-3 text-gray-900 whitespace-nowrap dark:text-black"
                       >
                         <img
-                          src={user.profileImage} 
+                          src={user.profilePicUrl ? `http://localhost:8080/${user.profilePicUrl.replace(/\\/g, "/")}` : ""} // Assuming the server is running on localhost:8080
                           className="w-10 h-10 rounded-full"
                           alt={`Profile of ${user.firstName} ${user.lastName}`}
                         />
+
                         <div class="ps-3">
                           <div className="flex flex-row text-base font-semibold">
                             <div>{user.firstName}</div>

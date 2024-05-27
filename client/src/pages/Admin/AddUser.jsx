@@ -31,7 +31,7 @@ const AddUser = () => {
   const { userID } = useParams(); // Get the user ID from the URL parameters
   // Initialize state for form errors
   const [errors, setErrors] = useState({
-    userID: '',
+    //userID: '',
     firstName: '',
     lastName: '',
     phoneNumber: '',
@@ -52,6 +52,11 @@ const AddUser = () => {
         .catch((error) => {
           console.error("Error fetching user data:", error); // Log the error to the console for debugging
         });
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        userID: Date.now() + Math.floor(Math.random() * 1000)
+      }));
     }
   }, [userID]);
   
@@ -74,6 +79,7 @@ const AddUser = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return; // Validate form before submission 
     try {
       if (userID) {
         await editUser(userID, formData);
@@ -86,91 +92,9 @@ const AddUser = () => {
     }
   };
 
-  // Function to handle form submission for adding or editing a user
-  {/*async function saveOrEditUser(e) {
-    e.preventDefault(); // Prevent default form submission behavior
-
-    // Validate form inputs
-    if (validateForm()) {
-      // Generate a random 5-digit user ID
-      //const userID = generateRandomUserID();
-      
-      // Set addedDate to the current date
-      //const today = new Date();
-      //const formattedDate = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-
-      const user = { 
-        userID: formData.userID,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        phoneNumber: formData.phoneNumber,
-        email: formData.email,
-        designation: formData.designation,
-        department: formData.department,
-        addedDate: formData.addedDate // Include addedDate in form data
-        
-      };
-      
-      // Append profileImage to the user object if it exists
-      if (formData.profileImage) {
-        user.profileImage = formData.profileImage;
-      }
-
-      try {
-        // Call addUser function from the service with the user object
-        const response = await addUser(user);
-        console.log(response.data);
-        // Clear form data after successful addition
-        setFormData({
-          userID: '', 
-          firstName: '',
-          lastName: '',
-          phoneNumber: '',
-          email: '',
-          designation: '',
-          department: '',
-          addedDate: '', 
-          profileImage: null
-        });
-        // Navigate to the user list page after successful addition
-        navigator('/userlist');
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  } */}
-
-  // Function to generate a random 5-digit user ID
-  {/*function generateRandomUserID() {
-    return Math.floor(10000 + Math.random() * 90000); // Generate a random number between 10000 and 99999
-  }*/}
-
-  {/*if (userID) {
-    // If editing an existing user, call editUser function from the service
-    editUser(userID, user)
-      .then((response) => {
-        console.log(response.data);
-        navigator('/userlist'); // Navigate to the user list page after successful edit
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  } else {
-    // If adding a new user, call addUser function from the service
-    addUser(user)
-      .then((response) => {
-        console.log(response.data);
-        navigator('/userlist'); // Navigate to the user list page after successful addition
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }*/}
-
   // Function to clear form fields
   const removeUser = async () => {
-    try {
-    
+    try { 
       navigator('/userlist');
       window.location.reload();
     } catch (error) {
@@ -187,13 +111,7 @@ const AddUser = () => {
     const errorsCopy = { ...errors };
 
     // Validate each form field
-    // Validate userID
-    if (!formData.userID.trim()) {
-      errorsCopy.userID = 'User ID is required!';
-      valid = false;
-    } else {
-      errorsCopy.userID = '';
-    }
+    
     // Validate firstName
     if (!formData.firstName.trim()) {
       errorsCopy.firstName = 'First Name is required!';
@@ -228,7 +146,7 @@ const AddUser = () => {
 
     // Validate addedDate
     if (!formData.addedDate.trim()) {
-      errorsCopy.addedDate = 'First Name is required!';
+      errorsCopy.addedDate = 'Added Date is required!';
       valid = false;
     } else {
       errorsCopy.addedDate = '';
@@ -239,35 +157,6 @@ const AddUser = () => {
 
     return valid;
   }
-
-  // Function to render page title based on whether adding or editing a user
-  {/*function pageTitle() {
-    if (userID) {
-      // If editing an existing user
-      return (
-        <div className="flex flex-row gap-3 pt-2 items-centered">
-          <FaUserEdit size={90} color="#001b5e" />
-          <div>
-            <h1 className="place-items-baseline text-4xl leading-relaxed py-4 font-bold text-left text-[#001b5e]">
-              Edit User
-            </h1>
-          </div>
-        </div>
-      );
-    } else {
-      // If adding a new user
-      return (
-        <div className="flex flex-row gap-3 pt-2 items-centered">
-          <RiUserAddFill size={90} color="#001b5e" />
-          <div>
-            <h1 className="place-items-baseline text-4xl leading-relaxed py-4 font-bold text-left text-[#001b5e]">
-              Add User
-            </h1>
-          </div>
-        </div>
-      );
-    }
-  }*/}
 
   // Function to render page title dynamically based on whether adding or editing a user
   function pageTitle() {
@@ -294,8 +183,8 @@ const AddUser = () => {
       <TopNavigationAdmin />
       <section className="flex">
         <SideNavigationAdmin open={open} setOpen={setOpen} />
-        <div class="relative bg-zinc-50 bg-cover h-fit w-screen">
-          <div className="m-3 text-xl font-semibold text-gray-900">
+        <div class="relative bg-zinc-100 bg-contain h-fit w-screen">
+          <div className="m-5 text-xl font-semibold text-gray-900">
 
             <form method="POST" onSubmit={handleSubmit}  encType="multipart/form-data">
               <div className="space-y-5">
@@ -303,29 +192,11 @@ const AddUser = () => {
                 {
                 pageTitle()
                 }
-                <div className="relative m-5 overflow-x-auto bg-white rounded-lg shadow-md">
-                  <div className="pb-12 border-b border-gray-900/10">
-                    <div className="grid grid-cols-1 m-5 mt-10 gap-x-6 gap-y-8 sm:grid-cols-12">
+                <div className="relative ml-5 mr-5 overflow-x-auto bg-white rounded-lg shadow-md">
+                  <div className="pb-5 border-b border-gray-900/10">
+                    <div className="grid grid-cols-1 ml-5 gap-x-6 gap-y-8 sm:grid-cols-12">
 
                       {/* Input fields for user details */}
-                      {/* Input for User ID */}
-                      <div className="sm:col-span-3">
-                        <label htmlFor="userID" className="block text-base font-medium leading-6 text-gray-900">
-                          User ID
-                        </label>
-                        <div className="mt-2">
-                          <input
-                            type="text"
-                            name="userID" //Match the property name in formData
-                            id="userID"
-                            autoComplete="userId"
-                            value={formData.userID} 
-                            onChange={handleChange}
-                            className={`form-input ${errors.userID ? 'border-red-500' : '' } block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
-                          />
-                          {errors.userID && <div className='text-red-500'> {errors.userID}</div>}
-                        </div>
-                      </div>
                       
                       {/* Input for First Name */}
                       <div className="sm:col-span-5 sm:row-start-2">
@@ -415,11 +286,12 @@ const AddUser = () => {
                           <select
                             id="designation"
                             name="designation"
-                            autoComplete="designation"
+                            autoComplete="off"
                             value={formData.designation} 
                             onChange={handleChange}
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                           >
+                            <option value="" disabled selected>Select Designation</option>
                             <option>Project Manager</option>
                             <option>Project Creation Team Member</option>
                             <option>Site Engineer</option>
@@ -434,6 +306,7 @@ const AddUser = () => {
                         </div>
                       </div>
 
+                      
                       {/* Input for Department */}
                       <div className="sm:col-span-3 sm:row-start-4">
                         <label htmlFor="department" className="block text-base font-medium leading-6 text-gray-900">
@@ -443,11 +316,12 @@ const AddUser = () => {
                           <select
                             id="department"
                             name="department"
-                            autoComplete="department"
+                            autoComplete="off"
                             value={formData.department} 
                             onChange={handleChange}
                             className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                           >
+                            <option value="" disabled selected>Select Department</option>
                             <option>PMD 1</option>
                             <option>PMD 2</option>
                             <option>PMD 3</option>
@@ -495,11 +369,11 @@ const AddUser = () => {
                   </div>
 
                   {/* Buttons for adding or deleting user */}
-                  <div className="flex items-center justify-end mt-6 mb-5 mr-5 gap-x-6">
+                  <div className="flex items-center justify-end mt-5 mb-5 mr-5 gap-x-6">
                     <button
                       type="submit"
                       onClick={handleSubmit}
-                      className="px-3 py-2 text-xl font-semibold text-white bg-[#101d3f] rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                      className="w-24 px-4 py-2 text-xl font-semibold text-white bg-[#101d3f] rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
                       {userID ? 'Update' : 'Add'}
                     </button>
@@ -507,7 +381,7 @@ const AddUser = () => {
                     <button
                       type="button"
                       onClick={removeUser}
-                      className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                      className="w-24 px-4 py-2 text-xl font-semibold text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                     >
                       Cancel
                     </button>
