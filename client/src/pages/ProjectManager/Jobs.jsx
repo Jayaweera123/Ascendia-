@@ -49,17 +49,23 @@ function Jobs() {
   return (
     <>
       <TopNavigationPM />
-      <section className="flex">
+      <section className="flex ">
         <SideNavigationPM projectId={projectId} />
-        <div className="ml-3.5 mr-3.5 mt-5 w-9/12 flex-grow">
-          <BreadCrumb previousPage={"Tasks"} currentPage={"Jobs"} />
-          <div className="flex">
-            <PageTitle title="Jobs" />
-          </div>
-          <TaskDetails taskId={taskId} />
-          <div className="ml-3.5">
-            <div className="flex-grow">
-              <JobCard taskId={taskId} />
+        <div className="flex-auto w-8/12">
+          <div className="mx-10 my-5">
+            {/*<BreadCrumb previousPage={"Tasks"} currentPage={"Jobs"} />*/}
+            <div className="flex">
+              <div className="h-screen">
+                <PageTitle title="Tasks" />
+
+                <TaskDetails taskId={taskId} />
+              </div>
+            </div>
+            <div className="">
+              <div className="flex-grow">
+                <PageTitle title="Jobs" />
+                <JobCard taskId={taskId} />
+              </div>
             </div>
           </div>
         </div>

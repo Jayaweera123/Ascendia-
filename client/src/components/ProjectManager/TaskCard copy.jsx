@@ -199,10 +199,10 @@ const TaskCardforProject = ({ projectId }) => {
 
   return (
     <>
-      <div className="mt-10 mx-auto">
+      <div className="">
         <main className="">
-          <div className="px-4">
-            <div className="flex items-center justify-between pb-6">
+          <div className="">
+            <div className="flex items-center justify-between pb-6 mt-2.5">
               <SearchBar search={search} setSearch={setSearch} />
 
               <div className="flex items-center space-x-4">

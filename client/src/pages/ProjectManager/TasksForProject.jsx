@@ -20,12 +20,14 @@ function TasksForProject() {
       <TopNavigationPM />
       <section className="flex">
         <SideNavigationPM projectId={projectId} />
-        <div className="ml-3.5 mr-3.5 mt-10 w-9/12 flex-grow">
-          <div className="flex justify-between m-0">
-            <PageTitle title="Tasks" />
-          </div>
-          <div className="flex-grow">
-            <TaskCardforProject projectId={projectId} />
+        <div className="flex-auto w-8/12">
+          <div className="mx-10 my-5">
+            <div className="flex justify-between">
+              <PageTitle title="Tasks" />
+            </div>
+            <div className="flex-grow">
+              <TaskCardforProject projectId={projectId} />
+            </div>
           </div>
         </div>
       </section>

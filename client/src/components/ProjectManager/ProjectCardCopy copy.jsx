@@ -21,10 +21,10 @@ const ProjectCard = ({ projectManagerId }) => {
 
   return (
     <>
-      <div className="mt-10">
-        <div className="mx-auto">
+      <div className="">
+        <div className="">
           <main className="">
-            <div className="px-4">
+            <div className="mt-2.5">
               <div className="grid sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3">
                 {projects.map((project) => (
                   <Link

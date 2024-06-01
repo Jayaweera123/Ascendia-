@@ -223,7 +223,6 @@ public class  TaskServiceImpl implements TaskService {
             LocalDate currentDate = LocalDate.now();
             LocalDate endDate = taskDto.getEndDate();
 
-
             Period period;
 
             if (currentDate.isBefore(endDate)) {

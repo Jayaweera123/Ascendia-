@@ -59,6 +59,7 @@ const TaskDetailsinJobPage = ({ taskId }) => {
         setProject(response.data.project.projectName); // Set the project data
         setTaskStatus(response.data.taskStatus);
         setProjectId(response.data.project.projectId);
+        //setTimeDifference(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -145,10 +146,8 @@ const TaskDetailsinJobPage = ({ taskId }) => {
   }
 
   return (
-    // Your JSX code goes here
-
-    <div className="w-11/12 mb-5 p-5 bg-white shadow-md rounded-md">
-      <div className="flex justify-between">
+    <div className="mt-2.5 mb-5 p-5 bg-white shadow-md rounded-md ">
+      <div className="flex justify-between  w-full">
         <div className="flex text-xl font-semibold mb-2 text-gray-700">
           {project}
           <IoIosArrowForward className="mt-1.5" />
@@ -175,8 +174,17 @@ const TaskDetailsinJobPage = ({ taskId }) => {
         </div>
       </div>
 
-      <p className="text-gray-800 mt-1">{description}</p>
-
+      <div className="text-justify">
+        <p className="text-gray-800 mt-1">
+          {description.length < 999
+            ? description +
+              Array(1000 - description.length)
+                .fill("\u00A0")
+                .join(" ")
+            : description + Array(200).fill("\u00A0").join(" ")}
+          {/* Add whitespace if shorter */}
+        </p>
+      </div>
       <div className="flex justify-between items-center mt-2">
         <div className="flex flex-col   text-gray-700">
           <p>Start Date: {formatDate(startDate)}</p>
