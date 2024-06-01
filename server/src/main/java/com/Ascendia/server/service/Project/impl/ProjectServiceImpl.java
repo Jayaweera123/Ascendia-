@@ -53,4 +53,11 @@ public class ProjectServiceImpl implements ProjectService {
         return projects.stream().map((project) -> ProjectMapper.mapToProjectDto(project))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<ProjectDto> searchProject(Long pmId, String query) {
+        List<Project> projects =  projectRepository.searchProject(pmId, query);
+        return projects.stream().map(ProjectMapper::mapToProjectDto)
+                .collect(Collectors.toList());
+    }
 }

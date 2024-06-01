@@ -15,5 +15,9 @@ public interface ProjectService {
 
     List<ProjectDto> getProjectsByPmId(Long pmId);
 
+    List<ProjectDto> searchProject(Long pmId, String query);
+
+
+
 
 }

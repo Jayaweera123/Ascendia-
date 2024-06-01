@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import {
   getAllProjectCards,
   getProjectForPM,
+  searchProject,
 } from "../../services/ProjectService.jsx";
+import SearchBar from "../../components/ProjectManager/SearchBar";
 import { Link } from "react-router-dom";
 
 const ProjectCard = ({ projectManagerId }) => {
   const [projects, setProjects] = useState([]);
+  const [search, setSearch] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("all");
 
   useEffect(() => {
     getProjectForPM(projectManagerId)
@@ -19,14 +23,64 @@ const ProjectCard = ({ projectManagerId }) => {
       });
   }, [projectManagerId]);
 
+  const handleStatusChange = (e) => {
+    setSelectedStatus(e.target.value);
+  };
+
+  //Search task
+  useEffect(() => {
+    if (search !== "") {
+      searchProject(projectManagerId, search)
+        .then((response) => {
+          setProjects(response.data);
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+        });
+    } else {
+      //if search is empty fetch all equipment
+      getProjectForPM(projectManagerId)
+        .then((response) => {
+          setProjects(response.data);
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+        });
+    }
+  }, [search]);
+
+  const filteredProjects =
+    selectedStatus === "all"
+      ? projects
+      : projects.filter((project) => project.projectStatus === selectedStatus);
+
   return (
     <>
       <div className="">
         <div className="">
           <main className="">
-            <div className="mt-2.5">
+            <div className="">
+              <div className="flex items-center justify-between pb-6 mt-2.5">
+                <SearchBar search={search} setSearch={setSearch} />
+
+                <div className="flex items-center space-x-4">
+                  <div className="relative">
+                    <select
+                      className="border border-[#101D3F] text-[#101D3F] font-bold py-2 px-4 rounded-md flex items-center"
+                      value={selectedStatus}
+                      onChange={handleStatusChange}
+                    >
+                      <option value="all">All</option>
+                      <option value="Overdue">Overdue</option>
+                      <option value="In-Progress">In Progress</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Scheduled">Scheduled</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
               <div className="grid sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3">
-                {projects.map((project) => (
+                {filteredProjects.map((project) => (
                   <Link
                     key={project.projectId}
                     to={`/project/${project.projectId}/dashboard`}

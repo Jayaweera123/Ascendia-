@@ -13,3 +13,8 @@ export const getAllProjectCards = () => axios.get(REST_API_BASE_URL);
 
 export const getProjectForPM = (ProjectManagerId) =>
   axios.get("http://localhost:8080/api/project/pm/" + ProjectManagerId);
+
+export const searchProject = (pmId, searchTerm) =>
+  axios.get(
+    "http://localhost:8080/api/project/search/" + pmId + "?query=" + searchTerm
+  );

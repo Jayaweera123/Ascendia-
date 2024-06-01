@@ -45,4 +45,10 @@ public class ProjectController {
         return ResponseEntity.ok(projects);
     }
 
+    //Build search REST API
+    @GetMapping("/search/{pmId}")
+    public ResponseEntity<List<ProjectDto>> searchProject(@PathVariable Long pmId, @RequestParam("query") String query){
+        return ResponseEntity.ok(projectService.searchProject(pmId, query));
+    }
+
 }
