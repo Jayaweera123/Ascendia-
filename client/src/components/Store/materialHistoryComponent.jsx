@@ -6,13 +6,18 @@ import DateCom from './DateCom';
 
 function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPage, 
     currentPage, numberOfPages, search, setSearch, selectedAction,
- filterByDate}) {
+ filterByDate , value, setValue}) {
     const [filteredRecords, setFilteredRecords] = useState(records);
     const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [action, setAction] = useState('All History');
 
-    
+    // const [value, setValue] = useState({ 
+
+    //     startDate: new Date(), 
+    //     endDate: new Date().setMonth(11) 
+        
+    //     }); 
 
     //Function to format date and time
     const formatDateTime = (dateTimeString) => {
@@ -63,9 +68,13 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
                     // <DateRangePickerComponent onDateChange={(startDate, endDate) => {
                     //     // Do something with the new date range
                     //   }} />
-                    <DateCom />
+                    <DateCom
+                    value = {value} 
+                    setValue = {setValue}/>
                 )}
                 {/* <DateRangePickerComponent onDateChange={filterByDate} />     */}
+
+                {console.log('value',value)}
                
                <br />
                 

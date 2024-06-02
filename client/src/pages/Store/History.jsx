@@ -3,10 +3,10 @@ import { getAllUpdatedEquipment, getAllUpdatedMaterials, searchUpdatedMaterial} 
 import { useNavigate } from "react-router-dom";
 import TopNavigationStore from "../../components/Store/TopNavigationStore";
 import SideNavigationStore from "../../components/Store/SideNavigationStore";
-import MaterialHistoryComponent from "../../components/Store/MaterialHistoryComponent";
+import MaterialHistoryComponent from "../../components/Store/materialHistoryComponent";
 import EquipmentHistoryComponent from "../../components/Store/EquipmentHistoryComponent";
 
-function History({ selectedAction, startDate, endDate}) {
+function History({ selectedAction, startDate, endDate }) {
 
     const [open, setOpen] = useState(true);
     const [updatedMaterial, setUpdatedMaterial] = useState([]);
@@ -15,7 +15,12 @@ function History({ selectedAction, startDate, endDate}) {
     const [searchMaterial, setSearchMaterial] = useState("");
     const [searchEquipment, setSearchEquipment] = useState("");
     const [filteredMaterial, setFilteredMaterial] = useState([]); // State to manage filtered material
-    
+    const [value, setValue] = useState({ 
+
+        startDate: new Date(), 
+        endDate: new Date().setMonth(11) 
+        
+        }); 
 
     const navigator = useNavigate();
     const givenProjectId = 3;
@@ -187,10 +192,13 @@ function History({ selectedAction, startDate, endDate}) {
                                     search={searchMaterial}
                                     setSearch={setSearchMaterial}
                                     selectedAction={selectedAction}
-                                  
+                                    setValue={setValue}
+                                    value={value}
                                     
                                 />
                             )}
+
+                            {console.log('value-history',value)}
 
                             {activeTab === 'equipment' && (
                                 <EquipmentHistoryComponent
