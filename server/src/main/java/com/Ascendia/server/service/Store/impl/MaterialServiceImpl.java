@@ -141,5 +141,22 @@ public class MaterialServiceImpl implements MaterialService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<UpdateMaterialDto> searchUpdatedMaterials(Long projectId, String query) {
+        List<UpdateMaterial> updatedMaterials = updateMaterialRepository.searchUpdatedMaterials(projectId, query);
+        return updatedMaterials.stream()
+                .map(UpdateMaterialMapper::mapToUpdateMaterialDto)
+                .collect(Collectors.toList());
+    }
 
+    public List<UpdateMaterialDto> getUpdatedMaterialsByDateRange(Long projectId, LocalDateTime startDate, LocalDateTime endDate) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + projectId));
+
+        List<UpdateMaterial> updatedMaterials = updateMaterialRepository.findAllByProjectIdAndDateRange(projectId, startDate, endDate);
+
+        return updatedMaterials.stream()
+                .map(UpdateMaterialMapper::mapToUpdateMaterialDto)
+                .collect(Collectors.toList());
+    }
 }

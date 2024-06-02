@@ -43,7 +43,7 @@ import Equipment from "./pages/Store/Equipment";
 import EquipmentForm from "./components/Store/EquipmentForm";
 import UpdateMaterialForm from "./components/Store/UpdateMaterialForm";
 import UpdateEquipmentForm from "./components/Store/UpdateEquipmentForm";
-import MaterialHistory from "./pages/Store/MaterialHistory";
+import History from "./pages/Store/History";
 /*import { Routes, Route, useParams } from "react-router-dom";*/
 
 {/*Nethuni*/}
@@ -105,7 +105,7 @@ const App = () => {
       <Route path="/editEquipment/:id" element={<EquipmentForm />} />
       <Route path="/updateMaterial/:id" element={<UpdateMaterialForm />} />
       <Route path="/updateEquipment/:id" element={<UpdateEquipmentForm />} />
-      <Route path="/materialHistory" element={<MaterialHistory />} />
+      <Route path="/history" element={<History />} />
       
         <Route
           path="/projects/:projectId/tasks"

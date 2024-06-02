@@ -100,7 +100,7 @@ function Material() {
 
                 <div className="flex justify-center min-h-screen mx-auto mt-20 ml-10 ">
                     <div className="overflow-x-auto ">
-                    <div className="pt-3 pb-10 pl-10 pr-10 bg-white rounded-lg shadow-md">
+                    <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md">
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                             
                                 <SearchBar search = {search} setSearch={setSearch}/>

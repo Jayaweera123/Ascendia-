@@ -76,4 +76,12 @@ public class EquipmentController {
         return ResponseEntity.ok(equipmentDto);
     }
 
+    //Build get all updated equipments REST API
+    @GetMapping("/getAllUpdatedEquipments/{projectId}")
+    public ResponseEntity<List<UpdateEquipmentDto>> getUpdatedEquipments(@PathVariable Long projectId) {
+        List<UpdateEquipmentDto> updatedEquipments = equipmentService.getAllUpdatedEquipments(projectId);
+        return ResponseEntity.ok(updatedEquipments);
+    }
+
 }
+

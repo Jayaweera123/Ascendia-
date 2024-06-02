@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -73,9 +75,34 @@ public class MaterialController {
         return ResponseEntity.ok(materialDto);
     }
 
+    //Build get all updated materials REST API
     @GetMapping("/getAllUpdatedMaterials/{projectId}")
     public ResponseEntity<List<UpdateMaterialDto>> getUpdatedMaterials(@PathVariable Long projectId) {
         List<UpdateMaterialDto> updatedMaterials = materialService.getAllUpdatedMaterials(projectId);
+        return ResponseEntity.ok(updatedMaterials);
+    }
+
+    // Build searchUpdatedMaterial REST API
+    @GetMapping("/searchUpdatedMaterial/{projectId}")
+    public ResponseEntity<List<UpdateMaterialDto>> searchUpdatedMaterial(
+            @PathVariable Long projectId,
+            @RequestParam("query") String query) {
+        return ResponseEntity.ok(materialService.searchUpdatedMaterials(projectId, query));
+    }
+
+    // New endpoint to get updated materials by date range
+    @GetMapping("/getUpdatedMaterialsByDateRange/{projectId}")
+    public ResponseEntity<List<UpdateMaterialDto>> getUpdatedMaterialsByDateRange(
+            @PathVariable Long projectId,
+            @RequestParam("startDate") String startDateStr,
+            @RequestParam("endDate") String endDateStr) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        LocalDateTime startDate = LocalDateTime.parse(startDateStr, formatter);
+        LocalDateTime endDate = LocalDateTime.parse(endDateStr, formatter);
+
+        List<UpdateMaterialDto> updatedMaterials = materialService.getUpdatedMaterialsByDateRange(projectId, startDate, endDate);
+
         return ResponseEntity.ok(updatedMaterials);
     }
 }

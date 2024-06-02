@@ -140,4 +140,15 @@ public class EquipmentServiceImpl implements EquipmentService {
 
         return EquipmentMapper.mapToEquipmentDto(equipment);
     }
+
+    @Override
+    public List<UpdateEquipmentDto> getAllUpdatedEquipments(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + projectId));
+        List<UpdateEquipment> updatedEquipments = updateEquipmentRepository.findAllByProjectId(projectId);
+        return updatedEquipments.stream()
+                .map(UpdateEquipmentMapper::mapToUpdateEquipmentDto)
+                .collect(Collectors.toList());
+    }
+
 }

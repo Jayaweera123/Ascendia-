@@ -12,7 +12,7 @@ const SideNavigationStore = () => {
     { name: "Material", link: "/material", icon: HiMiniRectangleGroup },
     { name: "Equipment", link: "/equipment", icon: HiMiniWrenchScrewdriver },
     // { name: "History", link: "/viewHistory", icon: HiMiniDocumentText },
-    { name: "History", link: "/materialHistory", icon: VscHistory  },
+    { name: "History", link: "/history", icon: VscHistory  },
     // { name: "Timeline", link: "/", icon: HiMiniClock },
     { name: "Notifications", link: "/", icon: HiBellAlert},
 
