@@ -17,5 +17,7 @@ public interface TaskRepository extends JpaRepository<Task, Long>{
                     "t.description LIKE CONCAT('%',:query, '%'))")
     List<Task> searchTask(Long projectId, String query);
 
+    int countTasksByProject_ProjectId(Long ProjectId);
+
 
 }
