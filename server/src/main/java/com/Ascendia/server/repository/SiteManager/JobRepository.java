@@ -26,4 +26,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query("SELECT COUNT(j) FROM Job j JOIN j.task t JOIN t.project p WHERE p.projectId = :projectId")
     Long countJobsByProjectId(@Param("projectId") Long projectId);
 
+    @Query("SELECT COUNT(j) FROM Job j JOIN j.task t JOIN t.project p WHERE p.projectId = :projectId AND j.status = 'Completed'")
+    Long countCompletedJobsByProjectId(@Param("projectId") Long projectId);
+
 }

@@ -22,9 +22,12 @@ public interface ProjectService {
 
     Long getTotalJobsForProject(Long projectId);
 
+    Long getCompletedJobsCountForProject(Long projectId);
+
     Long getEmployeeCountForProject(Long projectId);
 
     int getTaskCountForProject(Long projectId);
+
 
 
 }
