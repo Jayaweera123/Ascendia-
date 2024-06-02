@@ -8,11 +8,16 @@ import com.Ascendia.server.exceptions.ResourceNotFoundException;
 import com.Ascendia.server.mapper.Project.ProjectMapper;
 import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.repository.Project.ProjectRepository;
+import com.Ascendia.server.repository.ProjectManager.TaskRepository;
+import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
+import com.Ascendia.server.repository.SiteManager.JobRepository;
 import com.Ascendia.server.service.Project.ProjectService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
+import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +26,11 @@ import java.util.stream.Collectors;
 public class ProjectServiceImpl implements ProjectService {
 
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private JobRepository jobRepository;
+
+
 
     @Override
     public ProjectDto createProject(ProjectDto projectDto) {
@@ -60,4 +70,76 @@ public class ProjectServiceImpl implements ProjectService {
         return projects.stream().map(ProjectMapper::mapToProjectDto)
                 .collect(Collectors.toList());
     }
+
+    public Long getTotalJobsForProject(Long projectId) {
+        return jobRepository.countJobsByProjectId(projectId);
+    }
+
+    @Override
+    public String calculateDuration(ProjectDto projectDto) {
+
+        LocalDate startDate = projectDto.getCreatedDate();
+        LocalDate endDate = projectDto.getEndDate();
+
+        Period period;
+        period = Period.between(startDate, endDate);
+
+        int years = period.getYears();
+        int months = period.getMonths();
+        int days = period.getDays();
+
+        StringBuilder result = new StringBuilder();
+
+        if (years > 0) {
+            result.append(years).append(" year");
+            if (years > 1) {
+                result.append("s");
+            }
+        }
+
+        if (months > 0) {
+            if (!result.isEmpty()) {
+                result.append(", ");
+            }
+            result.append(months).append(" month");
+            if (months > 1) {
+                result.append("s");
+            }
+        }
+
+        if (days > 0) {
+            if (!result.isEmpty()) {
+                result.append(", ");
+            }
+            result.append(days).append(" day");
+            if (days > 1) {
+                result.append("s");
+            }
+        }
+
+        // Handle case when the period is zero (e.g., same day)
+        if (result.isEmpty()) {
+            result.append("0 days");
+        }
+
+        return result.toString();
+    }
+
+    @Autowired
+    private UserProjectAssignmentRepository userProjectAssignmentRepository;
+
+    public Long getEmployeeCountForProject(Long projectId) {
+        return userProjectAssignmentRepository.countDistinctAssignedUsersByProjectId(projectId);
+    }
+
+    @Autowired
+    private TaskRepository taskRepository;
+
+    @Override
+    public int getTaskCountForProject(Long projectId) {
+        return taskRepository.countTasksByProject_ProjectId(projectId);
+    }
+
+
+
 }

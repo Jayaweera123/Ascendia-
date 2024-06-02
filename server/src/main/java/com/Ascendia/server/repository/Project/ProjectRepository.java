@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ProjectRepository  extends JpaRepository<Project, Long >{
+
     List<Project> findByPmId(Long pmId);
 
     @Query(
