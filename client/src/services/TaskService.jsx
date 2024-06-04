@@ -36,3 +36,10 @@ export const markAsCompleted = (taskId) =>
 
 export const markAsUncompleted = (taskId) =>
   axios.get(REST_API_BASE_URL0 + taskId + "/mark-as-undone");
+
+//==========comments==================
+
+const REST_API_BASE_URL1 = "http://localhost:8080/api/v2/comment/";
+
+export const getCommetsForTask = (taskId) =>
+  axios.get(REST_API_BASE_URL1 + "task/" + taskId);
