@@ -1,5 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:my_project/BackGround.dart';
+import 'package:my_project/service.dart';
+import 'package:my_project/SiteEngineer/Task.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 //import 'package:my_project/sampleCode.dart';
 
 
@@ -26,8 +31,11 @@ class _ProjectSiteState extends State<JobbAddFormSite> {
 
   DateTime _dateTime1 = DateTime.now();
   DateTime _dateTime2 = DateTime.now();
-  String? selectedValue;
-  List<Map<String, dynamic>> tasks = [];
+ // String? selectedValue;
+ // List<Map<String, dynamic>> tasks = [];
+    String? selectedValue;
+  List<String> tasks = [];
+  
 
   void _showDatePicker1(){
     showDatePicker(
@@ -54,6 +62,26 @@ void _showDatePicker2(){
         });
       });
   }
+
+
+  void initState() {
+    super.initState();
+    _fetchTasks();
+  }
+
+  Future<void> _fetchTasks() async {
+    try {
+      List<String> taskNames = await Service.fetchTaskNames();
+      setState(() {
+        tasks = taskNames;
+      });
+    } catch (e) {
+      print('Failed to load tasks: $e');
+    }
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -225,8 +253,8 @@ child:Column(
               },
               items: tasks.map((task) {
                 return DropdownMenuItem<String>(
-                  value: task['name'],
-                  child: Text(task['name']),
+                  value: task,
+                  child: Text(task),
                 );
               }).toList(),
             ),

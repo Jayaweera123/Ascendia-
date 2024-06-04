@@ -6,11 +6,9 @@ import com.Ascendia.server.exceptions.ResourceNotFoundException;
 import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.repository.ProjectManager.TaskRepository;
 import com.Ascendia.server.service.ProjectManager.TaskService;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.security.PublicKey;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,14 +35,13 @@ public class  TaskServiceImpl implements TaskService {
 
     }
 
-
-
     @Override
     /*public List<TaskDto> getAllTasks() {
         List<Task> tasks = taskRepository.findAll();
         return tasks.stream().map((task) -> TaskMapper.mapToTaskDto(task))
                 .collect(Collectors.toList());
     }*/
+
     //From Chat gpt
     public List<TaskDto> getAllTasks() {
         List<Task> tasks = taskRepository.findAll();

@@ -1,7 +1,12 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:my_project/BackGround.dart';
 import 'package:my_project/SiteEngineer/inProgressSiteEngineer.dart';
-//import 'package:my_project/SiteEngineer/inProgressSiteEngineer.dart';
+import 'package:my_project/service.dart';
+import 'package:my_project/SiteEngineer/Task.dart';
+
 
 
 class TaskAddSite extends StatefulWidget {  
@@ -22,6 +27,9 @@ class _ProjectSiteState extends State<TaskAddSite> {
   String projectSubName = 'The Galle Techno-Park';
   String selectedValue = 'project manager';
   bool value = true; 
+   String userInputTask = '';
+  List<String> savedDataTask = [];
+  Service service = Service();
   
 
   DateTime _dateTime1 = DateTime.now();
@@ -203,6 +211,19 @@ child:Column(
                                   child: TextField(
                                     controller:controller1 ,
                                     
+                                    onChanged: (value) {
+              setState(() {
+                if (value.isNotEmpty) {
+      userInputTask = value;
+    } else {
+      // Handle empty value here, if needed
+    }
+              });
+            }
+                                    
+                                    
+                                    ,
+                                    
                                     textAlignVertical: TextAlignVertical.center,
                                     decoration: InputDecoration(
                                       contentPadding:
@@ -264,6 +285,17 @@ const Padding(padding: EdgeInsets.all(3)),
                                       height:250, // Adjust the height as needed
                                       child: TextField(
                                       controller:_descriptionController,
+
+onChanged: (value) {
+              setState(() {
+                if (value.isNotEmpty) {
+      userInputTask= value;
+    } else {
+      // Handle empty value here, if needed
+    }
+              });
+            },
+
                                         maxLines: 10,
                                         decoration: InputDecoration(
                                           filled: true,
@@ -309,15 +341,6 @@ const Padding(padding: EdgeInsets.all(3)),
                                         fontFamily: 'Inter',
                                       ),
                                     ),
-
-
-
-
-
-
-
-
-
                                     SizedBox(
   width: 170,
   height: 35,
@@ -477,6 +500,45 @@ SizedBox(
                   MaterialPageRoute(
                     builder: (context) =>  TaskAddSite(
         onTaskAdded: (newTask) {
+
+
+  // Saving the comment using service
+
+  if (userInputTask.isNotEmpty) {
+    setState(() {
+      savedDataTask.add(userInputTask);
+      userInputTask = ''; // Clear the input after saving
+service.saveTask(controller1.text,_descriptionController.text,_dateTime1,_dateTime2,21);
+
+      controller1.clear(); // Clear the TextEditingController
+      _descriptionController.clear();
+      _dateTime1 = DateTime.now(); // Update dateTime
+      _dateTime2 = DateTime.now();
+    });
+  } else {
+    // Handle the case when userInput is empty
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Please enter some data before saving.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
+
           // Add your task added logic here
         },
       ),

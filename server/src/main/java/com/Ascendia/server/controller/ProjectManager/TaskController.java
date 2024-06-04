@@ -1,9 +1,9 @@
 package com.Ascendia.server.controller.ProjectManager;
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
-import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.service.ProjectManager.TaskService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +17,11 @@ import java.util.List;
 
 public class TaskController {
 
+    @Autowired
     private TaskService taskService;
 
     //Add Task REST API
-    @PostMapping
+    @PostMapping("/add")
     public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto taskDto) {
         TaskDto savedTask = taskService.createTask(taskDto);
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
@@ -64,7 +65,6 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
-
-
+    
 }
 

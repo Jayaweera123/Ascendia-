@@ -28,8 +28,10 @@ public class Task {
     private LocalDate startDate;
     @Column(nullable = false)
     private LocalDate endDate;
+    
     @Column(name = "task_status", nullable = false, length = 50)
     private String status;
+
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id", nullable = false)

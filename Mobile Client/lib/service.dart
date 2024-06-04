@@ -96,4 +96,45 @@ print(" new 02");
   }
 
 
+
+ Future<void> saveTask(String taskName, String description,DateTime startDate,DateTime endDate,int projectId) async {
+    final Map<String, dynamic> data = {
+      'taskName': taskName,
+      'description': description,
+      'startDate': startDate,
+      'endDate': endDate,
+      'projectId': projectId
+      
+  };
+    try {
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:8080//api/task'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(data),
+      );
+      if (response.statusCode == 201) {
+        print('Data sent successfully');
+      } else {
+        throw Exception('Failed to send data');
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+
+  //static const String _baseUrl = 'http://10.0.2.2:8080//api/project/all';
+
+  static Future<List<String>> fetchTaskNames() async {
+    final response = await http.get(Uri.parse('http://10.0.2.2:8080/api/task/all'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      return List<String>.from(data);
+    } else {
+      throw Exception('Failed to load task names');
+    }
+  }
+
+
 }
