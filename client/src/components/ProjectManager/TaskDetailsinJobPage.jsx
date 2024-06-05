@@ -203,7 +203,7 @@ const TaskDetailsinJobPage = ({ taskId }) => {
       <div className="flex justify-between items-center mt-2">
         <div className="flex flex-col   text-gray-700">
           <p>Start Date: {formatDate(startDate)}</p>
-          <p>End Date: {formatDate(endDate)}</p>
+          <p>Due Date: {formatDate(endDate)}</p>
         </div>
         <div className="ml-auto">
           {taskStatus === "COMPLETED" ? (
@@ -219,14 +219,12 @@ const TaskDetailsinJobPage = ({ taskId }) => {
               overdue by {JSON.stringify(timeDifference).replace(/"/g, "")}
             </div>
           )}
-        </div>
-      </div>
 
-      {/* Render the comment cards */}
-      <div className="mt-4">
-        {comments.map((comment) => (
-          <CommentCard key={comment.commentId} comment={comment} />
-        ))}
+          {/* Render the comment cards */}
+          <div className="mt-1  text-gray-700 font-semibold">
+            <CommentCard comments={comments} />
+          </div>
+        </div>
       </div>
     </div>
   );
