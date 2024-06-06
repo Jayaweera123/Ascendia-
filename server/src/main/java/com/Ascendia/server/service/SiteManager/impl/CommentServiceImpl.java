@@ -70,7 +70,6 @@ public class CommentServiceImpl implements CommentService {
 
         return CommentMapper.mapToCommentResponseDto(savedComment);
 
-
     }
 
 
