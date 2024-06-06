@@ -19,6 +19,4 @@ public class CommentResponseDto {
     private String profilePicUrl;
     private String commentText;
     private String commentDateTime;
-
-
 }
