@@ -21,10 +21,15 @@ function ProjectDashboard() {
             <PageTitle title="Dashboard" />
 
             <TotalNumbers projectId={projectId} />
+            <div className="lg:flex grow gap-5 md:flex:none">
+              <div className="lg:w-8/12 py-5">
+                <TasksBarChart projectId={projectId} />
+              </div>
 
-            <TasksBarChart />
-
-            <TasksPieChart projectId={projectId} />
+              <div className="lg:w-4/12 py-5">
+                <TasksPieChart projectId={projectId} />
+              </div>
+            </div>
           </div>
         </div>
       </section>

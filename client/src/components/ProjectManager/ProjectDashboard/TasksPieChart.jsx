@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import {
   getTasksForProject,
   getJobCountForTask,
 } from "../../../services/TaskService";
-import {
-  getCompletedJobCount,
-  getJobCount,
-} from "../../../services/ProjectService";
-import { stringify } from "postcss";
-import { data } from "autoprefixer";
 
 const TasksPieChart = ({ projectId }) => {
   const [tasks, setTasks] = useState([]);
   const [jobCounts, setJobCounts] = useState({});
+  const [chartDimensions, setChartDimensions] = useState({
+    width: 400,
+    height: 250,
+  });
+  const chartRef = useRef(null);
 
   useEffect(() => {
     // Fetch tasks for the project when projectId changes
@@ -46,12 +45,26 @@ const TasksPieChart = ({ projectId }) => {
     }
   }, [tasks]);
 
-  const data01 = tasks.map((task) => ({
+  useEffect(() => {
+    function handleResize() {
+      const chartContainerWidth = chartRef.current.offsetWidth;
+      const chartContainerHeight = chartRef.current.offsetHeight;
+      setChartDimensions({
+        width: chartContainerWidth,
+        height: chartContainerHeight,
+      });
+    }
+
+    window.addEventListener("resize", handleResize);
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const data = tasks.map((task) => ({
     name: String(task.taskName), // Use String() to ensure it's a string
     value: jobCounts[task.taskId] || 0, // Use 0 if job count is not yet available
   }));
-
-  console.log(data01);
 
   const COLORS = [
     "#22223B",
@@ -65,24 +78,54 @@ const TasksPieChart = ({ projectId }) => {
 
   return (
     <>
-      <PieChart width={730} height={250}>
-        <Pie
-          data={data01}
-          dataKey="value"
-          nameKey="name"
-          cx="50%"
-          cy="50%"
-          innerRadius={60}
-          outerRadius={80}
-          fill="#82ca9d"
-          label
+      <div className="piechart-container">
+        <div
+          className="chart-wrapper rounded-md bg-white shadow"
+          ref={chartRef}
         >
-          {data01.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-          ))}
-        </Pie>
-        <Tooltip />
-      </PieChart>
+          {" "}
+          <p className="text-sm px-5 pt-5 font-medium text-gray-500">
+            Job Counts
+          </p>
+          <PieChart
+            width={chartDimensions.width}
+            height={chartDimensions.height}
+          >
+            <Pie
+              data={data}
+              margin={{ top: 0, right: 30, left: 20, bottom: 5 }}
+              dataKey="value"
+              nameKey="name"
+              innerRadius={60}
+              outerRadius={80}
+              fill="#82ca9d"
+              label
+            >
+              {data.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
+            <Tooltip />
+          </PieChart>
+        </div>
+      </div>
+      <style>
+        {`
+        .piechart-container {
+          width: 100%;
+          height: 100%; /* Set a default height */
+        }
+
+         .chart-wrapper {
+          width: 100%;
+          height: 100%;
+       
+        }
+        `}
+      </style>
     </>
   );
 };
