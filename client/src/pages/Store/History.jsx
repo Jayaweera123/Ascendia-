@@ -15,6 +15,7 @@ function History({ selectedAction, startDate, endDate }) {
     const [searchMaterial, setSearchMaterial] = useState("");
     const [searchEquipment, setSearchEquipment] = useState("");
     const [filteredMaterial, setFilteredMaterial] = useState([]); // State to manage filtered material
+    const [action, setAction] = useState('All History');
     const [value, setValue] = useState({ 
 
         startDate: new Date(), 
@@ -56,7 +57,7 @@ function History({ selectedAction, startDate, endDate }) {
     // }, []);
 
     useEffect(() => {
-        if(selectedAction === "All History"){
+        if(action === "All History"){
         getAllUpdatedMaterials(givenProjectId).then((response) => {
             const sortedMaterial = response.data.sort((a, b) => new Date(b.updatedDate) - new Date(a.updatedDate));
             setUpdatedMaterial(sortedMaterial);
@@ -66,20 +67,23 @@ function History({ selectedAction, startDate, endDate }) {
     } else{
         getAllUpdatedMaterials(givenProjectId).then((response) => {
             const sortedMaterial = response.data.sort((a, b) => new Date(b.updatedDate) - new Date(a.updatedDate));
-            setUpdatedMaterial(sortedMaterial);
-
             
-                const filtered = updatedMaterial.filter(updatedMaterial => {
-                    const recordDate = new Date(updatedMaterial.updatedDate);
-                    return recordDate >= startDate && recordDate <= endDate;
-                });
-                setUpdatedMaterial(filtered);
-          
+            const filtered = sortedMaterial.filter(material => {
+                const recordDate = new Date(material.updatedDate);
+                const startDate = new Date(value.startDate);
+                const endDate = new Date(value.endDate);
+                endDate.setHours(23, 59, 59, 999);  // set endDate to the end of the day
+                console.log(recordDate, startDate, endDate);
+                return recordDate >= startDate && recordDate <= endDate;
+            });
+            
+            console.log("filtered",filtered)
+            setUpdatedMaterial(filtered);
         }).catch(error => {
             console.error(error);
         })
     }
-    }, []);
+    }, [action,value]);
 
     // Get all updated equipment and sort by date
     useEffect(() => {
@@ -194,11 +198,14 @@ function History({ selectedAction, startDate, endDate }) {
                                     selectedAction={selectedAction}
                                     setValue={setValue}
                                     value={value}
-                                    
+                                    action={action}
+                                    setAction={setAction}
                                 />
                             )}
 
                             {console.log('value-history',value)}
+                            {console.log(value.startDate)}
+                            {console.log(action)}
 
                             {activeTab === 'equipment' && (
                                 <EquipmentHistoryComponent

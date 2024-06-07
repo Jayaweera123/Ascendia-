@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchBar from "../../components/Store/SearchBar";
 import { FaDownload } from "react-icons/fa6";
 import DateRangePickerComponent from './DateRangePickerComponent';
 import DateCom from './DateCom';
 
 function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPage, 
-    currentPage, numberOfPages, search, setSearch, selectedAction,
+    currentPage, numberOfPages, search, setSearch, selectedAction, action, setAction,
  filterByDate , value, setValue}) {
     const [filteredRecords, setFilteredRecords] = useState(records);
     const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
     const [showDatePicker, setShowDatePicker] = useState(false);
-    const [action, setAction] = useState('All History');
+    // const [action, setAction] = useState('All History');
 
     // const [value, setValue] = useState({ 
 
@@ -38,12 +38,15 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
 
     const handleActionChange = (e) => {
         const selectedAction = e.target.value;
-        setAction(selectedAction);
+        console.log('selectedAction',selectedAction)
+        setAction(e.target.value);
+        console.log(action)
         setShowDatePicker(selectedAction === "Filter By Date");
        
     };
-
-    
+    useEffect(() => {
+        console.log(action);
+      }, [action]);
 
     return (
         <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md">
