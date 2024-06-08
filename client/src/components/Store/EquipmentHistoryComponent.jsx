@@ -5,7 +5,7 @@ import { FaDownload } from "react-icons/fa6";
 import DateRangePickerComponent from "./DateRangePickerComponent";
 
 function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNextPage, eCurrentPage, eNumberOfPages,
-    search, setSearch ,action, setAction, value, setValue
+    search, setSearch ,action, setAction, value, setValue, updatedEquipment
 }) {
     const numbers = [...Array(eNumberOfPages + 1).keys()].slice(1);
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -25,7 +25,7 @@ function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNe
         documentTitle: 'Equipment History',
         onAfterPrint: () => {
             console.log('After print');
-            alert("data saved in pdf")
+            // alert("data saved in pdf")
         }
     });
 
@@ -82,7 +82,7 @@ function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNe
 
                         
                     </div>
-        <div ref={componentPDF} style={{width:'100%'}}>           
+
             <table className="min-w-full text-sm bg-white">
                 <thead>
                     <tr className="text-gray-700 border-b bg-blue-gray-100 border-blue-gray-50 border-y">
@@ -112,7 +112,47 @@ function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNe
                             }
                 </tbody>
             </table>
+
+        {/* For print pdf     */}
+        <div ref={componentPDF} style={{width:'100%'}} className="hidden w-full pt-20 pb-10 pl-20 pr-10 print:block">   
+
+                    <div className="pb-5">
+                        <h1 className="text-2xl leading-relaxed font-bold text-[#101d3f] whitespace-nowrap">History of Add or Issure Equipment</h1>
+                    </div>
+
+            <table className="min-w-full text-sm bg-white">
+                <thead>
+                    <tr className="text-gray-700 border-b bg-blue-gray-100 border-blue-gray-50 border-y">
+                        <th className="px-4 py-5 text-left">Equipment Code</th>
+                        <th className="px-4 py-5 text-left">Equipment Name</th>
+                        <th className="px-4 py-5 text-left">Updated Quantity</th>
+                        <th className="px-4 py-5 text-left">Updated Date</th>
+                        <th className="px-4 py-5 text-left">Updated Time</th>
+                        <th className="w-16 px-4 py-5 text-left">Action</th>
+                    </tr>
+                </thead>
+                <tbody className="text-blue-gray-900">
+                    {
+                        updatedEquipment.map(updatedEquipment => {
+                            const { formattedDate, formattedTime } = formatDateTime(updatedEquipment.updatedDate);
+                            return (
+                            <tr className="bg-white border-b border-blue-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600" key={updatedEquipment.updatedEquipmentId}>
+                                <td className="px-4 py-3">{updatedEquipment.equipmentCode}</td>
+                                <td className="px-4 py-3">{updatedEquipment.equipmentName}</td>
+                                <td className="px-4 py-3">{updatedEquipment.updatedQuantity}</td>
+                                <td className="px-4 py-3">{formattedDate}</td>
+                                <td className="px-4 py-3">{formattedTime}</td>
+                                <td className="px-4 py-3">{updatedEquipment.action}</td>
+                            </tr>
+                                  );
+                                })
+                            }
+                </tbody>
+            </table>
         </div>
+
+
+
             <div className="flex items-center justify-between p-4 border-t border-blue-gray-50">
                 <button className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none" onClick={ePrePage}>
                     Previous

@@ -238,6 +238,7 @@ function History() {
                                     value={value}
                                     action={action}
                                     setAction={setAction}
+                                    updatedMaterial={updatedMaterial}
                                 />
                             )}
 
@@ -256,6 +257,7 @@ function History() {
                                     setValue={setEValue}
                                     action={eAction}
                                     setAction={setEAction}
+                                    updatedEquipment={updatedEquipment}
                                 />
                             )}
                         </div>

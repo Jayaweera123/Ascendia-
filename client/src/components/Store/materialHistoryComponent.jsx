@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
 import SearchBar from "./SearchBar";
 import { FaDownload } from "react-icons/fa6";
 import DateRangePickerComponent from "./DateRangePickerComponent";
 
 function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPage, 
     currentPage, numberOfPages, search, setSearch, action, setAction,
- value, setValue}) {
+ value, setValue, updatedMaterial}) {
 
     const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -19,7 +20,18 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
         return { formattedDate, formattedTime };
     };
 
+    const componentPDF = useRef();
 
+    const generatePDF = useReactToPrint({
+        content: () => componentPDF.current,
+        documentTitle: 'Equipment History',
+        onAfterPrint: () => {
+            console.log('After print');
+            // alert("data saved in pdf")
+        }
+    });
+
+    {console.log(componentPDF)}
 
     const handleActionChange = (e) => {
         const selectedAction = e.target.value;
@@ -63,7 +75,7 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
                 
 
                 <div className="mb-8">
-                    <button className="mt-6 bg-[#101d3f] hover:bg-sky-800 text-white font-bold py-2 px-4 rounded" /*onClick={generatePDF}*/>
+                    <button className="mt-6 bg-[#101d3f] hover:bg-sky-800 text-white font-bold py-2 px-4 rounded" onClick={generatePDF}>
                         <div className="flex items-center">
                             <div className="flex items-center justify-center w-6 h-6 mr-2">
                                 <FaDownload />
@@ -73,6 +85,7 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
                     </button>
                 </div>
             </div>
+
             <table className="min-w-full text-sm bg-white">
                 <thead>
                     <tr className="text-gray-700 border-b bg-blue-gray-100 border-blue-gray-50 border-y">
@@ -85,7 +98,7 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
                         <th className="w-16 px-4 py-5 text-left">Action</th>
                     </tr>
                 </thead>
-                {console.log(records)  }
+                
                 <tbody className="text-blue-gray-900">
                     {records.map(updatedMaterial => {
                         const { formattedDate, formattedTime } = formatDateTime(updatedMaterial.updatedDate);
@@ -103,6 +116,47 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
                     })}
                 </tbody>
             </table>
+
+            {/* For print pdf     */}
+            <div ref={componentPDF} style={{width:'100%'}} className="hidden w-full pt-20 pb-10 pl-20 pr-10 print:block">   
+
+                <div className="pb-5">
+                    <h1 className="text-2xl leading-relaxed font-bold text-[#101d3f] whitespace-nowrap">History of Add or Issure Materials</h1>
+                </div>
+
+                <table className="min-w-full text-sm bg-white">
+                <thead>
+                    <tr className="text-gray-700 border-b bg-blue-gray-100 border-blue-gray-50 border-y">
+                        <th className="px-4 py-5 text-left">Material Code</th>
+                        <th className="px-4 py-5 text-left">Material Name</th>
+                        <th className="px-4 py-5 text-left">Updated Quantity</th>
+                        <th className="px-4 py-5 text-left">Measuring Unit</th>
+                        <th className="px-4 py-5 text-left">Updated Date</th>
+                        <th className="px-4 py-5 text-left">Updated Time</th>
+                        <th className="w-16 px-4 py-5 text-left">Action</th>
+                    </tr>
+                </thead>
+                
+                <tbody className="text-blue-gray-900">
+                    {updatedMaterial.map(updatedMaterial => {
+                        const { formattedDate, formattedTime } = formatDateTime(updatedMaterial.updatedDate);
+                        return (
+                            <tr className="bg-white border-b border-blue-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600" key={updatedMaterial.updatedMaterialId}>
+                                <td className="px-4 py-3">{updatedMaterial.materialCode}</td>
+                                <td className="px-4 py-3">{updatedMaterial.materialName}</td>
+                                <td className="px-4 py-3">{updatedMaterial.updatedQuantity}</td>
+                                <td className="px-4 py-3">{updatedMaterial.measuringUnit}</td>
+                                <td className="px-4 py-3">{formattedDate}</td>
+                                <td className="px-4 py-3">{formattedTime}</td>
+                                <td className="px-4 py-3">{updatedMaterial.action}</td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+
+
+            </div>
 
             <div className="flex items-center justify-between p-4 border-t border-blue-gray-50">
                 <button className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none" onClick={prePage}>
