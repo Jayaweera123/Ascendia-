@@ -16,8 +16,7 @@ public interface UpdateMaterialRepository extends JpaRepository<UpdateMaterial, 
     List<UpdateMaterial> findAllByProjectId(@Param("projectId") Long projectId);
 
     @Query("SELECT um FROM UpdateMaterial um WHERE um.material.project.projectId = :projectId " +
-            "AND (um.material.materialCode LIKE %:query% OR um.material.materialName LIKE %:query% " +
-            "OR CAST(um.UpdatedDate AS string) LIKE %:query%)")
+            "AND (um.material.materialCode LIKE %:query% OR um.material.materialName LIKE %:query%)" )
     List<UpdateMaterial> searchUpdatedMaterials(@Param("projectId") Long projectId, @Param("query") String query);
 
     @Query("SELECT um FROM UpdateMaterial um WHERE um.material.project.projectId = :projectId AND um.UpdatedDate BETWEEN :startDate AND :endDate")

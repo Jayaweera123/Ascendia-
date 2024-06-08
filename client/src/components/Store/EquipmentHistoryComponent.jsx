@@ -1,10 +1,14 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useReactToPrint } from 'react-to-print';
 import SearchBar from "../../components/Store/SearchBar";
 import { FaDownload } from "react-icons/fa6";
+import DateRangePickerComponent from "./DateRangePickerComponent";
 
-function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNextPage, eCurrentPage, eNumberOfPages }) {
+function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNextPage, eCurrentPage, eNumberOfPages,
+    search, setSearch ,action, setAction, value, setValue
+}) {
     const numbers = [...Array(eNumberOfPages + 1).keys()].slice(1);
+    const [showDatePicker, setShowDatePicker] = useState(false);
 
      // Function to format date and time
      const formatDateTime = (dateTimeString) => {
@@ -25,19 +29,53 @@ function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNe
         }
     });
 
+    {console.log(componentPDF)}
+
+    const handleActionChange = (e) => {
+        const selectedAction = e.target.value;
+       
+        setAction(e.target.value);
+       
+        setShowDatePicker(selectedAction === "Filter By Date");
+       
+    };
+    
+    useEffect(() => {
+        console.log(action);
+      }, [action]);
+
     return (
         <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                             
-                            {/* <SearchBar search = {search} setSearch={setSearch}/> */}
+                            <SearchBar search = {search} setSearch={setSearch}/>
 
+                            <div className="mb-1 mr-3">
+                                <select
+                                    value={action}
+                                    onChange={handleActionChange}
+                                    className="block w-full px-3 py-1.5 text-gray-900 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                >
+                                    <option value="All History">All History</option>
+                                    <option value="Filter By Date">Filter</option>
+                                </select>
+                            </div>
+
+                            {showDatePicker && (
+                    
+                                <DateRangePickerComponent
+                                value = {value} 
+                                setValue = {setValue}/>
+                             )}
+
+                            <br />
                             <div className="mb-8">
-                                <button className="mt-6 bg-[#101d3f] hover:bg-sky-800 text-white font-bold py-2 px-4 rounded al " onClick={generatePDF}>
+                                <button className="mt-6 bg-[#101d3f] hover:bg-sky-800 text-white font-bold py-2 px-4 rounded al ml-3" onClick={generatePDF}>
                                     <div className="flex items-center">
                                     <div className="flex items-center justify-center w-6 h-6 mr-2">
                                     <FaDownload />
                                     </div>
-                                    Download PDF
+                                    PDF
                                     </div>
                                 </button>
                             </div>

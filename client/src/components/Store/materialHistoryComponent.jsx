@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import SearchBar from "../../components/Store/SearchBar";
+import SearchBar from "./SearchBar";
 import { FaDownload } from "react-icons/fa6";
-import DateRangePickerComponent from './DateRangePickerComponent';
-import DateCom from './DateCom';
+import DateRangePickerComponent from "./DateRangePickerComponent";
 
 function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPage, 
-    currentPage, numberOfPages, search, setSearch, selectedAction, action, setAction,
- filterByDate , value, setValue}) {
-    const [filteredRecords, setFilteredRecords] = useState(records);
+    currentPage, numberOfPages, search, setSearch, action, setAction,
+ value, setValue}) {
+
     const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
     const [showDatePicker, setShowDatePicker] = useState(false);
-    // const [action, setAction] = useState('All History');
-
-    // const [value, setValue] = useState({ 
-
-    //     startDate: new Date(), 
-    //     endDate: new Date().setMonth(11) 
-        
-    //     }); 
+    
 
     //Function to format date and time
     const formatDateTime = (dateTimeString) => {
@@ -28,22 +20,16 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
     };
 
 
-    // const filterByDate = (startDate, endDate) => {
-    //     const filtered = records.filter(record => {
-    //         const recordDate = new Date(record.updatedDate);
-    //         return recordDate >= startDate && recordDate <= endDate;
-    //     });
-    //     setFilteredRecords(filtered);
-    // };
 
     const handleActionChange = (e) => {
         const selectedAction = e.target.value;
-        console.log('selectedAction',selectedAction)
+       
         setAction(e.target.value);
-        console.log(action)
+       
         setShowDatePicker(selectedAction === "Filter By Date");
        
     };
+    
     useEffect(() => {
         console.log(action);
       }, [action]);
@@ -51,12 +37,10 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
     return (
         <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                {/* <SearchBar search={search} setSearch={setSearch} /> */}
+                <SearchBar search={search} setSearch={setSearch} />
 
                 
                 <div className="mb-1">
-                  
-
                     <select
                         value={action}
                         onChange={handleActionChange}
@@ -68,16 +52,11 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
                 </div>
             
                  {showDatePicker && (
-                    // <DateRangePickerComponent onDateChange={(startDate, endDate) => {
-                    //     // Do something with the new date range
-                    //   }} />
-                    <DateCom
+                    
+                    <DateRangePickerComponent
                     value = {value} 
                     setValue = {setValue}/>
                 )}
-                {/* <DateRangePickerComponent onDateChange={filterByDate} />     */}
-
-                {console.log('value',value)}
                
                <br />
                 

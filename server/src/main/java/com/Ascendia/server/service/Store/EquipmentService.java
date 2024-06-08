@@ -22,4 +22,6 @@ public interface EquipmentService {
     EquipmentDto updateInventory(Long equipmentId, UpdateEquipmentDto updateEquipmentDto);
 
     List<UpdateEquipmentDto> getAllUpdatedEquipments(Long projectId);
+
+    List<UpdateEquipmentDto> searchUpdatedEquipment(Long projectId, String query);
 }

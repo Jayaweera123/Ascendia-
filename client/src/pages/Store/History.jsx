@@ -3,10 +3,11 @@ import { getAllUpdatedEquipment, getAllUpdatedMaterials, searchUpdatedMaterial} 
 import { useNavigate } from "react-router-dom";
 import TopNavigationStore from "../../components/Store/TopNavigationStore";
 import SideNavigationStore from "../../components/Store/SideNavigationStore";
-import MaterialHistoryComponent from "../../components/Store/materialHistoryComponent";
+import MaterialHistoryComponent from "../../components/Store/MaterialHistoryComponent";
 import EquipmentHistoryComponent from "../../components/Store/EquipmentHistoryComponent";
+import { searchUpdatedEquipment } from "../../services/StoreServices";
 
-function History({ selectedAction, startDate, endDate }) {
+function History() {
 
     const [open, setOpen] = useState(true);
     const [updatedMaterial, setUpdatedMaterial] = useState([]);
@@ -14,9 +15,15 @@ function History({ selectedAction, startDate, endDate }) {
     const [activeTab, setActiveTab] = useState('material'); // State to manage active tab
     const [searchMaterial, setSearchMaterial] = useState("");
     const [searchEquipment, setSearchEquipment] = useState("");
-    const [filteredMaterial, setFilteredMaterial] = useState([]); // State to manage filtered material
     const [action, setAction] = useState('All History');
     const [value, setValue] = useState({ 
+
+        startDate: new Date(), 
+        endDate: new Date().setMonth(11) 
+        
+        }); 
+    const [eAction, setEAction] = useState('All History');
+    const [eValue, setEValue] = useState({ 
 
         startDate: new Date(), 
         endDate: new Date().setMonth(11) 
@@ -42,19 +49,6 @@ function History({ selectedAction, startDate, endDate }) {
     const eRecords = updatedEquipment.slice(eFirstIndex, eLastIndex);
     const eNumberOfPages = Math.ceil(updatedEquipment.length / eRecordsPerPage);
 
-    // const [action, setAction] = useState('All History');
-    // const [filteredRecords, setFilteredRecords] = useState(records);
-    // const [showDatePicker, setShowDatePicker] = useState(false);
-
-    // Get all updated materials and sort by date
-    // useEffect(() => {
-    //     getAllUpdatedMaterials(givenProjectId).then((response) => {
-    //         const sortedMaterial = response.data.sort((a, b) => new Date(b.updatedDate) - new Date(a.updatedDate));
-    //         setUpdatedMaterial(sortedMaterial);
-    //     }).catch(error => {
-    //         console.error(error);
-    //     })
-    // }, []);
 
     useEffect(() => {
         if(action === "All History"){
@@ -85,15 +79,44 @@ function History({ selectedAction, startDate, endDate }) {
     }
     }, [action,value]);
 
-    // Get all updated equipment and sort by date
+    // // Get all updated equipment and sort by date
+    // useEffect(() => {
+    //     getAllUpdatedEquipment(givenProjectId).then((response) => {
+    //         const sortedEquipment = response.data.sort((a, b) => new Date(b.updatedDate) - new Date(a.updatedDate));
+    //         setUpdatedEquipment(sortedEquipment);
+    //     }).catch(error => {
+    //         console.error(error);
+    //     });
+    // }, []);
+
     useEffect(() => {
+        if(eAction === "All History"){
         getAllUpdatedEquipment(givenProjectId).then((response) => {
             const sortedEquipment = response.data.sort((a, b) => new Date(b.updatedDate) - new Date(a.updatedDate));
             setUpdatedEquipment(sortedEquipment);
         }).catch(error => {
             console.error(error);
-        });
-    }, []);
+        })
+    } else{
+        getAllUpdatedEquipment(givenProjectId).then((response) => {
+            const sortedEquipment = response.data.sort((a, b) => new Date(b.updatedDate) - new Date(a.updatedDate));
+            
+            const filtered = sortedEquipment.filter(equipment => {
+                const recordDate = new Date(equipment.updatedDate);
+                const startDate = new Date(eValue.startDate);
+                const endDate = new Date(eValue.endDate);
+                endDate.setHours(23, 59, 59, 999);  // set endDate to the end of the day
+                console.log(recordDate, startDate, endDate);
+                return recordDate >= startDate && recordDate <= endDate;
+            });
+            
+            console.log("filtered",filtered)
+            setUpdatedEquipment(filtered);
+        }).catch(error => {
+            console.error(error);
+        })
+    }
+    }, [eAction,eValue]);
 
     //Search updated materials
     useEffect(() => {
@@ -115,10 +138,26 @@ function History({ selectedAction, startDate, endDate }) {
         }
     }, [searchMaterial]);
 
-    // //Filter updated materials by date
-    // useEffect(() => {
-        
-    // },[filteredMaterial]);
+    // Search updated equipments
+    useEffect(() => {
+        if (searchEquipment !== "") {
+            searchUpdatedEquipment(givenProjectId, searchEquipment).then(response => {
+                const sortedEquipment = response.data.sort((a, b) => new Date(b.updatedDate) - new Date(a.updatedDate));
+                setUpdatedEquipment(sortedEquipment);
+            }).catch(error => {
+                console.error('There was an error!', error);
+            });
+        } else {
+            // If search bar is empty, get all equipments
+            getAllUpdatedEquipment(givenProjectId).then(response => {
+                const sortedEquipment = response.data.sort((a, b) => new Date(b.updatedDate) - new Date(a.updatedDate));
+                setUpdatedEquipment(sortedEquipment);
+            }).catch(error => {
+                console.error('There was an error!', error);
+            });
+        }
+    }, [searchEquipment]);
+
 
     // Pagination for updated equipment table
     const ePrePage = () => {
@@ -195,7 +234,6 @@ function History({ selectedAction, startDate, endDate }) {
                                     numberOfPages={numberOfPages}
                                     search={searchMaterial}
                                     setSearch={setSearchMaterial}
-                                    selectedAction={selectedAction}
                                     setValue={setValue}
                                     value={value}
                                     action={action}
@@ -203,9 +241,6 @@ function History({ selectedAction, startDate, endDate }) {
                                 />
                             )}
 
-                            {console.log('value-history',value)}
-                            {console.log(value.startDate)}
-                            {console.log(action)}
 
                             {activeTab === 'equipment' && (
                                 <EquipmentHistoryComponent
@@ -215,6 +250,12 @@ function History({ selectedAction, startDate, endDate }) {
                                     eNextPage={eNextPage}
                                     eCurrentPage={eCurrentPage}
                                     eNumberOfPages={eNumberOfPages}
+                                    search={searchEquipment}
+                                    setSearch={setSearchEquipment}
+                                    value={eValue}
+                                    setValue={setEValue}
+                                    action={eAction}
+                                    setAction={setEAction}
                                 />
                             )}
                         </div>

@@ -90,7 +90,7 @@ public class MaterialController {
         return ResponseEntity.ok(materialService.searchUpdatedMaterials(projectId, query));
     }
 
-    // New endpoint to get updated materials by date range
+    // Endpoint to get updated materials by date range
     @GetMapping("/getUpdatedMaterialsByDateRange/{projectId}")
     public ResponseEntity<List<UpdateMaterialDto>> getUpdatedMaterialsByDateRange(
             @PathVariable Long projectId,

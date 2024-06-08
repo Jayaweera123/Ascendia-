@@ -13,4 +13,8 @@ public interface UpdateEquipmentRepository extends JpaRepository<UpdateEquipment
     @Query("SELECT ue FROM UpdateEquipment ue WHERE ue.equipment.project.projectId = :projectId")
     List<UpdateEquipment> findAllByProjectId(@Param("projectId") Long projectId);
 
+    @Query("SELECT ue FROM UpdateEquipment ue WHERE ue.equipment.project.projectId = :projectId " +
+            "AND (ue.equipment.equipmentCode LIKE %:query% OR ue.equipment.equipmentName LIKE %:query%)" )
+    List<UpdateEquipment> searchUpdatedEquipment(@Param("projectId") Long projectId, @Param("query") String query);
+
 }
