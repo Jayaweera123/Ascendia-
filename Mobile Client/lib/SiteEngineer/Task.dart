@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 
 
 class Task {
-  final Long taskId;
+  final int taskId;
   final String taskName;
   final String description;
   final DateTime startDate;
@@ -27,13 +27,13 @@ class Task {
   });
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
-      taskId: json['taskId'],
-      taskName: json['taskName'],
-      description: json['description'] ??'',
-      startDate: json['startDate'],
-      endDate: json['endDate']??'',
-      status: json['status']??'',
-      projectId: json['projectId'],
+      taskId: (json['taskId'] ?? 0) as int, // Provide a default value if taskId is null
+      taskName: json['taskName'] ?? '',
+      description: json['description'] ?? '',
+      startDate: DateTime.parse(json['startDate'] ?? DateTime.now().toIso8601String()),
+      endDate: DateTime.parse(json['endDate'] ?? DateTime.now().toIso8601String()),
+      status: json['status'] ?? '',
+      projectId: (json['projectId'] ?? 0) as int, // Provide a default value if projectId is null
     );
   }
 
@@ -42,10 +42,12 @@ class Task {
       'taskId': taskId,
       'taskName': taskName,
       'description': description,
-      'startDate': startDate,
-      'endDate': endDate,
+      'startDate': startDate.toIso8601String(),
+      'endDate': endDate.toIso8601String(),
       'status': status,
-      'projectId': projectId,
+      'project':  {
+            'projectId': projectId,
+    },
     };
   }
 

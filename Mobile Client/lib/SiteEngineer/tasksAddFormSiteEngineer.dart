@@ -219,12 +219,8 @@ child:Column(
       // Handle empty value here, if needed
     }
               });
-            }
-                                    
-                                    
-                                    ,
-                                    
-                                    textAlignVertical: TextAlignVertical.center,
+            },
+             textAlignVertical: TextAlignVertical.center,
                                     decoration: InputDecoration(
                                       contentPadding:
                                           const EdgeInsets.symmetric(
@@ -450,24 +446,107 @@ SizedBox(
     height: 37,
 
     child: ElevatedButton(
-      onPressed: () {
-        _addTask();
-                // Add entered data to the list
-                setState(() {
-                  dataList.add(controller1.text);
-                });
-                // Clear the text field
-             // controller1.clear();
- Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => inProgressSite(
-                      dataList: dataList,
-                    ),
-                  ),
-                );
 
+
+
+
+
+      onPressed: () {
+
+print("object 04");
+  // Saving the comment using service
+
+  if (userInputTask.isNotEmpty) {
+    setState(() {
+      savedDataTask.add(userInputTask);
+      userInputTask = ''; // Clear the input after saving
+      print("object 03");
+
+
+
+      DateTime startDate = _dateTime1; // Assuming _dateTime1 is your start date
+      DateTime endDate = _dateTime2; // Assuming _dateTime2 is your end date
+
+      service.saveTask(controller1.text,_descriptionController.text,startDate,endDate,1);
+      print("object 02");
+      print(startDate);
+      print(endDate);
+
+      controller1.clear(); // Clear the TextEditingController
+      _descriptionController.clear();
+      _dateTime1 = DateTime.now(); // Update dateTime
+      _dateTime2 = DateTime.now();
+      Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>const inProgressSite(dataList: [],)),
+     );
+    });
+  } else {
+    // Handle the case when userInput is empty
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Please enter some data before saving.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
               },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }          // Add your task added logic here
+        },
+
+
+
+
+
+
+
+
+
+
+
+//       onPressed: () {
+//         _addTask();
+//                 // Add entered data to the list
+//                 setState(() {
+//                   dataList.add(controller1.text);
+//                 });
+//                 // Clear the text field
+//              // controller1.clear();
+//  Navigator.push(
+//                   context,
+//                   MaterialPageRoute(
+//                     builder: (context) => inProgressSite(
+//                       dataList: dataList,
+//                     ),
+//                   ),
+//                 );
+
+//               },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       style: ElevatedButton.styleFrom(
         primary: const Color.fromRGBO(16, 0, 63, 1), // Background color
         onPrimary:const Color.fromARGB(255, 255, 255, 255), // Text color
@@ -494,26 +573,22 @@ SizedBox(
     width: 110,
     height: 37,
 
+
+//new added =============================================================
+
+/*
     child: ElevatedButton(
-      onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>  TaskAddSite(
-        onTaskAdded: (newTask) {
-
-
+      onPressed: () {
   // Saving the comment using service
 
-  if (userInputTask.isNotEmpty) {
+  if (userInput.isNotEmpty) {
     setState(() {
-      savedDataTask.add(userInputTask);
-      userInputTask = ''; // Clear the input after saving
-service.saveTask(controller1.text,_descriptionController.text,_dateTime1,_dateTime2,21);
+      savedData.add(userInput);
+      userInput = ''; // Clear the input after saving
+service.saveComment(3, 1, tasksName, controllertaskscomment1.text, _dateTime3.toString());
 
-      controller1.clear(); // Clear the TextEditingController
-      _descriptionController.clear();
-      _dateTime1 = DateTime.now(); // Update dateTime
-      _dateTime2 = DateTime.now();
+      controllertaskscomment1.clear(); // Clear the TextEditingController
+      _dateTime3 = DateTime.now(); // Update dateTime
     });
   } else {
     // Handle the case when userInput is empty
@@ -539,11 +614,41 @@ service.saveTask(controller1.text,_descriptionController.text,_dateTime1,_dateTi
 
 
 
-          // Add your task added logic here
+},
+      style: ElevatedButton.styleFrom(
+        primary: const Color.fromRGBO(16, 0, 63, 1), // Background color
+        onPrimary:const Color.fromARGB(255, 255, 255, 255), // Text color
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(75.0), // Rounded corners
+        ),
+      ),
+
+      child:const Text(
+        'Add',
+        style: TextStyle(
+          fontSize: 19,
+          fontFamily: 'Intel',
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+)
+
+*/
+
+// ended
+
+
+
+    child: ElevatedButton(
+      
+      onPressed: () {
+        // Add your task added logic here
+
+
         },
-      ),
-                  )
-      ),
+      
+                  
+      
       style: ElevatedButton.styleFrom(
         primary: const Color.fromRGBO(16, 0, 63, 1), // Background color
         onPrimary:const Color.fromARGB(255, 255, 255, 255), // Text color
@@ -562,6 +667,18 @@ service.saveTask(controller1.text,_descriptionController.text,_dateTime1,_dateTi
         ),
       ),
 )
+
+
+
+
+
+
+
+
+
+
+
+
   )
 
 

@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
+import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:my_project/SiteEngineer/Comment.dart';
 class Service{
@@ -100,41 +102,73 @@ print(" new 02");
  Future<void> saveTask(String taskName, String description,DateTime startDate,DateTime endDate,int projectId) async {
     final Map<String, dynamic> data = {
       'taskName': taskName,
-      'description': description,
-      'startDate': startDate,
-      'endDate': endDate,
-      'projectId': projectId
-      
+    'description': description,
+    'startDate': startDate.toIso8601String(),
+    'endDate': endDate.toIso8601String(),
+    'project': {
+      'projectId': projectId,
+    },     
   };
+  print("object 01");
+
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8080//api/task'),
-        headers: {'Content-Type': 'application/json'},
+        Uri.parse('http://10.0.2.2:8080/api/task/add'),        //http://localhost:8080/api/task/add
+        headers: {'Content-Type': 'application/json'},          //http://10.0.2.2:8080/api/task/all
         body: json.encode(data),
       );
+      print("object 05");
       if (response.statusCode == 201) {
         print('Data sent successfully');
       } else {
-        throw Exception('Failed to send data');
+        print("exception 01");
+        throw Exception("Failed to send data");
       }
     } catch (error) {
+      print("error 01");
       print('Error: $error');
     }
   }
 
-
-  //static const String _baseUrl = 'http://10.0.2.2:8080//api/project/all';
-
-  static Future<List<String>> fetchTaskNames() async {
-    final response = await http.get(Uri.parse('http://10.0.2.2:8080/api/task/all'));
+Future<void> updateTask(int taskId, String updatedTask, String description,DateTime startDate,DateTime endDate,int projectId) async {
+  try {
+    final response = await http.put(
+      Uri.parse('http://10.0.2.2:8080/api/task//$taskId/edit'),//http://10.0.2.2:8080/api/task//{taskId}/edit
+      headers: {'Content-Type': 'application/json'},              // http://10.0.2.2:8080/api/v2/comment/$commentId
+      body: json.encode({
+        'updatedTask': updatedTask,
+        'description': description,
+        'startDate': startDate.toIso8601String(),
+        'endDate': endDate.toIso8601String(),
+        'project': {
+          'projectId': projectId,
+        },
+        }),
+    );
 
     if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
-      return List<String>.from(data);
+      // Successfully updated the comment
+      print('Comment updated successfully');
     } else {
-      throw Exception('Failed to load task names');
+      // Failed to update the comment
+      throw Exception('Failed to update comment');
+    }
+  } catch (e) {
+    // Handle error
+    print('Error updating comment: $e');
+  }
+}
+
+
+  Future<void> deleteTask(int taskId) async {
+    print("object  21");
+    final response = await http.delete(Uri.parse('http://10.0.2.2:8080/api/task/$taskId'));
+    print("object21");
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete comment');
     }
   }
+
 
 
 }

@@ -1,41 +1,79 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:my_project/BackGround.dart';
-import 'package:my_project/service.dart';
-import 'package:my_project/SiteEngineer/Task.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-//import 'package:my_project/sampleCode.dart';
+import 'package:flutter/material.dart';
+import 'package:my_project/BackGround.dart';
+import 'package:my_project/SiteEngineer/inProgressSiteEngineer.dart';
+import 'package:my_project/service.dart';
+import 'package:my_project/SiteEngineer/Task.dart';
 
 
-//import 'package:my_project/coponents/dateSet.dart';
-//import 'package:my_project/coponents/dateSet.dart';
+
+class UpdatingTaskForm extends StatefulWidget {  
+  int taskId;
+  String description;
+  String taskName;
+  DateTime startDate;
+  DateTime endDate;
+  int projectId;
+
+  UpdatingTaskForm({Key? key,
+                        required this.taskId,
+                        required this.taskName,
+                        required this.description,
+                        required this.startDate,
+                        required this.endDate,
+                        required this.projectId,
+  }) : super(key: key);
 
 
-class JobbAddFormSite extends StatefulWidget {
-  const JobbAddFormSite({Key? key}) : super(key: key);
 
   @override
-  State<JobbAddFormSite> createState() => _ProjectSiteState();
+  State<UpdatingTaskForm> createState() => _ProjectSiteState();
 }
 
-class _ProjectSiteState extends State<JobbAddFormSite> {
-  final TextEditingController searchingController = TextEditingController();
-  final TextEditingController jobFormName = TextEditingController();
-  final TextEditingController jobFormDescription = TextEditingController();
-  //TextEditingController _datacontroller = TextEditingController();
+class _ProjectSiteState extends State< UpdatingTaskForm> {
+   late TextEditingController taskNameController;
+  late TextEditingController descriptionController;
+  late TextEditingController startDateController;
+  late TextEditingController endDateController;
+
+ List<String> dataList=[] ;
+
   String projectName = 'My Project 01';
   String projectSubName = 'The Galle Techno-Park';
-
+  String selectedValue = 'project manager';
   bool value = true; 
+   String userInputTask = '';
+  List<String> savedDataTask = [];
+  Service service = Service();
+  
+
+
+  @override
+  void initState() {
+    super.initState();
+    taskNameController = TextEditingController(text: widget.taskName);
+    descriptionController = TextEditingController(text: widget.description);
+    startDateController = TextEditingController(text: widget.startDate.toIso8601String());
+    endDateController = TextEditingController(text: widget.endDate.toIso8601String());
+  }
+
+  @override
+  void dispose() {
+    taskNameController.dispose();
+    descriptionController.dispose();
+    startDateController.dispose();
+    endDateController.dispose();
+    super.dispose();
+  }
+
+
+
+
 
   DateTime _dateTime1 = DateTime.now();
   DateTime _dateTime2 = DateTime.now();
- // String? selectedValue;
- // List<Map<String, dynamic>> tasks = [];
-    String? selectedValue;
-  List<String> tasks = [];
-  
 
   void _showDatePicker1(){
     showDatePicker(
@@ -62,12 +100,6 @@ void _showDatePicker2(){
         });
       });
   }
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -213,70 +245,22 @@ child:Column(
                                     fontFamily: 'Inter',
                                   ),
                                 ),
-                                Container(
-                                  
-                                      height: 35,
-                                    decoration: BoxDecoration(
-                          color: const Color.fromRGBO(
-                                                  255, 243, 178, 1),
-                          borderRadius: BorderRadius.circular(6.0),
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 1.0,
-                          ),
-                        ),
-                                    child:DropdownButton<String>(
-              value: selectedValue,
-              icon: const Icon(Icons.arrow_drop_down),
-              iconSize: 24,
-              elevation: 16,
-              style: const TextStyle(color: Colors.black),
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedValue = newValue!;
-                });
-              },
-              items: tasks.map((task) {
-                return DropdownMenuItem<String>(
-                  value: task,
-                  child: Text(task),
-                );
-              }).toList(),
-            ),
-                                ),
-                              ],
-                            ),
-const Padding(padding: EdgeInsets.all(3)),
-
-
-
-
-
-Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Job name:',
-                                  style: TextStyle(
-                                    color: Color.fromRGBO(50, 75, 101, 1),
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'Inter',
-                                  ),
-                                ),
                                 SizedBox(
-                                  width: 170, // Adjust the width as needed
+                                  width: 163, // Adjust the width as needed
                                   height: 35, // Adjust the height as needed
-                                  child: TextFormField(
-                                    textAlignVertical: TextAlignVertical.center,
-                                    controller: jobFormName,
-                                    validator: (value) {
-  if (value == null || value.isEmpty) {
-    return 'Please enter a job name';
-  }
-  return null;
-},
-
+                                  child: TextField(
+                                    controller: taskNameController,
+                                    
+                                    onChanged: (value) {
+              setState(() {
+                if (value.isNotEmpty) {
+      userInputTask = value;
+    } else {
+      // Handle empty value here, if needed
+    }
+              });
+            },
+             textAlignVertical: TextAlignVertical.center,
                                     decoration: InputDecoration(
                                       contentPadding:
                                           const EdgeInsets.symmetric(
@@ -296,7 +280,8 @@ Row(
                                         borderRadius:
                                             BorderRadius.circular(6.0),
                                         borderSide: const BorderSide(
-                                          color:Color.fromRGBO(50, 75, 101, 1),
+                                          color:
+                                              Color.fromRGBO(50, 75, 101, 1),
                                         ),
                                       ),
                                       labelStyle: const TextStyle(
@@ -309,13 +294,6 @@ Row(
                                 ),
                               ],
                             ),
-
-
-
-
-
-
-
 const Padding(padding: EdgeInsets.all(3)),
                             const Row(
                             
@@ -341,14 +319,18 @@ const Padding(padding: EdgeInsets.all(3)),
                                     SizedBox(
                                       width: 250, // Adjust the width as needed
                                       height:250, // Adjust the height as needed
-                                      child: TextFormField(
-                                        controller: jobFormDescription,
-validator: (value) {
-  if (value == null || value.isEmpty) {
-    return 'Please enter a job name';
-  }
-  return null;
-},
+                                      child: TextField(
+                                      controller:descriptionController,
+
+onChanged: (value) {
+              setState(() {
+                if (value.isNotEmpty) {
+      userInputTask= value;
+    } else {
+      // Handle empty value here, if needed
+    }
+              });
+            },
 
                                         maxLines: 10,
                                         decoration: InputDecoration(
@@ -367,7 +349,7 @@ validator: (value) {
                                             borderRadius:
                                                 BorderRadius.circular(6.0),
                                             borderSide: const BorderSide(
-                                              color:Color.fromRGBO(50, 75, 101, 1),
+                                              color: Color.fromRGBO(50, 75, 101, 1),
                                             ),
                                           ),
                                           labelStyle: const TextStyle(
@@ -395,11 +377,11 @@ validator: (value) {
                                         fontFamily: 'Inter',
                                       ),
                                     ),
-                                
-  SizedBox(
+                                    SizedBox(
   width: 170,
   height: 35,
   child: MaterialButton(
+    
     onPressed: _showDatePicker1,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -450,9 +432,10 @@ validator: (value) {
                                         fontFamily: 'Inter',
                                       ),
                                     ),
-   
+
+// Provide a suitable width
 SizedBox(
-  width: 168,
+  width: 165,
   height: 35,
   child: MaterialButton(
     onPressed: _showDatePicker2,
@@ -487,17 +470,15 @@ SizedBox(
     ),
   ),
 ),
-       
+
                                   ],
                                 ),
-
-                                const Padding(padding: EdgeInsets.all(5)),
-                                
                               ],
                             ),
 
-const Padding(padding: EdgeInsets.all(20)),
-Row(
+const Padding(padding: EdgeInsets.all(45)),
+Center(
+child: Row(
   mainAxisAlignment: MainAxisAlignment.end,
   children: [
 SizedBox(
@@ -505,11 +486,73 @@ SizedBox(
     height: 37,
 
     child: ElevatedButton(
+
+
+
+
+
       onPressed: () {
-        print(jobFormName);
-        print(jobFormDescription);
-        // Perform login logic here
-     },
+
+print("object 04");
+  // Saving the comment using service
+
+  if (userInputTask.isNotEmpty) {
+    setState(() {
+      savedDataTask.add(userInputTask);
+      userInputTask = ''; // Clear the input after saving
+      print("object 03");
+
+
+
+      DateTime startDate = _dateTime1; // Assuming _dateTime1 is your start date
+      DateTime endDate = _dateTime2; // Assuming _dateTime2 is your end date
+void updateTask() async {
+  try {
+    await service.updateTask(
+      1, // Ensure taskId is defined or accessible here
+      taskNameController.text,
+      descriptionController.text,
+      startDate,
+      endDate,
+      1,
+    );
+    // Handle success or navigation after update
+  } catch (e) {
+    // Handle error
+    print('Failed to update task: $e');
+  }
+}
+      _dateTime1 = DateTime.now(); // Update dateTime
+      _dateTime2 = DateTime.now();
+      Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>const inProgressSite(dataList: [],)),
+     );
+    });
+  } else {
+    // Handle the case when userInput is empty
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Please enter some data before saving.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }          // Add your task added logic here
+        },
+
+
+
       style: ElevatedButton.styleFrom(
         primary: const Color.fromRGBO(16, 0, 63, 1), // Background color
         onPrimary:const Color.fromARGB(255, 255, 255, 255), // Text color
@@ -536,17 +579,24 @@ SizedBox(
     width: 110,
     height: 37,
 
+
     child: ElevatedButton(
+      
       onPressed: () {
-        // Perform login logic here
-     },
+        // Add your task added logic here
+
+
+        },
+      
+                  
+      
       style: ElevatedButton.styleFrom(
         primary: const Color.fromRGBO(16, 0, 63, 1), // Background color
         onPrimary:const Color.fromARGB(255, 255, 255, 255), // Text color
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(75.0), // Rounded corners
         ),
-       // padding:const EdgeInsets.symmetric(horizontal: 20, vertical: 16), // Adjust size here
+       
       ),
 
       child:const Text(
@@ -558,11 +608,24 @@ SizedBox(
         ),
       ),
 )
+
+
+
+
+
+
+
+
+
+
+
+
   )
 
 
 
   ],
+)
 )
 
 
@@ -584,7 +647,6 @@ SizedBox(
         ),
         ),
     );
-
   }
 
 }
