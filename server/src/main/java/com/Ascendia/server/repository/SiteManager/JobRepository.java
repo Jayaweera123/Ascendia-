@@ -1,6 +1,5 @@
 package com.Ascendia.server.repository.SiteManager;
 
-import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.entity.SiteManager.Job;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
