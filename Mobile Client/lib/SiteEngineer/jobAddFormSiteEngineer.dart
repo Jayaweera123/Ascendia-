@@ -19,6 +19,22 @@ class JobbAddFormSite extends StatefulWidget {
   State<JobbAddFormSite> createState() => _ProjectSiteState();
 }
 
+
+Future<List<Task>> getAllTasks() async {
+  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/task/all"));
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonData = json.decode(response.body);
+    return jsonData.map((taskData) => Task.fromJson(taskData)).toList();
+  } else {
+    throw Exception('Failed to load tasks');
+  }
+}
+
+
+
+
+
+
 class _ProjectSiteState extends State<JobbAddFormSite> {
   final TextEditingController searchingController = TextEditingController();
   final TextEditingController jobFormName = TextEditingController();
@@ -31,10 +47,32 @@ class _ProjectSiteState extends State<JobbAddFormSite> {
 
   DateTime _dateTime1 = DateTime.now();
   DateTime _dateTime2 = DateTime.now();
- // String? selectedValue;
- // List<Map<String, dynamic>> tasks = [];
-    String? selectedValue;
-  List<String> tasks = [];
+
+  List<Task> tasks = [];
+  Task? selectedTask;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchTasks();
+  }
+
+  Future<void> fetchTasks() async {
+    try {
+      List<Task> fetchedTasks = await getAllTasks();
+      setState(() {
+        tasks = fetchedTasks;
+        if (tasks.isNotEmpty) {
+          selectedTask = tasks[0];
+        }
+      });
+    } catch (e) {
+      print('Failed to fetch tasks: $e');
+    }
+  }
+
+
+
   
 
   void _showDatePicker1(){
@@ -214,38 +252,42 @@ child:Column(
                                   ),
                                 ),
                                 Container(
-                                  
-                                      height: 35,
+                                   height: 35,
                                     decoration: BoxDecoration(
-                          color: const Color.fromRGBO(
-                                                  255, 243, 178, 1),
+                          color: const Color.fromRGBO(255, 243, 178, 1),
                           borderRadius: BorderRadius.circular(6.0),
                           border: Border.all(
                             color: Colors.black,
                             width: 1.0,
                           ),
                         ),
-                                    child:DropdownButton<String>(
-              value: selectedValue,
-              icon: const Icon(Icons.arrow_drop_down),
-              iconSize: 24,
-              elevation: 16,
-              style: const TextStyle(color: Colors.black),
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedValue = newValue!;
-                });
-              },
-              items: tasks.map((task) {
-                return DropdownMenuItem<String>(
-                  value: task,
-                  child: Text(task),
-                );
-              }).toList(),
-            ),
-                                ),
-                              ],
-                            ),
+                        
+                        child: DropdownButton<Task>(
+                                            value: selectedTask,
+                                            icon: const Icon(Icons.arrow_drop_down),
+                                            iconSize: 24,
+                                            elevation: 16,
+                                            style: const TextStyle(color: Colors.black,fontSize: 16.0),
+                                            onChanged: (Task? newValue) {
+                                              setState(() {
+                                                selectedTask = newValue;
+                                              });
+                                            },
+                                            items: tasks.map((Task task) {
+                                              return DropdownMenuItem<Task>(
+                                                value: task,
+                                                child: Container(
+                                                  child: Text(
+                                                    task.taskName,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
 const Padding(padding: EdgeInsets.all(3)),
 
 
@@ -309,11 +351,6 @@ Row(
                                 ),
                               ],
                             ),
-
-
-
-
-
 
 
 const Padding(padding: EdgeInsets.all(3)),

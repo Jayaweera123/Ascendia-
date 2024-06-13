@@ -45,6 +45,7 @@ class _ProjectSiteState extends State< UpdatingTaskForm> {
   String selectedValue = 'project manager';
   bool value = true; 
    String userInputTask = '';
+   String userInputDescription = '';
   List<String> savedDataTask = [];
   Service service = Service();
   
@@ -249,8 +250,7 @@ child:Column(
                                   width: 163, // Adjust the width as needed
                                   height: 35, // Adjust the height as needed
                                   child: TextField(
-                                    controller: taskNameController,
-                                    
+                                    controller: taskNameController,                                    
                                     onChanged: (value) {
               setState(() {
                 if (value.isNotEmpty) {
@@ -325,7 +325,11 @@ const Padding(padding: EdgeInsets.all(3)),
 onChanged: (value) {
               setState(() {
                 if (value.isNotEmpty) {
-      userInputTask= value;
+      userInputDescription= value;
+      print(userInputTask);
+      print(widget.projectId);
+      print(widget.taskId);
+      print(userInputDescription);
     } else {
       // Handle empty value here, if needed
     }
@@ -491,6 +495,89 @@ SizedBox(
 
 
 
+
+
+/*
+
+
+ void _editData(int taskId,String taskName,String description,DateTime startDate,DateTime endDate,int projectId) async {
+  String updatedTask = ''; // Initialize the updated comment text
+print("object edit 04");
+  try {
+    showDialog(
+      
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Edit Comment"),
+          content: TextField(
+            
+            controller: TextEditingController(text: updatedTask),
+            onChanged: (newValue) {
+setState(() {
+                if (newValue.isNotEmpty) {
+                  print("object edite 5");
+      updatedTask = newValue;
+      print("object edite 6");
+    } else {
+      // Handle empty value here, if needed
+    }
+              });
+            },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                print("object edite 01");
+                Navigator.of(context).pop(); // Close the dialog
+                  // Call the service method to update the comment
+                  print(taskId);
+                  await service.updateTask(taskId, updatedTask, description,startDate,endDate,projectId);
+                  // Handle the result as needed
+                  print("object edite 03");
+                
+              },
+              child:const Text('Update'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  } catch (e) {
+    // Handle error
+    print(e.toString());
+  }
+}
+
+
+
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       onPressed: () {
 
 print("object 04");
@@ -498,36 +585,15 @@ print("object 04");
 
   if (userInputTask.isNotEmpty) {
     setState(() {
-      savedDataTask.add(userInputTask);
-      userInputTask = ''; // Clear the input after saving
-      print("object 03");
-
-
-
+      
       DateTime startDate = _dateTime1; // Assuming _dateTime1 is your start date
       DateTime endDate = _dateTime2; // Assuming _dateTime2 is your end date
-void updateTask() async {
-  try {
-    await service.updateTask(
-      1, // Ensure taskId is defined or accessible here
-      taskNameController.text,
-      descriptionController.text,
-      startDate,
-      endDate,
-      1,
-    );
-    // Handle success or navigation after update
-  } catch (e) {
-    // Handle error
-    print('Failed to update task: $e');
-  }
-}
+
+_editData(widget.taskId, userInputTask, userInputDescription, startDate, endDate, widget.projectId);
+
       _dateTime1 = DateTime.now(); // Update dateTime
       _dateTime2 = DateTime.now();
-      Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) =>const inProgressSite(dataList: [],)),
-     );
+     
     });
   } else {
     // Handle the case when userInput is empty
@@ -563,7 +629,7 @@ void updateTask() async {
       ),
 
       child:const Text(
-        'Create',
+        'Update',
         style: TextStyle(
           fontSize: 19,
           fontFamily: 'Intel',
@@ -648,6 +714,66 @@ SizedBox(
         ),
     );
   }
+
+
+
+
+
+ void _editData(int taskId,String userInputTask,String description,DateTime startDate,DateTime endDate,int projectId) async {
+print("object edit 04");
+  try {
+    showDialog(
+      
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Are you sure these data are should be updated ?"),
+          
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                print("object edite 01");
+                  // Call the service method to update the comment
+                  print(taskId);
+                  print(userInputTask);
+                  print(description);
+                  print(startDate);
+                  print(endDate);
+                  print(projectId);
+                  await service.updateTask(taskId, userInputTask, description,startDate,endDate,projectId);
+                  // Handle the result as needed
+                  print("object edite 03");
+
+
+
+                        Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>const inProgressSite(dataList: [],)),
+     );
+                
+              },
+              child:const Text('Update'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+  } catch (e) {
+    // Handle error
+    print(e.toString());
+  }
+}
+
+
+
+
+
 
 }
 

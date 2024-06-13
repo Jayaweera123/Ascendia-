@@ -110,6 +110,8 @@ print(" new 02");
     },     
   };
   print("object 01");
+    print(startDate);
+  print(endDate);
 
     try {
       final response = await http.post(
@@ -130,27 +132,43 @@ print(" new 02");
     }
   }
 
-Future<void> updateTask(int taskId, String updatedTask, String description,DateTime startDate,DateTime endDate,int projectId) async {
-  try {
-    final response = await http.put(
-      Uri.parse('http://10.0.2.2:8080/api/task//$taskId/edit'),//http://10.0.2.2:8080/api/task//{taskId}/edit
-      headers: {'Content-Type': 'application/json'},              // http://10.0.2.2:8080/api/v2/comment/$commentId
-      body: json.encode({
-        'updatedTask': updatedTask,
+Future<void> updateTask(int taskId, String taskName, String description,DateTime startDate,DateTime endDate,int projectId) async {
+ 
+final Map<String, dynamic> data = {
+        'taskName': taskName,
         'description': description,
         'startDate': startDate.toIso8601String(),
         'endDate': endDate.toIso8601String(),
         'project': {
           'projectId': projectId,
         },
-        }),
+      };
+
+
+       print("==============");
+  print(taskId);
+  print(taskName);
+  print(description);
+  print(startDate);
+  print(endDate);
+  print(projectId);
+
+  try {
+    final response = await http.put(
+      Uri.parse('http://10.0.2.2:8080/api/task/$taskId/edit'),//http://10.0.2.2:8080/api/task//{taskId}/edit
+      headers: {'Content-Type': 'application/json'},              // http://10.0.2.2:8080/api/v2/comment/$commentId
+      body: json.encode(data),
     );
+
+    print("Response status: ${response.statusCode}");
+    print("Response body: ${response.body}");
 
     if (response.statusCode == 200) {
       // Successfully updated the comment
       print('Comment updated successfully');
     } else {
       // Failed to update the comment
+      print('Failed to update comment: ${response.body}');
       throw Exception('Failed to update comment');
     }
   } catch (e) {

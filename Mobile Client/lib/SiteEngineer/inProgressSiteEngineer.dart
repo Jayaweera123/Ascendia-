@@ -10,6 +10,7 @@ import 'package:my_project/SiteEngineer/updateSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/HomeSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/updatingTaskForm.dart';
 import 'package:my_project/service.dart';
+import 'package:my_project/SiteEngineer/Task.dart';
 
 
 
@@ -39,13 +40,13 @@ Future<List<Task>> getAllTasks() async {
 
 
 class _DisplayDataPageState extends State<inProgressSite> {
-  List<bool> rememberMeList = List.generate(100, (index) => false); // Assuming a maximum of 100 items
+  //List<bool> rememberMeList = List.generate(100, (index) => false); // Assuming a maximum of 100 items
 
   final TextEditingController searchingcontroller = TextEditingController();
    final TextEditingController controller5 = TextEditingController();
   String projectName = 'My Project 01';
   String projectSubName = 'The Galle Techno-Park';
-  bool isFocused2 = false;
+  bool isFocused= false;
   Service service = Service();
     List<String> savedData = [];
 
@@ -476,25 +477,32 @@ Center(
                                     ),
                                   );
                                 },
-                           
-
-
-
-
                         ),
                       ),
+
                       Row(
                         mainAxisSize: MainAxisSize.min,
                                children: [
-          GestureDetector(
-            onTap: () {
-             
-            },
-            child: Icon(
-                  Icons.check_box_outlined
-                
-            ),
-          ),
+
+         GestureDetector(
+      onTap: () {
+        setState(() {
+          isFocused = !isFocused; // Toggle the isChecked state
+        });
+      },
+      child: Icon(
+        isFocused ? Icons.check_box_outlined : Icons.check_box_outline_blank, // Change icon based on isChecked
+ // Example: Green for checked, black for unchecked
+      ),
+    ),
+
+
+
+
+
+
+
+    
         const Padding(padding: EdgeInsets.all(19)),
           GestureDetector(
             onTap: () {
@@ -522,16 +530,21 @@ PopupMenuButton<String>(
                                   if (value == 'Delete') {
                                  _deleteData( task.taskId);
                                   } else if (value == 'Edit') {
-/*
+
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => UpdatingTaskForm(
-                                          task.taskId,task.taskName,task.description,task.startDate,task.endDate,task.projectId
+                                          taskId:task.taskId,
+                                          taskName:task.taskName,
+                                          description:task.description,
+                                          startDate:task.startDate,
+                                          endDate:task.endDate,
+                                          projectId:task.projectId
                                         ),
                                       ),
-                                    )
-                                */
+                                    );
+                              
                                   }
                                 },
                                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
