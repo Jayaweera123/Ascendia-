@@ -5,6 +5,8 @@ import 'package:my_project/service.dart';
 import 'package:my_project/SiteEngineer/Task.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:my_project/service.dart';
+import 'package:my_project/SiteEngineer/JobAddSiteEngineer.dart';
 //import 'package:my_project/sampleCode.dart';
 
 
@@ -42,8 +44,10 @@ class _ProjectSiteState extends State<JobbAddFormSite> {
   //TextEditingController _datacontroller = TextEditingController();
   String projectName = 'My Project 01';
   String projectSubName = 'The Galle Techno-Park';
+  String userInputTask = '';
 
   bool value = true; 
+  Service service = Service();
 
   DateTime _dateTime1 = DateTime.now();
   DateTime _dateTime2 = DateTime.now();
@@ -312,13 +316,15 @@ Row(
                                   child: TextFormField(
                                     textAlignVertical: TextAlignVertical.center,
                                     controller: jobFormName,
-                                    validator: (value) {
-  if (value == null || value.isEmpty) {
-    return 'Please enter a job name';
-  }
-  return null;
-},
-
+                                    onChanged: (value) {
+              setState(() {
+                if (value.isNotEmpty) {
+      userInputTask = value;
+    } else {
+      // Handle empty value here, if needed
+    }
+              });
+            },
                                     decoration: InputDecoration(
                                       contentPadding:
                                           const EdgeInsets.symmetric(
@@ -380,13 +386,15 @@ const Padding(padding: EdgeInsets.all(3)),
                                       height:250, // Adjust the height as needed
                                       child: TextFormField(
                                         controller: jobFormDescription,
-validator: (value) {
-  if (value == null || value.isEmpty) {
-    return 'Please enter a job name';
-  }
-  return null;
-},
-
+                                        onChanged: (value) {
+              setState(() {
+                if (value.isNotEmpty) {
+      userInputTask = value;
+    } else {
+      // Handle empty value here, if needed
+    }
+              });
+            },
                                         maxLines: 10,
                                         decoration: InputDecoration(
                                           filled: true,
@@ -543,6 +551,67 @@ SizedBox(
 
     child: ElevatedButton(
       onPressed: () {
+
+
+
+
+
+
+print("object 04");
+  // Saving the comment using service
+
+  if (userInputTask.isNotEmpty) {
+    setState(() {
+
+
+      print("object 03");
+
+
+
+      DateTime startDate = _dateTime1; // Assuming _dateTime1 is your start date
+      DateTime endDate = _dateTime2; // Assuming _dateTime2 is your end date
+
+      service.CreateJobs(jobFormName.text,jobFormDescription.text,startDate,endDate,selectedTask!.taskId);
+      print("object 02");
+      print(startDate);
+      print(endDate);
+
+      _dateTime1 = DateTime.now(); // Update dateTime
+      _dateTime2 = DateTime.now();
+      Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>const JobAddSite()),
+     );
+    });
+  } else {
+    // Handle the case when userInput is empty
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text('Please enter some data before saving.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  } 
+
+
+
+
+
+
+
+
+
         print(jobFormName);
         print(jobFormDescription);
         // Perform login logic here

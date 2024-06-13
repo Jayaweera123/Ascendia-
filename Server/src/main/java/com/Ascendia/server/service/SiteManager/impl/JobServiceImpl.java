@@ -2,6 +2,7 @@ package com.Ascendia.server.service.SiteManager.impl;
 
 
 import com.Ascendia.server.dto.SiteManager.JobDto;
+import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.entity.SiteManager.Job;
 import com.Ascendia.server.exceptions.ResourceNotFoundException;
 import com.Ascendia.server.mapper.SiteManager.JobMapper;
@@ -9,17 +10,20 @@ import com.Ascendia.server.repository.ProjectManager.TaskRepository;
 import com.Ascendia.server.repository.SiteManager.JobRepository;
 import com.Ascendia.server.service.SiteManager.JobService;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class JobServiceImpl implements JobService {
 
+    @Getter
     private JobRepository jobRepository;
 
     @Autowired
@@ -89,41 +93,69 @@ public class JobServiceImpl implements JobService {
             return "Completed";
         }
     }
+/*
+    @Override
+    public TaskDto createTask(TaskDto taskDto) {
+        // Assuming taskDto contains projectId
+        // Retrieve project details from the database based on projectId
+        Optional<Project> projectOptional = projectRepository.findById(taskDto.getProject().getProjectId());
+
+        // Check if the project exists
+        if (projectOptional.isPresent()) {
+            // Set the project details in the taskDto
+            taskDto.setProject(projectOptional.get());
+
+            Task task = TaskMapper.mapToTask(taskDto);
+            // Calculate the status
+            Task.TaskStatus status = task.calculateStatus();
+
+            task.setTaskStatus(status);
+            Task savedTask = taskRepository.save(task);
+            return TaskMapper.mapToTaskDto(savedTask);
+        } else {
+            // Handle the case where the project does not exist
+            // For example, throw an exception or return null
+            throw new ResourceNotFoundException("Project not found with ID: " + taskDto.getProject().getProjectId());
+        }
+    }
+*/
 
 
-//
-//    @Override
-//    public JobDto createJob(JobDto jobDto) {
-//        // Assuming jobDto contains taskId
-//        // Retrieve tasks details from the database based on taskId
-//        Optional<Task> taskOptional = taskRepository.findById(jobDto.getTask().getTaskId());
-//
-//        // Check if the project exists
-//        if (taskOptional.isPresent()) {
-//            // Set the project details in the jobDto
-//            jobDto.setTask(taskOptional.get());
-//
-//            Job job = JobMapper.mapToJob(jobDto);
-//            // Calculate the status
-//           // Job.JobStatus status = job.calculateStatus();
-//
-////job.setJobStatus(status);
-//            Job savedJob = jobRepository.save(job);
-//            return JobMapper.mapToJobDto(savedJob);
-//        } else {
-//            // Handle the case where the project does not exist
-//            // For example, throw an exception or return null
-//            throw new ResourceNotFoundException("Task not found with ID: " + jobDto.getTask().getTaskId());
-//        }
-//    }
 
+    public JobDto createJob(JobDto jobDto){
+
+        Optional<Task> taskOptional = taskRepository.findById(jobDto.getTask().getTaskId());
+        if (taskOptional.isPresent()) {
+            // Set the tasks details in the jobDto
+            jobDto.setTask(taskOptional.get());
+            Job job = JobMapper.mapToJob(jobDto);
+            // Calculate the status
+            job.setStatus("TO_DO"); // Set default status
+            job.setDone(false);
+
+
+            Job savedJob = jobRepository.save(job);
+            return JobMapper.mapToJobDto(savedJob);
+        } else {
+            // Handle the case where the project does not exist
+            // For example, throw an exception or return null
+            throw new ResourceNotFoundException("Tasks not found with ID: " + jobDto.getTask().getTaskId());
+        }
+    }
+
+
+
+
+
+
+/*
     @Override
     public JobDto createJob(JobDto jobDto) {
         Job job = JobMapper.mapToJob(jobDto);
         Job savedJob = jobRepository.save(job);
         return JobMapper.mapToJobDto(savedJob);
     }
-
+*/
     @Override
     public JobDto getJobById(Long jobId) {
         Job job = jobRepository.findById(jobId)

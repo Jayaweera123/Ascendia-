@@ -189,4 +189,38 @@ final Map<String, dynamic> data = {
 
 
 
+ Future<void> CreateJobs(String jobName, String description,DateTime startDate,DateTime endDate,int taskId) async {
+    final Map<String, dynamic> data = {
+      'jobName': jobName,
+    'description': description,
+    'startDate': startDate.toIso8601String(),
+    'endDate': endDate.toIso8601String(),
+    'task': {
+      'taskId': taskId,
+    },     
+  };
+  print("object 01");
+    print(startDate);
+  print(endDate);
+
+    try {
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:8080/api/job/createJob'),        //http://10.0.2.2:8080/api/job/createJob
+        headers: {'Content-Type': 'application/json'},          //http://10.0.2.2:8080/api/task/all
+        body: json.encode(data),
+      );
+      print("object 05");
+      if (response.statusCode == 201) {
+        print('Data sent successfully');
+      } else {
+        print("exception 01");
+        throw Exception("Failed to send data");
+      }
+    } catch (error) {
+      print("error 01");
+      print('Error: $error');
+    }
+  }
+
+
 }

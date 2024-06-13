@@ -65,7 +65,7 @@ public class JobController {
 
 
     //get all the comment list API
-    @GetMapping
+    @GetMapping("allJobs")
     public ResponseEntity <List<JobDto>> getAllJob(){
         List<JobDto> jobs = jobService.getAllJob();
         return ResponseEntity.ok(jobs);
