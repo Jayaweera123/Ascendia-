@@ -29,7 +29,8 @@ import Login from "./pages/Login/Login";
 import AddUser from "./pages/Admin/AddUser";
 import AdDashboard from "./pages/Admin/AdDashboard";
 import UserList from "./pages/Admin/UserList";
-import AddUserWork from "./pages/Admin/AddUserWork";
+
+
 
 {/* Rashmi - Client */}
 //import ClDashboard from "./pages/Client/ClDashboard";
@@ -130,8 +131,7 @@ const App = () => {
         <Route path="/edituser/:id" element={<AddUser/>}/>
         <Route path="/admin/dashboard" element={<AdDashboard/>}/>
         <Route path="/userlist" element={<UserList/>}/>
-        <Route path="/adduserwork" element={<AddUserWork/>}/>
-
+        
 
 
       {/* Rashmi - Client */}

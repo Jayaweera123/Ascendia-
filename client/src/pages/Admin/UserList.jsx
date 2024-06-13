@@ -1,4 +1,3 @@
-// Import necessary dependencies and components
 import React, { useEffect, useState } from "react";
 import SideNavigationAdmin from "../../components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin";
@@ -20,19 +19,24 @@ const UserList = () => {
   useEffect(() => {
     getAllUsers();
   }, []);
-
-  // Function to fetch all users from the server
+  
   function getAllUsers() {
     userList()
       .then((response) => {
-        // Filter out inactive users
-        const activeUsers = response.data.filter(user => user.active);
-        setUsers(activeUsers);
+        console.log("API Response:", response); // Log the entire response object
+        if (Array.isArray(response)) {
+          const activeUsers = response.filter(user => user.active);
+          setUsers(activeUsers);
+        } else {
+          console.error("Unexpected response format:", response);
+        }
       })
       .catch((error) => {
-        console.error(error);
+        console.error("Error fetching users:", error);
       });
   }
+  
+  
 
   // Function to navigate to the Add User page
   function addNewUser() {
@@ -60,12 +64,12 @@ const UserList = () => {
   // Render the component JSX
   return (
     <div>
-      {/* Render the top navigation component */}
+      
       <TopNavigationAdmin />
       <section className="flex">
-        {/* Render the side navigation component */}
+        
         <SideNavigationAdmin open={open} setOpen={setOpen} />
-        <div class="relative bg-zinc-100 bg-cover h-fit w-screen">
+        <div className="relative bg-zinc-100 bg-cover h-fit w-screen">
           <div className="m-3 text-xl font-semibold text-gray-900">
             <div className="flex flex-row gap-3 pt-2 pb-1 ml-5 items-centered">
               {/* Render the icon for user list */}
@@ -78,11 +82,11 @@ const UserList = () => {
               </div>
             </div>
             <div className="relative m-5 overflow-x-auto bg-white rounded-lg shadow-md">
-              <div class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4">
+              <div className="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4">
                 {/* Button to add a new user */}
                 <div>
                   <button
-                    class="inline-flex flex-row gap-1 ml-10 items-center pb-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-[#101d3f] dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                    className="inline-flex flex-row gap-1 ml-10 items-center pb-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-[#101d3f] dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                     type="button"
                     onClick={addNewUser}
                   >
@@ -93,14 +97,14 @@ const UserList = () => {
                   </button>
                 </div>
                 {/* Input field for searching users */}
-                <label for="table-search" class="sr-only">
+                <label htmlFor="table-search" className="sr-only">
                   Search
                 </label>
-                <div class="relative">
-                  <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                <div className="relative">
+                  <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
                     {/* Icon for search */}
                     <svg
-                      class="w-4 h-4 text-gray-100 dark:text-gray-400"
+                      className="w-4 h-4 text-gray-100 dark:text-gray-400"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -126,29 +130,26 @@ const UserList = () => {
               </div>
             </div>
             <div className="relative m-5 overflow-x-auto bg-white rounded-lg shadow-md">
-              <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 rounded-lg shadow-md">
+              <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 rounded-lg shadow-md">
                 <thead className="text-sm text-white uppercase bg-gray-500 ">
                   {/* Table headers */}
                   <tr>
-                    <th scope="col" className="w-5 px-5 py-3">
-                      User Id
+                  <th scope="col" className="w-20 px-5 py-3">
+                      User ID
                     </th>
-                    <th scope="col" className="w-24 px-5 py-3">
+                    <th scope="col" className="w-52 px-5 py-3">
                       Name
                     </th>
-                    <th scope="col" className="w-64 px-4 py-3">
+                    <th scope="col" className="w-60 px-4 py-3">
                       Designation
                     </th>
-                    <th scope="col" className="w-10 px-3 py-3">
+                    <th scope="col" className="w-32 px-4 py-3">
                       Department
                     </th>
-                    <th scope="col" className="w-10 px-4 py-3">
+                    <th scope="col" className="w-32 px-4 py-3">
                       Phone Number
                     </th>
-                    <th scope="col" className="px-4 py-3 w-30">
-                      Username
-                    </th>
-                    <th scope="col" className="px-5 py-3 w-15">
+                    <th scope="col" className="w-40 px-5 py-3">
                       Actions
                     </th>
                   </tr>
@@ -158,13 +159,13 @@ const UserList = () => {
                   {users.map((user) => (
                     <tr
                       key={user.userID}
-                      class="bg-white border-b dark:border-gray-100 hover:bg-gray-50"
+                      className="bg-white border-b dark:border-gray-100 hover:bg-gray-50"
                     >
                       {/* Display user information */}
                       <td class="px-6 py-3 w-20">{user.userID}</td>
                       <th
                         scope="row"
-                        class="flex items-center px-5 py-3 text-gray-900 whitespace-nowrap dark:text-black"
+                        className="flex items-center px-5 py-3 text-gray-900 whitespace-nowrap dark:text-black"
                       >
                         <img
                           src={user.profilePicUrl ? `http://localhost:8080/${user.profilePicUrl.replace(/\\/g, "/")}` : ""} // Assuming the server is running on localhost:8080
@@ -172,25 +173,25 @@ const UserList = () => {
                           alt={`Profile of ${user.firstName} ${user.lastName}`}
                         />
 
-                        <div class="ps-3">
+                        <div className="ps-3">
                           <div className="flex flex-row text-base font-semibold">
                             <div>{user.firstName}</div>
                             <div className="ml-1">{user.lastName}</div>
                           </div>
-                          <div class="font-normal text-gray-500">
+                          <div className="font-normal text-gray-500">
                             {user.email}
                           </div>
                         </div>
                       </th>
-                      <td class="px-4 py-3 w-40">{user.designation}</td>
-                      <td class="px-4 py-3">{user.department}</td>
-                      <td class="px-4 py-3">{user.phoneNumber}</td>
-                      <td class="px-4 py-3">{user.username}</td>
+                      <td className="px-4 py-3 w-60">{user.designation}</td>
+                      <td className="px-4 py-3 w-32">{user.department}</td>
+                      <td className="px-4 py-3">{user.phoneNumber}</td>
+                      
                       
                       {/* Buttons for editing and deleting users */}
-                      <td class="px-2 py-3">
+                      <td className="px-2 py-3">
                         <button
-                          class="inline-flex flex-row gap-1 pb-2 pl-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-[#101d3f] dark:text-white dark:border-gray-100 dark:hover:bg-gray-400 dark:hover:border-gray-100 dark:focus:ring-gray-100"
+                          className="inline-flex flex-row gap-1 pb-2 pl-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-[#101d3f] dark:text-white dark:border-gray-100 dark:hover:bg-gray-400 dark:hover:border-gray-100 dark:focus:ring-gray-100"
                           type="button"
                           onClick={() => editUser(user.userID)}
                         >
@@ -200,7 +201,7 @@ const UserList = () => {
                           <div>Edit</div>
                         </button>
                         <button
-                          class="inline-flex flex-row gap-1 pb-2 pl-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-red-600 dark:text-white dark:border-gray-100 dark:hover:bg-gray-400 dark:hover:border-gray-100 dark:focus:ring-gray-100"
+                          className="inline-flex flex-row gap-1 pb-2 pl-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-red-600 dark:text-white dark:border-gray-100 dark:hover:bg-gray-400 dark:hover:border-gray-100 dark:focus:ring-gray-100"
                           type="button"
                           onClick={() => removeUser(user.userID)}
                         >

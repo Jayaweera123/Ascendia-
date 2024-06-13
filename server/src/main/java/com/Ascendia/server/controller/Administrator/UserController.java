@@ -32,14 +32,6 @@ public class UserController {
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
-    /*@PostMapping("/create")
-    public ResponseEntity<UserDto> createUser(@ModelAttribute UserDto userDto,
-                                              @RequestParam("profileImage") MultipartFile profileImage) {
-        UserDto createdUser = userService.createUser(userDto, profileImage);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-    }*/
-
-
     //Build Get User REST API
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userID){

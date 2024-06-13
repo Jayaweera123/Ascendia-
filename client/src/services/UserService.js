@@ -13,8 +13,10 @@ export const userList = () => {
         });
 };
 
+  
+
 // Function to add a new user {http://localhost:8080/api/users/add}
-export const addUser = (user, profileImage) => {
+{/*export const addUser = (user, profileImage) => {
     const formData = new FormData();
     formData.append('profileImage', profileImage);
     Object.keys(user).forEach(key => {
@@ -31,7 +33,31 @@ export const addUser = (user, profileImage) => {
         console.error("Error adding user:", error);
         throw error;
     });
+};*/}
+
+// Function to add a new user
+export const addUser = async (user, profileImage) => {
+    try {
+        const formData = new FormData();
+        formData.append('profileImage', profileImage);
+        Object.keys(user).forEach(key => {
+            formData.append(key, user[key]);
+        });
+
+        const response = await axios.post(`${REST_API_BASE_URL}/add`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error("Error adding user:", error);
+        throw error;
+    }
 };
+
+
 
 // Function to get a specific user by ID {http://localhost:8080/api/users/{userID}}
 export const getUser = (userID) => {
