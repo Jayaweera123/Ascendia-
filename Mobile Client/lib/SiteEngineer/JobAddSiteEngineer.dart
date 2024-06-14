@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:my_project/BackGround.dart';
+import 'package:my_project/SiteEngineer/Task.dart';
 //import 'package:my_project/SiteEngineer/JobCommentFormSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/jobAddFormSiteEngineer.dart';
 //import 'package:my_project/SiteEngineer/inProgressSiteEngineer.dart';
 //import 'package:my_project/coponents/signupButon.dart';
 //import 'package:my_project/ConstentParts.dart';
+import 'package:http/http.dart' as http;
+import 'package:my_project/SiteEngineer/Job.dart';
+
 
 class JobAddSite extends StatefulWidget {
   const JobAddSite({Key? key}) : super(key: key);
@@ -12,6 +17,20 @@ class JobAddSite extends StatefulWidget {
   @override
   State<JobAddSite> createState() => _ProjectSiteState();
 }
+
+Future<List<Job>> getAllJobs() async {
+  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/job/allJobs"));
+  if(response.statusCode == 200){
+    final List<dynamic> jsonData = json.decode(response.body);
+    return jsonData.map((jobData) => Job.fromJson(jobData)).toList();
+  }else{
+    throw Exception('Failed to load comment10');
+  }
+  }
+
+
+
+
 
 class _ProjectSiteState extends State<JobAddSite> {
   final TextEditingController searchingcontroller = TextEditingController();
@@ -177,14 +196,125 @@ Container(
   color: Colors.amber,
   width:284,
   height:550,
-  child:const Column(
-children: [
-
-],
+      child: SingleChildScrollView(
+      child: FutureBuilder<List<Job>>(
+        future: getAllJobs(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            print("object7");
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            print("object9");
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            print("object10");
+            final List<Job> jobs = snapshot.data!;
+            return Column(
+              children: jobs.map((job) {
+                return Card(
+  margin: const EdgeInsets.all(5),
+  color: const Color.fromRGBO(255, 227, 76, 1),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(12),
+    side: const BorderSide(
+      color: Colors.black,
+      width: 1.0,
+    ),
   ),
+  child: Column(
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ListTile(
+              title: Text(
+                'Task Name: ${job.task.taskName}\nJob Name: ${job.jobName}',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ),
+          ),
+          PopupMenuButton<String>(
+            onSelected: (String value) {
+              if (value == 'Delete') {
+                // Implement delete functionality
+              } else if (value == 'Edit') {
+                // Implement edit functionality
+              }
+            },
+            itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'Delete',
+                child: Text('Delete'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Edit',
+                child: Text('Edit'),
+              ),
+            ],
+          ),
+        ],
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        child: Text(
+          job.description,
+          style: const TextStyle(
+            color: Color.fromRGBO(50, 75, 101, 1),
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Inter',
+          ),
+        ),
+      ),
+
+
+      Padding(
+        padding: const EdgeInsets.symmetric( vertical: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Text(
+              '${job.startDate.year}-${job.startDate.month}-${job.startDate.day}',               //'${_dateTime2.year}/${_dateTime2.month}/${_dateTime2.day}'
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Inter',
+              ),
+            ),
+            const SizedBox(width: 16),
+            Text(
+              '${job.endDate.year}-${job.endDate.month}-${job.endDate.day}',
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Inter',
+              ),
+            ),
+        
+    ]
+      ),
+      )
+
+    ],
+  ),
+);
+
+              }).toList(),
+            );
+          } else {
+            return Text('No data available');
+          }
+        },
+      ),
+    ),
 ),
 
-const Padding(padding: EdgeInsets.all(10)),
 
                   ],
                 )

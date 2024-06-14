@@ -4,6 +4,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_project/SiteEngineer/Task.dart';
 
 
 
@@ -15,7 +16,8 @@ class Job{
   final DateTime endDate;
   final String status;
   final bool isDone;
-  final int taskId;
+  final Task task;
+
 
   Job({
     required this.jobId,
@@ -25,7 +27,8 @@ class Job{
     required this.endDate,
     required this.status,
     required this.isDone,
-    required this.taskId});
+    required this.task,
+    });
 
   factory Job.fromJson(Map<String, dynamic> json) {
     return Job(
@@ -36,7 +39,8 @@ class Job{
       endDate: DateTime.parse(json['endDate']??DateTime.now().toIso8601String()),
       status: json['status']??'',
       isDone: json['isDone'] ?? false, // Default to false if not present
-      taskId: (json['taskId']??0)as int,
+      task: Task.fromJson(json['task']), // Parse nested task object
+
     );
   }
 Map<String, dynamic> toJson() {
@@ -48,9 +52,7 @@ Map<String, dynamic> toJson() {
     'endDate': endDate.toIso8601String(),
     'status': status,
     'isDone': isDone,
-    'task':{
-      'taskId': taskId,
-      },   
+    'task': task.toJson(),
   };
 }
 
