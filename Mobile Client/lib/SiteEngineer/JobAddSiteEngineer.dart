@@ -9,6 +9,7 @@ import 'package:my_project/SiteEngineer/jobAddFormSiteEngineer.dart';
 //import 'package:my_project/ConstentParts.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_project/SiteEngineer/Job.dart';
+import 'package:my_project/service.dart';
 
 
 class JobAddSite extends StatefulWidget {
@@ -38,6 +39,7 @@ class _ProjectSiteState extends State<JobAddSite> {
   String projectSubName = 'The Galle Techno-Park';
   bool isFocused2 = false;
     final String buttonSignUp='Submit';
+    Service service = Service();
 
 //create new job form
 
@@ -243,8 +245,9 @@ Container(
             onSelected: (String value) {
               if (value == 'Delete') {
                 // Implement delete functionality
+                                                 _deleteData( job.jobId);
               } else if (value == 'Edit') {
-                // Implement edit functionality
+                // Implement edit functionality              
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -325,4 +328,87 @@ Container(
       ),
     );
   }
+
+
+
+
+
+
+
+
+
+void _deleteData(int jobId) async {
+  print(jobId);
+  try {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:const Text("Warrning",
+            style: TextStyle(
+            color: Color.fromRGBO(50, 75, 101, 1),
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Inter',
+            ),
+          ),
+          content:const Text("Are you sure you want to delete this task ?",
+            style: TextStyle(
+            color: Color.fromRGBO(50, 75, 101, 1),
+            fontSize: 16.0,
+            fontWeight: FontWeight.normal,
+            fontFamily: 'Inter',
+            )),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                     service.deleteJob(jobId);
+                Navigator.of(context).pop(    );
+              },
+              child:const Text("OK"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child:const Text("Cancel"),
+            ),
+          ],
+
+        );
+      },
+    );
+    // Call the deleteComment method with the appropriate comment ID
+ 
+
+    // Handle the result, for example
+  } catch (e) {
+    // Handle error, for example:
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:const Text("Error"),
+          content: Text("Failed to delete task: $e"),          
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+ 
+}
+
+
+
+
+
+
+
 }
