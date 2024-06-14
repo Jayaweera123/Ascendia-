@@ -196,7 +196,7 @@ const Padding(padding: EdgeInsets.all(3)),
 
 Container(
 
-  color: Colors.amber,
+// color: Colors.amber,
   width:284,
   height:550,
       child: SingleChildScrollView(

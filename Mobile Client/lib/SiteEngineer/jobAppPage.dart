@@ -4,42 +4,62 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:my_project/BackGround.dart';
 import 'package:my_project/SiteEngineer/CompleteSiteEngineer.dart';
+import 'package:my_project/SiteEngineer/Job.dart';
 import 'package:my_project/SiteEngineer/Task.dart';
 import 'package:my_project/SiteEngineer/TaskCommentFormSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/updateSiteEngineer.dart';
-import 'package:my_project/SiteEngineer/jobAppPage.dart';
+import 'package:my_project/SiteEngineer/HomeSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/updatingTaskForm.dart';
 import 'package:my_project/service.dart';
 import 'package:my_project/SiteEngineer/Task.dart';
 
 
 
-class inProgressSite extends StatefulWidget {
-  final List<String> dataList;
-   
+class jobAppPage extends StatefulWidget {  
+ final int taskId;
+ final String taskName;
 
-  const inProgressSite({
+  jobAppPage({
     Key? key,
-    required this.dataList,
+    required this.taskId,
+    required this.taskName
+  
   }) : super(key: key);
 
   @override
   _DisplayDataPageState createState() => _DisplayDataPageState();
 }
 
-Future<List<Task>> getAllTasks() async {
-  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/task/all"));
+Future<List<Job>> getJobsByTasks(int taskId) async {//http://10.0.2.2:8080/api/job/api/task/19/jobs
+  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/job/api/task/$taskId/jobs"));
   if(response.statusCode == 200){
     final List<dynamic> jsonData = json.decode(response.body);
-    return jsonData.map((taskData) => Task.fromJson(taskData)).toList();
+    return jsonData.map((jobData) => Job.fromJson(jobData)).toList();
   }else{
     throw Exception('Failed to load comment10');
   }
   }
 
 
+/*
+Future<List<Job>> getAllJobs() async {
+  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/job/allJobs"));
+  if(response.statusCode == 200){
+    final List<dynamic> jsonData = json.decode(response.body);
+    return jsonData.map((jobData) => Job.fromJson(jobData)).toList();
+  }else{
+    throw Exception('Failed to load comment10');
+  }
+  }
 
-class _DisplayDataPageState extends State<inProgressSite> {
+*/
+
+
+
+
+
+
+class _DisplayDataPageState extends State<jobAppPage> {
   //List<bool> rememberMeList = List.generate(100, (index) => false); // Assuming a maximum of 100 items
 
   final TextEditingController searchingcontroller = TextEditingController();
@@ -49,6 +69,7 @@ class _DisplayDataPageState extends State<inProgressSite> {
   bool isFocused= false;
   Service service = Service();
     List<String> savedData = [];
+  
 
      
     void toDoGoToNewOne(){
@@ -137,7 +158,7 @@ class _DisplayDataPageState extends State<inProgressSite> {
             Container(
               color:const Color.fromARGB(255, 255, 255, 255),         
                            child:Text(
-                              '$projectName- Tasks',
+                              '$projectName',
                               style: const TextStyle(
                                 color: Color.fromRGBO(50, 75, 101, 1),
                                 fontSize: 20.0,
@@ -170,47 +191,18 @@ SizedBox(
 child:Row(
 mainAxisAlignment:MainAxisAlignment.spaceBetween, 
   children: [
-/* ..............................In Progress button............................. */
-InkWell(
-  onTap:toDoGoToNewOne,
-
-child:Container(
-  width: 108,
-  height: 36,
-   decoration: BoxDecoration(          
-            borderRadius: BorderRadius.circular(19.0),
-            color:const Color.fromRGBO(50, 75, 101, 1),
-            border: Border.all(
-              color: const Color.fromRGBO(0, 31, 63, 1),
-              width: 1.0,
-            )
-          ),
-          child:const Center(
-child:Text(
-                          'In Progress',
-                            style: TextStyle(
-                              
-                              color:Color.fromRGBO(255, 215, 0, 1),
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Inter',                              
-                            ),
-                           // textAlign: TextAlign.top,
-                          ),
-)
-           ),
-),
- /* ..............................In Progress button end............................. */
+/* ..............................In Progress button end............................. */
 
 /* ..............................to-do button............................. */
 
 Container(
-  width: 66,
-  height: 36,
+  width: 92,
+  height: 46,
    decoration: BoxDecoration(
+            
           
             borderRadius: BorderRadius.circular(19.0),
-            color:const Color.fromRGBO(255, 215, 0, 1),
+            color:const Color.fromRGBO(0, 31, 63, 1),
             border: Border.all(
               color: const Color.fromRGBO(0, 31, 63, 1),
               width: 1.0,
@@ -221,8 +213,8 @@ Container(
 child:Text(
                           'To-Do',
                             style: TextStyle(
-                              color: Color.fromRGBO(50, 75, 101, 1),
-                              fontSize: 16.0,
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontSize: 20.0,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Inter',                              
                             ),
@@ -232,45 +224,48 @@ child:Text(
            ),
 
 
- /* ..............................to-do button end............................. */
-
-/* ..............................Completed button............................. */
-InkWell(
-onTap:inprogressGoToComplete,
-child:Container(
-  width: 101,
-  height: 36,
-   decoration: BoxDecoration(
-          
-            borderRadius: BorderRadius.circular(19.0),
-            color:const  Color.fromRGBO(50, 75, 101, 1),
-            border: Border.all(
-              color: const Color.fromRGBO(0, 31, 63, 1),
-              width: 1.0,
-            )
-          ),
-          child:const Center(
-child:Text(
-                          'Completed',
-                            style: TextStyle(
-                              
-                              color:Color.fromRGBO(255, 215, 0, 1),
-                              fontSize: 16.0,
+Container(
+  child:Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+Text("Task Name",
+    style: TextStyle(
+                              color: Color.fromRGBO(0, 31, 63, 1),
+                              fontSize: 14.0,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'Inter',                              
                             ),
-                           // textAlign: TextAlign.top,
-                          ),
-)
-           )
+
 ),
- /* ..............................Completed button end............................. */
+Text(
+  widget.taskName,
+
+style: TextStyle(
+                              color: Color.fromRGBO(0, 31, 63, 1),
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Inter',                              
+                            ),
+
+),
+
+
+
+
+    ],
+  ),
+)
+
+
+
+
+ /* ..............................to-do button end............................. */
 
 
 ],)
 ),
 
-const Padding(padding: EdgeInsets.all(10)),
+const Padding(padding: EdgeInsets.all(2)),
 
 SizedBox(
   width: 284,
@@ -431,8 +426,8 @@ Center(
     height: 450,
     width: 300,
     child: SingleChildScrollView(
-      child: FutureBuilder<List<Task>>(
-        future: getAllTasks(),
+      child: FutureBuilder<List<Job>>(
+        future: getJobsByTasks( widget.taskId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             print("object7");
@@ -442,9 +437,9 @@ Center(
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.hasData) {
             print("object10");
-            final List<Task> tasks = snapshot.data!;
+            final List<Job> jobs = snapshot.data!;
             return Column(
-              children: tasks.map((task) {
+              children: jobs.map((job) {
                 return Card(
                   margin: const EdgeInsets.all(5),
                   color: const Color.fromRGBO(255, 227, 76, 1),
@@ -461,7 +456,7 @@ Center(
                       Expanded(
                         child: ListTile(
                           title: Text(
-                            '${task.taskName}',
+                            '${job.jobName}',
                             style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -473,17 +468,7 @@ Center(
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => jobAppPage(
-                                        taskId: task.taskId,
-                                        taskName: task.taskName,
-
-                                        
-
-
-
-
-
-                                      ),
+                                      builder: (context) => HomeSite(),
                                     ),
                                   );
                                 },
@@ -538,9 +523,9 @@ const Padding(padding: EdgeInsets.all(0)),
 PopupMenuButton<String>(
                                 onSelected: (String value) {
                                   if (value == 'Delete') {
-                                 _deleteData( task.taskId);
+                              //   _deleteData( task.taskId);
                                   } else if (value == 'Edit') {
-
+/*
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -554,7 +539,7 @@ PopupMenuButton<String>(
                                         ),
                                       ),
                                     );
-                              
+                              */
                                   }
                                 },
                                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
