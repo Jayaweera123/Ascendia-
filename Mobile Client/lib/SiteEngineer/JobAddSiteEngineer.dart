@@ -10,6 +10,7 @@ import 'package:my_project/SiteEngineer/jobAddFormSiteEngineer.dart';
 import 'package:http/http.dart' as http;
 import 'package:my_project/SiteEngineer/Job.dart';
 import 'package:my_project/service.dart';
+import 'package:my_project/SiteEngineer/updatingJobForm.dart';
 
 
 class JobAddSite extends StatefulWidget {
@@ -245,9 +246,24 @@ Container(
             onSelected: (String value) {
               if (value == 'Delete') {
                 // Implement delete functionality
-                                                 _deleteData( job.jobId);
+                _deleteData( job.jobId);
               } else if (value == 'Edit') {
-                // Implement edit functionality              
+                // Implement edit functionality         
+              
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => UpdatingJobForm(
+                                          jobId:job.jobId,
+                                          jobName: job.jobName,
+                                          description: job.description,
+                                          startDate: job.startDate,
+                                          endDate: job.endDate,
+                                          task: job.task,
+                                        ),
+                                      ),
+                                    );
+
               }
             },
             itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -328,14 +344,6 @@ Container(
       ),
     );
   }
-
-
-
-
-
-
-
-
 
 void _deleteData(int jobId) async {
   print(jobId);

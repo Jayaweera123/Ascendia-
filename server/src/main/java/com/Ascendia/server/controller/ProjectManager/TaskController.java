@@ -1,9 +1,6 @@
 package com.Ascendia.server.controller.ProjectManager;
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
-import com.Ascendia.server.dto.Store.EquipmentDto;
-import com.Ascendia.server.entity.ProjectManager.Task;
-import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.service.ProjectManager.TaskService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +40,10 @@ public class TaskController {
         List<TaskDto> tasks = taskService.getAllTasks();
         return ResponseEntity.ok(tasks);
     }
+
+
+
+
 /*
     //Update Tasks REST API
     @PutMapping("{id}")

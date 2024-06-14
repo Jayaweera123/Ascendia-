@@ -180,7 +180,9 @@ public class JobServiceImpl implements JobService {
         job.setDescription(updatedJob.getDescription());
         job.setEndDate(updatedJob.getEndDate());
         job.setStartDate(updatedJob.getStartDate());
-        job.setStatus(updatedJob.getStatus());
+        job.setDone(false);
+        job.setStatus("TO_DO");
+        job.setTask(updatedJob.getTask());
 
         Job updateJobObj = jobRepository.save(job);
 

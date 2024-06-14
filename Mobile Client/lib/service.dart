@@ -212,21 +212,22 @@ final Map<String, dynamic> data = {
 
 
 
-Future<void> updateJob(int taskId, String taskName, String description,DateTime startDate,DateTime endDate,int projectId) async {
+Future<void> updateJob(int jobId, String jobName, String description,DateTime startDate,DateTime endDate,int taskId) async {
 
 final Map<String, dynamic> data = {
-        'taskName': taskName,
-        'description': description,
-        'startDate': startDate.toIso8601String(),
-        'endDate': endDate.toIso8601String(),
-        'project': {
-          'projectId': projectId,
-        },
+        'jobName':jobName,
+        'description':description,
+        'startDate':startDate.toIso8601String(),
+        'endDate':endDate.toIso8601String(),
+        'task':{
+          'taskId':taskId,
+        } 
       };
+
   try {
     final response = await http.put(
-      Uri.parse('http://10.0.2.2:8080/api/task/$taskId/edit'),//http://10.0.2.2:8080/api/task//{taskId}/edit
-      headers: {'Content-Type': 'application/json'},              // http://10.0.2.2:8080/api/v2/comment/$commentId
+      Uri.parse('http://10.0.2.2:8080/api/job/$jobId'),
+      headers: {'Content-Type': 'application/json'},             
       body: json.encode(data),
     );
 
