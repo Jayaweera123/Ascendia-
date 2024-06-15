@@ -19,7 +19,7 @@ public class JWTUtils {
 
     private SecretKey Key;
 
-    private static final long EXPIRATION_TIME = 86400000; //24 Hours
+    private static final long EXPIRATION_TIME = 43200000; // 12 Hours in milliseconds
 
     public  JWTUtils(){
         String secreteString = "843567893696976453275974432697R634976R738467TR678T34865R6834R8763T478378637664538745673865783678548735687R3";
