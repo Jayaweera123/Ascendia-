@@ -14,7 +14,7 @@ const SideNavigationStore = () => {
     // { name: "History", link: "/viewHistory", icon: HiMiniDocumentText },
     { name: "History", link: "/history", icon: VscHistory  },
     // { name: "Timeline", link: "/", icon: HiMiniClock },
-    { name: "Notifications", link: "/", icon: HiBellAlert},
+    // { name: "Notifications", link: "/", icon: HiBellAlert},
 
   ];
   const [open, setOpen] = useState(true);
