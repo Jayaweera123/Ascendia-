@@ -5,6 +5,9 @@ import PageTitle from "../../components/ProjectManager/PageTitle";
 import { useParams } from "react-router-dom";
 import ProjectDetails from "../../components/ProjectManager/ProjectDashboard/ProjectDetails";
 import TotalNumbers from "../../components/ProjectManager/ProjectDashboard/TotalNumbers";
+import PieChartProgress from "../../components/ProjectManager/ProjectDashboard/PieChart";
+import TasksPieChart from "../../components/ProjectManager/ProjectDashboard/TasksPieChart";
+import TasksBarChart from "../../components/ProjectManager/ProjectDashboard/TasksBarChart";
 
 function ProjectDashboard() {
   const { projectId } = useParams();
@@ -18,9 +21,14 @@ function ProjectDashboard() {
             <PageTitle title="Dashboard" />
 
             <TotalNumbers projectId={projectId} />
+            <div className="lg:flex grow gap-5 md:flex:none">
+              <div className="lg:w-8/12 py-5">
+                <TasksBarChart projectId={projectId} />
+              </div>
 
-            <div className="align-left">
-              <ProjectDetails projectId={projectId} />
+              <div className="lg:w-4/12 py-5">
+                <TasksPieChart projectId={projectId} />
+              </div>
             </div>
           </div>
         </div>

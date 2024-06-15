@@ -27,6 +27,8 @@ public interface TaskService {
 
      int getJobCountForTask(Long taskId);
 
+     int getCompletedJobCountForTask(Long taskId);
+
     String checkCompletionOrStatusUpdate(Long taskId);
 
     void updateTaskStatus(Long taskId);
@@ -40,6 +42,7 @@ public interface TaskService {
     void markAsCompleted(Long taskId);
 
     void markAsUncompleted(Long taskId);
+
 
 
 

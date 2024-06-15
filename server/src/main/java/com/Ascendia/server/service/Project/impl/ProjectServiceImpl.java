@@ -75,6 +75,10 @@ public class ProjectServiceImpl implements ProjectService {
         return jobRepository.countJobsByProjectId(projectId);
     }
 
+    public Long getCompletedJobsCountForProject(Long projectId) {
+        return jobRepository.countCompletedJobsByProjectId(projectId);
+    }
+
     @Override
     public String calculateDuration(ProjectDto projectDto) {
 

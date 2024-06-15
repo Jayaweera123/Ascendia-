@@ -168,6 +168,11 @@ public class  TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public int getCompletedJobCountForTask(Long taskId) {
+        return jobRepository.countJobsByTask_TaskIdAndStatusCompleted(taskId);
+    }
+
+    @Override
     public void updateTaskStatus(Long taskId) {
         Task task = taskRepository.findById(taskId).orElseThrow(
                 () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)

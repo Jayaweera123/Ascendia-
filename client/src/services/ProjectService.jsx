@@ -25,6 +25,11 @@ export const getProjectDuration = (projectId) =>
 export const getJobCount = (projectId) =>
   axios.get("http://localhost:8080/api/project/" + projectId + "/jobs/count");
 
+export const getCompletedJobCount = (projectId) =>
+  axios.get(
+    "http://localhost:8080/api/project/" + projectId + "/completed/jobs/count"
+  );
+
 export const getEmployeeCount = (projectId) =>
   axios.get(
     "http://localhost:8080/api/project/" + projectId + "/employees/count"
