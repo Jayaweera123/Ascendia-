@@ -10,6 +10,10 @@ public interface UserService {
 
     UserDto addUser(UserDto userDto, MultipartFile profileImage);
 
+    UserDto login(UserDto loginRequest);
+
+    UserDto refreshToken(UserDto refreshTokenRequest);
+
     UserDto getUserById(Long userID);
 
     List<UserDto> getAllUsers();
