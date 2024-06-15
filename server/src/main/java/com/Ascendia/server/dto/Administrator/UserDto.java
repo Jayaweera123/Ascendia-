@@ -4,7 +4,6 @@ import com.Ascendia.server.entity.Administrator.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-
 import java.time.LocalDate;
 import java.util.List;
 

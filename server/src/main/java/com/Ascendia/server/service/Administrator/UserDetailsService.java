@@ -1,6 +1,5 @@
 package com.Ascendia.server.service.Administrator;
 
-
 import com.Ascendia.server.repository.Administrator.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

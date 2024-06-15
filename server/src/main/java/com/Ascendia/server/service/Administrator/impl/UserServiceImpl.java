@@ -18,11 +18,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.IOException;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
@@ -153,6 +153,7 @@ public class UserServiceImpl implements UserService {
             // Prepare response
             userDto.setStatusCode(200);
             userDto.setToken(jwtToken);
+            userDto.setDesignation(user.getDesignation());
             userDto.setRefreshToken(refreshToken);
             userDto.setExpirationTime("24 hours");
             userDto.setMessage("Successfully Logged In");
@@ -177,15 +178,12 @@ public class UserServiceImpl implements UserService {
             authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
             var user1 = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
-            // Check if passwords match
-            if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                throw new BadCredentialsException("Invalid username or password");
-            }
 
             var jwt = jwtUtils.generateToken(user1);
             var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user1);
             userDto2.setStatusCode(200);
             userDto2.setToken(jwt);
+            userDto2.setDesignation(user1.getDesignation());
             userDto2.setRefreshToken(refreshToken);
             userDto2.setExpirationTime("24Hrs");
             userDto2.setMessage("Successfully Logged In");
@@ -222,108 +220,97 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUserById(Long userID) {
-        User user = userRepository.findById(userID)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User is not exists with given Id : "+userID));
-        return UserMapper.mapToUserDto(user);
+        UserDto userDto4 = new UserDto();
+        try {
+            User usersById = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("User Not found"));
+            userDto4.setUser(usersById);
+            userDto4.setStatusCode(200);
+            userDto4.setMessage("Users with id '" + userID + "' found successfully");
+        } catch (Exception e) {
+            userDto4.setStatusCode(500);
+            userDto4.setMessage("Error occurred: " + e.getMessage());
+        }
+        return userDto4;
     }
 
-    {/*public ReqRes getUsersById(Integer id) {
-        ReqRes reqRes = new ReqRes();
-        try {
-            OurUsers usersById = usersRepo.findById(id).orElseThrow(() -> new RuntimeException("User Not found"));
-            reqRes.setOurUsers(usersById);
-            reqRes.setStatusCode(200);
-            reqRes.setMessage("Users with id '" + id + "' found successfully");
-        } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred: " + e.getMessage());
-        }
-        return reqRes;
-    } */}
+
 
     @Override
-    public List<UserDto> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map(UserMapper::mapToUserDto)
-                .collect(Collectors.toList());
-    }
-
-    {/* public ReqRes getAllUsers() {
-        ReqRes reqRes = new ReqRes();
+    public UserDto getAllUsers() {
+        UserDto userDto3 = new UserDto();
 
         try {
-            List<OurUsers> result = usersRepo.findAll();
-            if (!result.isEmpty()) {
-                reqRes.setOurUsersList(result);
-                reqRes.setStatusCode(200);
-                reqRes.setMessage("Successful");
+            List<User> users = userRepository.findAll();
+            if (!users.isEmpty()) {
+                userDto3.setUsersList(users);
+                userDto3.setStatusCode(200);
+                userDto3.setMessage("Successful");
             } else {
-                reqRes.setStatusCode(404);
-                reqRes.setMessage("No users found");
+                userDto3.setStatusCode(404);
+                userDto3.setMessage("No users found");
             }
-            return reqRes;
+            return userDto3;
         } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred: " + e.getMessage());
-            return reqRes;
+            userDto3.setStatusCode(500);
+            userDto3.setMessage("Error occurred: " + e.getMessage());
+            return userDto3;
         }
-    } */}
-
-    @Override
-    public UserDto updateUser(Long userID, UserDto updatedUser) {
-
-        User user = userRepository.findById(userID).orElseThrow(
-                () -> new ResourceNotFoundException("User is not exists with given Id : "+userID)
-        );
-
-        user.setFirstName(updatedUser.getFirstName());
-        user.setLastName(updatedUser.getLastName());
-        user.setEmail(updatedUser.getEmail());
-        user.setPhoneNumber(updatedUser.getPhoneNumber());
-        user.setDesignation(updatedUser.getDesignation());
-        user.setDepartment(updatedUser.getDepartment());
-        user.setProfilePicUrl(updatedUser.getProfilePicUrl());
-
-        User updatedUserObj = userRepository.save(user);
-
-        return UserMapper.mapToUserDto(updatedUserObj);
     }
 
-    {/* public ReqRes updateUser(Integer userId, OurUsers updatedUser) {
-        ReqRes reqRes = new ReqRes();
+    @Override
+    public UserDto updateUser(Long userID, UserDto updatedUser, MultipartFile profileImage) {
+        UserDto userDto4 = new UserDto();
         try {
-            Optional<OurUsers> userOptional = usersRepo.findById(userId);
+            Optional<User> userOptional = userRepository.findById(userID);
             if (userOptional.isPresent()) {
-                OurUsers existingUser = userOptional.get();
-                existingUser.setEmail(updatedUser.getEmail());
-                existingUser.setName(updatedUser.getName());
-                existingUser.setCity(updatedUser.getCity());
-                existingUser.setRole(updatedUser.getRole());
+                User existingUser = userOptional.get();
 
-                // Check if password is present in the request
-                if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
-                    // Encode the password and update it
-                    existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+                // Update basic user details
+                existingUser.setFirstName(updatedUser.getFirstName());
+                existingUser.setLastName(updatedUser.getLastName());
+                existingUser.setEmail(updatedUser.getEmail());
+                existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
+                existingUser.setDesignation(updatedUser.getDesignation());
+                existingUser.setDepartment(updatedUser.getDepartment());
+
+                // Check if a new profile image is provided
+                if (profileImage != null && !profileImage.isEmpty()) {
+                    try {
+                        // Get the file name
+                        String fileName = StringUtils.cleanPath(profileImage.getOriginalFilename());
+                        // Set the file path where the image will be stored
+                        Path uploadPath = Paths.get(uploadDir + fileName);
+                        // Copy the file to the upload path
+                        Files.copy(profileImage.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
+                        // Set the profile picture URL in the user entity
+                        existingUser.setProfilePicUrl(uploadPath.toString());
+                    } catch (IOException e) {
+                        e.printStackTrace(); // Handle the exception appropriately
+                        userDto4.setStatusCode(500);
+                        userDto4.setMessage("Error occurred while uploading profile image: " + e.getMessage());
+                        return userDto4;
+                    }
                 }
 
-                OurUsers savedUser = usersRepo.save(existingUser);
-                reqRes.setOurUsers(savedUser);
-                reqRes.setStatusCode(200);
-                reqRes.setMessage("User updated successfully");
+                // Save the user entity with updated details
+                User savedUser = userRepository.save(existingUser);
+                userDto4.setUser(savedUser);
+                userDto4.setStatusCode(200);
+                userDto4.setMessage("User updated successfully");
             } else {
-                reqRes.setStatusCode(404);
-                reqRes.setMessage("User not found for update");
+                userDto4.setStatusCode(404);
+                userDto4.setMessage("User not found for update");
             }
         } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred while updating user: " + e.getMessage());
+            userDto4.setStatusCode(500);
+            userDto4.setMessage("Error occurred while updating user: " + e.getMessage());
         }
-        return reqRes;
+        return userDto4;
     }
 
 
-    public ReqRes getMyInfo(String email){
+
+    {/*public ReqRes getMyInfo(String email){
         ReqRes reqRes = new ReqRes();
         try {
             Optional<OurUsers> userOptional = usersRepo.findByEmail(email);
