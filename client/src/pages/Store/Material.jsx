@@ -93,14 +93,14 @@ function Material() {
         <section className="flex">
             <SideNavigationStore open={open} setOpen={setOpen} />
       
-            <div className="relative h-screen">
+            <div className="relative w-screen h-screen ">
   
-                <div className="absolute top-0 left-0 pt-3 pl-10">
+                <div className="absolute top-0 left-0 pt-3 pl-10 ">
                     <h1 className="text-4xl leading-relaxed font-bold text-[#101d3f] whitespace-nowrap">Material List</h1>
                 </div>
 
                 <div className="flex justify-center min-h-screen mx-auto mt-20 ml-10 ">
-                    <div className="overflow-x-auto ">
+                    <div className="overflow-x-auto basis-full">
                         <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md">
                             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                                 

@@ -201,13 +201,13 @@ function History() {
             <section className="flex">
                 <SideNavigationStore open={open} setOpen={setOpen} />
 
-                <div className="relative h-screen">
+                <div className="relative w-screen h-screen">
                     <div className="absolute top-0 left-0 pt-3 pl-10">
                         <h1 className="text-4xl leading-relaxed font-bold text-[#101d3f] whitespace-nowrap">History</h1>
                     </div>
 
                     <div className="flex justify-center min-h-screen mx-auto mt-20 ml-10 ">
-                        <div className="overflow-x-auto ">
+                        <div className="overflow-x-auto basis-full">
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('material')}
