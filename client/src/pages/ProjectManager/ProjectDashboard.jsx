@@ -3,9 +3,7 @@ import SideNavigationPM from "../../components/ProjectManager/SideNavigation";
 import TopNavigationPM from "../../components/ProjectManager/TopNavigationPM";
 import PageTitle from "../../components/ProjectManager/PageTitle";
 import { useParams } from "react-router-dom";
-import ProjectDetails from "../../components/ProjectManager/ProjectDashboard/ProjectDetails";
 import TotalNumbers from "../../components/ProjectManager/ProjectDashboard/TotalNumbers";
-import PieChartProgress from "../../components/ProjectManager/ProjectDashboard/PieChart";
 import TasksPieChart from "../../components/ProjectManager/ProjectDashboard/TasksPieChart";
 import TasksBarChart from "../../components/ProjectManager/ProjectDashboard/TasksBarChart";
 
