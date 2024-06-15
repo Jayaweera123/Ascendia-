@@ -4,6 +4,7 @@ import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.entity.Store.Equipment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
