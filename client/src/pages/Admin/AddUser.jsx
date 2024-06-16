@@ -14,14 +14,12 @@ const AddUser = () => {
   const [open, setOpen] = useState(true);
 
   const [formData, setFormData] = useState({
-    userID: '', 
     firstName: '',
     lastName: '',
     phoneNumber: '',
     email: '',
     designation: '',
     department: '',
-    addedDate: '', 
     profileImage: null
   });
  
@@ -32,15 +30,14 @@ const AddUser = () => {
     firstName: '',
     lastName: '',
     phoneNumber: '',
-    email: '',
-    addedDate: '',
+    email: ''
   });
 
   // Use navigate hook for routing
   const navigate = useNavigate(); // Assuming this is used for navigation within the application
 
   // useEffect hook to fetch user data if editing an existing user
-  useEffect(() => {
+  {/*useEffect(() => {
     if (userID) {
       UserService.getUserById(userID)
         .then((response) => {
@@ -54,6 +51,29 @@ const AddUser = () => {
         ...prevData,
         userID: Date.now() + Math.floor(Math.random() * 1000)
       }));
+    }
+  }, [userID]); */}
+
+  useEffect(() => {
+    if (userID) {
+      UserService.getUserById(userID)
+        .then((response) => {
+          const { userID, ...userData } = response.data; // Destructure and remove userID
+          setFormData(userData);
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    } else {
+      setFormData({
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+        email: '',
+        designation: '',
+        department: '',
+        profileImage: null
+      });
     }
   }, [userID]);
   
@@ -80,11 +100,11 @@ const AddUser = () => {
 
     const formDataToSend = new FormData();
     Object.keys(formData).forEach(key => {
-        if (key === 'profileImage') {
-            formDataToSend.append(key, formData[key]);
-        } else {
-            formDataToSend.append(key, formData[key].toString());
-        }
+      if (key === 'profileImage') {
+        formDataToSend.append(key, formData[key]);
+      } else if (key !== 'userID') { // Exclude userID when adding a user
+        formDataToSend.append(key, formData[key].toString());
+      }
     });
 
     console.log("Form Data to Send:");
@@ -116,14 +136,12 @@ const AddUser = () => {
         console.log('User added/updated successfully:', result);
 
         setFormData({
-            userID: '',
             firstName: '',
             lastName: '',
             phoneNumber: '',
             email: '',
             designation: '',
             department: '',
-            addedDate: '',
             profileImage: null
         });
         alert('User added/updated successfully');
@@ -186,14 +204,6 @@ const AddUser = () => {
       valid = false;
     } else {
       errorsCopy.email = '';
-    }
-
-    // Validate addedDate
-    if (!formData.addedDate.trim()) {
-      errorsCopy.addedDate = 'Added Date is required!';
-      valid = false;
-    } else {
-      errorsCopy.addedDate = '';
     }
 
     // Update errors state
@@ -390,24 +400,6 @@ const AddUser = () => {
                         </div>
                       </div>
 
-                      {/* Input for Added Date */}
-                      <div className="sm:col-span-3 sm:row-start-5">
-                        <label htmlFor="AddedDate" className="block text-base font-medium leading-6 text-gray-900">
-                          Added Date
-                        </label>
-                        <div className="mt-2">
-                          <input
-                            type="date"
-                            name="addedDate"
-                            id="addedDate"
-                            autoComplete="given-date"
-                            value={formData.addedDate} 
-                            onChange={handleChange}
-                            className={`form-input ${errors.addedDate ? 'border-red-500' : '' } block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
-                          />
-                          {errors.addedDate && <div className='text-red-500'> {errors.addedDate}</div>}
-                        </div>
-                      </div>
                     </div>
                   </div>
 

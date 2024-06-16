@@ -7,7 +7,6 @@ public class UserMapper {
 
     public static UserDto mapToUserDto(User user) {
         return new UserDto(
-                user.getUserID(),
                 user.getFirstName(),
                 user.getLastName(),
                 user.getDesignation(),
@@ -32,20 +31,21 @@ public class UserMapper {
     }
 
     public static User mapToUser(UserDto userDto) {
-        return new User(
-                userDto.getUserID(),
-                userDto.getFirstName(),
-                userDto.getLastName(),
-                userDto.getDesignation(),
-                userDto.getDepartment(),
-                userDto.getUsername(),
-                userDto.getPassword(), // Map password from UserDto to User entity
-                userDto.getEmail(),
-                userDto.getPhoneNumber(),
-                userDto.getAddedDate(),
-                userDto.getProfilePicUrl(),
-                userDto.isAvailability(),
-                userDto.isActive()
-        );
+        // For mapToUser method, userDto.getUserID() should be handled based on how you handle ID generation/assignment
+        // Typically, ID would not be set for new User creation from DTO
+        User user = new User();
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setDesignation(userDto.getDesignation());
+        user.setDepartment(userDto.getDepartment());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword()); // Map password from UserDto to User entity
+        user.setEmail(userDto.getEmail());
+        user.setPhoneNumber(userDto.getPhoneNumber());
+        user.setAddedDate(userDto.getAddedDate());
+        user.setProfilePicUrl(userDto.getProfilePicUrl());
+        user.setAvailability(userDto.isAvailability());
+        user.setActive(userDto.isActive());
+        return user;
     }
 }

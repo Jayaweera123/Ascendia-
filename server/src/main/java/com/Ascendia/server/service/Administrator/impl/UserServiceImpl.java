@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.IOException;
 import java.nio.file.StandardCopyOption;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.nio.charset.StandardCharsets;
 
 @Service
 @Transactional
@@ -80,11 +84,11 @@ public class UserServiceImpl implements UserService {
             }
 
             // Generate username
-            String username = generateUsername(userDto.getFirstName(), userDto.getLastName(), userDto.getDepartment(), userDto.getUserID());
+            String username = generateUsername(userDto.getFirstName(), userDto.getLastName(), userDto.getDepartment(), userDto.getPhoneNumber());
             userDto.setUsername(username);
 
             // Generate password
-            String password = generatePassword(userDto);
+            String password = generatePassword(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(), userDto.getPhoneNumber());
             userDto.setPassword(passwordEncoder.encode(password));
 
             // Set isAvailability based on designation
@@ -366,38 +370,36 @@ public class UserServiceImpl implements UserService {
 
     // Helper method to generate username
     @Override
-    public String generateUsername(String firstName, String lastName, String department, long userId) {
+    public String generateUsername(String firstName, String lastName, String department, String phoneNumber) {
         char firstLetter = Character.toLowerCase(firstName.charAt(0));
-        String userIdString = String.valueOf(userId);
+        // Generate last two digits of phoneNumber
+        String lastTwoDigitsPhoneNumber = phoneNumber.substring(phoneNumber.length() - 2);
 
         if (department == null || department.isEmpty()) {
-            return (lastName + firstLetter + "." + userIdString).toLowerCase();
+            return (lastName + firstLetter + "." + lastTwoDigitsPhoneNumber).toLowerCase();
         } else {
-            return (lastName + firstLetter + "." + department + userIdString).toLowerCase();
+            return (lastName + firstLetter + "." + department + lastTwoDigitsPhoneNumber).toLowerCase();
         }
     }
 
 
 
+
     // Helper method to generate password
     @Override
-    public String generatePassword(UserDto userDto) {
-        StringBuilder passwordBuilder = new StringBuilder();
+    public String generatePassword(String firstName, String lastName, String email, String phoneNumber) {
+        // Get first letter of firstName and first letter of lastName
+        char firstLetterFirstName = Character.toLowerCase(firstName.charAt(0));
+        char firstLetterLastName = Character.toLowerCase(lastName.charAt(0)); // Get first letter of lastName
 
-        // Append first letter of the first name (if available)
-        if (!StringUtils.isEmpty(userDto.getFirstName())) {
-            passwordBuilder.append(Character.toLowerCase(userDto.getFirstName().charAt(0)));
-        }
+        // Get first two letters of email (assuming email has at least two characters)
+        String firstTwoLettersEmail = email.substring(0, 2).toLowerCase();
 
-        // Append first letter of the last name (if available)
-        if (!StringUtils.isEmpty(userDto.getLastName())) {
-            passwordBuilder.append(Character.toLowerCase(userDto.getLastName().charAt(0)));
-        }
+        // Generate last two digits of phoneNumber
+        String lastTwoDigitsPhoneNumber = phoneNumber.substring(phoneNumber.length() - 2);
 
-        // Append userID
-        passwordBuilder.append(userDto.getUserID());
-
-        return passwordBuilder.toString();
+        // Concatenate all parts to form the password
+        return String.valueOf(firstLetterFirstName) + firstLetterLastName + firstTwoLettersEmail + lastTwoDigitsPhoneNumber;
     }
 
 }

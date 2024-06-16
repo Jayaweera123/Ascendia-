@@ -19,8 +19,8 @@ public interface UserService {
 
     void deactivateUser(Long userID);
 
-    String generateUsername(String firstName, String lastName, String department, long userId);
+    String generateUsername(String firstName, String lastName, String department, String phoneNumber);
 
-    String generatePassword(UserDto userDto);
+    String generatePassword(String firstName, String lastName, String email, String phoneNumber);
 
 }
