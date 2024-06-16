@@ -13,7 +13,7 @@ public class TaskMapper {
                 task.getDescription(),
                 task.getStartDate(),
                 task.getEndDate(),
-                task.getTaskStatus(),
+                //task.getTaskStatus(),
                 task.getStatus(),
                 task.getProject()
                 //ORDER MUST BE THERE AS SAME THE DTO CLASS
@@ -27,7 +27,7 @@ public class TaskMapper {
                 taskDto.getDescription(),
                 taskDto.getStartDate(),
                 taskDto.getEndDate(),
-                taskDto.getTaskStatus(),
+               // taskDto.getTaskStatus(),
                 taskDto.getStatus(),
                 taskDto.getProject()
                 //ORDER MUST BE THERE AS SAME THE ENTITY CLASS
@@ -42,7 +42,7 @@ public class TaskMapper {
         taskDto.setDescription(task.getDescription());
         taskDto.setStartDate(task.getStartDate());
         taskDto.setEndDate(task.getEndDate());
-        taskDto.setTaskStatus(task.getTaskStatus());
+        //taskDto.setTaskStatus(task.getTaskStatus());
         taskDto.setStatus(task.getStatus());
         // Optionally include only necessary fields from the associated Project entity
         // taskDto.setProjectName(task.getProject().getName());

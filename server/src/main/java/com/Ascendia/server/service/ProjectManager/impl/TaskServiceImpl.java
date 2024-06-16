@@ -322,7 +322,7 @@ public class  TaskServiceImpl implements TaskService {
                 () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
         );
         if (!isCompleted(taskId)) {
-            task.setTaskStatus(Task.TaskStatus.COMPLETED);
+            //task.setTaskStatus(Task.TaskStatus.COMPLETED);
             task.setStatus("Completed");
             taskRepository.save(task);
         }

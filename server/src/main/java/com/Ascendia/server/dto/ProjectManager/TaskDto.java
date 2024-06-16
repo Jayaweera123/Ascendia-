@@ -19,7 +19,7 @@ public class TaskDto {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-    private Task.TaskStatus taskStatus;
+    //private Task.TaskStatus taskStatus;
     private String status;
     private Project project;
 

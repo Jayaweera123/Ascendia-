@@ -29,9 +29,9 @@ public class Task {
     @Column(nullable = false)
     private LocalDate endDate;
 
-    @Column(name = "task_status")
+    /*@Column(name = "task_status")
     @Enumerated(EnumType.STRING)
-    private TaskStatus taskStatus;
+    private TaskStatus taskStatus;*/
 
     @Column(name = "status")
     private String status;
@@ -41,34 +41,15 @@ public class Task {
     @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "projectId")
     private Project project;
 
-    public enum TaskStatus {
+   /* public enum TaskStatus {
         SCHEDULED,
         IN_PROGRESS,
         COMPLETED,
         OVERDUE
-    }
+    }*/
 
 
-    public TaskStatus calculateStatus() {
-        LocalDate currentDate = LocalDate.now();
 
-        if (currentDate.isBefore(startDate)) {
-            setStatus("Scheduled");
-            return TaskStatus.SCHEDULED; 
-        } else if (currentDate.isAfter(endDate)) {
-            setStatus("Overdue");
-            return TaskStatus.OVERDUE;
-        } else if (currentDate.isEqual(startDate) || currentDate.isEqual(endDate)) {
-            setStatus("In-Progress");
-            //setStatus("Scheduled");
-            return TaskStatus.IN_PROGRESS;
-        }
-        else {
-            setStatus("In-Progress");
-            //setStatus("Scheduled");
-            return TaskStatus.IN_PROGRESS;
-        }
-    }
 
 
 }
