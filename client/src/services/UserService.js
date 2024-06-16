@@ -117,23 +117,45 @@ class UserService{
     }
 
     static async addUser(user, profileImage, token) {
+        if (!user || typeof user !== 'object') {
+            throw new Error("Invalid user data");
+        }
+        if (!profileImage || !(profileImage instanceof File)) {
+            throw new Error("Invalid profile image");
+        }
+        if (!token) {
+            throw new Error("Token is required");
+        }
+
         try {
             const formData = new FormData();
             formData.append('profileImage', profileImage);
             Object.keys(user).forEach(key => {
                 formData.append(key, user[key]);
             });
-    
-            const response = await axios.post(`${UserService.BASE_URL}/auth/add`, formData, {
+
+            const response = await axios.post(`${UserService.BASE_URL}/admin/add`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${token}`
                 }
             });
-    
+
             return response.data;
         } catch (error) {
-            console.error("Error adding user:", error);
+            if (error.response) {
+                // Server responded with a status other than 2xx
+                console.error("Server error:", error.response.data);
+                if (error.response.status === 403) {
+                    console.error("Forbidden: Access is denied. Ensure the token has the correct permissions.");
+                }
+            } else if (error.request) {
+                // Request was made but no response was received
+                console.error("Network error:", error.request);
+            } else {
+                // Something else happened while setting up the request
+                console.error("Error:", error.message);
+            }
             throw error;
         }
     }
@@ -206,9 +228,9 @@ class UserService{
         return !!token
     }
 
-    static isAdmin() {
-        const designation = localStorage.getItem('designation');
-        return designation === 'Administrator'; // Match with backend roles
+    static isAdmin(){
+        const designation = localStorage.getItem('designation')
+        return designation === 'ADMIN'
     }
 
     static isUser(){
@@ -216,19 +238,11 @@ class UserService{
         return designation === 'USER'
     }
 
-    static isClient() {
-        const designation = localStorage.getItem('designation');
-        return designation === 'Client'; // Match with backend roles
-    }
-
-    static isStore() {
-        const designation = localStorage.getItem('designation');
-        return designation === 'Store Keeper'; // Match with backend roles
-    }
-
     static adminOnly(){
         return this.isAuthenticated() && this.isAdmin();
     }
+
+    
 
 }
 

@@ -76,46 +76,64 @@ const AddUser = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return; // Validate form before submission
+    if (!validateForm()) return;
 
     const formDataToSend = new FormData();
     Object.keys(formData).forEach(key => {
-      if (key === 'profileImage') {
-        formDataToSend.append(key, formData[key]);
-      } else {
-        formDataToSend.append(key, formData[key].toString());
-      }
+        if (key === 'profileImage') {
+            formDataToSend.append(key, formData[key]);
+        } else {
+            formDataToSend.append(key, formData[key].toString());
+        }
     });
 
+    console.log("Form Data to Send:");
+    for (let [key, value] of formDataToSend.entries()) {
+        console.log(`${key}: ${value}`);
+    }
+
     try {
-      const token = localStorage.getItem('token');
-      if (userID) {
-        // Update existing user
-        await UserService.updateUser(userID, formDataToSend, token);
-      } else {
-        // Add new user
-        await UserService.addUser(formDataToSend, token);
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('No token found, please login again.');
+            navigate('/login');  // Redirect to login if no token is found
+            return;
+        }
+        
+        let response;
+        if (userID) {
+            response = await UserService.updateUser(userID, formDataToSend, token);
+        } else {
+            response = await UserService.addUser(formDataToSend, token);
+        }
+
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(`Failed to add/update user. Status code: ${response.status}. Error message: ${errorMessage}`);
       }
 
-      // Clear the form fields after successful registration
-      setFormData({
-        userID: '', 
-        firstName: '',
-        lastName: '',
-        phoneNumber: '',
-        email: '',
-        designation: '',
-        department: '',
-        addedDate: '', 
-        profileImage: null
-      });
-      alert('User added successfully');
-      navigate('/admin/userlist');
+        const result = await response.json();
+        console.log('User added/updated successfully:', result);
+
+        setFormData({
+            userID: '',
+            firstName: '',
+            lastName: '',
+            phoneNumber: '',
+            email: '',
+            designation: '',
+            department: '',
+            addedDate: '',
+            profileImage: null
+        });
+        alert('User added/updated successfully');
+        navigate('/admin/userlist');
     } catch (error) {
-      console.error('Error adding user:', error);
-      alert('An error occurred while adding user');
+        console.error('Error adding user:', error);
+        alert('An error occurred while adding/updating the user. Please try again.');
     }
-  };
+};
+
 
 
   // Function to clear form fields
