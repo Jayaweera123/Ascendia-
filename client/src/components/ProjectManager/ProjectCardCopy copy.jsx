@@ -11,6 +11,14 @@ const ProjectCard = ({ projectManagerId }) => {
   const [projects, setProjects] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
+  const [expandedProjects, setExpandedProjects] = useState({});
+
+  const handleSeeMoreClick = (projectId) => {
+    setExpandedProjects((prevExpandedProjects) => ({
+      ...prevExpandedProjects,
+      [projectId]: !prevExpandedProjects[projectId],
+    }));
+  };
 
   useEffect(() => {
     getProjectForPM(projectManagerId)
@@ -81,13 +89,13 @@ const ProjectCard = ({ projectManagerId }) => {
               </div>
               <div className="grid sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3">
                 {filteredProjects.map((project) => (
-                  <Link
+                  <div
                     key={project.projectId}
-                    to={`/project/${project.projectId}/dashboard`}
+                    className="mb-6 pb-6 rounded-lg bg-white shadow-md project-card"
                   >
-                    <div
+                    <Link
                       key={project.projectId}
-                      className="mb-6 rounded-lg bg-white shadow-md task-card "
+                      to={`/project/${project.projectId}/dashboard`}
                     >
                       <div className="pl-6 pr-6 pt-2">
                         <div className="flex items-center justify-between border-b-2 border-gray-300 pb-2">
@@ -109,21 +117,36 @@ const ProjectCard = ({ projectManagerId }) => {
                           </div>
                         </div>
                       </div>
+                    </Link>
+                    <Link
+                      key={project.projectId}
+                      to={`/project/${project.projectId}/dashboard`}
+                    >
+                      <div className="project-description-container">
+                        <div className="text-sm font-normal px-6 pt-4 text-gray-500 project-description">
+                          {expandedProjects[project.projectId]
+                            ? project.projectDescription
+                            : project.projectDescription.length > 170
+                            ? `${project.projectDescription.slice(0, 170)}...`
+                            : project.projectDescription}
 
-                      <div className="">
-                        <p className="py-6 px-6 text-sm font-normal text-gray-500">
-                          {project.projectDescription.length >= 150
-                            ? project.projectDescription.substring(0, 150) +
-                              "..." // truncate if longer
-                            : project.projectDescription +
-                              Array(150 - project.projectDescription.length)
-                                .fill("\u00A0")
-                                .join(" ")}
-                          {/* Add whitespace if shorter */}
-                        </p>
+                          {project.projectDescription.length > 170 && (
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleSeeMoreClick(project.projectId);
+                              }}
+                              className="text-indigo-500 hover:underline ml-1"
+                            >
+                              {expandedProjects[project.projectId]
+                                ? "See less"
+                                : "See more"}
+                            </button>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </div>
                 ))}
               </div>
             </div>
@@ -133,6 +156,9 @@ const ProjectCard = ({ projectManagerId }) => {
 
       {/* Style tag for embedding CSS */}
       <style>{`
+        .project-card {
+          height: fit-content;
+        }
         .status-label-completed {
           background-color: #ddf6df; /* Green color for completed projects */
           color: #24976d;
@@ -170,7 +196,7 @@ const ProjectCard = ({ projectManagerId }) => {
           white-space: nowrap;
           transition: white-space 2s; /* Smooth transition for white-space change */
       
-          /* Additional styles for hover */
+          /* Additional styles for hover */ 
           &:hover {
             white-space: normal; /* Make overflowing text visible when hovered */
           }
