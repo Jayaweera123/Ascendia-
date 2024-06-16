@@ -2,80 +2,84 @@ import React, { useEffect, useState } from "react";
 import SideNavigationAdmin from "../../components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin";
 import { FaUsers } from "react-icons/fa";
-import { userList, deactivateUser } from "../../services/UserService";
 import { useNavigate } from "react-router-dom";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { TiUserAddOutline } from "react-icons/ti";
 import { LiaUserTimesSolid } from "react-icons/lia";
+import { Link } from 'react-router-dom';
+import UserService from "../../services/UserService";
+
 
 // Define the UserList component
 const UserList = () => {
   // State variables to manage component state
   const [open, setOpen] = useState(true);
   const [users, setUsers] = useState([]);
-  const navigator = useNavigate();
+  const navigate = useNavigate();
 
   // useEffect hook to fetch user list when component mounts
   useEffect(() => {
-    getAllUsers();
+    fetchUsers();
   }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+      if (!token) {
+        throw new Error('No token found');
+      }
+      const response = await UserService.getAllUsers(token);
+      console.log("API Response:", response); // Log the entire response object
+      if (Array.isArray(response)) {
+        const activeUsers = response.filter(user => user.active);
+        setUsers(activeUsers);
+      } else {
+        console.error("Unexpected response format:", response);
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
   
-  function getAllUsers() {
-    userList()
-      .then((response) => {
-        console.log("API Response:", response); // Log the entire response object
-        if (Array.isArray(response)) {
-          const activeUsers = response.filter(user => user.active);
-          setUsers(activeUsers);
-        } else {
-          console.error("Unexpected response format:", response);
+  const addNewUser = () => {
+    navigate("/admin/adduser");
+  };
+
+  const editUser = (userID) => {
+    navigate(`/admin/edituser/${userID}`);
+  };
+
+  const removeUser = async (userId) => {
+    try {
+      const confirmDeactivation = window.confirm('Are you sure you want to deactivate this user?');
+      if (confirmDeactivation) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
         }
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-      });
-  }
+        await UserService.deactivateUser(userId, token);
+        fetchUsers();
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
   
-  
-
-  // Function to navigate to the Add User page
-  function addNewUser() {
-    navigator("/adduser");
-  }
-
-  // Function to navigate to the Edit User page for a specific user
-  function editUser(userID) {
-    navigator(`/edituser/${userID}`);
-  }
-
-  // Function to remove a user from the list
-  function removeUser(userID) {
-    // Deactivate the user instead of deleting
-    deactivateUser(userID)
-      .then(() => {
-        // Fetch updated user list after deactivation
-        getAllUsers();
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
 
   // Render the component JSX
   return (
     <div>
-      
       <TopNavigationAdmin />
       <section className="flex">
-        
         <SideNavigationAdmin open={open} setOpen={setOpen} />
         <div className="relative bg-zinc-100 bg-cover h-fit w-screen">
           <div className="m-3 text-xl font-semibold text-gray-900">
             <div className="flex flex-row gap-3 pt-2 pb-1 ml-5 items-centered">
-              {/* Render the icon for user list */}
+             
               <FaUsers size={80} color="#001b5e" />
               <div>
-                {/* Render the title for user list */}
+                
                 <h1 className="place-items-baseline text-4xl leading-relaxed py-4 tracking-tight font-bold text-left text-[#001b5e]">
                   User List
                 </h1>
@@ -186,7 +190,6 @@ const UserList = () => {
                       <td className="px-4 py-3 w-60">{user.designation}</td>
                       <td className="px-4 py-3 w-32">{user.department}</td>
                       <td className="px-4 py-3">{user.phoneNumber}</td>
-                      
                       
                       {/* Buttons for editing and deleting users */}
                       <td className="px-2 py-3">

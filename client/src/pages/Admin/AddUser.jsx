@@ -1,13 +1,10 @@
-// AddUser.jsx
 import React, { useEffect, useState } from "react"; // Import necessary hooks from React
 import SideNavigationAdmin from "../../components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin";
 import { RiUserAddFill } from "react-icons/ri";
 import { FaUserEdit } from "react-icons/fa";
-import { addUser, editUser, getUser } from "../../services/UserService";
+import UserService from "../../services/UserService";
 import { useNavigate, useParams } from "react-router-dom"; // Assuming react-router-dom is used for routing
-
-
 
 
 // Define the AddUser component
@@ -40,12 +37,12 @@ const AddUser = () => {
   });
 
   // Use navigate hook for routing
-  const navigator = useNavigate(); // Assuming this is used for navigation within the application
+  const navigate = useNavigate(); // Assuming this is used for navigation within the application
 
   // useEffect hook to fetch user data if editing an existing user
   useEffect(() => {
     if (userID) {
-      getUser(userID)
+      UserService.getUserById(userID)
         .then((response) => {
           setFormData(response.data); // Update form data with user data fetched from the server
         })
@@ -79,23 +76,52 @@ const AddUser = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return; // Validate form before submission 
-    try {
-      if (userID) {
-        await editUser(userID, formData);
+    if (!validateForm()) return; // Validate form before submission
+
+    const formDataToSend = new FormData();
+    Object.keys(formData).forEach(key => {
+      if (key === 'profileImage') {
+        formDataToSend.append(key, formData[key]);
       } else {
-        await addUser(formData);
+        formDataToSend.append(key, formData[key].toString());
       }
-      navigator('/userlist');
-    } catch (err) {
-      console.error(err);
+    });
+
+    try {
+      const token = localStorage.getItem('token');
+      if (userID) {
+        // Update existing user
+        await UserService.updateUser(userID, formDataToSend, token);
+      } else {
+        // Add new user
+        await UserService.addUser(formDataToSend, token);
+      }
+
+      // Clear the form fields after successful registration
+      setFormData({
+        userID: '', 
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+        email: '',
+        designation: '',
+        department: '',
+        addedDate: '', 
+        profileImage: null
+      });
+      alert('User added successfully');
+      navigate('/admin/userlist');
+    } catch (error) {
+      console.error('Error adding user:', error);
+      alert('An error occurred while adding user');
     }
   };
+
 
   // Function to clear form fields
   const removeUser = async () => {
     try { 
-      navigator('/userlist');
+      navigate('/admin/userlist');
       window.location.reload();
     } catch (error) {
       console.error(error);
@@ -185,7 +211,6 @@ const AddUser = () => {
         <SideNavigationAdmin open={open} setOpen={setOpen} />
         <div class="relative bg-zinc-100 bg-contain h-fit w-screen">
           <div className="m-5 text-xl font-semibold text-gray-900">
-
             <form method="POST" onSubmit={handleSubmit}  encType="multipart/form-data">
               <div className="space-y-5">
                 {/* Render page title */}

@@ -1,6 +1,7 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
+
 
 import SideNavigation from "./components/ProjectManager/SideNavigation";
 import TopNavigation from "./components/TopNavigation";
@@ -21,6 +22,7 @@ import SideNavigationAdmin from "./components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "./components/Admin/TopNavigationAdmin";
 import TopNavigationClient from "./components/Client/TopNavigationClient";
 import { useParams } from "react-router-dom";
+import UserService from "./services/UserService";
 
 {/* Rashmi - Login */}
 import Login from "./pages/Login/Login";
@@ -70,8 +72,26 @@ const App = () => {
     <div>
        <BrowserRouter>
       <Routes>
+
+        {/* Rashmi - Login */}
+        <Route exact path="/" element={<Login />} /> 
+        <Route exact path="/login" element={<Login />} />
+        
+        {/* Check if user is authenticated and admin before rendering admin-only routes */}
+        {UserService.adminOnly() && (
+          <>
+
+            <Route path="/admin/adduser" element={<AddUser />} />
+            <Route path="/admin/edituser/:id" element={<AddUser/>}/>
+            <Route path="/admin/dashboard" element={<AdDashboard/>}/>
+            <Route path="/admin/userlist" element={<UserList/>}/>
+          </>
+        )}
+
+        <Route path="*" element={<Navigate to="/login" />} />‰
+
         {/* Ravindu */}
-        <Route path="/" element={<Home />} />
+        {/* <Route path="/" element={<Home />} /> */}
         <Route path="/sideNavigation" element={<SideNavigation />} />
         <Route path="/topNavigation" element={<TopNavigation />} />
         <Route path="/addProject" element={<AddProject/>}/>
@@ -126,12 +146,7 @@ const App = () => {
         <Route path="/topNavigationAdmin" element={<TopNavigationAdmin />} />
         <Route path="/topNavigationClient" element={<TopNavigationClient />} />
 
-      {/* Rashmi - Admin */}
-        <Route path="/adduser" element={<AddUser />} />
-        <Route path="/edituser/:id" element={<AddUser/>}/>
-        <Route path="/admin/dashboard" element={<AdDashboard/>}/>
-        <Route path="/userlist" element={<UserList/>}/>
-        
+      
 
 
       {/* Rashmi - Client */}
@@ -141,9 +156,7 @@ const App = () => {
         
 
 
-      {/* Rashmi - Login */}
-        <Route path="/login" element={<Login />} />
-
+      
       
 
        
