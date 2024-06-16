@@ -3,6 +3,7 @@ package com.Ascendia.server.service.ProjectManager;
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.Store.MaterialDto;
+import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.entity.Store.Material;
 import com.Ascendia.server.mapper.Store.MaterialMapper;
 
@@ -43,8 +44,6 @@ public interface TaskService {
 
     void markAsUncompleted(Long taskId);
 
-
-
-
+    public void calculateAndSetStatus(Task task);
 
 }

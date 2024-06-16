@@ -61,11 +61,13 @@ public class  TaskServiceImpl implements TaskService {
             // Set the project details in the taskDto
             taskDto.setProject(projectOptional.get());
 
+
             Task task = TaskMapper.mapToTask(taskDto);
             // Calculate the status
-            Task.TaskStatus status = task.calculateStatus();
+            //Task.TaskStatus status = task.calculateStatus();
+            calculateAndSetStatus(task);
 
-            task.setTaskStatus(status);
+            //task.setTaskStatus(status);
             Task savedTask = taskRepository.save(task);
             return TaskMapper.mapToTaskDto(savedTask);
         } else {
@@ -98,6 +100,24 @@ public class  TaskServiceImpl implements TaskService {
         return tasks.stream().map(TaskMapper::mapToTaskDtoProjection).collect(Collectors.toList());
     }
 
+    @Override
+    public void calculateAndSetStatus(Task task) {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate startDate = task.getStartDate();
+        LocalDate endDate = task.getEndDate();
+
+        if (currentDate.isBefore(startDate)) {
+            task.setStatus("Scheduled");
+        } else if (currentDate.isAfter(endDate)) {
+            task.setStatus("Overdue");
+        } else if (currentDate.isEqual(startDate) || currentDate.isEqual(endDate)) {
+            task.setStatus("In-Progress");
+        } else {
+            task.setStatus("In-Progress");
+        }
+    }
+
+
 
 
     //================================UPDATE TASK=======================================
@@ -115,15 +135,18 @@ public class  TaskServiceImpl implements TaskService {
         task.setStartDate(updateTask.getStartDate());
         task.setEndDate(updateTask.getEndDate());
 
+
         // Recalculate task status
-        Task.TaskStatus newStatus = task.calculateStatus();
+        //Task.TaskStatus newStatus = task.calculateStatus();
+        calculateAndSetStatus(task);
 
         // If the task status is different, update it
-        if (newStatus != task.getTaskStatus()) {
+        /*if (newStatus != task.getTaskStatus()) {
             task.setTaskStatus(newStatus);
+
             // Optionally, update the status string if needed
             // task.setStatus(newStatus.toString());
-        }
+        }*/
 
         // Save the updated task
         Task updatedTaskObj = taskRepository.save(task);
@@ -178,15 +201,18 @@ public class  TaskServiceImpl implements TaskService {
                 () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
         );
         // Recalculate task status
-        Task.TaskStatus newStatus = task.calculateStatus();
+        //Task.TaskStatus newStatus = task.calculateStatus();
+
 
         // If the task status is different, update it
-        if (newStatus != task.getTaskStatus()) {
+        /*if (newStatus != task.getTaskStatus()) {
             task.setTaskStatus(newStatus);
             // Optionally, update the status string if needed
             // task.setStatus(newStatus.toString());
-        }
+        }*/
         // Save the updated task
+
+        calculateAndSetStatus(task);
         taskRepository.save(task);
     }
 
