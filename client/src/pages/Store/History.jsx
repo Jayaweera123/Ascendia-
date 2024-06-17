@@ -97,6 +97,7 @@ function History() {
         }).catch(error => {
             console.error(error);
         })
+        
     } else{
         getAllUpdatedEquipment(givenProjectId).then((response) => {
             const sortedEquipment = response.data.sort((a, b) => new Date(b.updatedDate) - new Date(a.updatedDate));

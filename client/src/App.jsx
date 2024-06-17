@@ -35,7 +35,7 @@ import UserList from "./pages/Admin/UserList";
 import AddReview from "./pages/Client/AddReview";
 
 {/*Deshani*/}
-import Dashboard from "./pages/Store/Dashboard";
+import StoreKeeperDashboard from "./pages/Store/StoreKeeperDashboard";
 import ViewHistory from "./pages/Store/ViewHistory";
 import Material from "./pages/Store/Material";
 import MaterialForm from "./components/Store/MaterialForm";
@@ -95,7 +95,7 @@ const App = () => {
         />
 
       {/*Deshani*/}
-      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/skdashboard" element={<StoreKeeperDashboard />} />
       <Route path="/material" element={<Material/>} />
       <Route path="/viewHistory" element={<ViewHistory />} />
       <Route path="/addMaterial" element={<MaterialForm />} />
