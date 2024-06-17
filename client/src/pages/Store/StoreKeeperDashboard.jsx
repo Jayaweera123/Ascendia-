@@ -1,8 +1,6 @@
 import React from "react";
 import TopNavigationStore from "../../components/Store/TopNavigationStore";
 import SideNavigationStore from "../../components/Store/SideNavigationStore";
-
-import { useParams } from "react-router-dom";
 import DashboardCards from "../../components/Store/dashboard/DashboardCards";
 import MaterialChart from "../../components/Store/dashboard/MaterialChart";
 
