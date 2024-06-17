@@ -192,7 +192,7 @@ class UserService{
 
     static async deactivateUser(userID, token){
         try{
-            const response = await axios.delete(`${UserService.BASE_URL}/admin/delete/${userID}`, 
+            const response = await axios.delete(`${UserService.BASE_URL}/admin/deactivate/${userID}`, 
             {
                 headers: {Authorization: `Bearer ${token}`}
             })

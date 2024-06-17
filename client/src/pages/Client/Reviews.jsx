@@ -4,7 +4,7 @@ import SideNavigationClient from "../../components/Client/SideNavigationClient";
 import TopNavigationClient from "../../components/Client/TopNavigationClient";
 import { PiFilesBold } from "react-icons/pi";
 import { format } from 'date-fns'; // Import date-fns for formatting dates
-import { reviewsList } from "../../services/ReviewService";
+import ReviewService from "../../services/ReviewService";
 
 // Define Reviews component
 const Reviews = () => {

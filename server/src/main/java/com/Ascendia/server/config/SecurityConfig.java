@@ -30,12 +30,14 @@ public class SecurityConfig{
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(request-> request.requestMatchers("/auth/**", "/public/**").permitAll()
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/auth/**", "/public/**", "/client/**" ,"/uploads/**").permitAll() // Allow unauthenticated access to static resources
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/client/**").hasAnyAuthority("Client", "Consultant", "Project Manager", "Project Creation Team", "Site Engineer", "Supervisor", "Technical Officer", "Store Keeper", "Quantity Surveyor")
+                        .requestMatchers("/creview/**").hasAnyAuthority("Client", "Consultant")
                         .requestMatchers("/pcteam/**").hasAnyAuthority("Project Creation Team")
                         .requestMatchers("/pmanager/**").hasAnyAuthority("Project Manager", "Project Creation Team")
                         .requestMatchers("/sengineer/**").hasAnyAuthority("Site Engineer", "Project Manager", "Project Creation Team")
@@ -45,10 +47,9 @@ public class SecurityConfig{
                         .requestMatchers("/user/**").hasAnyAuthority("USER")
                         .requestMatchers("/adminuser/**").hasAnyAuthority("ADMIN", "USER")
                         .anyRequest().authenticated())
-                .sessionManagement(manager->manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider()).addFilterBefore(
-                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
-                );
+                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 
@@ -69,8 +70,6 @@ public class SecurityConfig{
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
         return authenticationConfiguration.getAuthenticationManager();
     }
-
-
 
 }
 

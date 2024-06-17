@@ -6,7 +6,7 @@ import TopNavigationClient from "../../components/Client/TopNavigationClient";
 import { MdOutlineRateReview } from "react-icons/md";
 import { MdOutlineAddBox } from "react-icons/md";
 import { format } from 'date-fns'; // Import date-fns for formatting dates
-import { addReview } from "../../services/ReviewService"; // Import your review service
+import ReviewService from "../../services/ReviewService";
 
 // Define AddReview component
 const AddReview = () => {

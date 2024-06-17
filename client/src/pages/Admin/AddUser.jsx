@@ -100,12 +100,16 @@ const AddUser = () => {
 
     const formDataToSend = new FormData();
     Object.keys(formData).forEach(key => {
-      if (key === 'profileImage') {
-        formDataToSend.append(key, formData[key]);
-      } else if (key !== 'userID') { // Exclude userID when adding a user
-        formDataToSend.append(key, formData[key].toString());
-      }
+        if (key === 'profileImage' && formData[key]) {
+            formDataToSend.append(key, formData[key]);
+        } else {
+            const value = formData[key];
+            if (value != null && value != undefined) {
+                formDataToSend.append(key, value.toString());
+            }
+        }
     });
+    
 
     console.log("Form Data to Send:");
     for (let [key, value] of formDataToSend.entries()) {
@@ -120,12 +124,10 @@ const AddUser = () => {
             return;
         }
         
-        let response;
-        if (userID) {
-            response = await UserService.updateUser(userID, formDataToSend, token);
-        } else {
-            response = await UserService.addUser(formDataToSend, token);
-        }
+        // Check if we're adding or updating a user
+        const response = userID 
+            ? await UserService.updateUser(userID, formDataToSend, token)
+            : await UserService.addUser(formDataToSend, token);
 
         if (!response.ok) {
           const errorMessage = await response.text();

@@ -25,7 +25,7 @@ const Login = () => {
       if (userData.token) {
         localStorage.setItem('token', userData.token);
         localStorage.setItem('designation', userData.designation);
-        navigate('/admin/dashboard');
+        navigate('/creview/add');
       } else {
         setError(userData.message);
       }

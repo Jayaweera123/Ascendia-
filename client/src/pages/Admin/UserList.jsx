@@ -30,8 +30,10 @@ const UserList = () => {
       }
       const response = await UserService.getAllUsers(token);
       console.log("API Response:", response); // Log the entire response object
-      if (Array.isArray(response)) {
-        const activeUsers = response.filter(user => user.active);
+
+      // Check if the response is in the expected format
+      if (response && Array.isArray(response.usersList)) {
+        const activeUsers = response.usersList.filter(user => user.active);
         setUsers(activeUsers);
       } else {
         console.error("Unexpected response format:", response);

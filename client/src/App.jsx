@@ -38,6 +38,7 @@ import UserList from "./pages/Admin/UserList";
 //import ClDashboard from "./pages/Client/ClDashboard";
 import AddReview from "./pages/Client/AddReview";
 import Reviews from "./pages/Client/Reviews";
+import ReviewService from "./services/ReviewService";
 
 {/*Deshani*/}
 import Dashboard from "./pages/Store/Dashboard";
@@ -65,8 +66,6 @@ import TasksForProject from "./pages/ProjectManager/TasksForProject";
 import Jobs from "./pages/ProjectManager/Jobs";
 
 
-
-
 const App = () => {
   return (
     <div>
@@ -89,6 +88,16 @@ const App = () => {
         )}
 
         <Route path="*" element={<Navigate to="/login" />} />‰
+
+        {/* Rashmi - Client */}
+        {ReviewService.creviewOnly() && (
+          <>
+            {/*<Route path="/client/dashboard" element={<ClDashboard/>}/>*/}
+            <Route path="/creview/add" element={<AddReview />} />
+          </>
+        )}
+
+        <Route path="/client/reviews" element={<Reviews />} /> 
 
         {/* Ravindu */}
         {/* <Route path="/" element={<Home />} /> */}
@@ -149,10 +158,7 @@ const App = () => {
       
 
 
-      {/* Rashmi - Client */}
-        {/*<Route path="/client/dashboard" element={<ClDashboard/>}/>*/}
-        <Route path="/addreview" element={<AddReview />} />
-      <Route path="/reviews" element={<Reviews />} /> 
+      
         
 
 
