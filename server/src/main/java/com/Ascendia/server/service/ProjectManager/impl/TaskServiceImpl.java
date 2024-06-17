@@ -40,12 +40,6 @@ public class  TaskServiceImpl implements TaskService {
     @Autowired
     private JobRepository jobRepository;
 
-    /*@Override
-    public TaskDto createTask(TaskDto taskDto) {
-        Task task = TaskMapper.mapToTask(taskDto);
-        Task savedTask = taskRepository.save(task);
-        return TaskMapper.mapToTaskDto(savedTask);
-    }*/
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -65,9 +59,14 @@ public class  TaskServiceImpl implements TaskService {
             Task task = TaskMapper.mapToTask(taskDto);
             // Calculate the status
             //Task.TaskStatus status = task.calculateStatus();
+
+            task.setCompleted(false);
             calculateAndSetStatus(task);
+            task.setCreatedDate(LocalDate.now());
+
 
             //task.setTaskStatus(status);
+
             Task savedTask = taskRepository.save(task);
             return TaskMapper.mapToTaskDto(savedTask);
         } else {
@@ -87,14 +86,22 @@ public class  TaskServiceImpl implements TaskService {
     }
 
 
+    // Helper method to retrieve a task by ID or throw exception if not found
+    private Task getTaskById(Long taskId) {
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + taskId));
+    }
 
-    @Override
+
+
+
     /*public List<TaskDto> getAllTasks() {
         List<Task> tasks = taskRepository.findAll();
         return tasks.stream().map((task) -> TaskMapper.mapToTaskDto(task))
                 .collect(Collectors.toList());
     }*/
     //From Chat gpt
+    @Override
     public List<TaskDto> getAllTasks() {
         List<Task> tasks = taskRepository.findAll();
         return tasks.stream().map(TaskMapper::mapToTaskDtoProjection).collect(Collectors.toList());
@@ -106,14 +113,19 @@ public class  TaskServiceImpl implements TaskService {
         LocalDate startDate = task.getStartDate();
         LocalDate endDate = task.getEndDate();
 
-        if (currentDate.isBefore(startDate)) {
-            task.setStatus("Scheduled");
-        } else if (currentDate.isAfter(endDate)) {
-            task.setStatus("Overdue");
-        } else if (currentDate.isEqual(startDate) || currentDate.isEqual(endDate)) {
-            task.setStatus("In-Progress");
-        } else {
-            task.setStatus("In-Progress");
+        if (!task.isCompleted()) {
+            if (currentDate.isBefore(startDate) || startDate == null) {
+                task.setStatus("Scheduled");
+            } else if (currentDate.isAfter(endDate)) {
+                task.setStatus("Overdue");
+            } else if ((currentDate.isEqual(startDate) &&  startDate != null) || currentDate.isEqual(endDate)) {
+                task.setStatus("In-Progress");
+            } else {
+                task.setStatus("In-Progress");
+            }
+        }
+        else {
+            task.setStatus("Completed");
         }
     }
 
@@ -163,10 +175,6 @@ public class  TaskServiceImpl implements TaskService {
         taskRepository.deleteById(taskId);
     }
 
-
-
-
-
     /*@Override
     public void calculateStatus(TaskDto taskDto) {
         LocalDate currentDate = LocalDate.now();
@@ -195,6 +203,8 @@ public class  TaskServiceImpl implements TaskService {
         return jobRepository.countJobsByTask_TaskIdAndStatusCompleted(taskId);
     }
 
+
+
     @Override
     public void updateTaskStatus(Long taskId) {
         Task task = taskRepository.findById(taskId).orElseThrow(
@@ -212,14 +222,13 @@ public class  TaskServiceImpl implements TaskService {
         }*/
         // Save the updated task
 
-        calculateAndSetStatus(task);
-        taskRepository.save(task);
+
     }
 
 
     @Override
-    public String checkCompletionOrStatusUpdate(Long taskId) {
-        if (!isCompleted(taskId)) {
+    public String CheckCompletionUpdateStatus(Long taskId) {
+        /*if (!isCompleted(taskId)) {
             int jobCount = getJobCountForTask(taskId);
             boolean allJobsCompleted;
             if (jobCount != 0) {
@@ -234,9 +243,65 @@ public class  TaskServiceImpl implements TaskService {
             }
             Task updatedTask = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found"));
             return updatedTask.getStatus();
-        }
-        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found"));
+        }*/
+
+        //Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found"));
+
+        Task task = getTaskById(taskId);
+        task.setPrevStatus(task.getStatus());
+        calculateAndSetStatus(task);
+        taskRepository.save(task);
+
         return task.getStatus();
+    }
+
+    @Override
+    public boolean isCompleted(Long taskId) {
+        Task task = taskRepository.findById(taskId).orElseThrow(
+                () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
+        );
+        return task.isCompleted();
+    }
+
+    //Robust method to mark as completed
+    @Override
+    public void markAsCompleted(Long taskId) {
+        Task task = getTaskById(taskId);
+        if (!task.isCompleted()) {
+            task.setPrevStatus(task.getStatus());
+            task.setStatus("Completed");
+            task.setCompleted(true);
+            taskRepository.save(task);
+        }
+    }
+
+    @Override
+    public void markAsUncompleted(Long taskId) {
+        Task task = getTaskById(taskId);
+        if (task.isCompleted()) {
+            task.setPrevStatus(task.getStatus());
+            task.setStatus("In-Progress");
+            task.setCompleted(false);
+            taskRepository.save(task);
+        }
+
+    }
+
+    @Override
+    public void moveToInProgress(Long taskId) {
+        Task task = getTaskById(taskId);
+        String status = task.getStatus();
+
+        if (status != null && status.equals("Scheduled")) {
+            task.setPrevStatus(status);
+            task.setStatus("In-Progress");
+            task.setStartDate(LocalDate.now());
+            //calculateAndSetStatus(task);
+            taskRepository.save(task);
+        }
+        else {
+            return;
+        }
     }
 
     @Override
@@ -250,7 +315,7 @@ public class  TaskServiceImpl implements TaskService {
 
     @Override
     public String calculateTimeDifference(TaskDto taskDto) {
-        if (!isCompleted(taskDto.getTaskId())) {
+        if (!taskDto.isCompleted()) {
             LocalDate currentDate = LocalDate.now();
             LocalDate endDate = taskDto.getEndDate();
 
@@ -307,36 +372,5 @@ public class  TaskServiceImpl implements TaskService {
         }
     }
 
-    @Override
-    public boolean isCompleted(Long taskId) {
-        Task task = taskRepository.findById(taskId).orElseThrow(
-                () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
-        );
-        return Objects.equals(task.getStatus(), "Completed");
-    }
 
-    //Robust method to mark as completed
-    @Override
-    public void markAsCompleted(Long taskId) {
-        Task task = taskRepository.findById(taskId).orElseThrow(
-                () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
-        );
-        if (!isCompleted(taskId)) {
-            //task.setTaskStatus(Task.TaskStatus.COMPLETED);
-            task.setStatus("Completed");
-            taskRepository.save(task);
-        }
-    }
-
-    @Override
-    public void markAsUncompleted(Long taskId) {
-        Task task = taskRepository.findById(taskId).orElseThrow(
-                () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
-        );
-        if (isCompleted(taskId)) {
-            updateTaskStatus(taskId);
-
-        }
-
-    }
 }

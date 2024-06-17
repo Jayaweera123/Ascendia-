@@ -24,18 +24,26 @@ public class Task {
     private String taskName;
     @Column(nullable = false, length = 1000)
     private String description;
-    @Column(nullable = false)
+    @Column
     private LocalDate startDate;
     @Column(nullable = false)
     private LocalDate endDate;
 
+    @Column(nullable = false)
+    private LocalDate createdDate;
+
+    @Column(name = "current_status")
+    private String status;
+
+    @Column(name = "previous_status")
+    private String prevStatus;
+
+    @Column(nullable = false)
+    private boolean completed;
+
     /*@Column(name = "task_status")
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;*/
-
-    @Column(name = "status")
-    private String status;
-
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "projectId")

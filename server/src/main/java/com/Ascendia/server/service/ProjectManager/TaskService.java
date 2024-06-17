@@ -30,13 +30,9 @@ public interface TaskService {
 
      int getCompletedJobCountForTask(Long taskId);
 
-    String checkCompletionOrStatusUpdate(Long taskId);
+    String CheckCompletionUpdateStatus(Long taskId);
 
-    void updateTaskStatus(Long taskId);
-
-    List<TaskDto> searchTask(Long projectId, String query);
-
-    String calculateTimeDifference(TaskDto taskDto);
+    void calculateAndSetStatus(Task task);
 
     boolean isCompleted(Long taskId);
 
@@ -44,6 +40,14 @@ public interface TaskService {
 
     void markAsUncompleted(Long taskId);
 
-    public void calculateAndSetStatus(Task task);
+    void moveToInProgress(Long taskId);
+
+    void updateTaskStatus(Long taskId);
+
+    List<TaskDto> searchTask(Long projectId, String query);
+
+    String calculateTimeDifference(TaskDto taskDto);
+
+
 
 }

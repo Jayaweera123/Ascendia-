@@ -98,7 +98,7 @@ public class TaskController {
 
     @GetMapping("/{taskId}/set-status")
     public String setTaskStatusLable(@PathVariable Long taskId) {
-        return taskService.checkCompletionOrStatusUpdate(taskId);
+        return taskService.CheckCompletionUpdateStatus(taskId);
     }
 
     //Build search REST API
@@ -114,6 +114,10 @@ public class TaskController {
         return taskService.calculateTimeDifference(taskDto);
     }
 
+    @PutMapping("/{taskId}/mark-as-ongoing")
+    public void markAsInProgress(@PathVariable Long taskId) {
+        taskService.moveToInProgress(taskId);
+    }
 
     @PutMapping("/{taskId}/mark-as-done")
     public void markAsDone(@PathVariable Long taskId) {

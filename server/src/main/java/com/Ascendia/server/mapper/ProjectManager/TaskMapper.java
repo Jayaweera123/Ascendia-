@@ -13,8 +13,11 @@ public class TaskMapper {
                 task.getDescription(),
                 task.getStartDate(),
                 task.getEndDate(),
-                //task.getTaskStatus(),
+                // taskDto.getTaskStatus(),
+                task.getCreatedDate(),
                 task.getStatus(),
+                task.getPrevStatus(),
+                task.isCompleted(),
                 task.getProject()
                 //ORDER MUST BE THERE AS SAME THE DTO CLASS
         );
@@ -28,7 +31,10 @@ public class TaskMapper {
                 taskDto.getStartDate(),
                 taskDto.getEndDate(),
                // taskDto.getTaskStatus(),
+                taskDto.getCreatedDate(),
                 taskDto.getStatus(),
+                taskDto.getPrevStatus(),
+                taskDto.isCompleted(),
                 taskDto.getProject()
                 //ORDER MUST BE THERE AS SAME THE ENTITY CLASS
         );
