@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { listMaterial } from "../../../services/StoreServices";
 import { listEquipment } from "../../../services/StoreServices";
 
