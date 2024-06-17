@@ -13,12 +13,12 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/reviews")
+@RequestMapping
 public class ReviewController {
     private final ReviewService reviewService;
 
     // Build AddReview REST API
-    @PostMapping("/add")
+    @PostMapping("/client/add")
     public ResponseEntity<ReviewDto> addReview(@RequestBody ReviewDto reviewDto){
         // Set reviewed date to current date if not provided
         if (reviewDto.getReviewedDate() == null) {
@@ -32,9 +32,10 @@ public class ReviewController {
     // Other endpoints for getting, updating, and deleting reviews can be added here
 
     // For getAllReviews endpoint
-    @GetMapping("/getAll")
-    public ResponseEntity<List<ReviewDto>> getAllReviews() {
-        List<ReviewDto> reviewDtos = reviewService.getAllReviews();
-        return ResponseEntity.ok(reviewDtos);
+    @GetMapping("/reviews/getAll")
+    public ResponseEntity<List<ReviewDto>> getAllReviews(){
+        List<ReviewDto> reviews = reviewService.getAllReviews();
+        return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
+
 }

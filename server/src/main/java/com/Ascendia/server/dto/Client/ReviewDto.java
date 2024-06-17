@@ -1,10 +1,13 @@
 package com.Ascendia.server.dto.Client;
 
+import com.Ascendia.server.entity.Administrator.User;
+import com.Ascendia.server.entity.Client.Review;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,8 +23,6 @@ public class ReviewDto {
     private String lastName;
     private String email;
     private String profilePicUrl;
-
-
 
 
     public LocalDate getReviewedDate() {

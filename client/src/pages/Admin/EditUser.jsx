@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react"; // Import necessary hooks from React
 import SideNavigationAdmin from "../../components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin";
-import { RiUserAddFill } from "react-icons/ri";
 import { FaUserEdit } from "react-icons/fa";
 import UserService from "../../services/UserService";
 import { useNavigate, useParams } from "react-router-dom"; // Assuming react-router-dom is used for routing
 
 
 // Define the AddUser component
-const AddUser = () => {
+const EditUser = () => {
 
   // State variables to manage component state
   const [open, setOpen] = useState(true);
@@ -35,46 +34,16 @@ const AddUser = () => {
   // Use navigate hook for routing
   const navigate = useNavigate(); // Assuming this is used for navigation within the application
 
-  // useEffect hook to fetch user data if editing an existing user
-  {/*useEffect(() => {
-    if (userID) {
-      UserService.getUserById(userID)
-        .then((response) => {
-          setFormData(response.data); // Update form data with user data fetched from the server
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error); // Log the error to the console for debugging
-        });
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        userID: Date.now() + Math.floor(Math.random() * 1000)
-      }));
-    }
-  }, [userID]); */}
-
   useEffect(() => {
-    if (userID) {
-      fetchFormDataById(userID); // Pass the userId to fetchUserDataById     
-    } else {
-      setFormData({
-        firstName: '',
-        lastName: '',
-        phoneNumber: '',
-        email: '',
-        designation: '',
-        department: '',
-        profileImage: null
-      });
-    }
+      fetchFormDataById(userID); // Pass the userId to fetchUserDataById
   }, [userID]);
 
   const fetchFormDataById = async (userID) => {
     try {
       const token = localStorage.getItem('token');
       const response = await UserService.getUserById(userID, token); // Pass userId to getUserById
-      const { firstName, lastName, phoneNumber, email, designation, department, profilePicUrl } = response.user;
-      setFormData({ firstName, lastName, phoneNumber, email, designation, department, profilePicUrl });
+      const { firstName, lastName, phoneNumber, email, designation, department, profileImage } = response.user;
+      setFormData({ firstName, lastName, phoneNumber, email, designation, department, profileImage });
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -83,19 +52,22 @@ const AddUser = () => {
   
   // Handle form input change
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value
+    }));
   };
+  
   
   // Handle file input change for profile image
   const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      profileImage: e.target.files[0]
-    });
+    setFormData((prevFormData) => ({
+        ...prevFormData,
+        profileImage: e.target.files[0]
+    }));
   };
+
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -127,18 +99,21 @@ const AddUser = () => {
             return;
         }
         
-        // Check if we're adding or updating a user
-        const response = userID 
-            ? await UserService.updateUser(userID, formDataToSend, token)
-            : await UserService.addUser(formDataToSend, token);
+        // Ensure that userID is available for updating
+        if (!userID) {
+            alert('User ID is missing. Cannot update user.');
+            return;
+        }
 
-            if (response.status !== 200 && response.status !== 201) {
-              const errorMessage = await response.text();
-              throw new Error(`Failed to add/update user. Status code: ${response.status}. Error message: ${errorMessage}`);
-            }
+        const response = await UserService.updateUser(userID, formDataToSend, token);
 
-        const result = await response.data();
-        console.log('User added/updated successfully:', result);
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(`Failed to update user. Status code: ${response.status}. Error message: ${errorMessage}`);
+      }
+
+        const result = await response.json();
+        console.log('User updated successfully:', result);
 
         setFormData({
             firstName: '',
@@ -149,11 +124,11 @@ const AddUser = () => {
             department: '',
             profileImage: null
         });
-        alert('User added/updated successfully');
+        alert('User updated successfully');
         navigate('/admin/userlist');
     } catch (error) {
-        console.error('Error adding user:', error);
-        alert('An error occurred while adding/updating the user. Please try again.');
+        console.error('Error updating user:', error);
+        alert('An error occurred while updating the user. Please try again.');
     }
 };
 
@@ -218,23 +193,7 @@ const AddUser = () => {
     return valid;
   }
 
-  // Function to render page title dynamically based on whether adding or editing a user
-  function pageTitle() {
-    const isEditing = !!userID; // Check if editing an existing user
-    const icon = isEditing ? <FaUserEdit size={90} color="#001b5e" /> : <RiUserAddFill size={90} color="#001b5e" />;
-    const title = isEditing ? "Edit User" : "Add User";
 
-    return (
-      <div className="flex flex-row gap-3 pt-2 items-centered">
-        {icon}
-        <div>
-          <h1 className="place-items-baseline text-4xl leading-relaxed py-4 font-bold text-left text-[#001b5e]">
-            {title}
-          </h1>
-        </div>
-      </div>
-    );
-  }
 
 
   // Return the JSX content of the component
@@ -247,10 +206,14 @@ const AddUser = () => {
           <div className="m-5 text-xl font-semibold text-gray-900">
             <form method="POST" onSubmit={handleSubmit}  encType="multipart/form-data">
               <div className="space-y-5">
-                {/* Render page title */}
-                {
-                pageTitle()
-                }
+                <div className="flex flex-row gap-3 pt-2 items-centered">
+                        <FaUserEdit size={90} color="#001b5e" />
+                    <div>
+                        <h1 className="place-items-baseline text-4xl leading-relaxed py-4 font-bold text-left text-[#001b5e]">
+                            Edit User
+                        </h1>
+                    </div>
+                </div>
                 <div className="relative ml-5 mr-5 overflow-x-auto bg-white rounded-lg shadow-md">
                   <div className="pb-5 border-b border-gray-900/10">
                     <div className="grid grid-cols-1 ml-5 gap-x-6 gap-y-8 sm:grid-cols-12">
@@ -439,4 +402,4 @@ const AddUser = () => {
 };
 
 // Export the AddUser component
-export default AddUser;
+export default EditUser;

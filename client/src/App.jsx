@@ -31,6 +31,7 @@ import Login from "./pages/Login/Login";
 import AddUser from "./pages/Admin/AddUser";
 import AdDashboard from "./pages/Admin/AdDashboard";
 import UserList from "./pages/Admin/UserList";
+import EditUser from "./pages/Admin/EditUser";
 
 
 
@@ -66,6 +67,7 @@ import TasksForProject from "./pages/ProjectManager/TasksForProject";
 import Jobs from "./pages/ProjectManager/Jobs";
 
 
+
 const App = () => {
   return (
     <div>
@@ -81,9 +83,10 @@ const App = () => {
           <>
 
             <Route path="/admin/adduser" element={<AddUser />} />
-            <Route path="/admin/edituser/:id" element={<AddUser/>}/>
+            
             <Route path="/admin/dashboard" element={<AdDashboard/>}/>
             <Route path="/admin/userlist" element={<UserList/>}/>
+            <Route path="/admin/update/:userID" element={<AddUser/>}/>
           </>
         )}
 

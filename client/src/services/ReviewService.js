@@ -48,6 +48,7 @@ class ReviewService {
     static creviewOnly() {
         return this.isAuthenticated() && this.isCreview();
     }
+
 }
 
 export default ReviewService;

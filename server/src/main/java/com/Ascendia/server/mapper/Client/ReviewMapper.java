@@ -1,7 +1,6 @@
 package com.Ascendia.server.mapper.Client;
 
 import com.Ascendia.server.dto.Client.ReviewDto;
-import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.entity.Client.Review;
 
 public class ReviewMapper {
@@ -13,7 +12,8 @@ public class ReviewMapper {
         reviewDto.setReviewContent(review.getReviewContent());
         reviewDto.setReviewedDate(review.getReviewedDate());
 
-        // Set user information
+
+        // Set user information if available
         if (review.getUser() != null) {
             reviewDto.setFirstName(review.getUser().getFirstName());
             reviewDto.setLastName(review.getUser().getLastName());
@@ -30,7 +30,6 @@ public class ReviewMapper {
         review.setReviewTitle(reviewDto.getReviewTitle());
         review.setReviewContent(reviewDto.getReviewContent());
 
-        // You can handle reviewedDate and user mapping differently based on your requirements
 
         return review;
     }

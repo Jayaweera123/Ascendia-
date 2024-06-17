@@ -25,7 +25,40 @@ const Login = () => {
       if (userData.token) {
         localStorage.setItem('token', userData.token);
         localStorage.setItem('designation', userData.designation);
-        navigate('/creview/add');
+        // Navigate to the appropriate dashboard based on user designation
+        switch (userData.designation) {
+          case 'ADMIN':
+            navigate('/admin/dashboard');
+            break;
+          case 'Client':
+          case 'Consultant':
+            navigate('/creview/dashboard');
+            break;
+          case 'Project Creation Team':
+            navigate('/pcteam/dashboard');
+            break;
+          case 'Project Manager':
+            navigate('/pmanager/dashboard');
+            break;
+          case 'Site Engineer':
+            navigate('/sengineer/dashboard');
+            break;
+          case 'Supervisor':
+            navigate('/supervisor/dashboard');
+            break;
+          case 'Store Keeper':
+            navigate('/skeeper/dashboard');
+            break;
+          case 'Quantity Surveyor':
+            navigate('/skeeper/dashboard');
+            break;
+          case 'USER':
+            navigate('/user/dashboard');
+            break;
+          default:
+            navigate('/creview/dashboard'); // Default page if designation is not recognized
+            break;
+        }
       } else {
         setError(userData.message);
       }

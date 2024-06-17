@@ -2,7 +2,6 @@ package com.Ascendia.server.service.Client.impl;
 
 import com.Ascendia.server.dto.Client.ReviewDto;
 import com.Ascendia.server.entity.Client.Review;
-import com.Ascendia.server.exception.Administrator.ResourceNotFoundException;
 import com.Ascendia.server.mapper.Client.ReviewMapper;
 import com.Ascendia.server.repository.Administrator.UserRepository;
 import com.Ascendia.server.repository.Client.ReviewRepository;
@@ -32,6 +31,8 @@ public class ReviewServiceImpl implements ReviewService {
         return ReviewMapper.mapToReviewDto(review);
     }
 
+
+
     @Override
     public List<ReviewDto> getAllReviews() {
         List<Review> reviews = reviewRepository.findAll();
@@ -39,6 +40,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .map(ReviewMapper::mapToReviewDto)
                 .collect(Collectors.toList());
     }
+
 
     private Review convertToEntity(ReviewDto reviewDto) {
         Review review = new Review();

@@ -116,49 +116,33 @@ class UserService{
         }
     }
 
-    static async addUser(user, profileImage, token) {
+    static async addUser(user, token) {
         if (!user || typeof user !== 'object') {
             throw new Error("Invalid user data");
-        }
-        if (!profileImage || !(profileImage instanceof File)) {
-            throw new Error("Invalid profile image");
-        }
-        if (!token) {
+          }
+          if (!token) {
             throw new Error("Token is required");
-        }
-
-        try {
+          }
+      
+          try {
             const formData = new FormData();
-            formData.append('profileImage', profileImage);
             Object.keys(user).forEach(key => {
-                formData.append(key, user[key]);
+              formData.append(key, user[key]);
             });
-
+      
             const response = await axios.post(`${UserService.BASE_URL}/admin/add`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${token}`
-                }
+              headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': `Bearer ${token}`
+              }
             });
 
-            return response.data;
-        } catch (error) {
-            if (error.response) {
-                // Server responded with a status other than 2xx
-                console.error("Server error:", error.response.data);
-                if (error.response.status === 403) {
-                    console.error("Forbidden: Access is denied. Ensure the token has the correct permissions.");
-                }
-            } else if (error.request) {
-                // Request was made but no response was received
-                console.error("Network error:", error.request);
-            } else {
-                // Something else happened while setting up the request
-                console.error("Error:", error.message);
-            }
-            throw error;
-        }
+            return response;
+    } catch (error) {
+      console.error("Error adding user:", error);
+      throw error;
     }
+  }
     
 
     static async getAllUsers(token){
@@ -204,18 +188,32 @@ class UserService{
     }
 
 
-    static async updateUser(userID, userData, token){
-        try{
-            const response = await axios.put(`${UserService.BASE_URL}/admin/update/${userID}`, userData,
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
-            return response.data;
-        }catch(err){
-            console.error(`Error updating user with ID ${userID}:`, err);
-            throw err;
+    static async updateUser(userID, user, token) {
+        if (!userID || !user || typeof user !== 'object') {
+          throw new Error("Invalid user data or userID");
         }
-    }
+        if (!token) {
+          throw new Error("Token is required");
+        }
+    
+        try {
+          const formData = new FormData();
+          Object.keys(user).forEach(key => {
+            formData.append(key, user[key]);
+          });
+    
+          const response = await axios.put(`${UserService.BASE_URL}/admin/update/${userID}`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          return response;
+        } catch (error) {
+          console.error(`Error updating user with ID ${userID}:`, error);
+          throw error;
+        }
+      }
 
     /**AUTHENTICATION CHECKER */
     static logout(){
@@ -240,6 +238,24 @@ class UserService{
 
     static adminOnly(){
         return this.isAuthenticated() && this.isAdmin();
+    }
+
+    static getToken() {
+        return localStorage.getItem('token');
+    }
+
+    static handleError(error) {
+        if (error.response) {
+            console.error("Server error:", error.response.data);
+            if (error.response.status === 403) {
+                console.error("Forbidden: Access is denied. Ensure the token has the correct permissions.");
+            }
+        } else if (error.request) {
+            console.error("Network error:", error.request);
+        } else {
+            console.error("Error:", error.message);
+        }
+        throw error;
     }
 
     

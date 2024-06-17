@@ -35,15 +35,19 @@ public class SecurityConfig{
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/auth/**", "/public/**", "/client/**" ,"/uploads/**").permitAll() // Allow unauthenticated access to static resources
+                        .requestMatchers("/auth/**", "/public/**", "/progress/**" ,"/reviews/**" ,"/uploads/**").permitAll() // Allow unauthenticated access to static resources
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/creview/**").hasAnyAuthority("Client", "Consultant")
                         .requestMatchers("/pcteam/**").hasAnyAuthority("Project Creation Team")
+                        .requestMatchers("/client/**").hasAnyAuthority("Client", "Consultant")
                         .requestMatchers("/pmanager/**").hasAnyAuthority("Project Manager", "Project Creation Team")
+                        .requestMatchers("/pmanageronly/**").hasAnyAuthority("Project Manager")
                         .requestMatchers("/sengineer/**").hasAnyAuthority("Site Engineer", "Project Manager", "Project Creation Team")
+                        .requestMatchers("/sengineeronly/**").hasAnyAuthority("Site Engineer")
                         .requestMatchers("/supervisor/**").hasAnyAuthority("Site Engineer", "Supervisor", "Technical Officer", "Project Manager", "Project Creation Team")
+                        .requestMatchers("/supervisoronly/**").hasAnyAuthority("Supervisor", "Technical Officer")
                         .requestMatchers("/store/**").hasAnyAuthority("Store Keeper", "Quantity Surveyor", "Site Engineer", "Project Manager", "Project Creation Team")
                         .requestMatchers("/skeeper/**").hasAnyAuthority("Store Keeper", "Quantity Surveyor", "Project Manager", "Project Creation Team")
+                        .requestMatchers("/skeeperonly/**").hasAnyAuthority("Store Keeper")
                         .requestMatchers("/user/**").hasAnyAuthority("USER")
                         .requestMatchers("/adminuser/**").hasAnyAuthority("ADMIN", "USER")
                         .anyRequest().authenticated())

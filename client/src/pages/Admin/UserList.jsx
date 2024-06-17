@@ -48,10 +48,10 @@ const UserList = () => {
   };
 
   const editUser = (userID) => {
-    navigate(`/admin/edituser/${userID}`);
+    navigate(`/admin/update/${userID}`);
   };
 
-  const removeUser = async (userId) => {
+  const removeUser = async (userID) => {
     try {
       const confirmDeactivation = window.confirm('Are you sure you want to deactivate this user?');
       if (confirmDeactivation) {
@@ -59,7 +59,7 @@ const UserList = () => {
         if (!token) {
           throw new Error('No token found');
         }
-        await UserService.deactivateUser(userId, token);
+        await UserService.deactivateUser(userID, token);
         fetchUsers();
       }
     } catch (error) {
