@@ -32,20 +32,4 @@ public class ProjectMapper {
         );
     }
 
-        project.setProjectId(projectDto.getProjectId());
-        project.setProjectName(projectDto.getProjectName());
-        project.setProjectType(projectDto.getProjectType());
-        project.setProjectDescription(projectDto.getProjectDescription());
-        project.setProjectStatus(projectDto.getProjectStatus());
-        project.setCreatedDate(projectDto.getCreatedDate());
-        project.setEndDate(projectDto.getEndDate());
-        project.setPmId(projectDto.getPmId());
-        project.setImage(projectDto.getImage());
-
-        // Tasks mapping can be added if needed, assuming Task and TaskDto have a similar structure
-        // project.setTasks(projectDto.getTasks().stream().map(TaskDto::mapToTask).collect(Collectors.toList()));
-
-
-        return project;
-    }
 }
