@@ -2,7 +2,7 @@ import React from "react";
 import SideNavigationPM from "../../components/ProjectManager/SideNavigation";
 import TopNavigationPM from "../../components/ProjectManager/TopNavigationPM";
 import PageTitle from "../../components/ProjectManager/PageTitle";
-import ProjectCard from "../../components/project/ProjectCard";
+import ProjectCard from "../../components/ProjectCreationTeam/NewProjectCard";
 import { Link } from "react-router-dom";
 
 import { BsClipboard2PlusFill } from "react-icons/bs";

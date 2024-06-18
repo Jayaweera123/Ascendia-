@@ -14,6 +14,10 @@ import ContactForm from "./pages/ContactForm";
 import ProjectsList from "./pages/ProjectCreationTeam/ProjectList";
 import CreationDashboard from "./pages/ProjectCreationTeam/CreationDashboard";
 
+  {/*DashBoard*/}
+     import NewDashBoard from "./pages/ProjectCreationTeam/NewDashBoard";
+
+
 
 
 
@@ -83,6 +87,7 @@ const App = () => {
         <Route path="/projectslist" element={<ProjectsList/>}/>
         <Route path="/creationDashboard" element={<CreationDashboard/>}/>
         <Route path="/addEmployee" element={<AssignPM/>}/>
+        <Route path="/newDashBoard" element={<NewDashBoard/>}/>
     
 
 
@@ -150,8 +155,9 @@ const App = () => {
         <Route path="/progress" element={<Progress />} />
 
    
-       
+      
       </Routes>
+
       </BrowserRouter>
     </div>
   );
