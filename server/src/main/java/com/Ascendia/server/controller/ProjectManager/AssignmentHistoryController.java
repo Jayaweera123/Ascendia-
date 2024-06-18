@@ -15,7 +15,7 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/history")
+@RequestMapping("/pmanager/history")
 public class AssignmentHistoryController {
 
     @Autowired
@@ -39,7 +39,6 @@ public class AssignmentHistoryController {
         AssignmentHistoryDto assignmentHistoryDto = assignmentHistoryService.getRecordById(Id);
         return assignmentHistoryService.calculateDuration(assignmentHistoryDto);
     }
-
     @GetMapping("/search/{projectId}")
     public ResponseEntity<List<AssignmentHistoryDto>> searchRecordbyNameORDep(@PathVariable Long projectId, @RequestParam("query") String query){
         return ResponseEntity.ok(assignmentHistoryService.searchRecord(projectId, query));

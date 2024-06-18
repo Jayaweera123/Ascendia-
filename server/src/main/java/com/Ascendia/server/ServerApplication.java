@@ -9,5 +9,5 @@ public class ServerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ServerApplication.class, args);
 	}
-    //update CorsConfig file according to your frontend url
+   
 }

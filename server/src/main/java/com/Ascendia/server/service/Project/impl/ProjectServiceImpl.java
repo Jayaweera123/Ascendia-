@@ -1,11 +1,15 @@
 package com.Ascendia.server.service.Project.impl;
 
 import com.Ascendia.server.dto.Project.ProjectDto;
+import com.Ascendia.server.exception.Administrator.ResourceNotFoundException;
 import com.Ascendia.server.dto.Project.ProjectGetDto;
 import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.mapper.Project.ProjectGetMapper;
 import com.Ascendia.server.mapper.Project.ProjectMapper;
 import com.Ascendia.server.repository.Project.ProjectRepository;
+import com.Ascendia.server.repository.ProjectManager.TaskRepository;
+import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
+import com.Ascendia.server.repository.SiteManager.JobRepository;
 import com.Ascendia.server.service.Project.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,12 +25,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Period;
 
 @Service
 @Transactional
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
+    @Autowired
+    private JobRepository jobRepository;
     private final String uploadDir; // Path to the directory where profile images will be stored
 
     @Autowired
@@ -102,41 +109,104 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDto getProjectId(Long projectId) {
-        return null;
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Project not found with the given ID : " + projectId));
+        return ProjectMapper.mapToProjectDto(project);
     }
 
     @Override
-    public List<ProjectDto> getProjectsByPmId(Long pmId) {
-        return null;
+    public List<ProjectDto> getProjectsByPmId(String pmId) {
+
+        List<Project> projects = projectRepository.findByPmId(pmId);
+        return projects.stream().map((project) -> ProjectMapper.mapToProjectDto(project))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProjectDto> searchProject(Long pmId, String query) {
-        return null;
+    public List<ProjectDto> searchProject(String pmId, String query) {
+        List<Project> projects =  projectRepository.searchProject(pmId, query);
+        return projects.stream().map(ProjectMapper::mapToProjectDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public String calculateDuration(ProjectDto projectDto) {
-        return null;
-    }
-
-    @Override
-    public Long getTotalJobsForProject(Long projectId) {
-        return null;
+   public Long getTotalJobsForProject(Long projectId) {
+        return jobRepository.countJobsByProjectId(projectId);
     }
 
     @Override
     public Long getCompletedJobsCountForProject(Long projectId) {
-        return null;
+        return jobRepository.countCompletedJobsByProjectId(projectId);
     }
+
+    @Autowired
+    private UserProjectAssignmentRepository userProjectAssignmentRepository;
 
     @Override
     public Long getEmployeeCountForProject(Long projectId) {
-        return null;
+        return userProjectAssignmentRepository.countDistinctAssignedUsersByProjectId(projectId);
     }
+
+    @Autowired
+    private TaskRepository taskRepository;
 
     @Override
     public int getTaskCountForProject(Long projectId) {
-        return 0;
+        return taskRepository.countTasksByProject_ProjectId(projectId);
     }
+
+
+    /*@Override
+    public String calculateDuration(ProjectDto projectDto) {
+        return null;
+
+        LocalDate startDate = projectDto.getCreatedDate();
+        LocalDate endDate = projectDto.getEndDate();
+
+        Period period;
+        period = Period.between(startDate, endDate);
+
+        int years = period.getYears();
+        int months = period.getMonths();
+        int days = period.getDays();
+
+        StringBuilder result = new StringBuilder();
+
+        if (years > 0) {
+            result.append(years).append(" year");
+            if (years > 1) {
+                result.append("s");
+            }
+        }
+
+        if (months > 0) {
+            if (!result.isEmpty()) {
+                result.append(", ");
+            }
+            result.append(months).append(" month");
+            if (months > 1) {
+                result.append("s");
+            }
+        }
+
+        if (days > 0) {
+            if (!result.isEmpty()) {
+                result.append(", ");
+            }
+            result.append(days).append(" day");
+            if (days > 1) {
+                result.append("s");
+            }
+        }
+
+        // Handle case when the period is zero (e.g., same day)
+        if (result.isEmpty()) {
+            result.append("0 days");
+        }
+
+        return result.toString();
+    }*/
+
+
 }
