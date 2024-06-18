@@ -79,11 +79,11 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.searchProject(pmId, query));
     }
 
-    @GetMapping("/pmanager/duration/{projectId}")
+    /*@GetMapping("/pmanager/duration/{projectId}")
     public String getDuration(@PathVariable("projectId") Long projectId) {
         ProjectDto projectDto = projectService.getProjectId(projectId);
         return projectService.calculateDuration(projectDto);
-    }
+    }*/
 
     @GetMapping("/pmanager/{projectId}/jobs/count")
     public Long getTotalJobsForProject(@PathVariable Long projectId) {
