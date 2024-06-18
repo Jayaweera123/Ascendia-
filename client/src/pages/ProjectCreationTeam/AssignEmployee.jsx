@@ -4,18 +4,14 @@ import TopNavigation from "../../components/TopNavigation";
 import SideNavigation from "../../components/ProjectManager/SideNavigation";
 import { getAllProjectCards } from "../../services/ProjectService";
 
-
-
 const AssignEmployee = () => {
   const [open, setOpen] = useState(true);
 
   return (
     <div>
-      <TopNavigation/>
+      <TopNavigation />
       <section className="flex gap-6">
         <SideNavigation open={open} setOpen={setOpen} />
-        
-   
       </section>
     </div>
   );

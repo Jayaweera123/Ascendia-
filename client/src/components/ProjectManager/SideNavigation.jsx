@@ -56,8 +56,13 @@ const SideNavigation = ({ projectId }) => {
       link: `/project/${projectId}/progress`,
       icon: GiProgression,
     },
+    { name: 'Home', link: '/pmhome', icon: IoHome },
+    { name: 'Dashboard', link: '/addproject', icon: PiProjectorScreenChartBold },
+    { name: 'Projects', link: '/projectslist', icon: MdOutlineDashboard, margin: true,},
+    { name: 'Create Project', link: '/addproject', icon: FaRegClipboard },
+    { name: 'Progress', link: '/progress', icon: GiProgression },
   ];
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = React.useState(true);
 
   /*if (projectId === null) {
     return <div>Loading...</div>; // Or handle the null case appropriately
@@ -65,10 +70,10 @@ const SideNavigation = ({ projectId }) => {
   return (
     <div
       className={`min-h-screen ${
-        open ? "w-72" : "w-16"
+        open ? 'w-72' : 'w-16'
       } duration-500 text-gray-100 px-4`}
       style={{
-        background: "#101d3f",
+        background: '#101d3f',
       }}
     >
       <div className="flex justify-end py-3">
@@ -79,31 +84,31 @@ const SideNavigation = ({ projectId }) => {
         />
       </div>
       <div className="relative flex flex-col gap-4 mt-4">
-        {menus?.map((menu, i) => (
+        {menus.map((menu, i) => (
           <Link
-            to={menu?.link}
+            to={menu.link}
             key={i}
             className={` ${
-              menu?.margin && "mt-5"
-            } group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md`}
+              menu.margin && 'mt-5'
+            } group flex items-center text-sm gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md`}
           >
-            <div>{React.createElement(menu?.icon, { size: "20" })}</div>
+            <div>{React.createElement(menu.icon, { size: '20' })}</div>
             <h2
               style={{
                 transitionDelay: `${i + 3}00ms`,
               }}
               className={`whitespace-pre duration-500 ${
-                !open && "opacity-0 translate-x-28 overflow-hidden"
+                !open && 'opacity-0 translate-x-28 overflow-hidden'
               }`}
             >
-              {menu?.name}
+              {menu.name}
             </h2>
             <h2
               className={`${
-                open && "hidden"
+                open && 'hidden'
               } absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit  `}
             >
-              {menu?.name}
+              {menu.name}
             </h2>
           </Link>
         ))}

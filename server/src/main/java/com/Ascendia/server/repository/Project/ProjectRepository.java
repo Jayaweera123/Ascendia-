@@ -17,4 +17,5 @@ public interface ProjectRepository  extends JpaRepository<Project, Long >{
                     "(p.projectName LIKE CONCAT('%',:query, '%') OR " +
                     "p.projectDescription LIKE CONCAT('%',:query, '%'))")
     List<Project> searchProject(Long pmId, String query);
+    Project findByProjectId(Long projectId);
 }

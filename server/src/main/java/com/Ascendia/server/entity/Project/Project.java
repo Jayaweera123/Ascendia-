@@ -39,8 +39,8 @@ public class Project {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @Column(name = "pm_id", nullable = false)
-    private Long pmId; // Changed field name to follow Java naming conventions
+    @Column(name = "pm_id")
+    private String pmId; // Changed field name to follow Java naming conventions
 
     @Column(name = "image")
     private String image;
@@ -49,4 +49,14 @@ public class Project {
     /*@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Task> tasks;*/
 
+    public Project(String projectName, String projectType, String projectDescription, String projectStatus, LocalDate createdDate, LocalDate endDate, String pmId, String image) {
+        this.projectName = projectName;
+        this.projectType = projectType;
+        this.projectDescription = projectDescription;
+        this.projectStatus = projectStatus;
+        this.createdDate = createdDate;
+        this.endDate = endDate;
+        this.pmId = pmId;
+        this.image = image;
+    }
 }

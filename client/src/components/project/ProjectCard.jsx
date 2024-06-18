@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { getAllProjectCards } from "../../services/ProjectService.jsx";
 import { Link } from "react-router-dom";
+import { MdEdit, MdDelete } from "react-icons/md";
+import Swal from "sweetalert2";
+
 
 const ProjectCard = () => {
   const [projects, setProjects] = useState([]);
@@ -14,6 +17,7 @@ const ProjectCard = () => {
         console.error(error);
       });
   }, []);
+  
 
   return (
     <>
@@ -43,14 +47,20 @@ const ProjectCard = () => {
 
                           <p className="text-sm font-medium">
                             <div
-                              className={`bg-indigo-100  text-indigo-500 rounded-md pl-1 pr-1 status-label-${project.status.toLowerCase()}`}
+                              className={`bg-indigo-100  text-indigo-500 rounded-md pl-1 pr-1 status-label-${project.projectStatus.toLowerCase()}`}
                             >
-                              {project.status}
+                              {project.projectStatus}
                             </div>
                           </p>
+                          <div className="flex">
+                            <MdEdit className="mr-2 text-slate-600" />
+
+                            <MdDelete className="text-slate-600" />
+                          </div>
                         </div>
+
                         <p className="my-6 text-sm font-normal text-gray-500">
-                          {project.pdiscription}
+                          {project.projectDescription}
                         </p>
                       </div>
                     </div>

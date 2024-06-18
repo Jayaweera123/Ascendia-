@@ -1,6 +1,5 @@
 package com.Ascendia.server.dto.Project;
 
-import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,20 +9,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectDto {
+
+public class ProjectGetDto {
+    private Long projectId;
     private String projectName;
     private String projectType;
     private String projectDescription;
     private String projectStatus;
     private LocalDate createdDate;
     private LocalDate endDate;
-    private Long pmId;
+    private String pmId;
     private String image;
-
 }

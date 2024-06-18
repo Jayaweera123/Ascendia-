@@ -8,7 +8,6 @@ import com.Ascendia.server.dto.Project.ProjectDto;
 public class ProjectMapper {
     public static ProjectDto mapToProjectDto(Project project) {
         return new ProjectDto(
-                project.getProjectId(),
                 project.getProjectName(),
                 project.getProjectType(),
                 project.getProjectDescription(),
@@ -20,8 +19,18 @@ public class ProjectMapper {
         );
     }
 
-    public static Project mapToProject(ProjectDto projectDto) {
-        Project project = new Project();
+    public static Project mapProject(ProjectDto projectDto) {
+        return new Project(
+                projectDto.getProjectName(),
+                projectDto.getProjectType(),
+                projectDto.getProjectDescription(),
+                projectDto.getProjectStatus(),
+                projectDto.getCreatedDate(),
+                projectDto.getEndDate(),
+                projectDto.getPmId(),
+                projectDto.getImage()
+        );
+    }
 
         project.setProjectId(projectDto.getProjectId());
         project.setProjectName(projectDto.getProjectName());

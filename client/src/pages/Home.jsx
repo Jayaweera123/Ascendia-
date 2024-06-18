@@ -1,8 +1,7 @@
 // Home.jsx
 import React, { useState } from "react";
-import TopNavigationAdmin from "../components/Admin/TopNavigationAdmin";
-import SideNavigationAdmin from "../components/Admin/SideNavigationAdmin";
-
+import TopNavigation from "../components/TopNavigation";
+import SideNavigation from "../components/ProjectManager/SideNavigation";
 
 
 const Home = () => {
@@ -10,9 +9,9 @@ const Home = () => {
 
   return (
     <div>
-      <TopNavigationAdmin />
+      <TopNavigation />
       <section className="flex gap-6">
-        <SideNavigationAdmin open={open} setOpen={setOpen} />
+        <SideNavigation open={open} setOpen={setOpen} />
         
    
       </section>

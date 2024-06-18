@@ -6,12 +6,13 @@ import TopNavigation from "./components/TopNavigation";
 {/*Ravindu*/}
 import AddProject from "./pages/ProjectCreationTeam/AddProject";
 import AssignEmployee from "./pages/ProjectCreationTeam/AssignEmployee";
-//import AssignPM from "./pages/ProjectCreationTeam/AssignPM";
-import ContactForm from "./pages/ContactForm";
+import AssignPM from "./pages/ProjectCreationTeam/AssignPM";
 import ProjectService from "./services/ProjectService";
 
 {/* Ravindu - Progress */}
 import Progress from "./pages/Progress/Progress";
+import ProjectsList from "./pages/ProjectCreationTeam/ProjectList";
+import CreationDashboard from "./pages/ProjectCreationTeam/CreationDashboard";
 
 {/*Rashmi*/}
 import SideNavigationClient from "./components/Client/SideNavigationClient";
@@ -48,7 +49,6 @@ import ProjectDashboard from "./pages/ProjectManager/ProjectDashboard";
 import Tasks from "./pages/ProjectManager/Tasks";
 import Employees from "./pages/ProjectManager/Employees";
 import ProjectProgress from "./pages/ProjectManager/ProjectProgress";
-import AddTaskForm from "./components/ProjectManager/AddTaskForm";
 import AddTask from "./pages/ProjectManager/AddTask";
 import TasksForProject from "./pages/ProjectManager/TasksForProject";
 import Jobs from "./pages/ProjectManager/Jobs";
@@ -57,6 +57,7 @@ import EditTask from "./pages/ProjectManager/EditTask";
 import AddEmployee from "./pages/ProjectManager/AddEmployee";
 import EmployeeHistory from "./pages/ProjectManager/EmployeeHistory";
 import EditTask0 from "./pages/ProjectManager/EditTask0";
+
 
 const App = () => {
   return (
@@ -98,14 +99,17 @@ const App = () => {
             </>
           )}
    
-
           {/* Ravindu */}
           {ProjectService.projectOnly() && (
             <>
               <Route path="/sideNavigation" element={<SideNavigation />} />
-              <Route path="/topNavigation" element={<TopNavigation />} />
-              <Route path="/project/addProject" element={<AddProject/>}/>
-              <Route path="/project/assignEmployee" element={<AssignEmployee/>}/>
+              <Route path="/topNavigation" element={<TopNavigation />} />            
+              <Route path="/addProject" element={<AddProject/>}/>
+              <Route path="/assignEmployee" element={<AssignEmployee/>}/>
+              <Route path="/assignPM" element={<AssignPM/>}/>
+              <Route path="/projectslist" element={<ProjectsList/>}/>
+              <Route path="/creationDashboard" element={<CreationDashboard/>}/>
+              <Route path="/addEmployee" element={<AssignPM/>}/>
             </>
           )}     
        
