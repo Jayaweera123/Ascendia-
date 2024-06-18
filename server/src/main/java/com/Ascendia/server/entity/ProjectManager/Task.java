@@ -24,51 +24,40 @@ public class Task {
     private String taskName;
     @Column(nullable = false, length = 1000)
     private String description;
-    @Column(nullable = false)
+    @Column
     private LocalDate startDate;
     @Column(nullable = false)
     private LocalDate endDate;
 
-    @Column(name = "task_status")
-    @Enumerated(EnumType.STRING)
-    private TaskStatus taskStatus;
+    @Column(nullable = false)
+    private LocalDate createdDate;
 
-    @Column(name = "status")
+    @Column(name = "current_status")
     private String status;
 
+    @Column(name = "previous_status")
+    private String prevStatus;
+
+    @Column(nullable = false)
+    private boolean completed;
+
+    /*@Column(name = "task_status")
+    @Enumerated(EnumType.STRING)
+    private TaskStatus taskStatus;*/
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "projectId")
     private Project project;
 
-    public enum TaskStatus {
+   /* public enum TaskStatus {
         SCHEDULED,
         IN_PROGRESS,
         COMPLETED,
         OVERDUE
-    }
+    }*/
 
 
-    public TaskStatus calculateStatus() {
-        LocalDate currentDate = LocalDate.now();
 
-        if (currentDate.isBefore(startDate)) {
-            setStatus("Scheduled");
-            return TaskStatus.SCHEDULED; 
-        } else if (currentDate.isAfter(endDate)) {
-            setStatus("Overdue");
-            return TaskStatus.OVERDUE;
-        } else if (currentDate.isEqual(startDate) || currentDate.isEqual(endDate)) {
-            setStatus("In-Progress");
-            //setStatus("Scheduled");
-            return TaskStatus.IN_PROGRESS;
-        }
-        else {
-            setStatus("In-Progress");
-            //setStatus("Scheduled");
-            return TaskStatus.IN_PROGRESS;
-        }
-    }
 
 
 }

@@ -26,7 +26,7 @@ export const getCompletedJobCountForTask = (taskId) =>
   axios.get(REST_API_BASE_URL0 + taskId + "/jobcount/completed");
 
 export const setStatusLabel = (taskId) =>
-  axios.get(REST_API_BASE_URL0 + taskId + "/set-status");
+  axios.put(REST_API_BASE_URL0 + taskId + "/set-status");
 
 export const searchTask = (projectId, query) =>
   axios.get(REST_API_BASE_URL0 + "search/" + projectId + "?query=" + query);
