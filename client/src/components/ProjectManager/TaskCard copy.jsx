@@ -23,6 +23,14 @@ const TaskCardforProject = ({ projectId }) => {
   const [taskStatus, setTaskStatus] = useState("");
   const [search, setSearch] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
+  const [expandedTasks, setExpandedTasks] = useState({});
+
+  const handleSeeMoreClick = (taskId) => {
+    setExpandedTasks((prevExpandedTasks) => ({
+      ...prevExpandedTasks,
+      [taskId]: !prevExpandedTasks[taskId],
+    }));
+  };
 
   const navigator = useNavigate();
   //const { projectId } = useParams();
@@ -239,9 +247,6 @@ const TaskCardforProject = ({ projectId }) => {
                             to={`/task/${task.taskId}/job`}
                           >
                             <h3 className="text-lg font-semibold text-gray-700 task-name cursor-pointer">
-                              {/*{task.taskName.length >= 14
-                                ? task.taskName.substring(0, 14) + "..." // truncate if longer
-                                : task.taskName}*/}
                               {task.taskName}
                             </h3>
                           </Link>
@@ -289,18 +294,30 @@ const TaskCardforProject = ({ projectId }) => {
                       </div>
                     </div>
                     <Link key={task.taskId} to={`/task/${task.taskId}/job`}>
-                      <div className="">
-                        <p className="my-6 text-sm font-normal text-gray-500">
-                          {task.description.length >= 150
-                            ? task.description.substring(0, 150) + "..." // truncate if longer
-                            : task.description +
-                              Array(150 - task.description.length)
-                                .fill("\u00A0")
-                                .join(" ")}
-                          {/* Add whitespace if shorter */}
-                        </p>
+                      <div className="task-description-container  pt-3 min-h-28">
+                        <div className="text-sm font-normal text-gray-500 task-description">
+                          {expandedTasks[task.taskId]
+                            ? task.description
+                            : task.description.length > 170
+                            ? `${task.description.slice(0, 170)}...`
+                            : task.description}
+
+                          {task.description.length > 170 && (
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleSeeMoreClick(task.taskId);
+                              }}
+                              className="text-indigo-500 hover:underline ml-1"
+                            >
+                              {expandedTasks[task.taskId]
+                                ? "See less"
+                                : "See more"}
+                            </button>
+                          )}
+                        </div>
                       </div>
-                      <div className="mt-6 flex items-center justify-between text-sm font-semibold mb-0">
+                      <div className="mt-4 flex items-center justify-between text-sm font-semibold mb-0">
                         <div className="flex">
                           <span className="mr-1">{jobCounts[task.taskId]}</span>{" "}
                           Jobs
@@ -325,12 +342,12 @@ const TaskCardforProject = ({ projectId }) => {
     height: fit-content;
     }
 .status-label-completed {
-    background-color: #D5F5E3 ; /* Green color for completed projects */
+    background-color: #D5F5E3 ; /* Green color for completed Tasks */
     color: #239B56  ;
   }
 
 .status-label-overdue {
-  background-color: #FFE7E2; /* Red color for overdue projects */
+  background-color: #FFE7E2; /* Red color for overdue Tasks */
   color: #E75538;
   }
 

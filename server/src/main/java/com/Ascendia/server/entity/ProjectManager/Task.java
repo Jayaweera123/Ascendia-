@@ -54,15 +54,18 @@ public class Task {
 
         if (currentDate.isBefore(startDate)) {
             setStatus("Scheduled");
-            return TaskStatus.SCHEDULED;
+            return TaskStatus.SCHEDULED; 
         } else if (currentDate.isAfter(endDate)) {
             setStatus("Overdue");
             return TaskStatus.OVERDUE;
         } else if (currentDate.isEqual(startDate) || currentDate.isEqual(endDate)) {
             setStatus("In-Progress");
+            //setStatus("Scheduled");
             return TaskStatus.IN_PROGRESS;
-        } else {
+        }
+        else {
             setStatus("In-Progress");
+            //setStatus("Scheduled");
             return TaskStatus.IN_PROGRESS;
         }
     }
