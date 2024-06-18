@@ -17,8 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
 
     // Build Add User REST API
     @PostMapping(value = "/admin/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})

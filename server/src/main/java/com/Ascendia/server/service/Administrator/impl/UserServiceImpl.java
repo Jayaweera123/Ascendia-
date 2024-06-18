@@ -349,25 +349,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    {/*public ReqRes deleteUser(Integer userId) {
-        ReqRes reqRes = new ReqRes();
-        try {
-            Optional<OurUsers> userOptional = usersRepo.findById(userId);
-            if (userOptional.isPresent()) {
-                usersRepo.deleteById(userId);
-                reqRes.setStatusCode(200);
-                reqRes.setMessage("User deleted successfully");
-            } else {
-                reqRes.setStatusCode(404);
-                reqRes.setMessage("User not found for deletion");
-            }
-        } catch (Exception e) {
-            reqRes.setStatusCode(500);
-            reqRes.setMessage("Error occurred while deleting user: " + e.getMessage());
-        }
-        return reqRes;
-    } */}
-
     // Helper method to generate username
     @Override
     public String generateUsername(String firstName, String lastName, String department, String phoneNumber) {
@@ -375,15 +356,15 @@ public class UserServiceImpl implements UserService {
         // Generate last two digits of phoneNumber
         String lastTwoDigitsPhoneNumber = phoneNumber.substring(phoneNumber.length() - 2);
 
-        if (department == null || department.isEmpty()) {
+        // Remove spaces from department
+        String sanitizedDepartment = (department != null) ? department.replaceAll("\\s+", "") : "";
+
+        if (sanitizedDepartment.isEmpty()) {
             return (lastName + firstLetter + "." + lastTwoDigitsPhoneNumber).toLowerCase();
         } else {
-            return (lastName + firstLetter + "." + department + lastTwoDigitsPhoneNumber).toLowerCase();
+            return (lastName + firstLetter + "." + sanitizedDepartment + lastTwoDigitsPhoneNumber).toLowerCase();
         }
     }
-
-
-
 
     // Helper method to generate password
     @Override

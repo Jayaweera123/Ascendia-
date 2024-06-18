@@ -13,35 +13,35 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/task")
+@RequestMapping
 
 public class TaskController {
 
     private TaskService taskService;
 
     //Add Task REST API
-    @PostMapping
+    @PostMapping("/pmanageronly/task")
     public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto taskDto) {
         TaskDto savedTask = taskService.createTask(taskDto);
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
     }
 
     //Get Task REST API
-    @GetMapping("{id}")
+    @GetMapping("/pmanager/task/{id}")
     public ResponseEntity<TaskDto> getTaskById(@PathVariable("id") Long taskId) {
         TaskDto taskDto = taskService.getTaskId(taskId);
         return ResponseEntity.ok(taskDto);
     }
 
     //Get all Tasks REST API
-    @GetMapping("all")
+    @GetMapping("/pmanager/task/all")
     public ResponseEntity<List<TaskDto>>  getAllTasks() {
         List<TaskDto> tasks = taskService.getAllTasks();
         return ResponseEntity.ok(tasks);
     }
 
     //Update Tasks REST API
-    @PutMapping("{id}")
+    @PutMapping("/pmanageronly/task/{id}")
     public ResponseEntity<TaskDto> updateTask(@PathVariable("id") Long taskId,
                                               @RequestBody TaskDto updatedTask) {
 
@@ -51,14 +51,14 @@ public class TaskController {
     }
 
     //Delete Tasks REST API
-    @DeleteMapping("{id}")
+    @DeleteMapping("/pmanageronly/task/{id}")
     public ResponseEntity<String> deleteTask(@PathVariable("id") Long taskId) {
         taskService.deleteTask(taskId);
         return ResponseEntity.ok("Task deleted successfully");
     }
 
     //CHat GPT get task for the projectID
-    @GetMapping("/api/project/{projectId}/tasks")
+    @GetMapping("/pmanager/project/{projectId}/tasks")
     public ResponseEntity<List<TaskDto>> getTasksByProjectId(@PathVariable Long projectId) {
         List<TaskDto> tasks = taskService.getTasksByProjectId(projectId);
         return ResponseEntity.ok(tasks);

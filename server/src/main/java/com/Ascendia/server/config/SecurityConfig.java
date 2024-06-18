@@ -37,7 +37,7 @@ public class SecurityConfig{
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/auth/**", "/public/**", "/progress/**" ,"/reviews/**" ,"/uploads/**").permitAll() // Allow unauthenticated access to static resources
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/pcteam/**").hasAnyAuthority("Project Creation Team")
+                        .requestMatchers("/project/**").hasAnyAuthority("Project Creation Team")
                         .requestMatchers("/client/**").hasAnyAuthority("Client", "Consultant")
                         .requestMatchers("/pmanager/**").hasAnyAuthority("Project Manager", "Project Creation Team")
                         .requestMatchers("/pmanageronly/**").hasAnyAuthority("Project Manager")

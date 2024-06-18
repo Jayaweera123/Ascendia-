@@ -11,17 +11,17 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/job")
+@RequestMapping
 public class JobController {
 
     private JobService jobService;
-    @GetMapping("{id}")
+    @GetMapping("/senginner/job/{id}")
     public ResponseEntity<JobDto> getJobById(@PathVariable("id") Long jobId) {
         JobDto jobDto = jobService.getJobById(jobId);
         return ResponseEntity.ok(jobDto);
     }
 
-    @GetMapping("/api/task/{taskId}/jobs")
+    @GetMapping("/senginner/task/{taskId}/jobs")
     public ResponseEntity<List<JobDto>> getJobsByTaskId(@PathVariable Long taskId) {
         List<JobDto> jobs = jobService.getJobsByTaskId(taskId);
         return ResponseEntity.ok(jobs);

@@ -32,10 +32,10 @@ const Login = () => {
             break;
           case 'Client':
           case 'Consultant':
-            navigate('/creview/dashboard');
+            navigate('/addreview');
             break;
           case 'Project Creation Team':
-            navigate('/pcteam/dashboard');
+            navigate('/project/assignEmployee');
             break;
           case 'Project Manager':
             navigate('/pmanager/dashboard');
@@ -47,10 +47,10 @@ const Login = () => {
             navigate('/supervisor/dashboard');
             break;
           case 'Store Keeper':
-            navigate('/skeeper/dashboard');
+            navigate('/store/dashboard');
             break;
           case 'Quantity Surveyor':
-            navigate('/skeeper/dashboard');
+            navigate('/store/dashboard');
             break;
           case 'USER':
             navigate('/user/dashboard');

@@ -137,13 +137,10 @@ const UserList = () => {
             </div>
             <div className="relative m-5 overflow-x-auto bg-white rounded-lg shadow-md">
               <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 rounded-lg shadow-md">
-                <thead className="text-sm text-white uppercase bg-gray-500 ">
+                <thead className="text-sm text-white uppercase bg-gray-500 h-20">
                   {/* Table headers */}
                   <tr>
-                  <th scope="col" className="w-20 px-5 py-3">
-                      User ID
-                    </th>
-                    <th scope="col" className="w-52 px-5 py-3">
+                    <th scope="col" className="w-60 px-5 py-3">
                       Name
                     </th>
                     <th scope="col" className="w-60 px-4 py-3">
@@ -152,7 +149,7 @@ const UserList = () => {
                     <th scope="col" className="w-32 px-4 py-3">
                       Department
                     </th>
-                    <th scope="col" className="w-32 px-4 py-3">
+                    <th scope="col" className="w-36 px-4 py-3">
                       Phone Number
                     </th>
                     <th scope="col" className="w-40 px-5 py-3">
@@ -168,14 +165,14 @@ const UserList = () => {
                       className="bg-white border-b dark:border-gray-100 hover:bg-gray-50"
                     >
                       {/* Display user information */}
-                      <td class="px-6 py-3 w-20">{user.userID}</td>
+                      
                       <th
                         scope="row"
                         className="flex items-center px-5 py-3 text-gray-900 whitespace-nowrap dark:text-black"
                       >
                         <img
                           src={user.profilePicUrl ? `http://localhost:8080/${user.profilePicUrl.replace(/\\/g, "/")}` : ""} // Assuming the server is running on localhost:8080
-                          className="w-10 h-10 rounded-full"
+                          className="w-12 h-12 rounded-full"
                           alt={`Profile of ${user.firstName} ${user.lastName}`}
                         />
 

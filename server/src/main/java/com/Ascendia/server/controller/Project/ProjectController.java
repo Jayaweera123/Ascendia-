@@ -12,20 +12,20 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/project")
+@RequestMapping
 public class ProjectController {
 
 
     private ProjectService projectService;
 
     //Build AddProject REST API
-    @PostMapping("/createProject")
+    @PostMapping("/project/createProject")
     public ResponseEntity<ProjectDto> createProject(@RequestBody ProjectDto projectDto){
         ProjectDto savedProject = projectService.createProject(projectDto);
         return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/project/all")
     public ResponseEntity<List<ProjectDto>>  getAllProjects() {
         List<ProjectDto> projects = projectService.getAllProjects();
         return ResponseEntity.ok(projects);

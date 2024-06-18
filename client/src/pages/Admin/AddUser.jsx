@@ -24,7 +24,6 @@ const AddUser = () => {
   });
  
   const { userID } = useParams(); // Get the user ID from the URL parameters
-  // Initialize state for form errors
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
@@ -36,23 +35,6 @@ const AddUser = () => {
   const navigate = useNavigate(); // Assuming this is used for navigation within the application
 
   // useEffect hook to fetch user data if editing an existing user
-  {/*useEffect(() => {
-    if (userID) {
-      UserService.getUserById(userID)
-        .then((response) => {
-          setFormData(response.data); // Update form data with user data fetched from the server
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error); // Log the error to the console for debugging
-        });
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        userID: Date.now() + Math.floor(Math.random() * 1000)
-      }));
-    }
-  }, [userID]); */}
-
   useEffect(() => {
     if (userID) {
       fetchFormDataById(userID); // Pass the userId to fetchUserDataById     
@@ -72,9 +54,17 @@ const AddUser = () => {
   const fetchFormDataById = async (userID) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await UserService.getUserById(userID, token); // Pass userId to getUserById
-      const { firstName, lastName, phoneNumber, email, designation, department, profilePicUrl } = response.user;
-      setFormData({ firstName, lastName, phoneNumber, email, designation, department, profilePicUrl });
+      const response = await UserService.getUserById(userID, token);
+      const { firstName, lastName, phoneNumber, email, designation, department, profileImage } = response.user;
+      setFormData({ 
+        firstName, 
+        lastName, 
+        phoneNumber, 
+        email, 
+        designation, 
+        department, 
+        profileImage: profileImage ? `${UserService.BASE_URL}/images/${profileImage}` : null 
+      });
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -104,15 +94,13 @@ const AddUser = () => {
 
     const formDataToSend = new FormData();
     Object.keys(formData).forEach(key => {
-        if (key === 'profileImage' && formData[key]) {
-            formDataToSend.append(key, formData[key]);
-        } else {
-            const value = formData[key];
-            if (value != null && value != undefined) {
-                formDataToSend.append(key, value.toString());
-            }
-        }
+      if (key === 'profileImage' && formData[key] && formData[key] instanceof File) {
+        formDataToSend.append(key, formData[key]);
+      } else {
+        formDataToSend.append(key, formData[key]);
+      }
     });
+
 
     console.log("Form Data to Send:");
     for (let [key, value] of formDataToSend.entries()) {
@@ -128,17 +116,14 @@ const AddUser = () => {
         }
         
         // Check if we're adding or updating a user
-        const response = userID 
-            ? await UserService.updateUser(userID, formDataToSend, token)
-            : await UserService.addUser(formDataToSend, token);
+        let response;
+        if (userID) {
+            response = await UserService.updateUser(userID, formDataToSend, formData.profileImage, token);
+        } else {
+            response = await UserService.addUser(formDataToSend, formData.profileImage, token);
+        }
 
-            if (response.status !== 200 && response.status !== 201) {
-              const errorMessage = await response.text();
-              throw new Error(`Failed to add/update user. Status code: ${response.status}. Error message: ${errorMessage}`);
-            }
-
-        const result = await response.data();
-        console.log('User added/updated successfully:', result);
+        console.log('User added/updated successfully:', response);
 
         setFormData({
             firstName: '',
@@ -152,13 +137,10 @@ const AddUser = () => {
         alert('User added/updated successfully');
         navigate('/admin/userlist');
     } catch (error) {
-        console.error('Error adding user:', error);
-        alert('An error occurred while adding/updating the user. Please try again.');
+      UserService.handleError(error);
+      alert('An error occurred while adding/updating the user. Please try again.');
     }
 };
-
-
-
 
   // Function to clear form fields
   const removeUser = async () => {
@@ -177,8 +159,6 @@ const AddUser = () => {
 
     // Copy errors object to prevent mutation of state directly
     const errorsCopy = { ...errors };
-
-    // Validate each form field
     
     // Validate firstName
     if (!formData.firstName.trim()) {
@@ -391,23 +371,26 @@ const AddUser = () => {
                       </div>             
 
                       {/* Input for Profile Image */}
-                      <div className="sm:col-span-5 sm:row-start-5">
-                        <label htmlFor="profileImage" className="block text-base font-medium leading-6 text-gray-900">
-                          Profile Image
-                        </label>
-                        <div className="mt-2">
-                          <input
-                            type="file"
-                            id="profileImage"
-                            name="profileImage"
-                            onChange={handleFileChange}
-                            className="form-input block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          />
+                      <div className="sm:col-span-12 sm:row-start-5">
+                        <label className="block text-base font-medium leading-6 text-gray-900">Profile Photo</label>
+                        <div className="mt-2 flex items-center">
+                          {formData.profileImage ? (
+                            <img src={typeof formData.profileImage === 'string' ? formData.profileImage : URL.createObjectURL(formData.profileImage)} alt="Profile" className="h-12 w-12 rounded-full object-cover" />
+                          ) : (
+                            <span className="inline-block h-12 w-12 overflow-hidden rounded-full bg-gray-100">
+                              <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 0H0v24h24V0z" fill="none" />
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                              </svg>
+                            </span>
+                          )}
+                          <input type="file" name="profileImage" onChange={handleFileChange} className="ml-5 rounded-md bg-white py-2 px-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" />
                         </div>
                       </div>
 
                     </div>
                   </div>
+                
 
                   {/* Buttons for adding or deleting user */}
                   <div className="flex items-center justify-end mt-5 mb-5 mr-5 gap-x-6">

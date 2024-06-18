@@ -6,7 +6,7 @@ class ReviewService {
     // Function to fetch the list of reviews 
     static getAllReviews = async (token) => {
         try {
-            const response = await axios.get(`${ReviewService.BASE_URL}/client/getAll`, {
+            const response = await axios.get(`${ReviewService.BASE_URL}/reviews/getAll`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -21,7 +21,7 @@ class ReviewService {
     // Function to add a review
     static addReview = async (review, token) => {
         try {
-            const response = await axios.post(`${ReviewService.BASE_URL}/creview/add`, review, {
+            const response = await axios.post(`${ReviewService.BASE_URL}/client/add`, review, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

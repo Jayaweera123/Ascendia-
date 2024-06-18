@@ -1,94 +1,6 @@
 import axios from "axios";
 
-// Base URL for the REST API
-{/*const REST_API_BASE_URL = 'http://localhost:1010';
-
-// Function to fetch the list of users {http://localhost:8080/api/users/getAll}
-export const userList = () => {
-    return axios.get(`${REST_API_BASE_URL}/getAll`)
-        .then(response => response.data)
-        .catch(error => {
-            console.error("Error fetching user list:", error);
-            throw error;
-        });
-};
-
-  
-//commented one
-// Function to add a new user {http://localhost:8080/api/users/add}
-export const addUser = (user, profileImage) => {
-    const formData = new FormData();
-    formData.append('profileImage', profileImage);
-    Object.keys(user).forEach(key => {
-        formData.append(key, user[key]);
-    });
-
-    return axios.post(`${REST_API_BASE_URL}/add`, formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    })
-    .then(response => response.data)
-    .catch(error => {
-        console.error("Error adding user:", error);
-        throw error;
-    });
-};
-
-// Function to add a new user
-export const addUser = async (user, profileImage) => {
-    try {
-        const formData = new FormData();
-        formData.append('profileImage', profileImage);
-        Object.keys(user).forEach(key => {
-            formData.append(key, user[key]);
-        });
-
-        const response = await axios.post(`${REST_API_BASE_URL}/add`, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-
-        return response.data;
-    } catch (error) {
-        console.error("Error adding user:", error);
-        throw error;
-    }
-};
-
-
-
-// Function to get a specific user by ID {http://localhost:8080/api/users/{userID}}
-export const getUser = (userID) => {
-    return axios.get(`${REST_API_BASE_URL}/${userID}`)
-        .then(response => response.data)
-        .catch(error => {
-            console.error(`Error fetching user with ID ${userID}:`, error);
-            throw error;
-        });
-};
-
-// Function to edit/update an existing user {http://localhost:8080/api/users/{userID}}
-export const editUser = (userID, user) => {
-    return axios.put(`${REST_API_BASE_URL}/${userID}`, user)
-        .then(response => response.data)
-        .catch(error => {
-            console.error(`Error updating user with ID ${userID}:`, error);
-            throw error;
-        });
-};
-
-// Function to deactivate a user by ID {http://localhost:8080/api/users/{userID}}
-export const deactivateUser = (userID) => {
-    return axios.delete(`${REST_API_BASE_URL}/${userID}`)
-        .then(response => response.data)
-        .catch(error => {
-            console.error(`Error deactivating user with ID ${userID}:`, error);
-            throw error;
-        });
-}; 
-
+{/*
 //you tube
 static async getYourProfile(token){
         try{
@@ -116,34 +28,54 @@ class UserService{
         }
     }
 
-    static async addUser(user, token) {
-        if (!user || typeof user !== 'object') {
-            throw new Error("Invalid user data");
-          }
-          if (!token) {
+    static async addUser(formData, profileImage, token) {
+        if (!token) {
             throw new Error("Token is required");
-          }
-      
-          try {
-            const formData = new FormData();
-            Object.keys(user).forEach(key => {
-              formData.append(key, user[key]);
-            });
-      
+        }
+        try {
             const response = await axios.post(`${UserService.BASE_URL}/admin/add`, formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${token}`
-              }
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}`
+                }
             });
-
-            return response;
-    } catch (error) {
-      console.error("Error adding user:", error);
-      throw error;
+            return response.data;
+        } catch (error) {
+            UserService.handleError(error);
+        }
     }
-  }
-    
+
+
+    static async updateUser(userID, formData, profileImage, token) {
+        if (!userID || !formData) throw new Error("Invalid user data or userID");
+        if (!token) throw new Error("Token is required");
+
+        try {
+            const response = await axios.put(`${UserService.BASE_URL}/admin/update/${userID}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            return response.data;
+        } catch (error) {
+            UserService.handleError(error);
+        }
+    }
+
+    static handleError(error) {
+        if (error.response) {
+            console.error("Server error:", error.response.data);
+            if (error.response.status === 403) {
+                console.error("Forbidden: Access is denied. Ensure the token has the correct permissions.");
+            }
+        } else if (error.request) {
+            console.error("Network error:", error.request);
+        } else {
+            console.error("Error:", error.message);
+        }
+        throw error;
+    }
 
     static async getAllUsers(token){
         try{
@@ -187,34 +119,6 @@ class UserService{
         }
     }
 
-
-    static async updateUser(userID, user, token) {
-        if (!userID || !user || typeof user !== 'object') {
-          throw new Error("Invalid user data or userID");
-        }
-        if (!token) {
-          throw new Error("Token is required");
-        }
-    
-        try {
-          const formData = new FormData();
-          Object.keys(user).forEach(key => {
-            formData.append(key, user[key]);
-          });
-    
-          const response = await axios.put(`${UserService.BASE_URL}/admin/update/${userID}`, formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'Authorization': `Bearer ${token}`
-            }
-          });
-          return response;
-        } catch (error) {
-          console.error(`Error updating user with ID ${userID}:`, error);
-          throw error;
-        }
-      }
-
     /**AUTHENTICATION CHECKER */
     static logout(){
         localStorage.removeItem('token')
@@ -243,22 +147,6 @@ class UserService{
     static getToken() {
         return localStorage.getItem('token');
     }
-
-    static handleError(error) {
-        if (error.response) {
-            console.error("Server error:", error.response.data);
-            if (error.response.status === 403) {
-                console.error("Forbidden: Access is denied. Ensure the token has the correct permissions.");
-            }
-        } else if (error.request) {
-            console.error("Network error:", error.request);
-        } else {
-            console.error("Error:", error.message);
-        }
-        throw error;
-    }
-
-    
 
 }
 

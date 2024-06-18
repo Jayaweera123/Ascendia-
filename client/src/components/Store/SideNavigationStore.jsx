@@ -8,9 +8,9 @@ const SideNavigationStore = () => {
   const menus = [
 
     { name: "Home", link: "/", icon: HiHome},
-    { name: "Dashboard", link: "/dashboard", icon: HiMiniIdentification },
-    { name: "Material", link: "/material", icon: HiMiniRectangleGroup },
-    { name: "Equipment", link: "/equipment", icon: HiMiniWrenchScrewdriver },
+    { name: "Dashboard", link: "/store/dashboard", icon: HiMiniIdentification },
+    { name: "Material", link: "/store/material", icon: HiMiniRectangleGroup },
+    { name: "Equipment", link: "/store/equipment", icon: HiMiniWrenchScrewdriver },
     // { name: "History", link: "/viewHistory", icon: HiMiniDocumentText },
     { name: "History", link: "/viewHistory", icon: VscHistory  },
     { name: "Timeline", link: "/", icon: HiMiniClock },

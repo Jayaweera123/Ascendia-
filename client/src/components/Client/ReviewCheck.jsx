@@ -1,12 +1,12 @@
 // Home.jsx
 import React, { useState } from "react";
-import SideNavigationClient from "../../components/Client/SideNavigationClient"; // Adjust the path based on your project structure
-import TopNavigationClient from "../../components/Client/TopNavigationClient";
+import SideNavigationClient from "./SideNavigationClient"; // Adjust the path based on your project structure
+import TopNavigationClient from "./TopNavigationClient";
 import { MdOutlineRateReview } from "react-icons/md";
 import { MdOutlineAddBox } from "react-icons/md";
 import { format } from 'date-fns'; // Import date-fns for formatting dates
 
-const reviewpage = () => {
+const ReviewCheck = () => {
   const [open, setOpen] = useState(true);
   
 
@@ -154,4 +154,4 @@ const reviewpage = () => {
   );
 };
 
-export default reviewpage;
+export default ReviewCheck;
