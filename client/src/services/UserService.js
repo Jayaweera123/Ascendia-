@@ -132,7 +132,7 @@ class UserService{
 
     static isAdmin(){
         const designation = localStorage.getItem('designation')
-        return designation === 'ADMIN'
+        return designation === 'Administrator'
     }
 
     static isUser(){
