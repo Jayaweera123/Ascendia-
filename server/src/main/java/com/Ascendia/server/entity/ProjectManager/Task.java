@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table (name = "tasks")
+@Table (name = "task")
 public class Task {
 
     @Id
@@ -24,15 +24,40 @@ public class Task {
     private String taskName;
     @Column(nullable = false, length = 1000)
     private String description;
-    @Column(nullable = false)
+    @Column
     private LocalDate startDate;
     @Column(nullable = false)
     private LocalDate endDate;
-    @Column(name = "task_status", nullable = false, length = 50)
+
+    @Column(nullable = false)
+    private LocalDate createdDate;
+
+    @Column(name = "current_status")
     private String status;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "project_id", nullable = false)
-    private Project project; // Reference to the Project entity
+    @Column(name = "previous_status")
+    private String prevStatus;
+
+    @Column(nullable = false)
+    private boolean completed;
+
+    /*@Column(name = "task_status")
+    @Enumerated(EnumType.STRING)
+    private TaskStatus taskStatus;*/
+
+    @ManyToOne
+    @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "projectId")
+    private Project project;
+
+   /* public enum TaskStatus {
+        SCHEDULED,
+        IN_PROGRESS,
+        COMPLETED,
+        OVERDUE
+    }*/
+
+
+
+
 
 }

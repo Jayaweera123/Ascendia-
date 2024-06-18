@@ -1,6 +1,8 @@
 package com.Ascendia.server.service.Administrator.impl;
 
 import com.Ascendia.server.service.Administrator.JWTUtils;
+import com.Ascendia.server.entity.ProjectManager.Task;
+import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.service.Administrator.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -383,4 +385,10 @@ public class UserServiceImpl implements UserService {
         return String.valueOf(firstLetterFirstName) + firstLetterLastName + firstTwoLettersEmail + lastTwoDigitsPhoneNumber;
     }
 
+    //Nethuni
+    @Override
+    public List<UserDto> getAllAvailableUsers() {
+        List<User> users = userRepository.findByAvailabilityTrue();
+        return users.stream().map(UserMapper::mapToUserDto).collect(Collectors.toList());
+    }
 }

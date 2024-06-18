@@ -2,21 +2,21 @@ import React from "react";
 import SideNavigationPM from "../../components/ProjectManager/SideNavigation";
 import TopNavigationPM from "../../components/ProjectManager/TopNavigationPM";
 import PageTitle from "../../components/ProjectManager/PageTitle";
-import AddTaskForm from "../../components/ProjectManager/AddTaskForm";
+import AddTaskForm from "../../components/ProjectManager/AddTaskCopyCopy";
+
 import { useParams } from "react-router-dom";
 
 const AddTask = () => {
-  const { id } = useParams();
+  const { projectId } = useParams();
+
   return (
     <>
       <TopNavigationPM />
-      <section className="flex w-full">
-        <SideNavigationPM />
-        <div className="w-8/12 ml-3.5 mt-10">
-          <PageTitle title={id ? "Update Task" : "Add Task"} />
-          <br />
-          <br />
-          <AddTaskForm />
+      <section className="flex">
+        <SideNavigationPM projectId={projectId} />
+
+        <div className="w-8/12 ml-3.5 mr-3.5 mt-5 flex-grow">
+          <AddTaskForm projectId={projectId} />
         </div>
       </section>
     </>

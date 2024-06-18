@@ -65,14 +65,8 @@ const ProjectCard = () => {
       {/* Style tag for embedding CSS */}
       <style>{`
         .status-label-completed {
-          background-color: #34d399; /* Green color for completed projects */
-          color: #ffffff;
-        }
-
-        .status-label-ongoing {
-            background-color: #60a5fa; /* Blue color for ongoing projects */
-
-          color: #ffffff;
+          background-color: #ddf6df; /* Green color for completed projects */
+          color: #24976d;
         }
 
         .status-label-upcoming {

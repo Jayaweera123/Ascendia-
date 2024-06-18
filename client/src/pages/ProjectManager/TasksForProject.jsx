@@ -10,32 +10,25 @@ import { useParams } from "react-router-dom";
 import { BsClipboard2PlusFill } from "react-icons/bs";
 import AddButton from "../../components/ProjectManager/AddButton";
 import TaskCardforProject from "../../components/ProjectManager/TaskCard copy";
+import SearchBar from "../../components/ProjectManager/SearchBar";
 
-//function TasksForProject({ projectId }) {
 function TasksForProject() {
   const { projectId } = useParams();
-  /* const [projectId, setProjectId] = useState(null);
 
-  // Extract projectId from URL params
-  const { projectId: urlProjectId } = useParams();
-
-  useEffect(() => {
-    // Set projectId state
-    setProjectId(urlProjectId);
-  }, [urlProjectId]);*/
   return (
     <>
       <TopNavigationPM />
       <section className="flex">
-        <SideNavigationPM />
-        <div className="ml-3.5 mt-10">
-          <div></div>
-          <div className="flex justify-between m-0">
-            <PageTitle title="Tasks" />
-            <AddButton />
+        <SideNavigationPM projectId={projectId} />
+        <div className="flex-auto w-8/12">
+          <div className="mx-10 my-5">
+            <div className="flex justify-between">
+              <PageTitle title="Tasks" />
+            </div>
+            <div className="flex-grow">
+              <TaskCardforProject projectId={projectId} />
+            </div>
           </div>
-
-          <TaskCardforProject projectId={projectId} />
         </div>
       </section>
     </>

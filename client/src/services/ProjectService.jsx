@@ -27,3 +27,38 @@ class AuthService {
     }
 }
 export default AuthService;
+
+export const getProjectById = (projectId) =>
+  axios.get("http://localhost:8080/pmanager/project/" + projectId);
+
+{
+  /*Nethuni*/
+}
+
+
+export const getProjectForPM = (ProjectManagerId) =>
+  axios.get("http://localhost:8080/pmanager/project/pm/" + ProjectManagerId);
+
+export const searchProject = (pmId, searchTerm) =>
+  axios.get(
+    "http://localhost:8080/pmanager/project/search/" + pmId + "?query=" + searchTerm
+  );
+
+export const getProjectDuration = (projectId) =>
+  axios.get("http://localhost:8080/pmanager/project/duration/" + projectId);
+
+export const getJobCount = (projectId) =>
+  axios.get("http://localhost:8080/pmanager/project/" + projectId + "/jobs/count");
+
+export const getCompletedJobCount = (projectId) =>
+  axios.get(
+    "http://localhost:8080/pmanager/project/" + projectId + "/completed/jobs/count"
+  );
+
+export const getEmployeeCount = (projectId) =>
+  axios.get(
+    "http://localhost:8080/pmanager/project/" + projectId + "/employees/count"
+  );
+
+export const getTaskCount = (projectId) =>
+  axios.get("http://localhost:8080/pmanager/project/" + projectId + "/task/count");

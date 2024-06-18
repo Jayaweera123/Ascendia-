@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table (name = "jobs")
+@Table (name = "job")
 public class Job {
 
     @Id
@@ -35,8 +35,7 @@ public class Job {
     private boolean isDone;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "task_id", nullable = false)
-    private Task task; // Reference to the Project entity
-
+    @JoinColumn(name = "task_id", nullable = false, referencedColumnName = "taskId")
+    private Task task;
 
 }

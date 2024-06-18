@@ -1,5 +1,6 @@
 package com.Ascendia.server.entity.Project;
 
+import com.Ascendia.server.entity.ProjectManager.Task;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,8 +40,13 @@ public class Project {
     private LocalDate endDate;
 
     @Column(name = "pm_id", nullable = false)
-    private String pmId; // Changed field name to follow Java naming conventions
+    private Long pmId; // Changed field name to follow Java naming conventions
 
     @Column(name = "image")
     private String image;
+
+
+    /*@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Task> tasks;*/
+
 }

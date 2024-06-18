@@ -15,14 +15,14 @@ function Tasks() {
       <TopNavigationPM />
       <section className="flex">
         <SideNavigationPM />
-        <div className="ml-3.5 mt-10">
+        <div className="ml-3.5 mt-10 w-9/12 flex-grow">
           <div></div>
           <div className="flex justify-between m-0">
             <PageTitle title="Tasks" />
             <AddButton />
           </div>
 
-          <TaskCard />
+          <TaskCardforProject />
         </div>
       </section>
     </>
