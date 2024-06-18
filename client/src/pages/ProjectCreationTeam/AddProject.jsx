@@ -4,7 +4,6 @@ import SideNavigation from "../../components/ProjectManager/SideNavigation";
 import { MdAssignmentAdd } from "react-icons/md";
 import { IoPersonAdd } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { getAllProjectCards } from "../../services/ProjectService";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -49,7 +48,7 @@ const AddProject = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/project/createProject",
+        "http://localhost:8080/project/addProject",
         formData,
         {
           headers: {

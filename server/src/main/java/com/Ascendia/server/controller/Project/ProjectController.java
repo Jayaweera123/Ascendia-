@@ -25,7 +25,7 @@ public class ProjectController {
     private ProjectService projectService;
     private TaskService taskService;
 
-    @PostMapping("/project/createProject")
+    @PostMapping("/project/addProject")
     public ResponseEntity<ProjectDto> createProject(@ModelAttribute ProjectDto projectDto,
                                                     @RequestParam("profileImage") MultipartFile profileImage){
         ProjectDto savedProject = projectService.createProject(projectDto, profileImage);

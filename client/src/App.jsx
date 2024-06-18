@@ -102,12 +102,12 @@ const App = () => {
           {/* Ravindu */}
           {ProjectService.projectOnly() && (
             <>
-              <Route path="/sideNavigation" element={<SideNavigation />} />
+              <Route path="/sideNavigation" element={<SideNavigation />} />             
               <Route path="/topNavigation" element={<TopNavigation />} />            
-              <Route path="/addProject" element={<AddProject/>}/>
+              <Route path="/project/addProject" element={<AddProject/>}/>
               <Route path="/assignEmployee" element={<AssignEmployee/>}/>
               <Route path="/assignPM" element={<AssignPM/>}/>
-              <Route path="/projectslist" element={<ProjectsList/>}/>
+              <Route path="/project/projectslist" element={<ProjectsList/>}/>
               <Route path="/creationDashboard" element={<CreationDashboard/>}/>
               <Route path="/addEmployee" element={<AssignPM/>}/>
             </>

@@ -3,7 +3,6 @@ package com.Ascendia.server.controller.Administrator;
 import lombok.AllArgsConstructor;
 import com.Ascendia.server.dto.Administrator.UserDto;
 import com.Ascendia.server.service.Administrator.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -81,7 +80,6 @@ public class UserController {
     }
 
      */}
-
 
     //Nethuni - Get All available users
     @GetMapping("/all/available")

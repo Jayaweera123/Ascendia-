@@ -27,7 +27,7 @@ const Login = () => {
         localStorage.setItem('designation', userData.designation);
         // Navigate to the appropriate dashboard based on user designation
         switch (userData.designation) {
-          case 'ADMIN':
+          case 'Administrator':
             navigate('/admin/dashboard');
             break;
           case 'Client':
@@ -35,7 +35,7 @@ const Login = () => {
             navigate('/addreview');
             break;
           case 'Project Creation Team':
-            navigate('/project/assignEmployee');
+            navigate('/project/addProject');
             break;
           case 'Project Manager':
             navigate('/pmanager/dashboard');
@@ -118,7 +118,7 @@ const Login = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex flex-row gap-2 mt-2">
                         <div className="pl-8 bg-blue">
-                          <FaUnlockKeyhole size={33} color="#001b5e" />
+                          <FaUnlockKeyhole size={35} color="#001b5e" />
                         </div>
                         <input
                           id="password"
@@ -126,7 +126,7 @@ const Login = () => {
                           type="password"
                           autoComplete="current-password"
                           required
-                          className="flex-1 block w-48 pl-1 text-gray-900 bg-transparent border-0 rounded-md shadow-sm mr-9 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 placeholder:text-gray-400"
+                          className="flex-1 block w-64 pl-1 text-gray-900 bg-transparent border-0 rounded-md shadow-sm mr-9 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 placeholder:text-gray-400"
                           placeholder="Password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}

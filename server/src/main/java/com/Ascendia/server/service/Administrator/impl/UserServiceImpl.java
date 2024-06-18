@@ -1,8 +1,6 @@
 package com.Ascendia.server.service.Administrator.impl;
 
 import com.Ascendia.server.service.Administrator.JWTUtils;
-import com.Ascendia.server.entity.ProjectManager.Task;
-import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.service.Administrator.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +19,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.IOException;
 import java.nio.file.StandardCopyOption;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -31,9 +28,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 @Service

@@ -33,7 +33,7 @@ class UserService{
             throw new Error("Token is required");
         }
         try {
-            const response = await axios.post(`${UserService.BASE_URL}/admin/add`, formData, {
+            const response = await axios.post(`${UserService.BASE_URL}/auth/add`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${token}`
