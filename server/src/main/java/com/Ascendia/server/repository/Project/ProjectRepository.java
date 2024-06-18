@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ProjectRepository  extends JpaRepository<Project, Long >{
 
-    List<Project> findByPmId(Long pmId);
+    List<Project> findByPmId(String pmId);
 
     @Query(
             "SELECT p FROM Project p WHERE " +

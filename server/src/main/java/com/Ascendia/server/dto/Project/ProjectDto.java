@@ -23,7 +23,7 @@ public class ProjectDto {
     private String projectStatus;
     private LocalDate createdDate;
     private LocalDate endDate;
-    private Long pmId;
+    private String pmId;
     private String image;
 
 }

@@ -32,7 +32,7 @@ public class ProjectMapper {
         );
     }
 
-        project.setProjectId(projectDto.getProjectId());
+        /*project.setProjectId(projectDto.getProjectId());
         project.setProjectName(projectDto.getProjectName());
         project.setProjectType(projectDto.getProjectType());
         project.setProjectDescription(projectDto.getProjectDescription());
@@ -46,6 +46,6 @@ public class ProjectMapper {
         // project.setTasks(projectDto.getTasks().stream().map(TaskDto::mapToTask).collect(Collectors.toList()));
 
 
-        return project;
-    }
+        return project;*/
+
 }

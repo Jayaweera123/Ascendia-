@@ -117,11 +117,7 @@ const ProjectCard = ({ projectManagerId }) => {
                           </div>
                         </div>
                       </div>
-                    </Link>
-                    <Link
-                      key={project.projectId}
-                      to={`/project/${project.projectId}/dashboard`}
-                    >
+
                       <div className="project-description-container">
                         <div className="text-sm font-normal px-6 pt-4 text-gray-500 project-description">
                           {expandedProjects[project.projectId]

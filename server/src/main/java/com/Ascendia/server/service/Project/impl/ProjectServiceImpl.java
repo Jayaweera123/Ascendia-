@@ -99,4 +99,44 @@ public class ProjectServiceImpl implements ProjectService {
             throw new IllegalArgumentException("Project with name " + projectId + " not found");
         }
     }
+
+    @Override
+    public ProjectDto getProjectId(Long projectId) {
+        return null;
+    }
+
+    @Override
+    public List<ProjectDto> getProjectsByPmId(Long pmId) {
+        return null;
+    }
+
+    @Override
+    public List<ProjectDto> searchProject(Long pmId, String query) {
+        return null;
+    }
+
+    @Override
+    public String calculateDuration(ProjectDto projectDto) {
+        return null;
+    }
+
+    @Override
+    public Long getTotalJobsForProject(Long projectId) {
+        return null;
+    }
+
+    @Override
+    public Long getCompletedJobsCountForProject(Long projectId) {
+        return null;
+    }
+
+    @Override
+    public Long getEmployeeCountForProject(Long projectId) {
+        return null;
+    }
+
+    @Override
+    public int getTaskCountForProject(Long projectId) {
+        return 0;
+    }
 }

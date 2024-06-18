@@ -56,7 +56,7 @@ const CommentCardPopup = ({ comments }) => {
     <>
       <span
         className="cursor-pointer"
-        onClick={comments.length > 0 ? handlePopup : ""}
+        onClick={comments.length > 0 ? handlePopup : null}
       >
         {comments.length} <em> Comments </em>
       </span>
