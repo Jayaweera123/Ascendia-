@@ -20,11 +20,12 @@ public interface ProjectService {
     //Nethuni
     ProjectDto getProjectId(Long projectId);
 
-    List<ProjectDto> getProjectsByPmId(Long pmId);
+    List<ProjectDto> getProjectsByPmId(String pmId);
 
-    List<ProjectDto> searchProject(Long pmId, String query);
 
-    String calculateDuration(ProjectDto projectDto);
+    List<ProjectDto> searchProject(String pmId, String query);
+
+    //String calculateDuration(ProjectDto projectDto);
 
     Long getTotalJobsForProject(Long projectId);
 

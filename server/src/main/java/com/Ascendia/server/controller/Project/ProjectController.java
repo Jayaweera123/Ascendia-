@@ -68,14 +68,14 @@ public class ProjectController {
     
     //Nethuni
     @GetMapping("/pmanager/pm/{pmId}")
-    public ResponseEntity<List<ProjectDto>>  getProjectsByPMId(@PathVariable("pmId") Long pmId){
+    public ResponseEntity<List<ProjectDto>>  getProjectsByPMId(@PathVariable("pmId") String pmId){
         List<ProjectDto> projects = projectService.getProjectsByPmId(pmId);
         return ResponseEntity.ok(projects);
     }
 
     //Build search REST API
     @GetMapping("/pmanager/search/{pmId}")
-    public ResponseEntity<List<ProjectDto>> searchProject(@PathVariable Long pmId, @RequestParam("query") String query){
+    public ResponseEntity<List<ProjectDto>> searchProject(@PathVariable String pmId, @RequestParam("query") String query){
         return ResponseEntity.ok(projectService.searchProject(pmId, query));
     }
 
