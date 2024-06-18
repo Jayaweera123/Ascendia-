@@ -6,6 +6,7 @@ import SideNavigationStore from "../../components/Store/SideNavigationStore";
 import MaterialHistoryComponent from "../../components/Store/MaterialHistoryComponent";
 import EquipmentHistoryComponent from "../../components/Store/EquipmentHistoryComponent";
 import { searchUpdatedEquipment } from "../../services/StoreServices";
+import NotificationBar from "../../components/Store/NotificationBar";
 
 function History() {
 
@@ -29,6 +30,12 @@ function History() {
         endDate: new Date().setMonth(11) 
         
         }); 
+
+    const [isOpen, setIsOpen] = useState(false);
+  
+    const notificationHandler = (status) => {
+        setIsOpen(status);
+    };    
 
     const navigator = useNavigate();
     const givenProjectId = 3;
@@ -198,7 +205,9 @@ function History() {
 
     return (
         <div>
-            <TopNavigationStore />
+            <TopNavigationStore notificationHandler={notificationHandler} />
+            {isOpen && <NotificationBar isOpen={isOpen} notificationHandler={notificationHandler} />}
+            
             <section className="flex">
                 <SideNavigationStore open={open} setOpen={setOpen} />
 

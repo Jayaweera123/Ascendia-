@@ -5,6 +5,7 @@ import SearchBar from "../../components/Store/SearchBar";
 import TopNavigationStore from "../../components/Store/TopNavigationStore";
 import SideNavigationStore from "../../components/Store/SideNavigationStore";
 import { searchMaterial } from "../../services/StoreServices";
+import NotificationBar from "../../components/Store/NotificationBar";
 
 function Material() {
 
@@ -15,6 +16,12 @@ function Material() {
     const navigator = useNavigate();
 
     const [search, setSearch] = useState("");
+
+    const [isOpen, setIsOpen] = useState(false);
+  
+    const notificationHandler = (status) => {
+        setIsOpen(status);
+    };
 
     const givenProjectId = 3;
 
@@ -88,8 +95,9 @@ function Material() {
     
   return (
     <div>
-        <TopNavigationStore />
-
+        <TopNavigationStore notificationHandler={notificationHandler} />
+        {isOpen && <NotificationBar isOpen={isOpen} notificationHandler={notificationHandler} />}
+        
         <section className="flex">
             <SideNavigationStore open={open} setOpen={setOpen} />
       
