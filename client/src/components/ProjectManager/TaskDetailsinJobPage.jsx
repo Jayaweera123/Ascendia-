@@ -199,7 +199,7 @@ const TaskDetailsinJobPage = ({ taskId }) => {
       </div>
       <div className="flex justify-between items-center mt-2">
         <div className="flex flex-col   text-gray-700">
-          <p>Start Date: {formatDate(startDate)}</p>
+          <p>Start Date: {startDate ? formatDate(startDate) : ""}</p>
           <p>Due Date: {formatDate(endDate)}</p>
         </div>
         <div className="ml-auto">
