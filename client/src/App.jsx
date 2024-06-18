@@ -12,7 +12,6 @@ import ProjectService from "./services/ProjectService";
 
 {/* Ravindu - Progress */}
 import Progress from "./pages/Progress/Progress";
-import Progress from "./pages/Progress/Progress";
 
 {/*Rashmi*/}
 import SideNavigationClient from "./components/Client/SideNavigationClient";

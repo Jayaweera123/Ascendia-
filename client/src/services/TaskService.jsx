@@ -58,7 +58,7 @@ class AuthService {
 
 export default AuthService;
 
-  axios.get(REST_API_BASE_URL0 + "api/project/" + ProjectId + "/tasks");
+  //axios.get(REST_API_BASE_URL0 + "api/project/" + ProjectId + "/tasks");
 
 export const getJobCountForTask = (taskId) =>
   axios.get(REST_API_BASE_URL0 + taskId + "/jobcount");
