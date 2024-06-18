@@ -39,6 +39,7 @@ public class Project {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
+
     @Column(name = "pm_id", nullable = false)
     private Long pmId; // Changed field name to follow Java naming conventions
 
