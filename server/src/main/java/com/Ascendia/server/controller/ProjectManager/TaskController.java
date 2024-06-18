@@ -96,7 +96,7 @@ public class TaskController {
         return ResponseEntity.ok(completedJobCount);
     }
 
-    @GetMapping("/{taskId}/set-status")
+    @PutMapping("/{taskId}/set-status")
     public String setTaskStatusLable(@PathVariable Long taskId) {
         return taskService.CheckCompletionUpdateStatus(taskId);
     }
