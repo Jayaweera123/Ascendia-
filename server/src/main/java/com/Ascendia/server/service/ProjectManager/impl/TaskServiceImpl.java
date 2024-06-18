@@ -61,7 +61,7 @@ public class  TaskServiceImpl implements TaskService {
             //Task.TaskStatus status = task.calculateStatus();
 
             task.setCompleted(false);
-            calculateAndSetStatus(task);
+            task.setStatus(calculateStatus(task));
             task.setCreatedDate(LocalDate.now());
 
 
@@ -108,24 +108,26 @@ public class  TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void calculateAndSetStatus(Task task) {
+    public String calculateStatus(Task task) {
         LocalDate currentDate = LocalDate.now();
         LocalDate startDate = task.getStartDate();
         LocalDate endDate = task.getEndDate();
 
         if (!task.isCompleted()) {
-            if (currentDate.isBefore(startDate) || startDate == null) {
-                task.setStatus("Scheduled");
-            } else if (currentDate.isAfter(endDate)) {
-                task.setStatus("Overdue");
-            } else if ((currentDate.isEqual(startDate) &&  startDate != null) || currentDate.isEqual(endDate)) {
-                task.setStatus("In-Progress");
-            } else {
-                task.setStatus("In-Progress");
-            }
+           if (startDate == null && currentDate.isAfter(endDate)) {
+               return ("Overdue");
+           } else if (startDate == null || currentDate.isBefore(startDate)) {
+                return ("Scheduled");
+           } else if (currentDate.isAfter(endDate)) {
+                return ("Overdue");
+           } else if ((currentDate.isEqual(startDate)) || currentDate.isEqual(endDate)) {
+                return ("In-Progress");
+           } else {
+                return ("In-Progress");
+           }
         }
         else {
-            task.setStatus("Completed");
+            return ("Completed");
         }
     }
 
@@ -137,9 +139,7 @@ public class  TaskServiceImpl implements TaskService {
 
     @Override
     public TaskDto updateTask(Long taskId, TaskDto updateTask) {
-        Task task = taskRepository.findById(taskId).orElseThrow(
-                () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
-        );
+        Task task = getTaskById(taskId);
 
         // Update task properties
         task.setTaskName(updateTask.getTaskName());
@@ -147,20 +147,13 @@ public class  TaskServiceImpl implements TaskService {
         task.setStartDate(updateTask.getStartDate());
         task.setEndDate(updateTask.getEndDate());
 
-
         // Recalculate task status
-        //Task.TaskStatus newStatus = task.calculateStatus();
-        calculateAndSetStatus(task);
+        String updatedStatus = calculateStatus(task);
+        if (!Objects.equals(updatedStatus, task.getStatus())) {
+            task.setPrevStatus(task.getStatus());
+            task.setStatus(updatedStatus);
+        }
 
-        // If the task status is different, update it
-        /*if (newStatus != task.getTaskStatus()) {
-            task.setTaskStatus(newStatus);
-
-            // Optionally, update the status string if needed
-            // task.setStatus(newStatus.toString());
-        }*/
-
-        // Save the updated task
         Task updatedTaskObj = taskRepository.save(task);
 
         return TaskMapper.mapToTaskDto(updatedTaskObj);
@@ -228,28 +221,15 @@ public class  TaskServiceImpl implements TaskService {
 
     @Override
     public String CheckCompletionUpdateStatus(Long taskId) {
-        /*if (!isCompleted(taskId)) {
-            int jobCount = getJobCountForTask(taskId);
-            boolean allJobsCompleted;
-            if (jobCount != 0) {
-                allJobsCompleted = jobRepository.areAllJobsCompletedForTask(taskId);
-                if (allJobsCompleted) {
-                    markAsCompleted(taskId);
-                } else {
-                    updateTaskStatus(taskId);
-                }
-            } else {
-                updateTaskStatus(taskId);
-            }
-            Task updatedTask = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found"));
-            return updatedTask.getStatus();
-        }*/
-
-        //Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("Task not found"));
 
         Task task = getTaskById(taskId);
-        task.setPrevStatus(task.getStatus());
-        calculateAndSetStatus(task);
+
+        String updatedStatus = calculateStatus(task);
+        if (!Objects.equals(updatedStatus, task.getStatus())) {
+            task.setPrevStatus(task.getStatus());
+            task.setStatus(updatedStatus);
+        }
+
         taskRepository.save(task);
 
         return task.getStatus();

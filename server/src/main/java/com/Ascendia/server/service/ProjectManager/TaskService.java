@@ -32,7 +32,7 @@ public interface TaskService {
 
     String CheckCompletionUpdateStatus(Long taskId);
 
-    void calculateAndSetStatus(Task task);
+    String calculateStatus(Task task);
 
     boolean isCompleted(Long taskId);
 
