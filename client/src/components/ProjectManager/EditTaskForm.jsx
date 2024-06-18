@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { createTask, getTask, updateTask } from "../../services/TaskService";
 import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
+import { getProjectById } from "../../services/ProjectService";
 
 function EditTaskForm({ id, prePageNavigator }) {
   const [taskName, setTaskName] = useState("");
@@ -9,6 +10,8 @@ function EditTaskForm({ id, prePageNavigator }) {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [pID, setPID] = useState(""); // State for project ID
+  const [projectStartDate, setProjectStartDate] = useState("");
+  const [projectEndDate, setProjectEndDate] = useState("");
 
   const navigator = useNavigate();
 
@@ -22,9 +25,13 @@ function EditTaskForm({ id, prePageNavigator }) {
         .then((response) => {
           setTaskName(response.data.taskName);
           setDescription(response.data.description);
-          setStartDate(response.data.startDate);
+          setStartDate(response.data.startDate || ""); // Ensure not null
           setEndDate(response.data.endDate);
           setPID(response.data.project.projectId); // Set project ID
+          setProjectStartDate(response.data.project.createdDate);
+          setProjectEndDate(response.data.project.endDate);
+          console.log(response.data);
+          console.log(projectStartDate, projectEndDate);
         })
         .catch((error) => {
           console.error(error);
@@ -40,9 +47,15 @@ function EditTaskForm({ id, prePageNavigator }) {
       const task = {
         taskName,
         description,
-        startDate,
         endDate,
+        //project: projectId,
       };
+
+      // Add startDate only if it is provided
+      if (startDate) {
+        task.startDate = startDate;
+      }
+
       console.log(task);
 
       if (id) {
@@ -65,6 +78,19 @@ function EditTaskForm({ id, prePageNavigator }) {
     }
   }
 
+  //get Project start date end date
+  /*useEffect(() => {
+    getProjectById(pID)
+      .then((response) => {
+        console.log(response.data);
+        setProjectStartDate(response.data.createdDate);
+        setProjectEndDate(response.data.endDate);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []); // Empty dependency array*/
+
   function clearForm() {
     setTaskName("");
     setDescription("");
@@ -79,12 +105,13 @@ function EditTaskForm({ id, prePageNavigator }) {
   // Determine if the form is invalid
   const isFormInvalid =
     !taskName ||
-    !startDate ||
     !endDate ||
     !description ||
-    description.trim().length == 0 ||
-    endDate < startDate ||
-    endDate == startDate ||
+    description.trim().length === 0 ||
+    (endDate && startDate && endDate < startDate) ||
+    (endDate && startDate && endDate === startDate) ||
+    (startDate && startDate < projectStartDate) ||
+    endDate > projectEndDate ||
     description.length > 999 ||
     taskName.length > 99;
 
@@ -167,9 +194,9 @@ function EditTaskForm({ id, prePageNavigator }) {
                       className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                     {/* Conditional rendering to display the required message */}
-                    {startDate.trim().length === 0 && (
+                    {/*startDate.trim().length === 0 && (
                       <span className="mt-2 text-sm text-red-500"></span>
-                    )}
+                    )*/}
                     {endDate && startDate && endDate < startDate && (
                       <span className="mt-2 text-sm text-red-500">
                         Start date must be before end date.
