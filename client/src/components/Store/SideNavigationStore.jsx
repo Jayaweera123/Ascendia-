@@ -6,9 +6,7 @@ import { VscHistory } from "react-icons/vsc";
 
 const SideNavigationStore = () => {
   const menus = [
-
-    { name: "Home", link: "/", icon: HiHome},
-    { name: "Dashboard", link: "/skdashboard", icon: HiMiniIdentification },
+    { name: "Dashboard", link: "/store/dashboard", icon: HiMiniIdentification },
     { name: "Material", link: "/material", icon: HiMiniRectangleGroup },
     { name: "Equipment", link: "/equipment", icon: HiMiniWrenchScrewdriver },
     // { name: "History", link: "/viewHistory", icon: HiMiniDocumentText },

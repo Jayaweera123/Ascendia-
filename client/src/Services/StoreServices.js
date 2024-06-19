@@ -1,7 +1,7 @@
 import axios from "axios";
 
 //Material
-export const listMaterial = (projectId) => axios.get('http://localhost:8080/api/material/getAllMaterials/'+ projectId);
+export const listMaterial = (projectId) => axios.get('http://localhost:8080/store/material/getAllMaterials/'+ projectId);
 
 export const createMaterial = (material) => axios.post('http://localhost:8080/store/material/createMaterial', material);
 

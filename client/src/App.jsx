@@ -147,12 +147,11 @@ const App = () => {
 
           {/*Deshani*/}
           {StoreServices.storeOnly() && (
-            <>
-              <Route path="/store/dashboard" element={<Dashboard />} />              
+            <>             
               <Route path="/tasks/:taskId/jobs" element={<Jobs />} />
               <Route path="/equipment" element={<Equipment />} />
               <Route path="/material" element={<Material />} /> 
-              <Route path="/skdashboard" element={<StoreKeeperDashboard />} />   
+              <Route path="/store/dashboard" element={<StoreKeeperDashboard />} />   
             </>
           )}
           {StoreServices.skeeperOnly() && (
