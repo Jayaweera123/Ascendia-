@@ -8,7 +8,6 @@ export const getProjectById = (projectId) =>
   axios.get("http://localhost:8080/pmanager/" + projectId);
 
 {/*Nethuni*/}
-
 export const getProjectForPM = (ProjectManagerId) =>
   axios.get("http://localhost:8080/pmanager/pm/" + ProjectManagerId);
 
@@ -48,7 +47,7 @@ class AuthService {
   static isProject() {
     const designation = localStorage.getItem('designation');
     const allowedDesignations = [
-      'Project Creation Team'
+      'Project Creation Team' 
     ];
     return allowedDesignations.includes(designation);
   }

@@ -35,7 +35,7 @@ const Login = () => {
             navigate('/addreview');
             break;
           case 'Project Creation Team':
-            navigate('/progress');
+            navigate('/project/addProject');
             break;
           case 'Project Manager':
             navigate('/pmanager/dashboard');
