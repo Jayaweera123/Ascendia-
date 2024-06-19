@@ -82,7 +82,7 @@ public class UserController {
      */}
 
     //Nethuni - Get All available users
-    @GetMapping("/all/available")
+    @GetMapping("/pmanager/available/all")
     public ResponseEntity<List<UserDto>> getAllAvailableUsers(){
         List<UserDto> users = userService.getAllAvailableUsers();
         return ResponseEntity.ok(users);

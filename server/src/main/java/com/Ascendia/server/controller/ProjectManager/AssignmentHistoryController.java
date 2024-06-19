@@ -22,11 +22,11 @@ public class AssignmentHistoryController {
     private AssignmentHistoryService assignmentHistoryService;
 
 
-    @PostMapping("/add")
+    /*@PostMapping("/add")
     public ResponseEntity<AssignmentHistoryDto> addRecord(@RequestBody AssignmentHistoryDto assignmentHistoryDto) {
         AssignmentHistoryDto savedRecord = assignmentHistoryService.createHistoryRecord(assignmentHistoryDto);
         return new ResponseEntity<>(savedRecord, HttpStatus.CREATED);
-    }
+    }*/
 
     @GetMapping("/{projectId}/records")
     public ResponseEntity<List<AssignmentHistoryDto>> getRecordsByProjectId(@PathVariable Long projectId) {

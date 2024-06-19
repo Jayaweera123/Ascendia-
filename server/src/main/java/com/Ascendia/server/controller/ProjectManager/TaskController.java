@@ -96,8 +96,8 @@ public class TaskController {
         return taskService.CheckCompletionUpdateStatus(taskId);
     }
 
-    //Build search REST API
-    @GetMapping("/pmanager/search/{projectId}")
+    //Task search REST API
+    @GetMapping("/pmanager/search/task/{projectId}")
     public ResponseEntity<List<TaskDto>> searchTask(@PathVariable Long projectId, @RequestParam("query") String query){
         return ResponseEntity.ok(taskService.searchTask(projectId, query));
     }
