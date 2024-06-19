@@ -1,5 +1,6 @@
 package com.Ascendia.server.entity.Project;
 
+import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.entity.ProjectManager.Task;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,6 +46,8 @@ public class Project {
 
     @Column(name = "image")
     private String image;
+
+
 
 
     /*@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

@@ -3,6 +3,7 @@ package com.Ascendia.server.controller.Project;
 import com.Ascendia.server.dto.Project.ProjectDto;
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.Project.ProjectGetDto;
+import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.service.Project.ProjectService;
 import com.Ascendia.server.service.ProjectManager.TaskService;
 import lombok.AllArgsConstructor;

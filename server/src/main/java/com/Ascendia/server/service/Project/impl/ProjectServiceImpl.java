@@ -1,6 +1,7 @@
 package com.Ascendia.server.service.Project.impl;
 
 import com.Ascendia.server.dto.Project.ProjectDto;
+import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.exception.Administrator.ResourceNotFoundException;
 import com.Ascendia.server.dto.Project.ProjectGetDto;
 import com.Ascendia.server.entity.Project.Project;
@@ -19,13 +20,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Period;
 
 @Service
 @Transactional
@@ -40,6 +41,43 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectServiceImpl(ProjectRepository projectRepository, @Value("${user.profile.image.upload-dir}") String uploadDir) {
         this.projectRepository = projectRepository;
         this.uploadDir = uploadDir;
+    }
+
+    @Override
+    public List<ProjectGetDto> getProjectsForUser(User user) {
+        String designation = user.getDesignation();
+        List<Project> projects;
+
+        switch (designation) {
+            case "Project Creation Team":
+                projects = projectRepository.findAll();
+                break;
+            case "Project Manager":
+            case "Site Engineer":
+            case "Supervisor":
+            case "Store Keeper":
+                projects = projectRepository.findProjectsByUser(user.getUserID());
+                break;
+            default:
+                projects = new ArrayList<>();
+        }
+
+        return projects.stream().map(this::mapToProjectDto).collect(Collectors.toList());
+    }
+
+    private ProjectGetDto mapToProjectDto(Project project) {
+        ProjectGetDto projectDto = new ProjectGetDto();
+        projectDto.setProjectId(project.getProjectId());
+        projectDto.setProjectName(project.getProjectName());
+        projectDto.setProjectType(project.getProjectType());
+        projectDto.setProjectDescription(project.getProjectDescription());
+        projectDto.setProjectStatus(project.getProjectStatus());
+        projectDto.setCreatedDate(project.getCreatedDate());
+        projectDto.setEndDate(project.getEndDate());
+        projectDto.setPmId(project.getPmId());
+        projectDto.setImage(project.getImage());
+
+        return projectDto;
     }
 
     @Override
@@ -155,6 +193,8 @@ public class ProjectServiceImpl implements ProjectService {
     public int getTaskCountForProject(Long projectId) {
         return taskRepository.countTasksByProject_ProjectId(projectId);
     }
+
+
 
 
     /*@Override

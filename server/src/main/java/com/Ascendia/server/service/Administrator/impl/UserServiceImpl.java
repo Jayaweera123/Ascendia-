@@ -102,11 +102,8 @@ public class UserServiceImpl implements UserService {
                 }
             }
 
-
-
             // Set active to true by default
             userDto.setActive(true);
-
 
             User user = UserMapper.mapToUser(userDto);
             User savedUser = userRepository.save(user);
@@ -156,7 +153,7 @@ public class UserServiceImpl implements UserService {
             userDto.setToken(jwtToken);
             userDto.setDesignation(user.getDesignation());
             userDto.setRefreshToken(refreshToken);
-            userDto.setExpirationTime("24 hours");
+            userDto.setExpirationTime("12 hours");
             userDto.setMessage("Successfully Logged In");
 
         } catch (BadCredentialsException e) {

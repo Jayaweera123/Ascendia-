@@ -30,6 +30,7 @@ public class JWTUtils {
     public String generateToken(UserDetails userDetails){
         return Jwts.builder()
                 .subject(userDetails.getUsername())
+                .claim("designation", userDetails.getAuthorities().iterator().next().getAuthority())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(Key)
