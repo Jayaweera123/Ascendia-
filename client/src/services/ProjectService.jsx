@@ -5,36 +5,36 @@ const REST_API_BASE_URL = "http://localhost:8080";
 export const getAllProjectCards = () => axios.get(REST_API_BASE_URL+ "/project/all");
 
 export const getProjectById = (projectId) =>
-  axios.get("http://localhost:8080/pmanager/project/" + projectId);
+  axios.get("http://localhost:8080/pmanager/" + projectId);
 
 {/*Nethuni*/}
 
 export const getProjectForPM = (ProjectManagerId) =>
-  axios.get("http://localhost:8080/pmanager/project/pm/" + ProjectManagerId);
+  axios.get("http://localhost:8080/pmanager/pm/" + ProjectManagerId);
 
 export const searchProject = (pmId, searchTerm) =>
   axios.get(
-    "http://localhost:8080/pmanager/project/search/" + pmId + "?query=" + searchTerm
+    "http://localhost:8080/pmanager/search/" + pmId + "?query=" + searchTerm
   );
 
 export const getProjectDuration = (projectId) =>
-  axios.get("http://localhost:8080/pmanager/project/duration/" + projectId);
+  axios.get("http://localhost:8080/pmanager/duration/" + projectId);
 
 export const getJobCount = (projectId) =>
-  axios.get("http://localhost:8080/pmanager/project/" + projectId + "/jobs/count");
+  axios.get("http://localhost:8080/pmanager/" + projectId + "/jobs/count");
 
 export const getCompletedJobCount = (projectId) =>
   axios.get(
-    "http://localhost:8080/pmanager/project/" + projectId + "/completed/jobs/count"
+    "http://localhost:8080/pmanager/" + projectId + "/completed/jobs/count"
   );
 
 export const getEmployeeCount = (projectId) =>
   axios.get(
-    "http://localhost:8080/pmanager/project/" + projectId + "/employees/count"
+    "http://localhost:8080/pmanager/" + projectId + "/employees/count"
   );
 
 export const getTaskCount = (projectId) =>
-  axios.get("http://localhost:8080/pmanager/project/" + projectId + "/task/count");
+  axios.get("http://localhost:8080/pmanager/" + projectId + "/task/count");
 
 /** AUTHENTICATION CHECKER */
 class AuthService {

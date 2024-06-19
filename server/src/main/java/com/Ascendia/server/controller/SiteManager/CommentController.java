@@ -12,7 +12,7 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("api/v2/comment")
+@RequestMapping("sengineer/comment")
 @AllArgsConstructor
 public class CommentController {
 

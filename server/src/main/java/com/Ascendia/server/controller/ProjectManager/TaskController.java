@@ -54,7 +54,7 @@ public class TaskController {
         return ResponseEntity.ok(taskDto);
     }*/
 
-    @PutMapping("/{taskId}/edit")
+    @PutMapping("/pmanageronly/{taskId}/edit")
     public ResponseEntity<TaskDto> updateTask(@PathVariable Long taskId, @RequestBody TaskDto taskDto) {
         // Update the task
         TaskDto updatedTaskDto = taskService.updateTask(taskId, taskDto);
@@ -77,59 +77,59 @@ public class TaskController {
     }
 
     //CHat GPT get task for the projectID
-    @GetMapping("/pmanager/project/{projectId}/tasks")
+    @GetMapping("/pmanager/{projectId}/tasks")
     public ResponseEntity<List<TaskDto>> getTasksByProjectId(@PathVariable Long projectId) {
         List<TaskDto> tasks = taskService.getTasksByProjectId(projectId);
         return ResponseEntity.ok(tasks);
     }
 
     //Get the job Count REST API
-    @GetMapping("/{taskId}/jobcount")
+    @GetMapping("/pmanager/{taskId}/jobcount")
     public ResponseEntity<Integer> getJobCountForTask(@PathVariable Long taskId) {
         int jobCount = taskService.getJobCountForTask(taskId);
         return ResponseEntity.ok(jobCount);
     }
 
-    @GetMapping("/{taskId}/jobcount/completed")
+    @GetMapping("/pmanager/{taskId}/jobcount/completed")
     public ResponseEntity<Integer> getCompletedJobCountForTask(@PathVariable Long taskId) {
         int completedJobCount = taskService.getCompletedJobCountForTask(taskId);
         return ResponseEntity.ok(completedJobCount);
     }
 
-    @PutMapping("/{taskId}/set-status")
+    @PutMapping("/pmanager/{taskId}/set-status")
     public String setTaskStatusLable(@PathVariable Long taskId) {
         return taskService.CheckCompletionUpdateStatus(taskId);
     }
 
     //Build search REST API
-    @GetMapping("/search/{projectId}")
+    @GetMapping("/pmanager/search/{projectId}")
     public ResponseEntity<List<TaskDto>> searchTask(@PathVariable Long projectId, @RequestParam("query") String query){
         return ResponseEntity.ok(taskService.searchTask(projectId, query));
     }
 
     //Get the time between the deadline
-    @GetMapping("/{taskId}/time-difference")
+    @GetMapping("/pmanager/{taskId}/time-difference")
     public String getTimeDifference(@PathVariable("taskId") Long taskId) {
         TaskDto taskDto = taskService.getTaskId(taskId);
         return taskService.calculateTimeDifference(taskDto);
     }
 
-    @PutMapping("/{taskId}/mark-as-ongoing")
+    @PutMapping("/pmanageronly/pmanager/{taskId}/mark-as-ongoing")
     public void markAsInProgress(@PathVariable Long taskId) {
         taskService.moveToInProgress(taskId);
     }
 
-    @PutMapping("/{taskId}/mark-as-done")
+    @PutMapping("/pmanageronly/pmanager/{taskId}/mark-as-done")
     public void markAsDone(@PathVariable Long taskId) {
         taskService.markAsCompleted(taskId);
     }
 
-    @PutMapping("/{taskId}/mark-as-undone")
+    @PutMapping("/pmanageronly/{taskId}/mark-as-undone")
     public void markAsUndone(@PathVariable Long taskId) {
         taskService.markAsUncompleted(taskId);
     }
 
-    /*@GetMapping("/{taskId}/jobcount")
+    /*@GetMapping("/pmanager/{taskId}/jobcount")
     public ResponseEntity<Object> getJobCountForTask(@PathVariable Long taskId) {
         int jobCount = taskService.getJobCountForTask(taskId);
         return ResponseEntity.ok().body(jobCount + "");

@@ -22,7 +22,7 @@ public class UserController {
     private final UserService userService;
 
     // Build Add User REST API
-    @PostMapping(value = "/admin/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/auth/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<UserDto> addUser(@ModelAttribute UserDto userDto,
                                            @RequestParam("profileImage") MultipartFile profileImage){
         UserDto savedUser = userService.addUser(userDto, profileImage);

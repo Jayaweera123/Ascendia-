@@ -59,7 +59,7 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("/project/{id}")
+    @GetMapping("/pmanager/{id}")
     public ResponseEntity<ProjectDto> getProjectById(@PathVariable("id") Long projectId) {
         ProjectDto projectDto = projectService.getProjectId(projectId);
         return ResponseEntity.ok(projectDto);

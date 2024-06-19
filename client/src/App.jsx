@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import SideNavigation from "./components/ProjectManager/SideNavigation";
 import TopNavigation from "./components/TopNavigation";
 
 {/*Ravindu*/}
+import SideNavigationPCTeam from "./components/ProjectCreationTeam/SideNavigationPCTeam";
 import AddProject from "./pages/ProjectCreationTeam/AddProject";
 import AssignEmployee from "./pages/ProjectCreationTeam/AssignEmployee";
 import AssignPM from "./pages/ProjectCreationTeam/AssignPM";
@@ -102,7 +102,7 @@ const App = () => {
           {/* Ravindu */}
           {ProjectService.projectOnly() && (
             <>
-              <Route path="/sideNavigation" element={<SideNavigation />} />             
+              <Route path="/sideNavigationPCTeam" element={<SideNavigationPCTeam />} />             
               <Route path="/topNavigation" element={<TopNavigation />} />            
               <Route path="/project/addProject" element={<AddProject/>}/>
               <Route path="/assignEmployee" element={<AssignEmployee/>}/>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TopNavigation from "../../components/TopNavigation";
-import SideNavigation from "../../components/ProjectManager/SideNavigation";
+import SideNavigationPCTeam from "../../components/ProjectCreationTeam/SideNavigationPCTeam";
 import { MdAssignmentAdd } from "react-icons/md";
 import { IoPersonAdd } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
@@ -66,7 +66,7 @@ const AddProject = () => {
           confirmButtonText: "OK",
         }).then(() => {
           // Redirect to projects page
-          navigate("/projectslist");
+          navigate("/project/projectslist");
         });
       } else {
         console.error("Failed to create project");
@@ -170,7 +170,7 @@ const AddProject = () => {
     <div>
       <TopNavigation />
       <section className="flex">
-        <SideNavigation open={open} setOpen={setOpen} />
+        <SideNavigationPCTeam open={open} setOpen={setOpen} />
         <div className="relative w-screen bg-cover bg-zinc-50 h-fit">
           <div className="m-3 text-xl font-semibold text-gray-900">
             <form method="POST" encType="multipart/form-data">

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SideNavigation from "../../components/ProjectManager/SideNavigation";
+import SideNavigationPCTeam from "../../components/ProjectCreationTeam/SideNavigationPCTeam";
 import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin"; // Adjust the path based on your project structure
 import dboard from "../../assets/dboard.png";
 import { RiUserAddFill } from "react-icons/ri";
@@ -18,7 +18,7 @@ const CreationDashboard = () => {
     <div>
       <TopNavigationAdmin />
       <section className="flex">
-        <SideNavigation open={open} setOpen={setOpen} />
+        <SideNavigationPCTeam open={open} setOpen={setOpen} />
 
         <div className="relative h-screen">
           <img

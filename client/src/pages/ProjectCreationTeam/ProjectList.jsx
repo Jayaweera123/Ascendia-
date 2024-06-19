@@ -1,5 +1,5 @@
 import React from "react";
-import SideNavigationPM from "../../components/ProjectManager/SideNavigation";
+import SideNavigationPCTeam from "../../components/ProjectCreationTeam/SideNavigationPCTeam";
 import TopNavigationPM from "../../components/ProjectManager/TopNavigationPM";
 import PageTitle from "../../components/ProjectManager/PageTitle";
 import ProjectCard from "../../components/project/ProjectCard";
@@ -14,7 +14,7 @@ function ProjectsList() {
     <>
       <TopNavigationPM />
       <section className="flex">
-        <SideNavigationPM />
+        <SideNavigationPCTeam />
         <div className="ml-3.5 mt-10">
           <div></div>
           <div className="flex justify-between m-0">

@@ -28,18 +28,18 @@ public class JobController {
         return ResponseEntity.ok(jobs);
     }
 
-    @GetMapping("/search/{taskId}")
+    @GetMapping("/senginner/search/{taskId}")
     public ResponseEntity<List<JobDto>> searchJob(@PathVariable Long taskId, @RequestParam("query") String query){
         return ResponseEntity.ok(jobService.searchJob(taskId, query));
     }
 
-    @PutMapping("/complete/{jobId}")
+    @PutMapping("/senginner/complete/{jobId}")
     public ResponseEntity<Void> completeJobById(@PathVariable Long jobId) {
         jobService.markJobAsCompletedById(jobId);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/updateStatus/{jobId}")
+    @PutMapping("/senginner/updateStatus/{jobId}")
     public ResponseEntity<String> updateJobStatus(@PathVariable Long jobId) {
         String newStatus = jobService.updateJobStatus(jobId);
         return ResponseEntity.ok(newStatus);

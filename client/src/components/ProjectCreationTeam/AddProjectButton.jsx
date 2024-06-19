@@ -7,7 +7,7 @@ const AddProjectButton = () => {
   const navigator = useNavigate();
 
   function addNewProject() {
-    navigator("/addproject");
+    navigator("/project/addProject");
   }
 
   return (

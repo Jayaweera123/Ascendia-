@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TopNavigation from "../../components/TopNavigation";
-import SideNavigation from "../../components/ProjectManager/SideNavigation";
+import SideNavigationPCTeam from "../../components/ProjectCreationTeam/SideNavigationPCTeam";
 import { RiUserAddFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 
@@ -27,8 +27,7 @@ const AssignPM = () => {
 
     {/* Main Section */}
     <section className="flex">
-      {/* Side Navigation Component */}
-      <SideNavigation open={open} setOpen={setOpen} />
+      <SideNavigationPCTeam open={open} setOpen={setOpen} />
 
       {/* Main Content */}
       <div className="relative w-screen bg-cover bg-zinc-50 h-fit">
@@ -167,12 +166,6 @@ const AssignPM = () => {
                           </div>
                         
  
-
-
-
-
-
-
 
   {/* Card */}
   
