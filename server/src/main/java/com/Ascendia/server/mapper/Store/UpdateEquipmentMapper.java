@@ -7,12 +7,15 @@ import com.Ascendia.server.entity.Store.UpdateEquipment;
 public class UpdateEquipmentMapper {
 
     public static UpdateEquipmentDto mapToUpdateEquipmentDto(UpdateEquipment updateEquipment){
+        Equipment equipment = updateEquipment.getEquipment();
         return new UpdateEquipmentDto(
                 updateEquipment.getId(),
                 updateEquipment.getUpdatedQuantity(),
                 updateEquipment.getAction(),
                 updateEquipment.getUpdatedDate(),
-                updateEquipment.getEquipment().getEquipmentId()
+                updateEquipment.getEquipment().getEquipmentId(),
+                equipment.getEquipmentCode(),
+                equipment.getEquipmentName()
         );
     }
 

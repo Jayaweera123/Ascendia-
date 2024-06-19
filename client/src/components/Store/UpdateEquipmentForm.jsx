@@ -3,7 +3,8 @@ import SideNavigationStore from "./SideNavigationStore"; // Adjust the path base
 import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
 import { getEquipment, inventoryUpdateEquipment } from '../../services/StoreServices'
 import { useNavigate, useParams } from 'react-router-dom'
-import Popup from "./Popup";
+import Swal from 'sweetalert2';
+
 
 function UpdateEquipmentForm() {
   const [open, setOpen] = useState(true);
@@ -11,7 +12,7 @@ function UpdateEquipmentForm() {
   const [equipmentName, setEquipmentName] = useState('')
   const [updatedQuantity, setUpdatedQuantity] = useState('')
   const [action, setAction] = useState('Issue')
-  const [showPopup, setShowPopup] = useState(false);
+  
 
   const {id} = useParams();
 
@@ -35,20 +36,42 @@ function UpdateEquipmentForm() {
 
   //Handle function to update inventory
   function handleInventoryUpdate(e){
-     e.preventDefault();
+    e.preventDefault();
 
-    if(validateForm()){
-      const equipment = {updatedQuantity,action}
-      console.log(equipment,"id:",id)
+   if(validateForm()){
+     const equipment = {updatedQuantity,action}
+     console.log(equipment,"id:",id)
 
-        inventoryUpdateEquipment(id, equipment).then((response) => {
-          console.log(response.data)
-          navigator('/equipment')
-        }).catch(error => {
-          console.error(error)
-        })
-      }
-    }
+     const confirmationOptions = {
+       title: 'Update Inventory?',
+       text: 'Are you sure you want to update inventory?',
+       icon: 'warning',
+       showCancelButton: true,
+       confirmButtonColor: '#001b5e',
+       cancelButtonColor: '#6b7280',
+       confirmButtonText: 'Update',
+       cancelButtonText: 'Cancel',
+     };
+
+     Swal.fire(confirmationOptions).then((result) => {
+       if (result.isConfirmed) {
+         inventoryUpdateEquipment(id, equipment).then((response) => {
+           console.log(response.data)
+           Swal.fire({
+             icon: 'success',
+             title: 'Success!',
+             text: 'Inventory updated successfully!',
+             confirmButtonColor: '#001b5e'
+           }).then(() => {
+             navigator('/equipment');
+           });
+         }).catch(error => {
+           console.error(error)
+         })
+       }
+     }) 
+   }
+}
 
 function handleCancel(e){
   navigator('/equipment')
@@ -80,11 +103,6 @@ function validateForm(){
   return valid;
   
 }
-
-function onClosePopup() {
-    setShowPopup(false);
-    // Additional logic to perform after closing the popup
-  }
 
   return (
     <div>
@@ -153,7 +171,7 @@ function onClosePopup() {
                 </label>
                 <div className="mt-3">
                   <input
-                    type="text"
+                    type="number"
                     placeholder='Enter Quantity of equipment'
                     name="updatedQuantity"
                     id="updatedQuantity"
@@ -218,7 +236,7 @@ function onClosePopup() {
     </div>
         </div>
       </section>
-      {showPopup && <Popup message="Successfully updated inventory" onClose={onClosePopup} />}
+     
     </div>
   );
 

@@ -13,6 +13,11 @@ export const searchMaterial = (projectId, query) => axios.get(`http://localhost:
 
 export const inventoryUpdateMaterial = (materialId, material) => axios.put('http://localhost:8080/api/material/updateInventory/material/'+ materialId, material);
 
+export const getAllUpdatedMaterials = (projectId) => axios.get('http://localhost:8080/api/material/getAllUpdatedMaterials/' + projectId);
+
+export const searchUpdatedMaterial = (projectId, query) => axios.get(`http://localhost:8080/api/material/searchUpdatedMaterial/${projectId}?query=${query}`);
+
+
 //Equipment
 export const listEquipment = (projectId) => axios.get('http://localhost:8080/api/equipment/getAllEquipment/' + projectId);
 
@@ -82,3 +87,7 @@ class AuthService {
   
   export default AuthService;
   
+export const getAllUpdatedEquipment = (projectId) => axios.get('http://localhost:8080/api/equipment/getAllUpdatedEquipments/' + projectId);
+
+export const searchUpdatedEquipment = (projectId, query) => axios.get(`http://localhost:8080/api/equipment/searchUpdatedEquipment/${projectId}?query=${query}`);
+

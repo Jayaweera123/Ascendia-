@@ -30,7 +30,7 @@ import Reviews from "./pages/Client/Reviews";
 import ReviewService from "./services/ReviewService";
 
 {/*Deshani*/}
-import Dashboard from "./pages/Store/Dashboard";
+import StoreKeeperDashboard from "./pages/Store/StoreKeeperDashboard";
 import ViewHistory from "./pages/Store/ViewHistory";
 import Material from "./pages/Store/Material";
 import MaterialForm from "./components/Store/MaterialForm";
@@ -39,6 +39,7 @@ import EquipmentForm from "./components/Store/EquipmentForm";
 import UpdateMaterialForm from "./components/Store/UpdateMaterialForm";
 import UpdateEquipmentForm from "./components/Store/UpdateEquipmentForm";
 import StoreServices from "./services/StoreServices";
+import History from "./pages/Store/History";
 
 {/*Nethuni*/}
 import SideNavigationPM from "./components/ProjectManager/SideNavigationPM";
@@ -72,7 +73,7 @@ const App = () => {
 
           {/* Ravindu - Progress */}
           <Route path="/progress" element={<Progress />} />
-
+ 
           {/* Rashmi - Client */}
           <Route path="/reviews" element={<Reviews />} /> 
 
@@ -151,16 +152,18 @@ const App = () => {
               <Route path="/tasks/:taskId/jobs" element={<Jobs />} />
               <Route path="/equipment" element={<Equipment />} />
               <Route path="/material" element={<Material />} /> 
+              <Route path="/skdashboard" element={<StoreKeeperDashboard />} />   
             </>
           )}
           {StoreServices.skeeperOnly() && (
             <>
-              <Route path="/viewHistory" element={<ViewHistory />} />       
+              <Route path="/viewHistory" element={<ViewHistory />} />  
+              <Route path="/history" element={<History />} />     
             </>
           )}
           {StoreServices.skeeperonlyOnly() && (
             <>          
-              <Route path="/editMaterial/:id" element = {<MaterialForm/>}/>
+              <Route path="/editMaterial/:id" element = {<MaterialForm/>}/>             
               <Route path="/addEquipment" element={<EquipmentForm />} />
               <Route path="/editEquipment/:id" element={<EquipmentForm />} />
               <Route path="/updateMaterial/:id" element={<UpdateMaterialForm />} />

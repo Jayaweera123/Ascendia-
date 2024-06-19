@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import SideNavigationStore from "./SideNavigationStore"; // Adjust the path based on your project structure
 import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
-import { getMaterial, inventoryUpdateMaterial } from '../../services/StoreServices'
-import { useNavigate, useParams } from 'react-router-dom'
-import Popup from "./Popup";
+import { getMaterial, inventoryUpdateMaterial } from '../../services/StoreServices';
+import { useNavigate, useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 function UpdateMaterialForm() {
   const [open, setOpen] = useState(true);
   const [materialCode, setMaterialCode] = useState('')
   const [materialName, setMaterialName] = useState('')
-  const [updatedQuantity, setUpdatedQuantity] = useState('')
+  const [updatedQuantity, setUpdatedQuantity] = useState(0)
   const [action, setAction] = useState('Issue')
-  const [showPopup, setShowPopup] = useState(false);
 
   const {id} = useParams();
 
@@ -41,30 +40,42 @@ function UpdateMaterialForm() {
   //Handle function to update inventory
 
   function handleInventoryUpdate(e){
-     e.preventDefault();
+    e.preventDefault();
 
     if(validateForm()){
+        const material = {updatedQuantity, action}
+        console.log(material, "id:", id)
 
-      const material = {updatedQuantity,action}
-      console.log(material,"id:",id)
+        const confirmationOptions = {
+            title: 'Update Inventory?',
+            text: 'Are you sure you want to update inventory?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#001b5e',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Update',
+            cancelButtonText: 'Cancel',
+        };
 
-    //   then((response) => {
-    //     setShowPopup(true);
-    //   })
-    // alert("Successfully updated")
-    // navigator('/material')
-        inventoryUpdateMaterial(id, material).then((response) => {
-          console.log(response.data)
-          
-          navigator('/material')
-        }).catch(error => {
-          console.error(error)
-        })
-  
-      }
-  
-      
+        Swal.fire(confirmationOptions).then((result) => {
+            if (result.isConfirmed) {
+                inventoryUpdateMaterial(id, material).then((response) => {
+                    console.log(response.data)
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Inventory updated successfully!',
+                        confirmButtonColor: '#001b5e'
+                    }).then(() => {
+                        navigator('/material');
+                    });
+                }).catch(error => {
+                    console.error(error)
+                })
+            }
+        }) 
     }
+}
 
 
 
@@ -101,10 +112,6 @@ function validateForm(){
   
 }
 
-function onClosePopup() {
-    setShowPopup(false);
-    // Additional logic to perform after closing the popup
-  }
 
   return (
     <div>
@@ -173,7 +180,7 @@ function onClosePopup() {
                 </label>
                 <div className="mt-3">
                   <input
-                    type="text"
+                    type="number"
                     placeholder='Enter Quantity of material'
                     name="updatedQuantity"
                     id="updatedQuantity"
@@ -237,7 +244,6 @@ function onClosePopup() {
     </div>
         </div>
       </section>
-      {showPopup && <Popup message="Successfully updated inventory" onClose={onClosePopup} />}
     </div>
   );
 };

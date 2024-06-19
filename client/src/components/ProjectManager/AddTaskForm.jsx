@@ -104,13 +104,13 @@ const AddTaskForm = () => {
   function formTitle() {
     if (id) {
       return (
-        <h2 className="text-center text-3xl font-bold text-sky-950 mb-5">
+        <h2 className="mb-5 text-3xl font-bold text-center text-sky-950">
           Edit Task
         </h2>
       );
     } else {
       return (
-        <h2 className="text-center text-3xl font-bold text-sky-950 mb-5">
+        <h2 className="mb-5 text-3xl font-bold text-center text-sky-950">
           Create Task
         </h2>
       );
@@ -123,7 +123,7 @@ const AddTaskForm = () => {
         <button
           type="button"
           onClick={() => navigator("/tasks")} // Corrected
-          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+          className="px-4 py-2 font-bold text-white bg-gray-500 rounded hover:bg-gray-700"
         >
           Cancel
         </button>
@@ -133,7 +133,7 @@ const AddTaskForm = () => {
         <button
           type="button"
           onClick={clearForm}
-          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+          className="px-4 py-2 font-bold text-white bg-gray-500 rounded hover:bg-gray-700"
         >
           Clear
         </button>
@@ -143,8 +143,8 @@ const AddTaskForm = () => {
 
   return (
     <>
-      <div className="min-h-screen md:px-20  justify-center">
-        <div className="bg-white w-full rounded-md px-6 py-10 mx-auto  shadow-xl ">
+      <div className="justify-center min-h-screen md:px-20">
+        <div className="w-full px-6 py-10 mx-auto bg-white rounded-md shadow-xl ">
           {formTitle()}
 
           {/* Input fields */}
@@ -166,7 +166,7 @@ const AddTaskForm = () => {
                 value={taskName}
                 maxLength={100}
                 onChange={(e) => setTaskName(e.target.value)}
-                className="bg-gray-50 outline-none py-1 px-2 text-base border-2 border-gray-300 focus:border-sky-300 text-gray-900 rounded-md w-full"
+                className="w-full px-2 py-1 text-base text-gray-900 border-2 border-gray-300 rounded-md outline-none bg-gray-50 focus:border-sky-300"
               />
               {/* Conditional rendering to display the required message */}
               {taskName.trim().length === 0 && (
@@ -196,7 +196,7 @@ const AddTaskForm = () => {
                 maxLength={1000} // Limit the number of characters
                 required
                 onChange={(e) => setDescription(e.target.value)}
-                className="bg-gray-50 outline-none py-1 px-2 text-base border-2 border-gray-300 focus:border-sky-300 text-gray-900 rounded-md w-full h-32 resize-none"
+                className="w-full h-32 px-2 py-1 text-base text-gray-900 border-2 border-gray-300 rounded-md outline-none resize-none bg-gray-50 focus:border-sky-300"
               ></textarea>
               {/* Conditional rendering to display the required message */}
               {description.trim().length === 0 && (
@@ -211,7 +211,7 @@ const AddTaskForm = () => {
             </div>
 
             {/* Start Date */}
-            <div className="mb-4 mt-4">
+            <div className="mt-4 mb-4">
               <label
                 htmlFor="startDate"
                 className="pr-4 font-sans text-base font-semibold text-gray-800"
@@ -225,7 +225,7 @@ const AddTaskForm = () => {
                 value={startDate}
                 required
                 onChange={(e) => setStartDate(e.target.value)}
-                className="bg-gray-50 outline-none py-1 px-2 text-base border-2 border-gray-300 focus:border-sky-300 text-gray-900 rounded-md w-full"
+                className="w-full px-2 py-1 text-base text-gray-900 border-2 border-gray-300 rounded-md outline-none bg-gray-50 focus:border-sky-300"
               />
               {/* Conditional rendering to display the required message */}
               {startDate.trim().length === 0 && (
@@ -234,7 +234,7 @@ const AddTaskForm = () => {
             </div>
 
             {/* Due Date */}
-            <div className="mb-4 mt-4">
+            <div className="mt-4 mb-4">
               <label
                 htmlFor="endDate"
                 className="pr-4 font-sans text-base font-semibold text-gray-800"
@@ -248,7 +248,7 @@ const AddTaskForm = () => {
                 value={endDate}
                 required
                 onChange={(e) => setEndDate(e.target.value)}
-                className="bg-gray-50 outline-none py-1 px-2 text-base border-2 border-gray-300 focus:border-sky-300 text-gray-900 rounded-md w-full"
+                className="w-full px-2 py-1 text-base text-gray-900 border-2 border-gray-300 rounded-md outline-none bg-gray-50 focus:border-sky-300"
               />
               {endDate.trim().length === 0 && (
                 <span className="mt-2 text-sm text-red-500">*required</span>
@@ -276,7 +276,7 @@ const AddTaskForm = () => {
               {/*<button
                 type="button"
                 onClick={clearForm}
-                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                className="px-4 py-2 font-bold text-white bg-gray-500 rounded hover:bg-gray-700"
               >
                 Clear
               </button>*/}

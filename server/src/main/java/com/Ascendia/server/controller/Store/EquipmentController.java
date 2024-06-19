@@ -3,6 +3,7 @@ package com.Ascendia.server.controller.Store;
 import com.Ascendia.server.dto.Store.EquipmentDto;
 
 import com.Ascendia.server.dto.Store.UpdateEquipmentDto;
+import com.Ascendia.server.dto.Store.UpdateMaterialDto;
 import com.Ascendia.server.service.Store.EquipmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,4 +77,21 @@ public class EquipmentController {
         return ResponseEntity.ok(equipmentDto);
     }
 
+    //Build get all updated equipments REST API
+    @GetMapping("/getAllUpdatedEquipments/{projectId}")
+    public ResponseEntity<List<UpdateEquipmentDto>> getUpdatedEquipments(@PathVariable Long projectId) {
+        List<UpdateEquipmentDto> updatedEquipments = equipmentService.getAllUpdatedEquipments(projectId);
+        return ResponseEntity.ok(updatedEquipments);
+    }
+
+    // Build searchUpdatedEquipment REST API
+    @GetMapping("/searchUpdatedEquipment/{projectId}")
+    public ResponseEntity<List<UpdateEquipmentDto>> searchUpdatedEquipment(
+            @PathVariable Long projectId,
+            @RequestParam("query") String query) {
+        return ResponseEntity.ok(equipmentService.searchUpdatedEquipment(projectId, query));
+    }
+
 }
+
+

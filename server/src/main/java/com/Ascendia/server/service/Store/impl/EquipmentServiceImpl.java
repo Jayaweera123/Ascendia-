@@ -2,9 +2,12 @@ package com.Ascendia.server.service.Store.impl;
 
 import com.Ascendia.server.dto.Store.EquipmentDto;
 import com.Ascendia.server.dto.Store.UpdateEquipmentDto;
+import com.Ascendia.server.dto.Store.UpdateMaterialDto;
 import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.entity.Store.UpdateEquipment;
+import com.Ascendia.server.entity.Store.UpdateMaterial;
 import com.Ascendia.server.mapper.Store.UpdateEquipmentMapper;
+import com.Ascendia.server.mapper.Store.UpdateMaterialMapper;
 import com.Ascendia.server.repository.Store.UpdateEquipmentRepository;
 import com.Ascendia.server.repository.Store.EquipmentRepository;
 import com.Ascendia.server.entity.Store.Equipment;
@@ -140,4 +143,23 @@ public class EquipmentServiceImpl implements EquipmentService {
 
         return EquipmentMapper.mapToEquipmentDto(equipment);
     }
+
+    @Override
+    public List<UpdateEquipmentDto> getAllUpdatedEquipments(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + projectId));
+        List<UpdateEquipment> updatedEquipments = updateEquipmentRepository.findAllByProjectId(projectId);
+        return updatedEquipments.stream()
+                .map(UpdateEquipmentMapper::mapToUpdateEquipmentDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UpdateEquipmentDto> searchUpdatedEquipment(Long projectId, String query) {
+        List<UpdateEquipment> updatedEquipment = updateEquipmentRepository.searchUpdatedEquipment(projectId, query);
+        return updatedEquipment.stream()
+                .map(UpdateEquipmentMapper::mapToUpdateEquipmentDto)
+                .collect(Collectors.toList());
+    }
+
 }
