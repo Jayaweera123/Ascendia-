@@ -24,25 +24,19 @@ public class TaskController {
     private TaskService taskService;
 
     //Add Task REST API
-    @PostMapping("/pmanageronly/task/add")
+    @PostMapping("/sengineer/task/add")
     public ResponseEntity<TaskDto> createTask(@RequestBody TaskDto taskDto) {
         TaskDto savedTask = taskService.createTask(taskDto);
         return new ResponseEntity<>(savedTask, HttpStatus.CREATED);
     }
 
     //Get Task REST API
-    @GetMapping("/pmanager/task/{id}")
+    @GetMapping("/sengineer/task/{id}")
     public ResponseEntity<TaskDto> getTaskById(@PathVariable("id") Long taskId) {
         TaskDto taskDto = taskService.getTaskId(taskId);
         return ResponseEntity.ok(taskDto);
     }
 
-    //Get all Tasks REST API
-    @GetMapping("/pmanager/task/all")
-    public ResponseEntity<List<TaskDto>>  getAllTasks() {
-        List<TaskDto> tasks = taskService.getAllTasks();
-        return ResponseEntity.ok(tasks);
-    }
 /*
     //Update Tasks REST API
     @PutMapping("/pmanageronly/task/{id}")
@@ -54,7 +48,7 @@ public class TaskController {
         return ResponseEntity.ok(taskDto);
     }*/
 
-    @PutMapping("/pmanageronly/{taskId}/edit")
+    @PutMapping("/sengineer/{taskId}/edit")
     public ResponseEntity<TaskDto> updateTask(@PathVariable Long taskId, @RequestBody TaskDto taskDto) {
         // Update the task
         TaskDto updatedTaskDto = taskService.updateTask(taskId, taskDto);
@@ -76,21 +70,22 @@ public class TaskController {
         return ResponseEntity.ok("Task deleted successfully");
     }
 
-    //CHat GPT get task for the projectID
-    @GetMapping("/pmanager/{projectId}/tasks")
+    //get task for the projectID
+    @GetMapping("/sengineer/{projectId}/tasks")
     public ResponseEntity<List<TaskDto>> getTasksByProjectId(@PathVariable Long projectId) {
         List<TaskDto> tasks = taskService.getTasksByProjectId(projectId);
         return ResponseEntity.ok(tasks);
     }
 
-    //Get the job Count REST API
+    //Get the total job Count REST API
     @GetMapping("/pmanager/{taskId}/jobcount")
     public ResponseEntity<Integer> getJobCountForTask(@PathVariable Long taskId) {
         int jobCount = taskService.getJobCountForTask(taskId);
         return ResponseEntity.ok(jobCount);
     }
 
-    @GetMapping("/pmanager/{taskId}/jobcount/completed")
+    //Completed Job Count
+    @GetMapping("/pmanager/{taskId}/job/completed")
     public ResponseEntity<Integer> getCompletedJobCountForTask(@PathVariable Long taskId) {
         int completedJobCount = taskService.getCompletedJobCountForTask(taskId);
         return ResponseEntity.ok(completedJobCount);
@@ -114,12 +109,12 @@ public class TaskController {
         return taskService.calculateTimeDifference(taskDto);
     }
 
-    @PutMapping("/pmanageronly/pmanager/{taskId}/mark-as-ongoing")
+    @PutMapping("/sengineer/{taskId}/mark-as-ongoing")
     public void markAsInProgress(@PathVariable Long taskId) {
         taskService.moveToInProgress(taskId);
     }
 
-    @PutMapping("/pmanageronly/pmanager/{taskId}/mark-as-done")
+    @PutMapping("/sengineer/{taskId}/mark-as-done")
     public void markAsDone(@PathVariable Long taskId) {
         taskService.markAsCompleted(taskId);
     }
