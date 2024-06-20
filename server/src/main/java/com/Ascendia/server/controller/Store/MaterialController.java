@@ -76,14 +76,14 @@ public class MaterialController {
     }
 
     //Build get all updated materials REST API
-    @GetMapping("/getAllUpdatedMaterials/{projectId}")
+    @GetMapping("/store/material/getAllUpdatedMaterials/{projectId}")
     public ResponseEntity<List<UpdateMaterialDto>> getUpdatedMaterials(@PathVariable Long projectId) {
         List<UpdateMaterialDto> updatedMaterials = materialService.getAllUpdatedMaterials(projectId);
         return ResponseEntity.ok(updatedMaterials);
     }
 
     // Build searchUpdatedMaterial REST API
-    @GetMapping("/searchUpdatedMaterial/{projectId}")
+    @GetMapping("/store/material/searchUpdatedMaterial/{projectId}")
     public ResponseEntity<List<UpdateMaterialDto>> searchUpdatedMaterial(
             @PathVariable Long projectId,
             @RequestParam("query") String query) {
@@ -91,7 +91,7 @@ public class MaterialController {
     }
 
     // Endpoint to get updated materials by date range
-    @GetMapping("/getUpdatedMaterialsByDateRange/{projectId}")
+    @GetMapping("/store/material/getUpdatedMaterialsByDateRange/{projectId}")
     public ResponseEntity<List<UpdateMaterialDto>> getUpdatedMaterialsByDateRange(
             @PathVariable Long projectId,
             @RequestParam("startDate") String startDateStr,
