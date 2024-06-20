@@ -1,9 +1,13 @@
 package com.Ascendia.server.dto.SiteEngineer;
 
+import com.Ascendia.server.entity.Administrator.User;
+import com.Ascendia.server.entity.ProjectManager.Task;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -11,9 +15,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CommentDto {
     private int commentId;
-    private int taskId;
-    private String taskName;
-    private int userId;
+    private Task task;
+    //private String taskName;
+    private User commentedUser;
     private String commentText;
-    private String commentDate;
+    private LocalDateTime commentDate;
 }

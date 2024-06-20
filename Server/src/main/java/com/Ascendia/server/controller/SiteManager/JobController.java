@@ -40,14 +40,6 @@ public class JobController {
         return ResponseEntity.ok(newStatus);
     }
 
-
-
-
-
-
-
-
-
     // add the sample API
     @PostMapping("createJob")
     public ResponseEntity<JobDto> createJob (@RequestBody JobDto jobDto){

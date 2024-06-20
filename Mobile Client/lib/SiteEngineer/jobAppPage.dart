@@ -12,6 +12,7 @@ import 'package:my_project/SiteEngineer/HomeSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/updatingTaskForm.dart';
 import 'package:my_project/service.dart';
 import 'package:my_project/SiteEngineer/Task.dart';
+import 'package:my_project/SiteEngineer/JobCommentFormSiteEngineer.dart';
 
 
 
@@ -61,14 +62,15 @@ Future<List<Job>> getAllJobs() async {
 
 class _DisplayDataPageState extends State<jobAppPage> {
   //List<bool> rememberMeList = List.generate(100, (index) => false); // Assuming a maximum of 100 items
-
+Map<int, bool> isFocused = {};
   final TextEditingController searchingcontroller = TextEditingController();
    final TextEditingController controller5 = TextEditingController();
   String projectName = 'My Project 01';
   String projectSubName = 'The Galle Techno-Park';
-  bool isFocused= false;
   Service service = Service();
     List<String> savedData = [];
+
+     
   
 
      
@@ -479,17 +481,20 @@ Center(
                         mainAxisSize: MainAxisSize.min,
                                children: [
 
-         GestureDetector(
-      onTap: () {
-        setState(() {
-          isFocused = !isFocused; // Toggle the isChecked state
-        });
-      },
-      child: Icon(
-        isFocused ? Icons.check_box_outlined : Icons.check_box_outline_blank, // Change icon based on isChecked
- // Example: Green for checked, black for unchecked
-      ),
-    ),
+GestureDetector(
+  onTap: () {
+    setState(() {
+      isFocused[job.jobId] = !(isFocused[job.jobId] ?? false); // Toggle the isChecked state with null check
+    });
+  },
+  child: Icon(
+    (isFocused[job.jobId] ?? false)
+      ? Icons.check_box_outlined 
+      : Icons.check_box_outline_blank, // Change icon based on isChecked
+  ),
+),
+         
+
 
 
 
@@ -502,16 +507,17 @@ Center(
           GestureDetector(
             onTap: () {
               // Add your navigation logic here
-/*
+
                Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>  TaskCommentSite(
-                  //  selectedData: widget.dataList[taskId],
+                  builder: (context) =>  JobCommentSite(
+                      jobId:job.jobId,
+                      jobName:job.jobName
                   ),
                 ),
               );
-            */
+            
             },
             child: const Icon(
               Icons.add_box_outlined,

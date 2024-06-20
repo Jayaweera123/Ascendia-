@@ -1,7 +1,6 @@
 package com.Ascendia.server.repository.ProjectManager;
 
 import com.Ascendia.server.entity.ProjectManager.Task;
-import com.Ascendia.server.entity.Store.Equipment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,30 +1,38 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:math';
 import 'package:http/http.dart' as http;
-import 'package:my_project/SiteEngineer/Comment.dart';
+import 'package:my_project/SiteEngineer/CommentTasks.dart';
 class Service{
 
 
- Future<void> saveComment(int taskId, int userId, String taskName, String commentText, String commentDate) async {
+ Future<void> saveComment(int taskId, int userID,String commentText) async {
     final Map<String, dynamic> data = {
-    'taskId': taskId,
-    'userId': userId,
-    'taskName': taskName,
+    'task': {
+      'taskId': taskId,
+    },
+    'commentedUser':{
+      'userID':userID,
+    },
+    
     'commentText': commentText,
-    'commentDate': commentDate,
   };
     try {
+      print(taskId);
+      print(userID);
+      print(commentText);
       final response = await http.post(
         Uri.parse('http://10.0.2.2:8080/api/v2/comment/createComment'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(data),
+      
       );
       if (response.statusCode == 201) {
         print('Data sent successfully');
       } else {
-        throw Exception('Failed to send data');
+        print("new error server");
+        throw Exception(response.body);
+     //   print(response.body);
       }
     } catch (error) {
       print('Error: $error');
@@ -32,18 +40,31 @@ class Service{
   }
 
 
-Future<void> updateComment(int commentId, String updatedCommentText, String commentDate, String taskName, int userId, int taskId) async {
+Future<void> updateComment(int commentId, String CommentText, int userID, int taskId) async {
   try {
+
+print(commentId);
+      print(taskId);
+      print('userId');
+      print(userID);
+      print('userId');
+      print(CommentText);
+
     final response = await http.put(
       Uri.parse('http://10.0.2.2:8080/api/v2/comment/$commentId'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
-        'commentText': updatedCommentText,
-        'commentDate': commentDate,
-        'taskName': taskName,
-        'userId': userId,
-        'taskId': taskId
+
+    'task': {
+      'taskId': taskId,
+    },
+    'commentedUser':{
+      'userID':userID,
+    },   
+    'commentText':CommentText,
+
         }),
+
     );
 
     if (response.statusCode == 200) {
@@ -257,6 +278,103 @@ final Map<String, dynamic> data = {
     }
     
   }
+
+
+
+
+
+  
+ Future<void> saveCommentJob(int jobId, int userID,String commentJobText) async {
+    final Map<String, dynamic> data = {
+    'job': {
+      'jobId': jobId,
+    },
+    'commentedJobUser':{
+      'userID':userID,
+    },
+    
+    'commentJobText': commentJobText,
+  };
+    try {
+      print(jobId);
+      print(userID);
+      print(commentJobText);
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:8080/api/v2/commentjob/job/createComment'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(data),
+      
+      );
+      print("in the commentJob save");
+      if (response.statusCode == 201) {
+        print('Data sent successfully');
+      } else {
+        print("new error server");
+        throw Exception(response.body);
+     //   print(response.body);
+      }
+    } catch (error) {
+      print('Error: $error');
+    }
+  }
+
+
+
+  
+Future<void> updateCommentJob(int commentJobId, String CommentJobText, int userID, int jobId) async {
+  try {
+
+print(commentJobId);
+      print(jobId);
+      print('userId');
+      print(userID);
+      print('userId');
+      print(CommentJobText);
+
+    final response = await http.put(
+      Uri.parse('http://10.0.2.2:8080/api/v2/commentjob/$commentJobId'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+
+    'job': {
+      'jobId': jobId,
+    },
+    'commentedJobUser':{
+      'userID':userID,
+    },   
+    'commentJobText':CommentJobText,
+
+        }),
+
+    );
+
+    if (response.statusCode == 200) {
+      // Successfully updated the comment
+      print('Comment updated successfully');
+    } else {
+      // Failed to update the comment
+      throw Exception('Failed to update comment');
+    }
+  } catch (e) {
+    // Handle error
+    print('Error updating comment: $e');
+  }
+}
+
+
+    // Delete a comment from the backend
+  Future<void> deleteCommentJob(int commentjobId) async {
+    print("object  21");
+    print("delect comment job :");
+    print(commentjobId);
+    final response = await http.delete(Uri.parse('http://10.0.2.2:8080/api/v2/commentjob/$commentjobId'));
+    print("object21");
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete comment');
+    }
+  }
+
+
 
 
 }

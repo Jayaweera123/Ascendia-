@@ -13,14 +13,13 @@ import 'package:my_project/service.dart';
 import 'package:my_project/SiteEngineer/Task.dart';
 
 
-
 class inProgressSite extends StatefulWidget {
   final List<String> dataList;
-   
 
   const inProgressSite({
     Key? key,
     required this.dataList,
+
   }) : super(key: key);
 
   @override
@@ -32,21 +31,22 @@ Future<List<Task>> getAllTasks() async {
   if(response.statusCode == 200){
     final List<dynamic> jsonData = json.decode(response.body);
     return jsonData.map((taskData) => Task.fromJson(taskData)).toList();
+   // print('fvdfvdfvdfv');
   }else{
     throw Exception('Failed to load comment10');
   }
   }
 
-
-
 class _DisplayDataPageState extends State<inProgressSite> {
-  //List<bool> rememberMeList = List.generate(100, (index) => false); // Assuming a maximum of 100 items
+  //List<bool> rememberMeList = List.generate(100, (Widget.taskId) => false); // Assuming a maximum of 100 items
+  Map<int, bool> isFocused = {};
+
 
   final TextEditingController searchingcontroller = TextEditingController();
    final TextEditingController controller5 = TextEditingController();
   String projectName = 'My Project 01';
   String projectSubName = 'The Galle Techno-Park';
-  bool isFocused= false;
+  //bool isFocused= false;
   Service service = Service();
     List<String> savedData = [];
 
@@ -311,13 +311,6 @@ Container(
 
   ])
 ),
-   
-
-
-
-
-
-
 
 /*
 Center(
@@ -408,23 +401,7 @@ Center(
     ),
   ),
 ),
-
-
-
 */
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 Center(
   child: SizedBox(
@@ -435,10 +412,10 @@ Center(
         future: getAllTasks(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            print("object7");
+            print("object   7");
             return CircularProgressIndicator();
           } else if (snapshot.hasError) {
-            print("object9");
+            print("object  9");
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.hasData) {
             print("object10");
@@ -476,13 +453,7 @@ Center(
                                       builder: (context) => jobAppPage(
                                         taskId: task.taskId,
                                         taskName: task.taskName,
-
-                                        
-
-
-
-
-
+                                       
                                       ),
                                     ),
                                   );
@@ -494,39 +465,57 @@ Center(
                         mainAxisSize: MainAxisSize.min,
                                children: [
 
-         GestureDetector(
-      onTap: () {
-        setState(() {
-          isFocused = !isFocused; // Toggle the isChecked state
-        });
-      },
-      child: Icon(
-        isFocused ? Icons.check_box_outlined : Icons.check_box_outline_blank, // Change icon based on isChecked
- // Example: Green for checked, black for unchecked
-      ),
-    ),
+         
+GestureDetector(
+  onTap: () {
+    setState(() {
+      isFocused[task.taskId] = !(isFocused[task.taskId] ?? false); // Toggle the isChecked state with null check
+    });
+  },
+  child: Icon(
+    (isFocused[task.taskId] ?? false)
+      ? Icons.check_box_outlined 
+      : Icons.check_box_outline_blank, // Change icon based on isChecked
+  ),
+),
+         
 
 
+// onTap: () {
+//               setState(() {
+//                 rememberMeList[index] = !rememberMeList[index];
+              
+//               });
+              
+//             },
+//             child: Icon(
+//               rememberMeList[index]
+//                   ? Icons.check_box_outlined
+//                   : Icons.check_box_outline_blank,
+//               color: rememberMeList[index]
+//                   ? const Color.fromRGBO(0, 31, 63, 1)
+//                   : const Color.fromRGBO(0, 31, 63, 1),
+//               size: 24.0,
+//             ),
+//           ),
 
 
-
-
-
-    
         const Padding(padding: EdgeInsets.all(19)),
           GestureDetector(
             onTap: () {
               // Add your navigation logic here
-/*
+
                Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) =>  TaskCommentSite(
-                  //  selectedData: widget.dataList[taskId],
+                    taskId:task.taskId,
+                    taskName:task.taskName
+                    
                   ),
                 ),
               );
-            */
+            
             },
             child: const Icon(
               Icons.add_box_outlined,
@@ -550,7 +539,7 @@ PopupMenuButton<String>(
                                           description:task.description,
                                           startDate:task.startDate,
                                           endDate:task.endDate,
-                                          projectId:task.projectId
+                                          projectId:task.project.projectId,
                                         ),
                                       ),
                                     );

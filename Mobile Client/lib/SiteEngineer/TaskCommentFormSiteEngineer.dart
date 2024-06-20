@@ -4,27 +4,36 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:my_project/BackGround.dart';
 import 'package:my_project/service.dart';
-import 'package:my_project/SiteEngineer/Comment.dart';
+import 'package:my_project/SiteEngineer/CommentTasks.dart';
+import 'package:my_project/SiteEngineer/User.dart';
 
 class TaskCommentSite extends StatefulWidget {
-  final String selectedData;// pass data from inprogress page 
-List<String> dataListcomment=[];
-   TaskCommentSite({Key? key, required this.selectedData, }) : super(key: key);
+  //final String selectedData;// pass data from inprogress page 
+  final int taskId;
+  final String taskName;
+
+   TaskCommentSite({Key? key, 
+
+   required this.taskId,
+   required this.taskName
+    }) : super(key: key);
 
   @override
   State<TaskCommentSite> createState() => _ProjectSiteState();
 }
 
-
-Future<List<Comment>> getAllComments() async {
-  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/v2/comment"));
+  Future<List<Comment>> getCommentByTask(int taskId) async {
+  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/v2/comment/task/$taskId"));
   if(response.statusCode == 200){
     final List<dynamic> jsonData = json.decode(response.body);
+    print('obect future get method');
+    
     return jsonData.map((commentData) => Comment.fromJson(commentData)).toList();
   }else{
     throw Exception('Failed to load comment10');
   }
   }
+
 
 
 class _ProjectSiteState extends State<TaskCommentSite> {
@@ -45,7 +54,7 @@ class _ProjectSiteState extends State<TaskCommentSite> {
     @override
   void initState() {
     super.initState();
-    tasksName = widget.selectedData.toString();
+    tasksName = widget.taskName;
     print("object3");
   }
 
@@ -279,60 +288,8 @@ const Padding(padding: EdgeInsets.all(3)),
                                   ],
                                 ),
 
-                                const Padding(padding: EdgeInsets.all(5)),
+                             //   const Padding(padding: EdgeInsets.all(5)),
 
-                                    Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                        const Text(
-                                      'Close Date:',
-                                      style: TextStyle(
-                                        color: Color.fromRGBO(50, 75, 101, 1),
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'Inter',
-                                      ),
-                                    ),
-
-SizedBox(
-  width: 168,
-  height: 35,
-  child: MaterialButton(
-    onPressed: _showDatePicker3,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          value
-              ? '${_dateTime3.year}/${_dateTime3.month}/${_dateTime3.day}'
-              : ' DD / MM / YYYY ',
-          style: TextStyle(
-            color: Color.fromRGBO(50, 75, 101, 1),
-            fontSize: 14.0,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'Inter',
-          ),
-        ),
-
-         Icon(
-          Icons.calendar_month,
-          color: Color.fromRGBO(50, 75, 101, 1),
-          ),
-        
-      ],
-    ),
-    color:  Color.fromRGBO(255, 243, 178, 1),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(8.0),
-      side: BorderSide(
-        color: Color.fromRGBO(50, 75, 101, 1),
-        width: 1.0,
-      ),
-    ),
-  ),
-),       
-                    ],
-                           ),
 
                                 const Padding(padding: EdgeInsets.all(5)),
                                 const Row(
@@ -347,8 +304,6 @@ SizedBox(
                                         fontFamily: 'Inter',
                                       ),
                                     ),
-
-
                                   ],
                                 ),
                               ],
@@ -360,8 +315,6 @@ Column(children: [
 
 
 /*
-
-
 Center(
   child: SizedBox(
     height: 250,
@@ -449,21 +402,13 @@ Center(
 ),
 */
 
-
-
-
-
-
-
-
-
 Center(
   child: SizedBox(
-    height: 250,
+    height: 300,
     width: 250,
     child: SingleChildScrollView(
       child: FutureBuilder<List<Comment>>(
-        future: getAllComments(),
+        future: getCommentByTask(widget.taskId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             print("object7");
@@ -472,10 +417,11 @@ Center(
             print("object9");
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.hasData) {
-            print("object10");
+            print("object10   new");
             final List<Comment> comments = snapshot.data!;
             return Column(
               children: comments.map((comment) {
+                print("card on");
                 return Card(
                   margin: const EdgeInsets.all(5),
                   color: const Color.fromRGBO(255, 227, 76, 1),
@@ -491,7 +437,7 @@ Center(
                     children: [
                       ListTile(
                         title: Text(
-                          'Task Name: ${comment.taskName} \nComment: ${comment.commentText}',
+                          'Task Name: ${widget.taskName} \nComment: ${comment.commentText}',
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
@@ -516,7 +462,7 @@ Center(
                             onPressed: () {
                               // Implement your edit functionality
                               print("object25");
-                              _editData(comment.commentId,comment.taskName,comment.commentDate,comment.userId,comment.taskId);
+                              _editData(comment.commentId,comment.task.taskName,1,widget.taskId);
                               print("object24");
                             },
                           ),
@@ -525,7 +471,7 @@ Center(
                             onPressed: () {
                               // Implement your delete functionality
                               print(" object delete 01");
-                           _deleteData( comment.commentId);
+                           _deleteData(comment.commentId);
                            print("object delete 02");
                            
                             },
@@ -650,7 +596,9 @@ SizedBox(
     setState(() {
       savedData.add(userInput);
       userInput = ''; // Clear the input after saving
-service.saveComment(3, 1, tasksName, controllertaskscomment1.text, _dateTime3.toString());
+      print(widget.taskId);
+      print(controllertaskscomment1.text);
+service.saveComment(widget.taskId, 1, controllertaskscomment1.text);
 
       controllertaskscomment1.clear(); // Clear the TextEditingController
       _dateTime3 = DateTime.now(); // Update dateTime
@@ -758,7 +706,7 @@ SizedBox(
   }
 
 
- void _editData(int commentId,String taskName,String commentDate,int userId,int taskId) async {
+ void _editData(int commentId,String taskName,int userId,int taskId) async {
   String updatedComment = ''; // Initialize the updated comment text
 print("object edit 04");
   try {
@@ -786,6 +734,9 @@ setState(() {
           actions: <Widget>[
             TextButton(
               onPressed: () async {
+
+                print(commentId);
+                  await service.updateComment(commentId, updatedComment,userId,taskId);
                 print("object edite 01");
                 Navigator.of(context).pop(); // Close the dialog
 
@@ -794,8 +745,7 @@ setState(() {
                //   savedData[commentId] = updatedComment;
                  print("object edite 02");
                   // Call the service method to update the comment
-                  print(commentId);
-                  await service.updateComment(commentId, updatedComment, commentDate,taskName,userId,taskId);
+                  
                   // Handle the result as needed
                   print("object edite 03");
                 

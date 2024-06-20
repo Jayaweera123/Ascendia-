@@ -2,12 +2,9 @@ package com.Ascendia.server.service.ProjectManager;
 
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
-import com.Ascendia.server.dto.Store.MaterialDto;
-import com.Ascendia.server.entity.Store.Material;
-import com.Ascendia.server.mapper.Store.MaterialMapper;
+import com.Ascendia.server.entity.ProjectManager.Task;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public interface TaskService {
     TaskDto createTask(TaskDto taskDto);
@@ -18,22 +15,20 @@ public interface TaskService {
 
     TaskDto updateTask(Long taskId, TaskDto updateTask);
 
-     void deleteTaskById(Long taskId);
+    void deleteTaskById(Long taskId);
 
     // TaskService.java
     //void calculateStatus(TaskDto taskDto);
 
     List<TaskDto> getTasksByProjectId(Long projectId);
 
-     int getJobCountForTask(Long taskId);
+    int getJobCountForTask(Long taskId);
 
-    String checkCompletionOrStatusUpdate(Long taskId);
+   // int getCompletedJobCountForTask(Long taskId);
 
-    void updateTaskStatus(Long taskId);
+    String CheckCompletionUpdateStatus(Long taskId);
 
-    List<TaskDto> searchTask(Long projectId, String query);
-
-    String calculateTimeDifference(TaskDto taskDto);
+    String calculateStatus(Task task);
 
     boolean isCompleted(Long taskId);
 
@@ -41,6 +36,13 @@ public interface TaskService {
 
     void markAsUncompleted(Long taskId);
 
+    void moveToInProgress(Long taskId);
+
+    void updateTaskStatus(Long taskId);
+
+    List<TaskDto> searchTask(Long projectId, String query);
+
+    String calculateTimeDifference(TaskDto taskDto);
 
 
 

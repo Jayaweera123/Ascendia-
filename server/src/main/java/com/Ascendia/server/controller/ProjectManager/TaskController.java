@@ -40,10 +40,6 @@ public class TaskController {
         List<TaskDto> tasks = taskService.getAllTasks();
         return ResponseEntity.ok(tasks);
     }
-
-
-
-
 /*
     //Update Tasks REST API
     @PutMapping("{id}")
@@ -90,10 +86,16 @@ public class TaskController {
         int jobCount = taskService.getJobCountForTask(taskId);
         return ResponseEntity.ok(jobCount);
     }
-
+/*
+    @GetMapping("/{taskId}/jobcount/completed")
+    public ResponseEntity<Integer> getCompletedJobCountForTask(@PathVariable Long taskId) {
+        int completedJobCount = taskService.getCompletedJobCountForTask(taskId);
+        return ResponseEntity.ok(completedJobCount);
+    }
+*/
     @GetMapping("/{taskId}/set-status")
     public String setTaskStatusLable(@PathVariable Long taskId) {
-        return taskService.checkCompletionOrStatusUpdate(taskId);
+        return taskService.CheckCompletionUpdateStatus(taskId);
     }
 
     //Build search REST API
@@ -109,6 +111,10 @@ public class TaskController {
         return taskService.calculateTimeDifference(taskDto);
     }
 
+    @PutMapping("/{taskId}/mark-as-ongoing")
+    public void markAsInProgress(@PathVariable Long taskId) {
+        taskService.moveToInProgress(taskId);
+    }
 
     @PutMapping("/{taskId}/mark-as-done")
     public void markAsDone(@PathVariable Long taskId) {
@@ -128,5 +134,20 @@ public class TaskController {
 
 
 
-}
 
+
+
+    //==========
+
+
+    /*
+
+
+
+
+    */
+    
+
+
+
+}

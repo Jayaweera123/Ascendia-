@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -39,7 +38,7 @@ class Job{
       endDate: DateTime.parse(json['endDate']??DateTime.now().toIso8601String()),
       status: json['status']??'',
       isDone: json['isDone'] ?? false, // Default to false if not present
-      task: Task.fromJson(json['task']), // Parse nested task object
+      task: Task.fromJson(json['task']??{}), // Parse nested task object
 
     );
   }
@@ -55,6 +54,4 @@ Map<String, dynamic> toJson() {
     'task': task.toJson(),
   };
 }
-
-
 }

@@ -3,8 +3,6 @@ package com.Ascendia.server.mapper.ProjectManager;
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.entity.ProjectManager.Task;
 
-import java.time.LocalDate;
-
 public class TaskMapper {
     public static TaskDto mapToTaskDto(Task task) {
         return new TaskDto(
@@ -13,8 +11,11 @@ public class TaskMapper {
                 task.getDescription(),
                 task.getStartDate(),
                 task.getEndDate(),
-                task.getTaskStatus(),
+                // taskDto.getTaskStatus(),
+                task.getCreatedDate(),
                 task.getStatus(),
+                task.getPrevStatus(),
+                task.isCompleted(),
                 task.getProject()
                 //ORDER MUST BE THERE AS SAME THE DTO CLASS
         );
@@ -27,8 +28,11 @@ public class TaskMapper {
                 taskDto.getDescription(),
                 taskDto.getStartDate(),
                 taskDto.getEndDate(),
-                taskDto.getTaskStatus(),
+                // taskDto.getTaskStatus(),
+                taskDto.getCreatedDate(),
                 taskDto.getStatus(),
+                taskDto.getPrevStatus(),
+                taskDto.isCompleted(),
                 taskDto.getProject()
                 //ORDER MUST BE THERE AS SAME THE ENTITY CLASS
         );
@@ -42,7 +46,7 @@ public class TaskMapper {
         taskDto.setDescription(task.getDescription());
         taskDto.setStartDate(task.getStartDate());
         taskDto.setEndDate(task.getEndDate());
-        taskDto.setTaskStatus(task.getTaskStatus());
+        //taskDto.setTaskStatus(task.getTaskStatus());
         taskDto.setStatus(task.getStatus());
         // Optionally include only necessary fields from the associated Project entity
         // taskDto.setProjectName(task.getProject().getName());

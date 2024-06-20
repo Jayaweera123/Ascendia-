@@ -1,7 +1,6 @@
-package com.Ascendia.server.entity.SiteEngineer;
+package com.Ascendia.server.entity.SiteManager;
 
 import com.Ascendia.server.entity.Administrator.User;
-import com.Ascendia.server.entity.ProjectManager.Task;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,31 +14,24 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "task_comment_table")
-public class Comment {
+@Table(name = "Comment_Job")
+public class CommentJob {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "commentId")
-    private int commentId;
+    @Column(name = "commentJobId")
+    private int commentJobId;
 
     @ManyToOne
-    @JoinColumn(name = "task_id", nullable = false, referencedColumnName = "taskId")
-    private Task task;
-
-    //@Column(name = "taskName")
-    //private String taskName;
+    @JoinColumn(name = "job_id", nullable = false, referencedColumnName = "jobId")
+    private Job job;
 
     @ManyToOne
     @JoinColumn(name = "commentor_user_id", nullable = false, referencedColumnName = "userID")
-    private User commentedUser;
+    private User commentedJobUser;
 
     @Column(name = "commentText", length = 500)
-    private String commentText;
-
-    //@Column(name = "commentDate")
-    //private String commentDate;
+    private String commentJobText;
 
     @Column(name = "commentDateTime")
-    private LocalDateTime commentDate;
-
+    private LocalDateTime commentJobDate;
 }
