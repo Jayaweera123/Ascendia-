@@ -1,5 +1,6 @@
 package com.Ascendia.server.entity.Administrator;
 
+import com.Ascendia.server.entity.Project.Project;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -60,6 +62,7 @@ public class User implements UserDetails {
     @Column(name = "active", nullable = false)
     private boolean active;
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(designation));
@@ -85,4 +88,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
