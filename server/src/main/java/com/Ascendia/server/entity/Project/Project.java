@@ -48,27 +48,6 @@ public class Project {
     @JoinColumn(name = "pmanager_id")
     private User projectManager;
 
-    /*@ManyToOne
-    @JoinColumn(name = "store_keeper_id")
-    private User storeKeeper;
-
-    @ManyToOne
-    @JoinColumn(name = "site_engineer_id")
-    private User siteEngineer;
-
-    @ManyToOne
-    @JoinColumn(name = "supervisor_id")
-    private User supervisor;
-
-    @ManyToOne
-    @JoinColumn(name = "technical_officer_id")
-    private User technicalOfficer;
-
-    @ManyToOne
-    @JoinColumn(name = "quantity_surveyor_id")
-    private User quantitySurveyor;*/
-
-
     /*@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Task> tasks;*/
 

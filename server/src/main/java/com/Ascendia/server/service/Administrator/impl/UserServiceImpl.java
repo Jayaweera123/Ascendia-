@@ -1,5 +1,7 @@
 package com.Ascendia.server.service.Administrator.impl;
 
+import com.Ascendia.server.repository.Project.ProjectRepository;
+import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
 import com.Ascendia.server.service.Administrator.JWTUtils;
 import com.Ascendia.server.service.Administrator.UserService;
 import org.slf4j.Logger;
@@ -35,23 +37,31 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final ProjectRepository projectRepository;
+    private final UserProjectAssignmentRepository userProjectAssignmentRepository;
 
-    @Autowired
-    private JWTUtils jwtUtils;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final JWTUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final String uploadDir; // Path to the directory where profile images will be stored
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, @Value("${user.profile.image.upload-dir}") String uploadDir) {
+    public UserServiceImpl(UserRepository userRepository,
+                           ProjectRepository projectRepository,
+                           UserProjectAssignmentRepository userProjectAssignmentRepository,
+                           JWTUtils jwtUtils,
+                           AuthenticationManager authenticationManager,
+                           PasswordEncoder passwordEncoder,
+                           @Value("${user.profile.image.upload-dir}") String uploadDir) {
         this.userRepository = userRepository;
+        this.projectRepository = projectRepository;
+        this.userProjectAssignmentRepository = userProjectAssignmentRepository;
+        this.jwtUtils = jwtUtils;
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
         this.uploadDir = uploadDir;
     }
 
@@ -144,14 +154,19 @@ public class UserServiceImpl implements UserService {
                 throw new BadCredentialsException("Invalid username or password");
             }
 
+            // Fetch the projects the user is engaged with
+            List<Long> projectIds = userProjectAssignmentRepository.findProjectIdsByUserId(user.getUserID());
+
             // Generate JWT token
-            String jwtToken = jwtUtils.generateToken(user);
-            String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+            String jwtToken = jwtUtils.generateToken(user, projectIds);
+            String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user, projectIds);
 
             // Prepare response
             userDto.setStatusCode(200);
             userDto.setToken(jwtToken);
+            userDto.setUserID(user.getUserID()); // Set userID here
             userDto.setDesignation(user.getDesignation());
+            userDto.setProjectIDs(projectIds);
             userDto.setRefreshToken(refreshToken);
             userDto.setExpirationTime("12 hours");
             userDto.setMessage("Successfully Logged In");
@@ -168,52 +183,32 @@ public class UserServiceImpl implements UserService {
         return userDto;
     }
 
-
-
-    {/*public UserDto login(UserDto loginRequest){
+    public UserDto refreshToken(UserDto refreshTokenRequest) {
         UserDto userDto2 = new UserDto();
         try {
-            authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-            var user1 = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
-
-            var jwt = jwtUtils.generateToken(user1);
-            var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user1);
-            userDto2.setStatusCode(200);
-            userDto2.setToken(jwt);
-            userDto2.setDesignation(user1.getDesignation());
-            userDto2.setRefreshToken(refreshToken);
-            userDto2.setExpirationTime("24Hrs");
-            userDto2.setMessage("Successfully Logged In");
-
-        }catch (Exception e){
-           userDto2.setStatusCode(500);
-           userDto2.setMessage(e.getMessage());
-        }
-        return userDto2;
-    }*/}
-
-    public UserDto refreshToken(UserDto refreshTokenRequest){
-        UserDto userDto2 = new UserDto();
-        try{
             String userUsername = jwtUtils.extractUsername(refreshTokenRequest.getToken());
             User user2 = userRepository.findByUsername(userUsername).orElseThrow();
             if (jwtUtils.isTokenValid(refreshTokenRequest.getToken(), user2)) {
-                var jwt = jwtUtils.generateToken(user2);
+                // Fetch the projects the user is engaged with
+                List<Long> projectIds = userProjectAssignmentRepository.findProjectIdsByUserId(user2.getUserID());
+
+                // Generate new JWT token with project IDs
+                String jwt = jwtUtils.generateToken(user2, projectIds);
+
                 userDto2.setStatusCode(200);
                 userDto2.setToken(jwt);
                 userDto2.setRefreshToken(refreshTokenRequest.getToken());
-                userDto2.setExpirationTime("24Hr");
+                userDto2.setExpirationTime("12 hours");
                 userDto2.setMessage("Successfully Refreshed Token");
+            } else {
+                userDto2.setStatusCode(401);
+                userDto2.setMessage("Invalid refresh token");
             }
-            userDto2.setStatusCode(200);
-            return userDto2;
-
-        }catch (Exception e){
+        } catch (Exception e) {
             userDto2.setStatusCode(500);
-            userDto2.setMessage(e.getMessage());
-            return userDto2;
+            userDto2.setMessage("Error occurred during token refresh: " + e.getMessage());
         }
+        return userDto2;
     }
 
     @Override
@@ -230,8 +225,6 @@ public class UserServiceImpl implements UserService {
         }
         return userDto4;
     }
-
-
 
     @Override
     public UserDto getAllUsers() {

@@ -53,26 +53,13 @@ public class ProjectServiceImpl implements ProjectService {
         List<Project> projects = new ArrayList<>();
 
         if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Creation Team"))) {
-            projects = projectRepository.findAll(); // Return all projects for Project Creation Team
-        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Manager"))) {
-            projects = projectRepository.findByProjectManager(user);
-        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Site Engineer"))) {
+            projects = projectRepository.findAll();
+        } else {
             projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);
-        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Supervisor"))) {
-            projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);
-        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Technical Officer"))) {
-            projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);
-        }else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Store Keeper"))) {
-            projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);/*
-        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Technical Officer"))) {
-            projects = projectRepository.findByTechnicalOfficer(user);
-        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Quantity Surveyor"))) {
-            projects = projectRepository.findByQuantitySurveyor(user);*/
         }
 
         return projects.stream().map(ProjectGetMapper::mapToProjectGetDto).collect(Collectors.toList());
     }
-
 
 
     @Override
