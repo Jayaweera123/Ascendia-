@@ -7,6 +7,7 @@ import com.Ascendia.server.dto.Project.ProjectGetDto;
 import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.mapper.Project.ProjectGetMapper;
 import com.Ascendia.server.mapper.Project.ProjectMapper;
+import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.repository.ProjectManager.TaskRepository;
 import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
@@ -34,6 +35,9 @@ import java.nio.file.Paths;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
+
+    @Autowired
+    private  UserProjectAssignmentRepository userProjectAssignmentRepository;
     @Autowired
     private JobRepository jobRepository;
     private final String uploadDir; // Path to the directory where profile images will be stored
@@ -52,35 +56,24 @@ public class ProjectServiceImpl implements ProjectService {
             projects = projectRepository.findAll(); // Return all projects for Project Creation Team
         } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Manager"))) {
             projects = projectRepository.findByProjectManager(user);
-        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Store Keeper"))) {
-            projects = projectRepository.findByStoreKeeper(user);
         } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Site Engineer"))) {
-            projects = projectRepository.findBySiteEngineer(user);
+            projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);
         } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Supervisor"))) {
-            projects = projectRepository.findBySupervisor(user);
+            projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);
+        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Technical Officer"))) {
+            projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);
+        }else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Store Keeper"))) {
+            projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);/*
         } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Technical Officer"))) {
             projects = projectRepository.findByTechnicalOfficer(user);
         } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Quantity Surveyor"))) {
-            projects = projectRepository.findByQuantitySurveyor(user);
+            projects = projectRepository.findByQuantitySurveyor(user);*/
         }
 
-        return projects.stream().map(this::mapToProjectDto).collect(Collectors.toList());
+        return projects.stream().map(ProjectGetMapper::mapToProjectGetDto).collect(Collectors.toList());
     }
 
-    private ProjectGetDto mapToProjectDto(Project project) {
-        ProjectGetDto projectDto = new ProjectGetDto();
-        projectDto.setProjectId(project.getProjectId());
-        projectDto.setProjectName(project.getProjectName());
-        projectDto.setProjectType(project.getProjectType());
-        projectDto.setProjectDescription(project.getProjectDescription());
-        projectDto.setProjectStatus(project.getProjectStatus());
-        projectDto.setCreatedDate(project.getCreatedDate());
-        projectDto.setEndDate(project.getEndDate());
-        projectDto.setPmId(project.getProjectManager() != null ? project.getProjectManager().getUserID().toString() : null);
-        projectDto.setImage(project.getImage());
 
-        return projectDto;
-    }
 
     @Override
     public ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage) {
@@ -133,7 +126,7 @@ public class ProjectServiceImpl implements ProjectService {
             existingProject.setProjectStatus(projectDto.getProjectStatus());
             existingProject.setCreatedDate(projectDto.getCreatedDate());
             existingProject.setEndDate(projectDto.getEndDate());
-            existingProject.setPmId(projectDto.getPmId());
+            //existingProject.setPmId(projectDto.getPmId());
             existingProject.setImage(projectDto.getImage());
 
             // Save the updated project entity
@@ -155,20 +148,20 @@ public class ProjectServiceImpl implements ProjectService {
         return ProjectMapper.mapToProjectDto(project);
     }
 
-    @Override
+    /*@Override
     public List<ProjectDto> getProjectsByPmId(String pmId) {
 
         List<Project> projects = projectRepository.findByPmId(pmId);
         return projects.stream().map((project) -> ProjectMapper.mapToProjectDto(project))
                 .collect(Collectors.toList());
-    }
+    }*/
 
-    @Override
+    /*@Override
     public List<ProjectDto> searchProject(String pmId, String query) {
         List<Project> projects =  projectRepository.searchProject(pmId, query);
         return projects.stream().map(ProjectMapper::mapToProjectDto)
                 .collect(Collectors.toList());
-    }
+    }*/
 
     @Override
    public Long getTotalJobsForProject(Long projectId) {
@@ -179,9 +172,6 @@ public class ProjectServiceImpl implements ProjectService {
     public Long getCompletedJobsCountForProject(Long projectId) {
         return jobRepository.countCompletedJobsByProjectId(projectId);
     }
-
-    @Autowired
-    private UserProjectAssignmentRepository userProjectAssignmentRepository;
 
     @Override
     public Long getEmployeeCountForProject(Long projectId) {

@@ -13,8 +13,9 @@ public class ProjectGetMapper {
                 project.getProjectStatus(),
                 project.getCreatedDate(),
                 project.getEndDate(),
-                project.getPmId(),
+                //project.getPmId(),
                 project.getImage()
+
         );
     }
     public static Project mapToProject(ProjectGetDto projectGetDto) {
@@ -26,8 +27,23 @@ public class ProjectGetMapper {
         project.setProjectStatus(projectGetDto.getProjectStatus());
         project.setCreatedDate(projectGetDto.getCreatedDate());
         project.setEndDate(projectGetDto.getEndDate());
-        project.setPmId(projectGetDto.getPmId());
+        //project.setPmId(projectGetDto.getPmId());
         project.setImage(projectGetDto.getImage());
         return project;
     }
+
+    /*private ProjectGetDto mapToProjectDto(Project project) {
+        ProjectGetDto projectDto = new ProjectGetDto();
+        projectDto.setProjectId(project.getProjectId());
+        projectDto.setProjectName(project.getProjectName());
+        projectDto.setProjectType(project.getProjectType());
+        projectDto.setProjectDescription(project.getProjectDescription());
+        projectDto.setProjectStatus(project.getProjectStatus());
+        projectDto.setCreatedDate(project.getCreatedDate());
+        projectDto.setEndDate(project.getEndDate());
+        //projectDto.setPmId(project.getProjectManager() != null ? project.getProjectManager().getUserID().toString() : null);
+        projectDto.setImage(project.getImage());
+
+        return projectDto;
+    }*/
 }

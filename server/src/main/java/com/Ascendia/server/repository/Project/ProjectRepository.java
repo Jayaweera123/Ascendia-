@@ -11,19 +11,21 @@ import java.util.List;
 
 public interface ProjectRepository  extends JpaRepository<Project, Long >{
 
-    List<Project> findByPmId(String pmId);
+    //List<Project> findByPmId(String pmId);
 
-    @Query(
+    /*@Query(
             "SELECT p FROM Project p WHERE " +
                     "p.pmId = :pmId AND " +
                     "(p.projectName LIKE CONCAT('%',:query, '%') OR " +
                     "p.projectDescription LIKE CONCAT('%',:query, '%'))")
-    List<Project> searchProject(String pmId, String query);
+    List<Project> searchProject(String pmId, String query);*/
+
     Project findByProjectId(Long projectId);
     List<Project> findByProjectManager(User user);
+    /*
     List<Project> findByStoreKeeper(User user);
     List<Project> findBySiteEngineer(User user);
     List<Project> findBySupervisor(User user);
     List<Project> findByTechnicalOfficer(User user);
-    List<Project> findByQuantitySurveyor(User user);
+    List<Project> findByQuantitySurveyor(User user);*/
 }
