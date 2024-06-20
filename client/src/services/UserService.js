@@ -23,8 +23,8 @@ class UserService{
             const userData = response.data;
             if (userData.token) {
                 localStorage.setItem('token', userData.token);
-                localStorage.setItem('designation', userData.designation);
                 localStorage.setItem('userID', userData.userID);
+                localStorage.setItem('designation', userData.designation);          
                 localStorage.setItem('projectIDs', JSON.stringify(userData.projectIDs)); // Store project IDs
             }
             return userData;
@@ -129,7 +129,8 @@ class UserService{
     static logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('designation');
-        localStorage.removeItem('userID'); // Remove userID
+        localStorage.removeItem('userID');
+        //localStorage.setItem('projectIDs', JSON.stringify(userData.projectIDs)); // Remove userID
     }
 
     static isAuthenticated(){

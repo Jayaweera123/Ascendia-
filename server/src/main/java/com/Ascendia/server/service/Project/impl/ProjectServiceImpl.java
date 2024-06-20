@@ -64,7 +64,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         return projects.stream().map(ProjectGetMapper::mapToProjectGetDto).collect(Collectors.toList());
     }
-    
+
     @Override
     public ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage) {
         // Check if a profile image is provided

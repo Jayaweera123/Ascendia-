@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { LuUsers2 } from "react-icons/lu";
@@ -9,6 +9,7 @@ import { TbLogout } from "react-icons/tb";
 
 
 const SideNavigationAdmin = () => {
+  const navigate = useNavigate();
   const isAuthenticated = UserService.isAuthenticated();
   const isAdmin = UserService.isAdmin();
 
@@ -16,6 +17,7 @@ const SideNavigationAdmin = () => {
     const confirmDelete = window.confirm('Are you sure you want to logout this user?');
     if (confirmDelete) {
       UserService.logout();
+      navigate('/');  // Redirect to login page after logout
     }
   };
 
@@ -24,7 +26,7 @@ const SideNavigationAdmin = () => {
     { name: "User List", link: "/admin/userlist", icon: LuUsers2, condition: isAdmin },
     { name: "Add User", link: "/admin/adduser", icon: RiUserAddLine },
     { name: "New Dashboard", link: "/admin/newdashboard", icon: MdOutlineDashboard },
-    { name: "Ascendia", link: "/", icon: null, condition: !isAuthenticated },
+    { name: "Ascendia", link: "/ascendia", icon: null, condition: !isAuthenticated },
     
   ];
 
