@@ -54,14 +54,17 @@ public class ProjectServiceImpl implements ProjectService {
 
         if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Creation Team"))) {
             projects = projectRepository.findAll();
+
+        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Manager"))) {
+            projects = projectRepository.findByProjectManager(user);
+
         } else {
             projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);
         }
 
         return projects.stream().map(ProjectGetMapper::mapToProjectGetDto).collect(Collectors.toList());
     }
-
-
+    
     @Override
     public ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage) {
         // Check if a profile image is provided
