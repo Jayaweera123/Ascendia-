@@ -58,6 +58,12 @@ export const searchUpdatedEquipment = (projectId, query) => api.get(`/store/equi
 
 /** AUTHENTICATION CHECKER */
 class AuthService {
+
+    static logout(){
+      localStorage.removeItem('token')
+      localStorage.removeItem('designation')
+    }
+
     // Check if the user is authenticated by verifying if token exists in localStorage
     static isAuthenticated() {
       const token = localStorage.getItem('token');
