@@ -14,7 +14,7 @@ function EquipmentForm() {
   const [description, setDescription] = useState('')
   const [createdDate, setCreatedDate] = useState('')
 
-  const projectId = 1;
+  const projectId = 3;
 
   const {id} = useParams();
 
