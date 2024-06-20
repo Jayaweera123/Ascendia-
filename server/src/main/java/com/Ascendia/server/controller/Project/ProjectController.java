@@ -69,8 +69,8 @@ public class ProjectController {
 
 
     @GetMapping("/pmanager/{pmId}/all")
-    public ResponseEntity<List<ProjectDto>>  getProjectsByPMId(@PathVariable("pmId") String pmId){
-        List<ProjectDto> projects = projectService.getProjectsByPmId(pmId);
+    public ResponseEntity<List<ProjectGetDto>>  getProjectsByPMId(@PathVariable("pmId") String pmId){
+        List<ProjectGetDto> projects = projectService.getProjectsByPmId(pmId);
         return ResponseEntity.ok(projects);
     }
 

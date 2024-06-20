@@ -116,10 +116,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectDto> getProjectsByPmId(String pmId) {
+    public List<ProjectGetDto> getProjectsByPmId(String pmId) {
 
         List<Project> projects = projectRepository.findByPmId(pmId);
-        return projects.stream().map((project) -> ProjectMapper.mapToProjectDto(project))
+        return projects.stream().map(ProjectGetMapper::mapToProjectGetDto)
                 .collect(Collectors.toList());
     }
 
