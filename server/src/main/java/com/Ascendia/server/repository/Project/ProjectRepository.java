@@ -20,6 +20,10 @@ public interface ProjectRepository  extends JpaRepository<Project, Long >{
                     "p.projectDescription LIKE CONCAT('%',:query, '%'))")
     List<Project> searchProject(String pmId, String query);
     Project findByProjectId(Long projectId);
-    @Query("SELECT p FROM Project p WHERE p.pmId = :userID")
-    List<Project> findProjectsByUser(Long userID);
+    List<Project> findByProjectManager(User user);
+    List<Project> findByStoreKeeper(User user);
+    List<Project> findBySiteEngineer(User user);
+    List<Project> findBySupervisor(User user);
+    List<Project> findByTechnicalOfficer(User user);
+    List<Project> findByQuantitySurveyor(User user);
 }

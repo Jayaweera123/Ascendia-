@@ -14,6 +14,7 @@ import com.Ascendia.server.repository.SiteManager.JobRepository;
 import com.Ascendia.server.service.Project.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,21 +46,22 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectGetDto> getProjectsForUser(User user) {
-        String designation = user.getDesignation();
-        List<Project> projects;
+        List<Project> projects = new ArrayList<>();
 
-        switch (designation) {
-            case "Project Creation Team":
-                projects = projectRepository.findAll();
-                break;
-            case "Project Manager":
-            case "Site Engineer":
-            case "Supervisor":
-            case "Store Keeper":
-                projects = projectRepository.findProjectsByUser(user.getUserID());
-                break;
-            default:
-                projects = new ArrayList<>();
+        if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Creation Team"))) {
+            projects = projectRepository.findAll(); // Return all projects for Project Creation Team
+        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Manager"))) {
+            projects = projectRepository.findByProjectManager(user);
+        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Store Keeper"))) {
+            projects = projectRepository.findByStoreKeeper(user);
+        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Site Engineer"))) {
+            projects = projectRepository.findBySiteEngineer(user);
+        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Supervisor"))) {
+            projects = projectRepository.findBySupervisor(user);
+        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Technical Officer"))) {
+            projects = projectRepository.findByTechnicalOfficer(user);
+        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Quantity Surveyor"))) {
+            projects = projectRepository.findByQuantitySurveyor(user);
         }
 
         return projects.stream().map(this::mapToProjectDto).collect(Collectors.toList());
@@ -74,7 +76,7 @@ public class ProjectServiceImpl implements ProjectService {
         projectDto.setProjectStatus(project.getProjectStatus());
         projectDto.setCreatedDate(project.getCreatedDate());
         projectDto.setEndDate(project.getEndDate());
-        projectDto.setPmId(project.getPmId());
+        projectDto.setPmId(project.getProjectManager() != null ? project.getProjectManager().getUserID().toString() : null);
         projectDto.setImage(project.getImage());
 
         return projectDto;

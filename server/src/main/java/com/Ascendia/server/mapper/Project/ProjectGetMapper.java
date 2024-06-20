@@ -1,6 +1,5 @@
 package com.Ascendia.server.mapper.Project;
 
-
 import com.Ascendia.server.dto.Project.ProjectGetDto;
 import com.Ascendia.server.entity.Project.Project;
 
@@ -19,17 +18,16 @@ public class ProjectGetMapper {
         );
     }
     public static Project mapToProject(ProjectGetDto projectGetDto) {
-        return new Project(
-                projectGetDto.getProjectId(),
-                projectGetDto.getProjectName(),
-                projectGetDto.getProjectType(),
-                projectGetDto.getProjectDescription(),
-                projectGetDto.getProjectStatus(),
-                projectGetDto.getCreatedDate(),
-                projectGetDto.getEndDate(),
-                projectGetDto.getPmId(),
-                projectGetDto.getImage()
-        );
+        Project project = new Project();
+        project.setProjectId(projectGetDto.getProjectId());
+        project.setProjectName(projectGetDto.getProjectName());
+        project.setProjectType(projectGetDto.getProjectType());
+        project.setProjectDescription(projectGetDto.getProjectDescription());
+        project.setProjectStatus(projectGetDto.getProjectStatus());
+        project.setCreatedDate(projectGetDto.getCreatedDate());
+        project.setEndDate(projectGetDto.getEndDate());
+        project.setPmId(projectGetDto.getPmId());
+        project.setImage(projectGetDto.getImage());
+        return project;
     }
-
 }
