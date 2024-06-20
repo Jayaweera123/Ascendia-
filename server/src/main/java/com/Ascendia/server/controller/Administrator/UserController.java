@@ -1,5 +1,8 @@
 package com.Ascendia.server.controller.Administrator;
 
+import com.Ascendia.server.dto.Project.ProjectGetDto;
+import com.Ascendia.server.entity.Administrator.User;
+import com.Ascendia.server.service.Project.ProjectService;
 import lombok.AllArgsConstructor;
 import com.Ascendia.server.dto.Administrator.UserDto;
 import com.Ascendia.server.service.Administrator.UserService;
@@ -8,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -18,10 +22,16 @@ import java.util.List;
 
 public class UserController {
 
-
     private final UserService userService;
+    private final ProjectService projectService;
 
-    // Build Add User REST API
+    @GetMapping("/projects/user")
+    public ResponseEntity<List<ProjectGetDto>> getProjectsForCurrentUser(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        List<ProjectGetDto> projects = projectService.getProjectsForUser(user);
+        return ResponseEntity.ok(projects);
+    }
+
     @PostMapping(value = "/auth/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<UserDto> addUser(@ModelAttribute UserDto userDto,
                                            @RequestParam("profileImage") MultipartFile profileImage){

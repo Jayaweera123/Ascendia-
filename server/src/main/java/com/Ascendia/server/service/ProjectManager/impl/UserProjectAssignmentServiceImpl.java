@@ -40,6 +40,7 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
     private UserRepository userRepository;
 
 
+
     @Override
     public UserProjectAssignmentDto addAssignment(UserProjectAssignmentDto assignmentDto) {
 
@@ -105,6 +106,11 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
 
 
 
+    }
+
+    @Override
+    public List<Project> getProjectsByAssignedUser(User assignedUser) {
+        return userProjectAssignmentRepository.findProjectsByAssignedUser(assignedUser);
     }
 
     @Override
