@@ -17,12 +17,18 @@ static async getYourProfile(token){
 class UserService{
     static BASE_URL = "http://localhost:8080"
 
-    static async login(username, password){
-        try{
-            const response = await axios.post(`${UserService.BASE_URL}/auth/login`, {username, password});
-            return response.data;
-
-        }catch(err){
+    static async login(username, password) {
+        try {
+            const response = await axios.post(`${UserService.BASE_URL}/auth/login`, { username, password });
+            const userData = response.data;
+            if (userData.token) {
+                localStorage.setItem('token', userData.token);
+                localStorage.setItem('designation', userData.designation);
+                localStorage.setItem('userID', userData.userID);
+                localStorage.setItem('projectIDs', JSON.stringify(userData.projectIDs)); // Store project IDs
+            }
+            return userData;
+        } catch (err) {
             console.error("Error logging in:", err);
             throw err;
         }
@@ -120,14 +126,23 @@ class UserService{
     }
 
     /**AUTHENTICATION CHECKER */
-    static logout(){
-        localStorage.removeItem('token')
-        localStorage.removeItem('designation')
+    static logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('designation');
+        localStorage.removeItem('userID'); // Remove userID
     }
 
     static isAuthenticated(){
         const token = localStorage.getItem('token')
         return !!token
+    }
+
+    static getUserID() {
+        return localStorage.getItem('userID');
+    }
+
+    static getDesignation() {
+        return localStorage.getItem('designation');
     }
 
     static isAdmin(){

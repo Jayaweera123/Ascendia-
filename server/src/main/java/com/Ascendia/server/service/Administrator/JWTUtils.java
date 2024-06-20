@@ -1,18 +1,17 @@
 package com.Ascendia.server.service.Administrator;
 
-
+import com.Ascendia.server.entity.Administrator.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 @Component
@@ -28,28 +27,49 @@ public class JWTUtils {
         this.Key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(UserDetails userDetails){
+    public String generateToken(User user, List<Long> projectIds) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userID", user.getUserID());
+        claims.put("designation", user.getDesignation());
+        claims.put("projectIDs", projectIds);
+
         return Jwts.builder()
-                .subject(userDetails.getUsername())
-                .claim("designation", userDetails.getAuthorities().iterator().next().getAuthority())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .setClaims(claims)
+                .setSubject(user.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(Key)
                 .compact();
     }
 
-    public String generateRefreshToken(HashMap<String, Object> claims, UserDetails userDetails){
+    public String generateRefreshToken(HashMap<String, Object> claims, User user, List<Long> projectIds) {
+        claims.put("userID", user.getUserID());
+        claims.put("designation", user.getDesignation());
+        claims.put("projectIDs", projectIds);
+
         return Jwts.builder()
-                .claims(claims)
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .setClaims(claims)
+                .setSubject(user.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(Key)
                 .compact();
     }
 
     public String extractUsername(String token){
         return extractClaims(token, Claims::getSubject);
+    }
+
+    public Long extractUserID(String token){
+        return extractClaims(token, claims -> claims.get("userID", Long.class));
+    }
+
+    public String extractDesignation(String token) {
+        return extractClaims(token, claims -> claims.get("designation", String.class));
+    }
+
+    public List<Long> extractProjectIDs(String token) {
+        return extractClaims(token, claims -> claims.get("projectIDs", List.class));
     }
 
     private <T> T extractClaims(String token, Function<Claims, T> claimsTFunction){

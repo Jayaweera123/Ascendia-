@@ -53,28 +53,18 @@ public class ProjectServiceImpl implements ProjectService {
         List<Project> projects = new ArrayList<>();
 
         if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Creation Team"))) {
-            projects = projectRepository.findAll(); // Return all projects for Project Creation Team
+            projects = projectRepository.findAll();
+
         } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Manager"))) {
             projects = projectRepository.findByProjectManager(user);
-        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Site Engineer"))) {
+
+        } else {
             projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);
-        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Supervisor"))) {
-            projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);
-        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Technical Officer"))) {
-            projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);
-        }else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Store Keeper"))) {
-            projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);/*
-        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Technical Officer"))) {
-            projects = projectRepository.findByTechnicalOfficer(user);
-        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Quantity Surveyor"))) {
-            projects = projectRepository.findByQuantitySurveyor(user);*/
         }
 
         return projects.stream().map(ProjectGetMapper::mapToProjectGetDto).collect(Collectors.toList());
     }
-
-
-
+    
     @Override
     public ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage) {
         // Check if a profile image is provided

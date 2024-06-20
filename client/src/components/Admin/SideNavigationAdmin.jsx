@@ -23,6 +23,7 @@ const SideNavigationAdmin = () => {
     { name: "Dashboard", link: "/admin/dashboard", icon: MdOutlineDashboard },
     { name: "User List", link: "/admin/userlist", icon: LuUsers2, condition: isAdmin },
     { name: "Add User", link: "/admin/adduser", icon: RiUserAddLine },
+    { name: "New Dashboard", link: "/admin/newdashboard", icon: MdOutlineDashboard },
     { name: "Ascendia", link: "/", icon: null, condition: !isAuthenticated },
     
   ];

@@ -23,6 +23,7 @@ import UserService from "./services/UserService";
 import Login from "./pages/Login/Login";
 import AddUser from "./pages/Admin/AddUser";
 import AdDashboard from "./pages/Admin/AdDashboard";
+import DashBoard from "./pages/Admin/Dashboard";
 import UserList from "./pages/Admin/UserList";
 //import ClDashboard from "./pages/Client/ClDashboard";
 import AddReview from "./pages/Client/AddReview";
@@ -59,7 +60,6 @@ import AddEmployee from "./pages/ProjectManager/AddEmployee";
 import EmployeeHistory from "./pages/ProjectManager/EmployeeHistory";
 import EditTask0 from "./pages/ProjectManager/EditTask0";
 
-
 const App = () => {
   return (
     <div>
@@ -87,6 +87,7 @@ const App = () => {
             <>
               <Route path="/admin/adduser" element={<AddUser />} />         
               <Route path="/admin/dashboard" element={<AdDashboard/>}/>
+              <Route path="/admin/newdashboard" element={<DashBoard/>}/>
               <Route path="/admin/userlist" element={<UserList/>}/>
               <Route path="/admin/update/:userID" element={<AddUser/>}/>
             </>
