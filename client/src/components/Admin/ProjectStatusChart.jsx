@@ -4,13 +4,13 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recha
 import UserService from '../../services/UserService';
 import StatusGrid from './StatusGrid';
 
-const COLORS = ['#15803d', '#0369a1', '#a16207', '#b91c1c'];
+const COLORS = [ '#0369a1', '#b91c1c'];
 
 function ProjectStatusChart() {
   const [data, setData] = useState([
-    { name: 'Users', value: 0 },
+    
     { name: 'Active', value: 0 },
-    { name: 'Today Active', value: 0 },
+    
     { name: 'Deactive', value: 0 }
   ]);
 

@@ -1,10 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { FaUsers } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { LiaUserEditSolid } from "react-icons/lia";
-import { TiUserAddOutline } from "react-icons/ti";
-import { LiaUserTimesSolid } from "react-icons/lia";
-import { Link } from 'react-router-dom';
 import UserService from "../../services/UserService";
 
 const OnlineUserList = () => {
