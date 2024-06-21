@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { HiMiniIdentification, HiMiniWrenchScrewdriver, HiMiniRectangleGroup } from "react-icons/hi2";
 import { VscHistory } from "react-icons/vsc";
 import AuthService from "../../services/StoreServices";
 import { TbLogout } from "react-icons/tb";
 
+
 const SideNavigationStore = () => {
 
+  const navigate = useNavigate();
   const isAuthenticated = AuthService.isAuthenticated();
   const isStoreKeeper = AuthService.isStore();
 
@@ -15,6 +17,7 @@ const SideNavigationStore = () => {
     const confirmDelete = window.confirm('Are you sure you want to logout this user?');
     if (confirmDelete) {
       AuthService.logout();
+      navigate('/');  // Redirect to login page after logout
     }
   };
 
