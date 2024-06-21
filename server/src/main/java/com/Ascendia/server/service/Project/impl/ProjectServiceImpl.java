@@ -8,6 +8,7 @@ import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.mapper.Project.ProjectGetMapper;
 import com.Ascendia.server.mapper.Project.ProjectMapper;
 import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
+import com.Ascendia.server.repository.Administrator.UserRepository;
 import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.repository.ProjectManager.TaskRepository;
 import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
@@ -40,6 +41,8 @@ public class ProjectServiceImpl implements ProjectService {
     private  UserProjectAssignmentRepository userProjectAssignmentRepository;
     @Autowired
     private JobRepository jobRepository;
+    @Autowired
+    private UserRepository userRepository;
     private final String uploadDir; // Path to the directory where profile images will be stored
 
     @Autowired
@@ -152,6 +155,17 @@ public class ProjectServiceImpl implements ProjectService {
         return projects.stream().map(ProjectMapper::mapToProjectDto)
                 .collect(Collectors.toList());
     }*/
+
+    @Override
+    public List<ProjectDto> getProjectsByPmId(Long pmId) {
+        User projectManager = userRepository.findById(pmId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid project manager ID: " + pmId));
+        //return projectRepository.findProjectsByProjectManager(projectManager);
+
+        List<Project> projects = projectRepository.findProjectsByProjectManager(projectManager);
+        return projects.stream().map(ProjectMapper::mapToProjectDto)
+                .collect(Collectors.toList());
+    }
 
     @Override
    public Long getTotalJobsForProject(Long projectId) {

@@ -19,7 +19,13 @@ public interface ProjectRepository  extends JpaRepository<Project, Long >{
                     "p.projectDescription LIKE CONCAT('%',:query, '%'))")
     List<Project> searchProject(String pmId, String query);*/
 
+    @Query("SELECT p FROM Project p WHERE p.projectManager = :pmId")
+    List<Project> findProjectsByProjectManagerId(@Param("pmId") Long pmId);
+
+    List<Project> findProjectsByProjectManager(User projectManager);
+
     Project findByProjectId(Long projectId);
+
     List<Project> findByProjectManager(User user);
     /*
     List<Project> findByStoreKeeper(User user);

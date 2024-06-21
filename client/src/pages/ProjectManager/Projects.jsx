@@ -10,7 +10,7 @@ function Projects() {
   const { pmId } = useParams();
   const [projects, setProjects] = useState([]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     const loadProjects = async () => {
       try {
         const response = await fetch(`/api/projects/pm/${pmId}`); // Adjust URL to your backend endpoint
@@ -25,24 +25,24 @@ function Projects() {
       }
     };
     loadProjects();
-  }, [pmId]);
+  }, [pmId]);*/
 
   return (
     <>
       <TopNavigationPM />
       <section className="flex">
-        <SideNavigationPM pmId={pmId} />
+        <SideNavigationPM pmId={1} />
 
         <div className="flex-auto w-8/12">
           <div className="mx-10 my-5">
             <PageTitle title="Projects" />
-            <ul>
+            {/*<ul>
               {projects.map((project) => (
                 <li key={project.id}>{project.name}</li>
               ))}
-            </ul>
+            </ul>*/}
 
-            <ProjectCard projectManagerId={pmId} />
+            <ProjectCard projectManagerId={1} />
 
             {/* Uncomment and adjust this section for linking to tasks page */}
             {/* <Link to="/projects/tasks">

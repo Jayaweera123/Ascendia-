@@ -45,7 +45,7 @@ public class Project {
     private String image;
 
     @ManyToOne
-    @JoinColumn(name = "pmanager_id")
+    @JoinColumn(name = "pmanager_id", referencedColumnName = "userID")
     private User projectManager;
 
     /*@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
