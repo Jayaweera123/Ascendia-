@@ -96,9 +96,6 @@ class UserService{
         }
     }
 
-
-    
-
     static async getUserById(userID, token){
         try{
             const response = await axios.get(`${UserService.BASE_URL}/admin/getUser/${userID}`, 
@@ -121,6 +118,18 @@ class UserService{
             return response.data;
         }catch(err){
             console.error(`Error deactivating user with ID ${userID}:`, err);
+            throw err;
+        }
+    }
+
+    static async getOnlineUsers(token) {
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/admin/onlineUsers`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return response.data;
+        } catch (err) {
+            console.error("Error fetching online users:", err);
             throw err;
         }
     }

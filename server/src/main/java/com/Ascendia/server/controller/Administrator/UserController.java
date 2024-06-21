@@ -78,6 +78,36 @@ public class UserController {
         return ResponseEntity.ok("User deactivated successfully!.");
     }
 
+    @GetMapping("/admin/todayActiveUsers")
+    public int getTodayActiveUsers() {
+        return userService.getTodayActiveUsers();
+    }
+
+    @GetMapping("/admin/countUsers")
+    public ResponseEntity<Integer> countUsers() {
+        int userCount = userService.countAllUsers();
+        return ResponseEntity.ok(userCount);
+    }
+
+    @GetMapping("/admin/countActiveUsers")
+    public ResponseEntity<Integer> countActiveUsers() {
+        int activeUserCount = userService.countActiveUsers();
+        return ResponseEntity.ok(activeUserCount);
+    }
+
+    @GetMapping("/admin/countDeactivatedUsers")
+    public ResponseEntity<Integer> countDeactivatedUsers() {
+        int deactivatedUserCount = userService.countDeactivatedUsers();
+        return ResponseEntity.ok(deactivatedUserCount);
+    }
+
+    @GetMapping("/admin/onlineUsers")
+    public ResponseEntity<List<UserDto>> getOnlineUsers() {
+        List<UserDto> onlineUsers = userService.getOnlineUsers();
+        return new ResponseEntity<>(onlineUsers, HttpStatus.OK);
+    }
+
+
     {/*
 
     @GetMapping("/adminuser/get-profile")

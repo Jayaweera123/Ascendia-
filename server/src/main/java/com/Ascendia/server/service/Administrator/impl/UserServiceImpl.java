@@ -22,6 +22,8 @@ import java.nio.file.Paths;
 import java.io.IOException;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -153,6 +155,10 @@ public class UserServiceImpl implements UserService {
             if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
                 throw new BadCredentialsException("Invalid username or password");
             }
+
+            // Update last login date
+            user.setLastLoginDate(LocalDateTime.now());
+            userRepository.save(user);
 
             // Fetch the projects the user is engaged with
             List<Long> projectIds = userProjectAssignmentRepository.findProjectIdsByUserId(user.getUserID());
@@ -369,6 +375,54 @@ public class UserServiceImpl implements UserService {
         // Concatenate all parts to form the password
         return String.valueOf(firstLetterFirstName) + firstLetterLastName + firstTwoLettersEmail + lastTwoDigitsPhoneNumber;
     }
+
+    @Override
+    public int getTodayActiveUsers() {
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+        List<User> users = userRepository.findAllByLastLoginDateBetween(startOfDay, endOfDay);
+        return users.size();
+    }
+
+    @Override
+    public int countAllUsers() {
+        try {
+            return userRepository.findAll().size();
+        } catch (Exception e) {
+            logger.error("Error occurred while counting users: {}", e.getMessage());
+            return -1; // or throw a custom exception
+        }
+    }
+
+    @Override
+    public int countActiveUsers() {
+        try {
+            return userRepository.countByActiveTrue();
+        } catch (Exception e) {
+            logger.error("Error occurred while counting active users: {}", e.getMessage());
+            return -1; // or throw a custom exception
+        }
+    }
+
+    @Override
+    public int countDeactivatedUsers() {
+        try {
+            return userRepository.countByActiveFalse();
+        } catch (Exception e) {
+            logger.error("Error occurred while counting deactivated users: {}", e.getMessage());
+            return -1; // or throw a custom exception
+        }
+    }
+
+    @Override
+    public List<UserDto> getOnlineUsers() {
+        LocalDateTime activeThreshold = LocalDateTime.now().minusMinutes(15); // Active within the last 15 minutes
+        List<User> onlineUsers = userRepository.findByLastActiveTimeGreaterThanEqual(activeThreshold);
+        return onlineUsers.stream().map(UserMapper::mapToUserDto).collect(Collectors.toList());
+    }
+
 
     //Nethuni
     @Override
