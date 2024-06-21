@@ -14,7 +14,8 @@ public class ProjectGetMapper {
                 project.getCreatedDate(),
                 project.getEndDate(),
                 //project.getPmId(),
-                project.getImage()
+                project.getImage(),
+                project.getProgress()
 
         );
     }
@@ -29,6 +30,8 @@ public class ProjectGetMapper {
         project.setEndDate(projectGetDto.getEndDate());
         //project.setPmId(projectGetDto.getPmId());
         project.setImage(projectGetDto.getImage());
+        project.setProgress(projectGetDto.getProgress());
+
         return project;
     }
 

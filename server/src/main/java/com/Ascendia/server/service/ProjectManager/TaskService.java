@@ -48,6 +48,8 @@ public interface TaskService {
 
     String calculateTimeDifference(TaskDto taskDto);
 
-
+    //Ravindu
+    int getTaskProgress(Long taskId);
+    double calculateProjectProgress(Long projectId);
 
 }

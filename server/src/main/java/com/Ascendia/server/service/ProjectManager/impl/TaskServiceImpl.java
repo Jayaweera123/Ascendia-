@@ -92,15 +92,6 @@ public class  TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + taskId));
     }
 
-
-
-
-    /*public List<TaskDto> getAllTasks() {
-        List<Task> tasks = taskRepository.findAll();
-        return tasks.stream().map((task) -> TaskMapper.mapToTaskDto(task))
-                .collect(Collectors.toList());
-    }*/
-    //From Chat gpt
     @Override
     public List<TaskDto> getAllTasks() {
         List<Task> tasks = taskRepository.findAll();
@@ -130,12 +121,6 @@ public class  TaskServiceImpl implements TaskService {
             return ("Completed");
         }
     }
-
-
-
-
-    //================================UPDATE TASK=======================================
-
 
     @Override
     public TaskDto updateTask(Long taskId, TaskDto updateTask) {
@@ -168,17 +153,6 @@ public class  TaskServiceImpl implements TaskService {
         taskRepository.deleteById(taskId);
     }
 
-    /*@Override
-    public void calculateStatus(TaskDto taskDto) {
-        LocalDate currentDate = LocalDate.now();
-        if (currentDate.isBefore(taskDto.getStartDate())) {
-            taskDto.setStatus("Upcoming");
-        } else if (currentDate.isAfter(taskDto.getEndDate())) {
-            taskDto.setStatus("Completed");
-        } else {
-            taskDto.setStatus("Ongoing");
-        }
-    }*/
     @Override
     public List<TaskDto> getTasksByProjectId(Long projectId) {
         List<Task> tasks = taskRepository.findByProjectProjectId(projectId);
@@ -203,19 +177,6 @@ public class  TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(taskId).orElseThrow(
                 () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
         );
-        // Recalculate task status
-        //Task.TaskStatus newStatus = task.calculateStatus();
-
-
-        // If the task status is different, update it
-        /*if (newStatus != task.getTaskStatus()) {
-            task.setTaskStatus(newStatus);
-            // Optionally, update the status string if needed
-            // task.setStatus(newStatus.toString());
-        }*/
-        // Save the updated task
-
-
     }
 
 
@@ -352,5 +313,31 @@ public class  TaskServiceImpl implements TaskService {
         }
     }
 
+    //Ravindu
+    @Override
+    public int getTaskProgress(Long taskId) {
+        Task task = getTaskById(taskId);
+        if (task.isCompleted()) {
+            return 100; // Completed task
+        } else {
+            // Optionally implement more detailed progress calculation logic
+            return 0; // Incomplete task
+        }
+    }
+
+    @Override
+    public double calculateProjectProgress(Long projectId) {
+        List<Task> tasks = taskRepository.findByProjectProjectId(projectId);
+        if (tasks.isEmpty()) {
+            return 0.0; // No tasks means no progress
+        }
+
+        double totalProgress = 0.0;
+        for (Task task : tasks) {
+            totalProgress += getTaskProgress(task.getTaskId());
+        }
+
+        return totalProgress / tasks.size();
+    }
 
 }

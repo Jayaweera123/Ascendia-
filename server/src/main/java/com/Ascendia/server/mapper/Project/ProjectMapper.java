@@ -21,17 +21,18 @@ public class ProjectMapper {
     }
 
     public static Project mapProject(ProjectDto projectDto) {
-        return new Project(
-                projectDto.getProjectName(),
-                projectDto.getProjectType(),
-                projectDto.getProjectDescription(),
-                projectDto.getProjectStatus(),
-                projectDto.getCreatedDate(),
-                projectDto.getEndDate(),
-                //projectDto.getPmId(),
-                projectDto.getImage(),
-                projectDto.getProjectManager()
-        );
+        Project project = new Project();
+        project.setProjectName(projectDto.getProjectName());
+        project.setProjectType(projectDto.getProjectType());
+        project.setProjectDescription(projectDto.getProjectDescription());
+        project.setProjectStatus(projectDto.getProjectStatus());
+        project.setCreatedDate(projectDto.getCreatedDate());
+        project.setEndDate(projectDto.getEndDate());
+        //project.setPmId(projectDto.getPmId());
+        project.setImage(projectDto.getImage());
+        project.setProjectManager(projectDto.getProjectManager());
+
+        return project;
     }
 
         /*project.setProjectId(projectDto.getProjectId());

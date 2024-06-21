@@ -22,10 +22,9 @@ import TopNavigationClient from "./components/Client/TopNavigationClient";
 import UserService from "./services/UserService";
 import Login from "./pages/Login/Login";
 import AddUser from "./pages/Admin/AddUser";
-import AdDashboard from "./pages/Admin/AdDashboard";
 import DashBoard from "./pages/Admin/Dashboard";
 import UserList from "./pages/Admin/UserList";
-//import ClDashboard from "./pages/Client/ClDashboard";
+import ClDashboard from "./pages/Client/ClDashboard";
 import AddReview from "./pages/Client/AddReview";
 import Reviews from "./pages/Client/Reviews";
 import ReviewService from "./services/ReviewService";
@@ -86,8 +85,7 @@ const App = () => {
           {UserService.adminOnly() && (
             <>
               <Route path="/admin/adduser" element={<AddUser />} />         
-              <Route path="/admin/dashboard" element={<AdDashboard/>}/>
-              <Route path="/admin/newdashboard" element={<DashBoard/>}/>
+              <Route path="/admin/dashboard" element={<DashBoard/>}/>
               <Route path="/admin/userlist" element={<UserList/>}/>
               <Route path="/admin/update/:userID" element={<AddUser/>}/>
             </>
@@ -98,6 +96,7 @@ const App = () => {
             <>
               {/*<Route path="/client/dashboard" element={<ClDashboard/>}/>*/}
               <Route path="/addreview" element={<AddReview />} />
+              <Route path="/client/dashboard" element={<ClDashboard />} />
             </>
           )}
    

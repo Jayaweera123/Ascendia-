@@ -13,6 +13,7 @@ import com.Ascendia.server.repository.ProjectManager.TaskRepository;
 import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
 import com.Ascendia.server.repository.SiteManager.JobRepository;
 import com.Ascendia.server.service.Project.ProjectService;
+import com.Ascendia.server.service.ProjectManager.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -40,7 +41,9 @@ public class ProjectServiceImpl implements ProjectService {
     private  UserProjectAssignmentRepository userProjectAssignmentRepository;
     @Autowired
     private JobRepository jobRepository;
-    private final String uploadDir; // Path to the directory where profile images will be stored
+    private final String uploadDir;
+    @Autowired
+    private TaskService taskService;// Path to the directory where profile images will be stored
 
     @Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository, @Value("${user.profile.image.upload-dir}") String uploadDir) {
@@ -131,27 +134,26 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ProjectGetDto getProjectByProjectId(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found with the given ID : " + projectId));
+
+        ProjectGetDto projectGetDto = ProjectGetMapper.mapToProjectGetDto(project);
+
+        // Calculate project progress
+        double progress = taskService.calculateProjectProgress(projectId);
+        projectGetDto.setProgress(progress);
+
+        return projectGetDto;
+    }
+
+    @Override
     public ProjectDto getProjectId(Long projectId) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Project not found with the given ID : " + projectId));
         return ProjectMapper.mapToProjectDto(project);
     }
-
-    /*@Override
-    public List<ProjectDto> getProjectsByPmId(String pmId) {
-
-        List<Project> projects = projectRepository.findByPmId(pmId);
-        return projects.stream().map((project) -> ProjectMapper.mapToProjectDto(project))
-                .collect(Collectors.toList());
-    }*/
-
-    /*@Override
-    public List<ProjectDto> searchProject(String pmId, String query) {
-        List<Project> projects =  projectRepository.searchProject(pmId, query);
-        return projects.stream().map(ProjectMapper::mapToProjectDto)
-                .collect(Collectors.toList());
-    }*/
 
     @Override
    public Long getTotalJobsForProject(Long projectId) {
@@ -175,60 +177,5 @@ public class ProjectServiceImpl implements ProjectService {
     public int getTaskCountForProject(Long projectId) {
         return taskRepository.countTasksByProject_ProjectId(projectId);
     }
-
-
-
-
-    /*@Override
-    public String calculateDuration(ProjectDto projectDto) {
-        return null;
-
-        LocalDate startDate = projectDto.getCreatedDate();
-        LocalDate endDate = projectDto.getEndDate();
-
-        Period period;
-        period = Period.between(startDate, endDate);
-
-        int years = period.getYears();
-        int months = period.getMonths();
-        int days = period.getDays();
-
-        StringBuilder result = new StringBuilder();
-
-        if (years > 0) {
-            result.append(years).append(" year");
-            if (years > 1) {
-                result.append("s");
-            }
-        }
-
-        if (months > 0) {
-            if (!result.isEmpty()) {
-                result.append(", ");
-            }
-            result.append(months).append(" month");
-            if (months > 1) {
-                result.append("s");
-            }
-        }
-
-        if (days > 0) {
-            if (!result.isEmpty()) {
-                result.append(", ");
-            }
-            result.append(days).append(" day");
-            if (days > 1) {
-                result.append("s");
-            }
-        }
-
-        // Handle case when the period is zero (e.g., same day)
-        if (result.isEmpty()) {
-            result.append("0 days");
-        }
-
-        return result.toString();
-    }*/
-
 
 }

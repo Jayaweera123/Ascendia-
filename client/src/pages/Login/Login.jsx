@@ -6,7 +6,6 @@ import constructionc from "../../assets/constructionc.jpg";
 import { FaUserTie } from "react-icons/fa";
 import { FaUserCircle } from "react-icons/fa";
 import { FaUnlockKeyhole } from "react-icons/fa6";
-
 import axios from "axios";
 
 
@@ -77,7 +76,7 @@ const Login = () => {
   return (
     <div>
       <TopNavigationAdmin />
-      <div className="relative bg-white bg-contain">
+      <div className="relative bg-white bg-cover bg-no-repeat bg-center w-screen h-screen">
         <div className="text-xl font-semibold text-gray-900">
           <div className="flex flex-row gap-10">
             <img

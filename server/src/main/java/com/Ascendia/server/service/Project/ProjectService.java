@@ -21,6 +21,8 @@ public interface ProjectService {
 
     ProjectDto updateProjectById(Long projectId, ProjectDto projectDto);
 
+    ProjectGetDto getProjectByProjectId(Long projectId);
+
     //Nethuni
     ProjectDto getProjectId(Long projectId);
 

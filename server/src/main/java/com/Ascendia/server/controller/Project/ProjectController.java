@@ -60,6 +60,18 @@ public class ProjectController {
         }
     }
 
+    @GetMapping("/progress/{projectId}")
+    public ResponseEntity<ProjectGetDto> getProjectByProjectId(@PathVariable Long projectId) {
+        ProjectGetDto projectGetDto = projectService.getProjectByProjectId(projectId);
+        if (projectGetDto == null) {
+            // Return a default ProjectGetDto with progress set to 0
+            projectGetDto = new ProjectGetDto();
+            projectGetDto.setProgress(0); // Assuming ProjectGetDto has a setProgress method
+        }
+        return ResponseEntity.ok(projectGetDto);
+    }
+
+
 
     //Nethuni
     @GetMapping("/pmanager/{id}")

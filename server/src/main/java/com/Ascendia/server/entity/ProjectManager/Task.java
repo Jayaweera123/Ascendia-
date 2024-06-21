@@ -41,23 +41,8 @@ public class Task {
     @Column(nullable = false)
     private boolean completed;
 
-    /*@Column(name = "task_status")
-    @Enumerated(EnumType.STRING)
-    private TaskStatus taskStatus;*/
-
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "projectId")
     private Project project;
-
-   /* public enum TaskStatus {
-        SCHEDULED,
-        IN_PROGRESS,
-        COMPLETED,
-        OVERDUE
-    }*/
-
-
-
-
 
 }

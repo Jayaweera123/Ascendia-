@@ -1,5 +1,6 @@
-import React, { useState } from "react";
- 
+import React, { useState, useEffect } from "react";
+import axios from "axios";  
+import { jwtDecode } from 'jwt-decode';
 import SideNavigationClient from "../../components/Client/SideNavigationClient"; // Adjust the path based on your project structure
 import TopNavigationClient from "../../components/Client/TopNavigationClient";
 import progresspark from "../../assets/progresspark.png";
@@ -12,6 +13,53 @@ import RadialProgressBar5 from "../../components/Progress/RadialProgressBar5";
 
 const Progress = () => {
   const [open, setOpen] = useState(true);
+  const [project, setProject] = useState({
+    projectId: '',
+    projectName: '',
+    projectType: '',
+    projectDescription: '',
+    projectStatus: '',
+    createdDate: '',
+    endDate: '',
+    image: '',
+    progress: 0
+  });
+
+  const [tasks, setTasks] = useState([{ taskId: 0, taskName: 'Closure of the building site', progress: 0 }]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const projectIds = decodedToken.projectIDs;
+      
+      if (projectIds && projectIds.length > 0) {
+        const projectId = projectIds[0]; // Assuming you want the first project ID
+
+        const fetchProjectData = async () => {
+          try {
+            const projectResponse = await axios.get(`http://localhost:8080/progress/${projectId}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            setProject(projectResponse.data);
+
+            const tasksResponse = await axios.get(`http://localhost:8080/progress/${projectId}/taskprogress`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            setTasks(tasksResponse.data);
+          } catch (error) {
+            console.error("Error fetching project or task data", error);
+          }
+        };
+
+        fetchProjectData();
+      }
+    }
+  }, []);
 
   return (
     <div>
@@ -30,16 +78,18 @@ const Progress = () => {
             <div className="flex flex-row gap-5 p-3 m-3 border-2 border-dotted rounded-lg border-gray-900/10">
                 <div className="flex flex-col justify-center object-left gap-5 items-left">
                     <h1 className="top-0 left-0 text-3xl font-bold leading-9 tracking-tight text-left text-gray-900">
-                        Project Id - 0156A
+                        Project ID - {project.projectId || 105}
                     </h1>
                     <h2 className="font-sans text-2xl font-semibold leading-9 tracking-tight text-left text-gray-500">
-                        The Galle Techno-Park
+                      {project.projectName || "The Galle Techno-Park" }
                     </h2>
-                    <div className="text-base text-justify">The Galle Techno-Park is located in the Galle District, close to the Southern Expressway Pinnaduwa interchange. Construction of the complex was envisioned by the Ministry of Information Technology in line with the National Policy Framework and the President’s vision.</div>
+                    <div className="text-base text-justify">
+                      {project.projectDescription || "The Galle Techno-Park is located in the Galle District, close to the Southern Expressway Pinnaduwa interchange. Construction of the complex was envisioned by the Ministry of Information Technology in line with the National Policy Framework and the President’s vision."}
+                    </div>
 
                 </div>
                 <img
-                  src={progresspark}
+                  src={project.image || progresspark}
                   alt="park"
                   className="object-right w-6/12 pt-1 shadow-sm h-1/2 shadow-white"
                 />
@@ -48,51 +98,28 @@ const Progress = () => {
 
             <div className="flex flex-col gap-3 p-3 m-3 border-2 border-dotted rounded-lg border-gray-900/10">
                 <h1 className="top-0 left-0 pt-3 text-3xl font-bold leading-9 tracking-tight text-left text-gray-900">
-                            Progress : 15/02/2024
+                  Progress : {new Date().toLocaleDateString()}
                 </h1>
                 {/* Radial Progress Component */}
                 <div className="flex flex-row gap-5 p-3 m-3">
                     <div className="flex flex-col">
-                        <RadialProgressBar1/>
+                    <RadialProgressBar1 progress={project.progress} />
                         <h3 className="text-base font-semibold tracking-tight text-center text-gray-900">
-                                Closure of the building site
+                                Project Progress
                         </h3>
                     </div>
-                    <div className="flex flex-col">
-                        <RadialProgressBar2/>
-                        <h3 className="text-base font-semibold tracking-tight text-center text-gray-900">
-                                Land and Foundation
-                        </h3>
+                    {tasks.map(task => (
+                    <div key={task.taskId} className="flex flex-col">
+                      <RadialProgressBar2 progress={task.progress} />
+                      <h3 className="text-base font-semibold tracking-tight text-center text-gray-900">
+                        {task.taskName || "Closure of the building site"}
+                      </h3>
                     </div>
-                    <div className="flex flex-col">
-                        <RadialProgressBar3/>
-                        <h3 className="text-base font-semibold tracking-tight text-center text-gray-900">
-                                The structure of the construction
-                        </h3>
-                    </div>
-                    <div className="flex flex-col">
-                        <RadialProgressBar4/>
-                        <h3 className="text-base font-semibold tracking-tight text-center text-gray-900">
-                                Insulation and waterproofing
-                        </h3>
-                    </div>
-                    <div className="flex flex-col">
-                        <RadialProgressBar5/>
-                        <h3 className="text-base font-semibold tracking-tight text-center text-gray-900">
-                                Finishes and Closures
-                        </h3>
-                    </div>
+                  ))}
                     
                 </div>
-                </div>
-
-
-
-
-        </div>
-
-        
-          
+              </div>
+            </div>
           </div>
         </div>
       </section>
