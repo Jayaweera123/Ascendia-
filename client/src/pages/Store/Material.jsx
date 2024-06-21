@@ -16,8 +16,15 @@ function Material() {
 
   const [search, setSearch] = useState("");
 
-  const givenProjectId = 3;
+  // Retrieve and parse projectIDs from local storage
+  const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
+  
+  // Set a specific project ID (e.g., the first one)
+  const givenProjectId = projectIDs ? projectIDs[0] : null;
 
+  console.log('projectId', givenProjectId);
+
+  
   //Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;

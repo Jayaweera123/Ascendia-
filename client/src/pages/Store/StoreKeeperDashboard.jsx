@@ -5,7 +5,13 @@ import DashboardCards from "../../components/Store/dashboard/DashboardCards";
 import MaterialChart from "../../components/Store/dashboard/MaterialChart";
 import NotificationBar from "../../components/Store/NotificationBar";
 
-const givenProjectId = 3;
+ // Retrieve and parse projectIDs from local storage
+ const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
+  
+ // Set a specific project ID (e.g., the first one)
+ const givenProjectId = projectIDs ? projectIDs[0] : null;
+
+ console.log('projectId', givenProjectId);
 
 function StoreKeeperDashboard() {
 

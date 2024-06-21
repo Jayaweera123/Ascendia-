@@ -14,7 +14,14 @@ function EquipmentForm() {
   const [description, setDescription] = useState('')
   const [createdDate, setCreatedDate] = useState('')
 
-  const projectId = 3;
+
+   // Retrieve and parse projectIDs from local storage
+   const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
+  
+   // Set a specific project ID (e.g., the first one)
+   const projectId = projectIDs ? projectIDs[0] : null;
+ 
+   console.log('projectId', projectId);
 
   const {id} = useParams();
 
