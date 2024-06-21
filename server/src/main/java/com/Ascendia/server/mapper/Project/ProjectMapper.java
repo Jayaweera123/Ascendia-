@@ -14,8 +14,9 @@ public class ProjectMapper {
                 project.getProjectStatus(),
                 project.getCreatedDate(),
                 project.getEndDate(),
-                project.getPmId(),
-                project.getImage()
+                //project.getPmId(),
+                project.getImage(),
+                project.getProjectManager()
         );
     }
 
@@ -27,8 +28,9 @@ public class ProjectMapper {
                 projectDto.getProjectStatus(),
                 projectDto.getCreatedDate(),
                 projectDto.getEndDate(),
-                projectDto.getPmId(),
-                projectDto.getImage()
+                //projectDto.getPmId(),
+                projectDto.getImage(),
+                projectDto.getProjectManager()
         );
     }
 

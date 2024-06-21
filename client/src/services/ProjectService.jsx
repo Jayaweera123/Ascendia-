@@ -2,6 +2,16 @@ import axios from "axios";
 
 const REST_API_BASE_URL = "http://localhost:8080";
 
+const fetchProjects = async () => {
+  try {
+      const response = await axios.get(REST_API_BASE_URL + "/projects");
+      return response.data;
+  } catch (error) {
+      console.error("Error fetching projects", error);
+      throw error;
+  }
+};
+
 export const getAllProjectCards = () => axios.get(REST_API_BASE_URL+ "/project/all");
 
 export const getProjectById = (projectId) =>

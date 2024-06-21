@@ -1,11 +1,13 @@
 package com.Ascendia.server.entity.Administrator;
 
+import com.Ascendia.server.entity.Project.Project;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -60,11 +62,20 @@ public class User implements UserDetails {
     @Column(name = "active", nullable = false)
     private boolean active;
 
+    @Column(name = "lastLoginDate")
+    private LocalDateTime lastLoginDate;
+
+    @Column(name = "online_status")
+    private boolean onlineStatus;
+
+    @Column(name = "last_active_time")
+    private LocalDateTime lastActiveTime;
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(designation));
     }
-
 
     @Override
     public boolean isAccountNonExpired() {
@@ -85,4 +96,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

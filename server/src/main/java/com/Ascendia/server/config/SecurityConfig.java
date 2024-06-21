@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,7 +27,6 @@ public class SecurityConfig{
     @Autowired
     private JWTAuthFilter jwtAuthFilter;
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
@@ -37,8 +35,9 @@ public class SecurityConfig{
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/auth/**", "/public/**", "/progress/**" ,"/reviews/**" ,"/uploads/**").permitAll() // Allow unauthenticated access to static resources
                         .requestMatchers("/admin/**").hasAnyAuthority("Administrator")
-                        .requestMatchers("/project/**").hasAnyAuthority("Project Creation Team")
                         .requestMatchers("/client/**").hasAnyAuthority("Client", "Consultant")
+                        .requestMatchers("/projects/**").hasAnyAuthority("Project Creation Team", "Project Manager", "Site Engineer", "Supervisor", "Technical Officer", "Store Keeper", "Quantity Surveyor")
+                        .requestMatchers("/project/**").hasAnyAuthority("Project Creation Team")
                         .requestMatchers("/pmanager/**").hasAnyAuthority("Project Manager", "Project Creation Team")
                         .requestMatchers("/pmanageronly/**").hasAnyAuthority("Project Manager")
                         .requestMatchers("/sengineer/**").hasAnyAuthority("Site Engineer", "Project Manager", "Project Creation Team")

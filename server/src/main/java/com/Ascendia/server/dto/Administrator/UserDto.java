@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
-
+    private Long userID;
     private String firstName;
     private String lastName;
     private String designation;
@@ -44,6 +44,7 @@ public class UserDto {
     private String expirationTime;
     private User user;
     private List<User> usersList;
-
+    @Setter
+    private List<Long> projectIDs;
 
 }

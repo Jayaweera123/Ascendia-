@@ -1,11 +1,13 @@
 package com.Ascendia.server.service.Project.impl;
 
 import com.Ascendia.server.dto.Project.ProjectDto;
+import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.exception.Administrator.ResourceNotFoundException;
 import com.Ascendia.server.dto.Project.ProjectGetDto;
 import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.mapper.Project.ProjectGetMapper;
 import com.Ascendia.server.mapper.Project.ProjectMapper;
+import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.repository.ProjectManager.TaskRepository;
 import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
@@ -13,25 +15,29 @@ import com.Ascendia.server.repository.SiteManager.JobRepository;
 import com.Ascendia.server.service.Project.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Period;
 
 @Service
 @Transactional
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
+
+    @Autowired
+    private  UserProjectAssignmentRepository userProjectAssignmentRepository;
     @Autowired
     private JobRepository jobRepository;
     private final String uploadDir; // Path to the directory where profile images will be stored
@@ -40,6 +46,23 @@ public class ProjectServiceImpl implements ProjectService {
     public ProjectServiceImpl(ProjectRepository projectRepository, @Value("${user.profile.image.upload-dir}") String uploadDir) {
         this.projectRepository = projectRepository;
         this.uploadDir = uploadDir;
+    }
+
+    @Override
+    public List<ProjectGetDto> getProjectsForUser(User user) {
+        List<Project> projects = new ArrayList<>();
+
+        if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Creation Team"))) {
+            projects = projectRepository.findAll();
+
+        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Manager"))) {
+            projects = projectRepository.findByProjectManager(user);
+
+        } else {
+            projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);
+        }
+
+        return projects.stream().map(ProjectGetMapper::mapToProjectGetDto).collect(Collectors.toList());
     }
 
     @Override
@@ -93,7 +116,7 @@ public class ProjectServiceImpl implements ProjectService {
             existingProject.setProjectStatus(projectDto.getProjectStatus());
             existingProject.setCreatedDate(projectDto.getCreatedDate());
             existingProject.setEndDate(projectDto.getEndDate());
-            existingProject.setPmId(projectDto.getPmId());
+            //existingProject.setPmId(projectDto.getPmId());
             existingProject.setImage(projectDto.getImage());
 
             // Save the updated project entity
@@ -115,20 +138,20 @@ public class ProjectServiceImpl implements ProjectService {
         return ProjectMapper.mapToProjectDto(project);
     }
 
-    @Override
+    /*@Override
     public List<ProjectDto> getProjectsByPmId(String pmId) {
 
         List<Project> projects = projectRepository.findByPmId(pmId);
         return projects.stream().map((project) -> ProjectMapper.mapToProjectDto(project))
                 .collect(Collectors.toList());
-    }
+    }*/
 
-    @Override
+    /*@Override
     public List<ProjectDto> searchProject(String pmId, String query) {
         List<Project> projects =  projectRepository.searchProject(pmId, query);
         return projects.stream().map(ProjectMapper::mapToProjectDto)
                 .collect(Collectors.toList());
-    }
+    }*/
 
     @Override
    public Long getTotalJobsForProject(Long projectId) {
@@ -139,9 +162,6 @@ public class ProjectServiceImpl implements ProjectService {
     public Long getCompletedJobsCountForProject(Long projectId) {
         return jobRepository.countCompletedJobsByProjectId(projectId);
     }
-
-    @Autowired
-    private UserProjectAssignmentRepository userProjectAssignmentRepository;
 
     @Override
     public Long getEmployeeCountForProject(Long projectId) {
@@ -155,6 +175,8 @@ public class ProjectServiceImpl implements ProjectService {
     public int getTaskCountForProject(Long projectId) {
         return taskRepository.countTasksByProject_ProjectId(projectId);
     }
+
+
 
 
     /*@Override

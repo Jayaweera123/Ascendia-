@@ -1,5 +1,8 @@
 package com.Ascendia.server.controller.Administrator;
 
+import com.Ascendia.server.dto.Project.ProjectGetDto;
+import com.Ascendia.server.entity.Administrator.User;
+import com.Ascendia.server.service.Project.ProjectService;
 import lombok.AllArgsConstructor;
 import com.Ascendia.server.dto.Administrator.UserDto;
 import com.Ascendia.server.service.Administrator.UserService;
@@ -8,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.security.core.Authentication;
 import java.util.List;
 
 @RestController
@@ -18,10 +21,16 @@ import java.util.List;
 
 public class UserController {
 
-
     private final UserService userService;
+    private final ProjectService projectService;
 
-    // Build Add User REST API
+    @GetMapping("/projects/user")
+    public ResponseEntity<List<ProjectGetDto>> getProjectsForCurrentUser(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        List<ProjectGetDto> projects = projectService.getProjectsForUser(user);
+        return ResponseEntity.ok(projects);
+    }
+
     @PostMapping(value = "/auth/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<UserDto> addUser(@ModelAttribute UserDto userDto,
                                            @RequestParam("profileImage") MultipartFile profileImage){
@@ -68,6 +77,36 @@ public class UserController {
         userService.deactivateUser(userID);
         return ResponseEntity.ok("User deactivated successfully!.");
     }
+
+    @GetMapping("/admin/todayActiveUsers")
+    public int getTodayActiveUsers() {
+        return userService.getTodayActiveUsers();
+    }
+
+    @GetMapping("/admin/countUsers")
+    public ResponseEntity<Integer> countUsers() {
+        int userCount = userService.countAllUsers();
+        return ResponseEntity.ok(userCount);
+    }
+
+    @GetMapping("/admin/countActiveUsers")
+    public ResponseEntity<Integer> countActiveUsers() {
+        int activeUserCount = userService.countActiveUsers();
+        return ResponseEntity.ok(activeUserCount);
+    }
+
+    @GetMapping("/admin/countDeactivatedUsers")
+    public ResponseEntity<Integer> countDeactivatedUsers() {
+        int deactivatedUserCount = userService.countDeactivatedUsers();
+        return ResponseEntity.ok(deactivatedUserCount);
+    }
+
+    @GetMapping("/admin/onlineUsers")
+    public ResponseEntity<List<UserDto>> getOnlineUsers() {
+        List<UserDto> onlineUsers = userService.getOnlineUsers();
+        return new ResponseEntity<>(onlineUsers, HttpStatus.OK);
+    }
+
 
     {/*
 

@@ -19,7 +19,7 @@ public class CommentController {
 
     private CommentService commentService;
 
-    @PostMapping("createComment")
+    @PostMapping("/sengineer/comment/createComment")
     public ResponseEntity<CommentResponseDto>createComment(@RequestBody CommentDto commentDto){
         CommentResponseDto savedComment = commentService.createComment(commentDto);
         return new ResponseEntity<>(savedComment , HttpStatus.CREATED);

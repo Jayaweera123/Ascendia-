@@ -3,6 +3,7 @@ package com.Ascendia.server.controller.Project;
 import com.Ascendia.server.dto.Project.ProjectDto;
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.Project.ProjectGetDto;
+import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.service.Project.ProjectService;
 import com.Ascendia.server.service.ProjectManager.TaskService;
 import lombok.AllArgsConstructor;
@@ -68,17 +69,17 @@ public class ProjectController {
     }
 
 
-    @GetMapping("/pmanager/{pmId}/all")
+    /*@GetMapping("/pmanager/{pmId}/all")
     public ResponseEntity<List<ProjectDto>>  getProjectsByPMId(@PathVariable("pmId") String pmId){
         List<ProjectDto> projects = projectService.getProjectsByPmId(pmId);
         return ResponseEntity.ok(projects);
-    }
+    }*/
 
     //Build search REST API
-    @GetMapping("/pmanager/search/{pmId}")
+    /*@GetMapping("/pmanager/search/{pmId}")
     public ResponseEntity<List<ProjectDto>> searchProject(@PathVariable String pmId, @RequestParam("query") String query){
         return ResponseEntity.ok(projectService.searchProject(pmId, query));
-    }
+    }*/
 
     /*@GetMapping("/pmanager/duration/{projectId}")
     public String getDuration(@PathVariable("projectId") Long projectId) {

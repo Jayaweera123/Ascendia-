@@ -1,5 +1,7 @@
 package com.Ascendia.server.service.Administrator.impl;
 
+import com.Ascendia.server.repository.Project.ProjectRepository;
+import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
 import com.Ascendia.server.service.Administrator.JWTUtils;
 import com.Ascendia.server.service.Administrator.UserService;
 import org.slf4j.Logger;
@@ -20,6 +22,8 @@ import java.nio.file.Paths;
 import java.io.IOException;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -35,23 +39,31 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final ProjectRepository projectRepository;
+    private final UserProjectAssignmentRepository userProjectAssignmentRepository;
 
-    @Autowired
-    private JWTUtils jwtUtils;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final JWTUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final String uploadDir; // Path to the directory where profile images will be stored
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, @Value("${user.profile.image.upload-dir}") String uploadDir) {
+    public UserServiceImpl(UserRepository userRepository,
+                           ProjectRepository projectRepository,
+                           UserProjectAssignmentRepository userProjectAssignmentRepository,
+                           JWTUtils jwtUtils,
+                           AuthenticationManager authenticationManager,
+                           PasswordEncoder passwordEncoder,
+                           @Value("${user.profile.image.upload-dir}") String uploadDir) {
         this.userRepository = userRepository;
+        this.projectRepository = projectRepository;
+        this.userProjectAssignmentRepository = userProjectAssignmentRepository;
+        this.jwtUtils = jwtUtils;
+        this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
         this.uploadDir = uploadDir;
     }
 
@@ -102,11 +114,8 @@ public class UserServiceImpl implements UserService {
                 }
             }
 
-
-
             // Set active to true by default
             userDto.setActive(true);
-
 
             User user = UserMapper.mapToUser(userDto);
             User savedUser = userRepository.save(user);
@@ -147,16 +156,25 @@ public class UserServiceImpl implements UserService {
                 throw new BadCredentialsException("Invalid username or password");
             }
 
+            // Update last login date
+            user.setLastLoginDate(LocalDateTime.now());
+            userRepository.save(user);
+
+            // Fetch the projects the user is engaged with
+            List<Long> projectIds = userProjectAssignmentRepository.findProjectIdsByUserId(user.getUserID());
+
             // Generate JWT token
-            String jwtToken = jwtUtils.generateToken(user);
-            String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+            String jwtToken = jwtUtils.generateToken(user, projectIds);
+            String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user, projectIds);
 
             // Prepare response
             userDto.setStatusCode(200);
             userDto.setToken(jwtToken);
+            userDto.setUserID(user.getUserID()); // Set userID here
             userDto.setDesignation(user.getDesignation());
+            userDto.setProjectIDs(projectIds);
             userDto.setRefreshToken(refreshToken);
-            userDto.setExpirationTime("24 hours");
+            userDto.setExpirationTime("12 hours");
             userDto.setMessage("Successfully Logged In");
 
         } catch (BadCredentialsException e) {
@@ -171,52 +189,32 @@ public class UserServiceImpl implements UserService {
         return userDto;
     }
 
-
-
-    {/*public UserDto login(UserDto loginRequest){
+    public UserDto refreshToken(UserDto refreshTokenRequest) {
         UserDto userDto2 = new UserDto();
         try {
-            authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-            var user1 = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
-
-            var jwt = jwtUtils.generateToken(user1);
-            var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user1);
-            userDto2.setStatusCode(200);
-            userDto2.setToken(jwt);
-            userDto2.setDesignation(user1.getDesignation());
-            userDto2.setRefreshToken(refreshToken);
-            userDto2.setExpirationTime("24Hrs");
-            userDto2.setMessage("Successfully Logged In");
-
-        }catch (Exception e){
-           userDto2.setStatusCode(500);
-           userDto2.setMessage(e.getMessage());
-        }
-        return userDto2;
-    }*/}
-
-    public UserDto refreshToken(UserDto refreshTokenRequest){
-        UserDto userDto2 = new UserDto();
-        try{
             String userUsername = jwtUtils.extractUsername(refreshTokenRequest.getToken());
             User user2 = userRepository.findByUsername(userUsername).orElseThrow();
             if (jwtUtils.isTokenValid(refreshTokenRequest.getToken(), user2)) {
-                var jwt = jwtUtils.generateToken(user2);
+                // Fetch the projects the user is engaged with
+                List<Long> projectIds = userProjectAssignmentRepository.findProjectIdsByUserId(user2.getUserID());
+
+                // Generate new JWT token with project IDs
+                String jwt = jwtUtils.generateToken(user2, projectIds);
+
                 userDto2.setStatusCode(200);
                 userDto2.setToken(jwt);
                 userDto2.setRefreshToken(refreshTokenRequest.getToken());
-                userDto2.setExpirationTime("24Hr");
+                userDto2.setExpirationTime("12 hours");
                 userDto2.setMessage("Successfully Refreshed Token");
+            } else {
+                userDto2.setStatusCode(401);
+                userDto2.setMessage("Invalid refresh token");
             }
-            userDto2.setStatusCode(200);
-            return userDto2;
-
-        }catch (Exception e){
+        } catch (Exception e) {
             userDto2.setStatusCode(500);
-            userDto2.setMessage(e.getMessage());
-            return userDto2;
+            userDto2.setMessage("Error occurred during token refresh: " + e.getMessage());
         }
+        return userDto2;
     }
 
     @Override
@@ -233,8 +231,6 @@ public class UserServiceImpl implements UserService {
         }
         return userDto4;
     }
-
-
 
     @Override
     public UserDto getAllUsers() {
@@ -379,6 +375,54 @@ public class UserServiceImpl implements UserService {
         // Concatenate all parts to form the password
         return String.valueOf(firstLetterFirstName) + firstLetterLastName + firstTwoLettersEmail + lastTwoDigitsPhoneNumber;
     }
+
+    @Override
+    public int getTodayActiveUsers() {
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+        List<User> users = userRepository.findAllByLastLoginDateBetween(startOfDay, endOfDay);
+        return users.size();
+    }
+
+    @Override
+    public int countAllUsers() {
+        try {
+            return userRepository.findAll().size();
+        } catch (Exception e) {
+            logger.error("Error occurred while counting users: {}", e.getMessage());
+            return -1; // or throw a custom exception
+        }
+    }
+
+    @Override
+    public int countActiveUsers() {
+        try {
+            return userRepository.countByActiveTrue();
+        } catch (Exception e) {
+            logger.error("Error occurred while counting active users: {}", e.getMessage());
+            return -1; // or throw a custom exception
+        }
+    }
+
+    @Override
+    public int countDeactivatedUsers() {
+        try {
+            return userRepository.countByActiveFalse();
+        } catch (Exception e) {
+            logger.error("Error occurred while counting deactivated users: {}", e.getMessage());
+            return -1; // or throw a custom exception
+        }
+    }
+
+    @Override
+    public List<UserDto> getOnlineUsers() {
+        LocalDateTime activeThreshold = LocalDateTime.now().minusMinutes(15); // Active within the last 15 minutes
+        List<User> onlineUsers = userRepository.findByLastActiveTimeGreaterThanEqual(activeThreshold);
+        return onlineUsers.stream().map(UserMapper::mapToUserDto).collect(Collectors.toList());
+    }
+
 
     //Nethuni
     @Override

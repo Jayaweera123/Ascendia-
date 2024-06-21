@@ -25,6 +25,16 @@ public interface UserService {
 
     String generatePassword(String firstName, String lastName, String email, String phoneNumber);
 
+    int getTodayActiveUsers();
+
+    int countAllUsers();
+
+    int countActiveUsers();
+
+    int countDeactivatedUsers();
+
+    List<UserDto> getOnlineUsers();
+
     //Nethuni
     List<UserDto> getAllAvailableUsers();
 

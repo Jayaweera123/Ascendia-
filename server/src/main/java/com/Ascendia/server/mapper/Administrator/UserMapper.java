@@ -6,34 +6,36 @@ import com.Ascendia.server.entity.Administrator.User;
 public class UserMapper {
 
     public static UserDto mapToUserDto(User user) {
-        return new UserDto(
-                user.getFirstName(),
-                user.getLastName(),
-                user.getDesignation(),
-                user.getDepartment(),
-                user.getUsername(), // Username is kept as it is
-                null, // Password is not mapped to UserDto for security reasons
-                user.getEmail(),
-                user.getPhoneNumber(),
-                user.getAddedDate(),
-                user.getProfilePicUrl(),
-                user.isAvailability(), // Availability is kept as it is
-                user.isActive(),
-                0, // default statusCode
-                null, // default error
-                null, // default message
-                null, // default token
-                null, // default refreshToken
-                null, // default expirationTime
-                null, // default User reference
-                null // default Users list
-        );
+        UserDto userDto = new UserDto();
+        userDto.setUserID(user.getUserID()); // Set userID here
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setDesignation(user.getDesignation());
+        userDto.setDepartment(user.getDepartment());
+        userDto.setUsername(user.getUsername()); // Username is kept as it is
+        // Password is not mapped to UserDto for security reasons
+        userDto.setEmail(user.getEmail());
+        userDto.setPhoneNumber(user.getPhoneNumber());
+        userDto.setAddedDate(user.getAddedDate());
+        userDto.setProfilePicUrl(user.getProfilePicUrl());
+        userDto.setAvailability(user.isAvailability()); // Availability is kept as it is
+        userDto.setActive(user.isActive());
+        userDto.setStatusCode(0); // default statusCode
+        userDto.setError(null); // default error
+        userDto.setMessage(null); // default message
+        userDto.setToken(null); // default token
+        userDto.setRefreshToken(null); // default refreshToken
+        userDto.setExpirationTime(null); // default expirationTime
+        userDto.setUser(null); // default User reference
+        userDto.setUsersList(null); // default Users list
+        userDto.setProjectIDs(null); // default projectIDs
+
+        return userDto;
     }
 
     public static User mapToUser(UserDto userDto) {
-        // For mapToUser method, userDto.getUserID() should be handled based on how you handle ID generation/assignment
-        // Typically, ID would not be set for new User creation from DTO
         User user = new User();
+        user.setUserID(userDto.getUserID()); // Set userID if provided
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setDesignation(userDto.getDesignation());
@@ -46,6 +48,7 @@ public class UserMapper {
         user.setProfilePicUrl(userDto.getProfilePicUrl());
         user.setAvailability(userDto.isAvailability());
         user.setActive(userDto.isActive());
+
         return user;
     }
 }

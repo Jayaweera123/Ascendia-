@@ -19,6 +19,6 @@ public class ProjectGetDto {
     private String projectStatus;
     private LocalDate createdDate;
     private LocalDate endDate;
-    private String pmId;
+    //private String pmId;
     private String image;
 }

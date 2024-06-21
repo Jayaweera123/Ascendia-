@@ -25,6 +25,7 @@ const Login = () => {
       if (userData.token) {
         localStorage.setItem('token', userData.token);
         localStorage.setItem('designation', userData.designation);
+        localStorage.setItem('userID', userData.userID);
         // Navigate to the appropriate dashboard based on user designation
         switch (userData.designation) {
           case 'Administrator':
