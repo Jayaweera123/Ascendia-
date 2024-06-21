@@ -36,7 +36,7 @@ public class TaskController {
 
     //Get all Tasks REST API
     @GetMapping("all")
-    public ResponseEntity<List<TaskDto>>  getAllTasks() {
+    public ResponseEntity<List<TaskDto>> getAllTasks() {
         List<TaskDto> tasks = taskService.getAllTasks();
         return ResponseEntity.ok(tasks);
     }
@@ -93,14 +93,15 @@ public class TaskController {
         return ResponseEntity.ok(completedJobCount);
     }
 */
-    @GetMapping("/{taskId}/set-status")
+
+    @PutMapping("/{taskId}/set-status")
     public String setTaskStatusLable(@PathVariable Long taskId) {
         return taskService.CheckCompletionUpdateStatus(taskId);
     }
 
     //Build search REST API
     @GetMapping("/search/{projectId}")
-    public ResponseEntity<List<TaskDto>> searchTask(@PathVariable Long projectId, @RequestParam("query") String query){
+    public ResponseEntity<List<TaskDto>> searchTask(@PathVariable Long projectId, @RequestParam("query") String query) {
         return ResponseEntity.ok(taskService.searchTask(projectId, query));
     }
 
@@ -132,22 +133,18 @@ public class TaskController {
         return ResponseEntity.ok().body(jobCount + "");
     }*/
 
+    //========== new Rest API ========
 
+    @GetMapping("/api/task/{projectId}/scheduled")
+    public ResponseEntity<List<TaskDto>> getTasksByScheduledStatus(@PathVariable Long projectId) {
+        List<TaskDto> tasks = taskService.getTasksByScheduledStatus(projectId);
+        return ResponseEntity.ok(tasks);
+    }
 
+    @GetMapping("/api/task/{projectId}/inProgress")
+    public ResponseEntity<List<TaskDto>> getTasksByInProgresStatus(@PathVariable Long projectId) {
+        List<TaskDto> tasks = taskService.getTasksByInProgresStatus(projectId);
+        return ResponseEntity.ok(tasks);
 
-
-
-    //==========
-
-
-    /*
-
-
-
-
-    */
-    
-
-
-
+    }
 }

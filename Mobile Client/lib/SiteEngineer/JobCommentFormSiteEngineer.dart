@@ -60,20 +60,8 @@ class _ProjectSiteState extends State<JobCommentSite> {
 
 
     late String jobsName;
-    DateTime _dateTime3 = DateTime.now();
 
-  void _showDatePicker3() {
-  showDatePicker(
-    context: context,
-    initialDate: DateTime.now(),
-    firstDate: DateTime(2024),
-    lastDate: DateTime(2100),
-  ).then((value3) {
-    setState(() {
-      _dateTime3 = value3!;
-    });
-  });
-}
+
 
   @override
   Widget build(BuildContext context) {
@@ -606,9 +594,8 @@ SizedBox(
       print(controllertaskscomment1.text);
       print("enter before to the save Comment Job ");
 service.saveCommentJob(widget.jobId, 1, controllertaskscomment1.text);
-
       controllertaskscomment1.clear(); // Clear the TextEditingController
-      _dateTime3 = DateTime.now(); // Update dateTime
+
     });
   } else {
     // Handle the case when userInput is empty

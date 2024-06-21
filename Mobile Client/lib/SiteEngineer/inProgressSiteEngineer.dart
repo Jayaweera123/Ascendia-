@@ -26,9 +26,10 @@ class inProgressSite extends StatefulWidget {
   _DisplayDataPageState createState() => _DisplayDataPageState();
 }
 
-Future<List<Task>> getAllTasks() async {
-  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/task/all"));
-  if(response.statusCode == 200){
+
+Future<List<Task>> getAllScheduledTasks(int projectId) async {
+  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/task/api/task/$projectId/scheduled"));
+  if(response.statusCode == 200){   //http://10.0.2.2:8080/api/task/api/task/1/scheduled
     final List<dynamic> jsonData = json.decode(response.body);
     return jsonData.map((taskData) => Task.fromJson(taskData)).toList();
    // print('fvdfvdfvdfv');
@@ -409,9 +410,10 @@ Center(
     width: 300,
     child: SingleChildScrollView(
       child: FutureBuilder<List<Task>>(
-        future: getAllTasks(),
+        future: getAllScheduledTasks(1),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
+            
             print("object   7");
             return CircularProgressIndicator();
           } else if (snapshot.hasError) {
@@ -419,9 +421,10 @@ Center(
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.hasData) {
             print("object10");
-            final List<Task> tasks = snapshot.data!;
+            final List<Task> tasks = snapshot.data!;            
             return Column(
               children: tasks.map((task) {
+                updateStatus(task.taskId);
                 return Card(
                   margin: const EdgeInsets.all(5),
                   color: const Color.fromRGBO(255, 227, 76, 1),
@@ -437,6 +440,7 @@ Center(
                     children: [
                       Expanded(
                         child: ListTile(
+                          
                           title: Text(
                             '${task.taskName}',
                             style: const TextStyle(
@@ -706,7 +710,9 @@ Center(
     );
   }
 
-
+void updateStatus(int taskId) async {
+  await service.updateTaskStatus(taskId);
+}
 
 
  void _editData(int taskId,String taskName,String description,DateTime startDate,DateTime endDate,int projectId) async {

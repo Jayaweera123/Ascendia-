@@ -1,8 +1,16 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:my_project/BackGround.dart';
 import 'package:my_project/SiteEngineer/CompleteSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/inProgressSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/tasksAddFormSiteEngineer.dart';
+import 'package:my_project/SiteEngineer/Task.dart';
+import 'package:my_project/service.dart';
+import 'package:my_project/SiteEngineer/jobAppPage.dart';
+import 'package:my_project/SiteEngineer/TaskCommentFormSiteEngineer.dart';
+import 'package:my_project/SiteEngineer/updatingTaskForm.dart';
 //import 'package:my_project/coponents/signupButon.dart';
 //import 'package:my_project/ConstentParts.dart';
 
@@ -15,6 +23,18 @@ class updateSite extends StatefulWidget {
   State<updateSite> createState() => _ProjectSiteState();
 }
 
+
+Future<List<Task>> getAllScheduledTasks(int projectId) async {
+  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/task/api/task/$projectId/inProgress"));
+  if(response.statusCode == 200){   //http://10.0.2.2:8080/api/task/api/task/1/scheduled
+    final List<dynamic> jsonData = json.decode(response.body);
+    return jsonData.map((taskData) => Task.fromJson(taskData)).toList();
+   // print('fvdfvdfvdfv');
+  }else{
+    throw Exception('Failed to load comment10');
+  }
+  }
+
 class _ProjectSiteState extends State<updateSite> {
   final TextEditingController searchingcontroller = TextEditingController();
   final TextEditingController controller5 = TextEditingController();
@@ -24,6 +44,10 @@ class _ProjectSiteState extends State<updateSite> {
   bool isFocused2 = false;
     final String buttonSignUp='Submit';
     List<String> dataList = [];
+    Service service = Service();
+
+      Map<int, bool> isFocused = {};
+
 
     void inProgressGoToNew() {
   Navigator.push(
@@ -329,22 +353,180 @@ Container(
   ])
 ),
 
+Center(
+  child: SizedBox(
+    height: 400,
+    width: 300,
+    child: SingleChildScrollView(
+      child: FutureBuilder<List<Task>>(
+        future: getAllScheduledTasks(1),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            
+            print("object   7");
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            print("object  9");
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            print("object10");
+            final List<Task> tasks = snapshot.data!;            
+            return Column(
+              children: tasks.map((task) {
+                updateStatus(task.taskId);
+                return Card(
+                  margin: const EdgeInsets.all(5),
+                  color: const Color.fromRGBO(255, 227, 76, 1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: const BorderSide(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: ListTile(
+                          
+                          title: Text(
+                            '${task.taskName}',
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
 
-Container(
+                        onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => jobAppPage(
+                                        taskId: task.taskId,
+                                        taskName: task.taskName,
+                                       
+                                      ),
+                                    ),
+                                  );
+                                },
+                        ),
+                      ),
 
-  color: Colors.amber,
-  width:284,
-  height:400,
-  child:const Column(
-children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                               children: [
 
-
-
-
-],
+         
+GestureDetector(
+  onTap: () {
+    setState(() {
+      isFocused[task.taskId] = !(isFocused[task.taskId] ?? false); // Toggle the isChecked state with null check
+    });
+  },
+  child: Icon(
+    (isFocused[task.taskId] ?? false)
+      ? Icons.check_box_outlined 
+      : Icons.check_box_outline_blank, // Change icon based on isChecked
   ),
-
 ),
+         
+
+
+// onTap: () {
+//               setState(() {
+//                 rememberMeList[index] = !rememberMeList[index];
+              
+//               });
+              
+//             },
+//             child: Icon(
+//               rememberMeList[index]
+//                   ? Icons.check_box_outlined
+//                   : Icons.check_box_outline_blank,
+//               color: rememberMeList[index]
+//                   ? const Color.fromRGBO(0, 31, 63, 1)
+//                   : const Color.fromRGBO(0, 31, 63, 1),
+//               size: 24.0,
+//             ),
+//           ),
+
+
+        const Padding(padding: EdgeInsets.all(19)),
+          GestureDetector(
+            onTap: () {
+              // Add your navigation logic here
+
+               Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>  TaskCommentSite(
+                    taskId:task.taskId,
+                    taskName:task.taskName
+                    
+                  ),
+                ),
+              );
+            
+            },
+            child: const Icon(
+              Icons.add_box_outlined,
+              size: 24.0,
+            ),
+          ),
+
+const Padding(padding: EdgeInsets.all(0)),
+PopupMenuButton<String>(
+                                onSelected: (String value) {
+                                  if (value == 'Delete') {
+                                 _deleteData( task.taskId);
+                                  } else if (value == 'Edit') {
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => UpdatingTaskForm(
+                                          taskId:task.taskId,
+                                          taskName:task.taskName,
+                                          description:task.description,
+                                          startDate:task.startDate,
+                                          endDate:task.endDate,
+                                          projectId:task.project.projectId,
+                                        ),
+                                      ),
+                                    );
+                              
+                                  }
+                                },
+                                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                                  const PopupMenuItem<String>(
+                                    value: 'Delete',
+                                    child: Text('Delete'),
+                                  ),
+                                  const PopupMenuItem<String>(
+                                    value: 'Edit',
+                                    child: Text('Edit'),
+                                  ),
+                                ],
+                              ),
+
+                               ]
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            );
+          } else {
+            return Text('No data available');
+          }
+        },
+      ),
+    ),
+  ),
+),
+
 
 
 
@@ -420,4 +602,81 @@ Center(
       ),
     );
   }
+
+
+  void updateStatus(int taskId) async {
+  await service.updateTaskStatus(taskId);
+}
+
+
+void _deleteData(int taskId) async {
+  print(taskId);
+  try {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:const Text("Warrning",
+            style: TextStyle(
+            color: Color.fromRGBO(50, 75, 101, 1),
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Inter',
+            ),
+          ),
+          content:const Text("Are you sure you want to delete this task ?",
+            style: TextStyle(
+            color: Color.fromRGBO(50, 75, 101, 1),
+            fontSize: 16.0,
+            fontWeight: FontWeight.normal,
+            fontFamily: 'Inter',
+            )),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                     service.deleteTask(taskId);
+                Navigator.of(context).pop(    );
+              },
+              child:const Text("OK"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child:const Text("Cancel"),
+            ),
+          ],
+
+        );
+      },
+    );
+    // Call the deleteComment method with the appropriate comment ID
+ 
+
+    // Handle the result, for example
+  } catch (e) {
+    // Handle error, for example:
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title:const Text("Error"),
+          content: Text("Failed to delete task: $e"),          
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+ 
+}
+
+
+
 }

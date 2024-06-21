@@ -46,4 +46,14 @@ public interface TaskService {
 
 
 
+
+
+
+
+
+    //============================
+    List<TaskDto> getTasksByScheduledStatus(Long projectId);
+
+    List<TaskDto> getTasksByInProgresStatus(Long projectId);
+
 }

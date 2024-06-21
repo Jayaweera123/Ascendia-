@@ -121,6 +121,8 @@ public class  TaskServiceImpl implements TaskService {
             return ("Completed");
         }
     }
+//Scheduled
+    //Overdue
 
 
 
@@ -342,6 +344,48 @@ public class  TaskServiceImpl implements TaskService {
             return ("Completed");
         }
     }
+//==========================================================
+    @Override
+    public List<TaskDto> getTasksByScheduledStatus(Long projectId) {
+
+        String scheduledStatus = "Scheduled";
+        String overdueStatus = "Overdue";
+        String inProgressStatus = "In-Progress";
+
+        // Retrieve tasks with the current status "Overdue"
+        List<Task> tasks = taskRepository.findByProjectProjectId(projectId);
+
+        //Filter tasks Based on the specified condition
+        List<Task> filteredTasks = tasks.stream()
+                .filter(task -> scheduledStatus.equals(task.getStatus()) ||
+                        (overdueStatus.equals(task.getStatus()) && scheduledStatus.equals(task.getPrevStatus())))
+                .collect(Collectors.toList());
+
+        return filteredTasks.stream().map(TaskMapper::mapToTaskDto).collect(Collectors.toList());
+
+    }
+
+    @Override
+    public List<TaskDto> getTasksByInProgresStatus(Long projectId) {
+
+        String overdueStatus = "Overdue";
+        String inProgressStatus = "In-Progress";
+
+        // Retrieve tasks with the current status "Overdue"
+        List<Task> tasks = taskRepository.findByProjectProjectId(projectId);
+
+        //Filter tasks Based on the specified condition
+        List<Task> filteredTasks = tasks.stream()
+                .filter(task -> inProgressStatus.equals(task.getStatus()) ||
+                        (overdueStatus.equals(task.getStatus()) && inProgressStatus.equals(task.getPrevStatus())))
+                .collect(Collectors.toList());
+
+        return filteredTasks.stream().map(TaskMapper::mapToTaskDto).collect(Collectors.toList());
+
+    }
+
+
+
 
 
 }

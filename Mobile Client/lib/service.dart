@@ -377,4 +377,31 @@ print(commentJobId);
 
 
 
+
+Future<void> updateTaskStatus(int taskId) async {
+  try {
+      print(taskId);
+    final response = await http.put(
+      Uri.parse('http://10.0.2.2:8080/api/task/$taskId/set-status'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+    'task': {
+      'taskId': taskId,
+    },}),
+    );
+
+    if (response.statusCode == 200) {
+      // Successfully updated the comment
+      print('Comment updated successfully');
+    } else {
+      // Failed to update the comment
+      throw Exception('Failed to update comment');
+    }
+  } catch (e) {
+    // Handle error
+    print('Error updating comment: $e');
+  }
+}
+
+
 }
