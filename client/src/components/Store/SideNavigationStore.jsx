@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link ,useNavigate} from "react-router-dom";
 import { HiMenuAlt3 } from "react-icons/hi";
-import { HiMiniIdentification, HiMiniWrenchScrewdriver, HiMiniRectangleGroup } from "react-icons/hi2";
+import { MdOutlineDashboard } from "react-icons/md";
+import { HiMiniWrenchScrewdriver, HiMiniRectangleGroup } from "react-icons/hi2";
 import { VscHistory } from "react-icons/vsc";
 import AuthService from "../../services/StoreServices";
 import { TbLogout } from "react-icons/tb";
@@ -22,7 +23,7 @@ const SideNavigationStore = () => {
   };
 
   const menus = [
-    { name: "Dashboard", link: "/store/dashboard", icon: HiMiniIdentification },
+    { name: "Dashboard", link: "/store/dashboard", icon: MdOutlineDashboard },
     { name: "Material", link: "/material", icon: HiMiniRectangleGroup , condition: isStoreKeeper  },
     { name: "Equipment", link: "/equipment", icon: HiMiniWrenchScrewdriver },
     { name: "History", link: "/history", icon: VscHistory  },

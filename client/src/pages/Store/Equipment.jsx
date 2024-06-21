@@ -100,7 +100,7 @@ function Equipment() {
         <section className="flex">
             <SideNavigationStore open={open} setOpen={setOpen} />
       
-            <div className="relative w-screen h-screen">
+            <div className="relative flex-auto w-8/12 h-screen">
   
                 <div className="absolute top-0 left-0 pt-3 pl-10">
                 <h1 className="text-4xl leading-relaxed font-bold text-[#101d3f] whitespace-nowrap">Equipment List</h1>
@@ -121,7 +121,7 @@ function Equipment() {
                                                 <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
                                             </svg>
                                         </div>
-                                        Add Equipment
+                                        New Equipment
                                         </div>
                                     </button>
                                 </div>
@@ -136,8 +136,8 @@ function Equipment() {
                                 <th className="px-4 py-5 text-left">Equipment Name</th>
                                 <th className="px-4 py-5 text-left">Quantity</th>
                                 <th className="px-4 py-5 text-left">Description</th>
-                                <th className="w-16 px-4 py-5 text-left"></th>
-                                <th className="w-16 px-4 py-5 text-left"></th>
+                                <th className="w-16 px-4 py-5 text-left">Edit</th>
+                                <th className="w-16 px-4 py-5 text-left">Add/Issue</th>
                                
                                 </tr>
                             </thead>
@@ -158,8 +158,8 @@ function Equipment() {
                                             <td className="px-4 py-3">{equipment.description}</td>
 
                                             {/* ******************* Edit equipment functionality ****************************/}
-                                            <td className="px-4 py-3">
-                                                <div className="relative inline-block group">
+                                            <td className="px-5 py-3">
+                                                <div className="relative justify-center inline-block group">
                                                     <button
                                                         type="button"
                                                         className="focus:outline-none text-neutral-700 dark:text-neutral-200 group-hover:opacity-70"
@@ -181,8 +181,8 @@ function Equipment() {
                                             </td>
 
                                             {/* ******************* Update inventory functionality ****************************/}
-                                            <td className="px-4 py-3">
-                                                <div className="relative inline-block group">
+                                            <td className="px-10 py-3">
+                                                <div className="relative justify-center inline-block group">
                                                     <button
                                                         type="button"
                                                         className="focus:outline-none text-neutral-700 dark:text-neutral-200 group-hover:opacity-70"

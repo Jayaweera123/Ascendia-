@@ -25,7 +25,7 @@ function StoreKeeperDashboard() {
       <section className="flex">
 
         <SideNavigationStore open={open} setOpen={setOpen} />
-        <div className="relative flex-auto w-8/12">
+        <div className="relative flex-auto w-8/12 h-screen">
         
           <div className="mx-10 my-5">
               <div className="absolute top-0 left-0 pt-3 pl-10">

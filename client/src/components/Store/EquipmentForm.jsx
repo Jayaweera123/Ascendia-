@@ -179,7 +179,7 @@ function formTitle(){
       <TopNavigationStore />
       <section className="flex gap-6">
         <SideNavigationStore open={open} setOpen={setOpen} />
-        <div className="w-screen m-3">
+        <div className="flex-auto w-8/12 m-3">
         <div className="max-w-2xl pt-4 pb-4 pl-10 pr-10 mx-auto bg-white rounded-lg shadow-md">
        <form  className="space-y-4">
 
@@ -239,29 +239,6 @@ function formTitle(){
           </div>
 
           <div>
-          <label
-                  htmlFor="quantity"
-                  className="block text-base font-medium leading-6 text-gray-900"
-                >
-                  Quantity:
-                </label>
-                <div className="mt-3">
-                  <input
-                    type="number"
-                    placeholder='Enter Quantity of equipment'
-                    name="quantity"
-                    id="quantity"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                      errors.quantity ? 'border-red-500' : 'border-gray-300'
-                    }`}
-                  />
-                  {errors.quantity && <div className="mt-1 text-sm text-red-500">{errors.quantity}</div>}
-                </div>
-          </div>
-
-          <div>
                 <label
                   htmlFor="description"
                   className="block text-base font-medium leading-6 text-gray-900"
@@ -281,6 +258,29 @@ function formTitle(){
                     }`}
                   />
                   {errors.description && <p className="mt-1 text-sm text-red-500">{errors.description}</p>}
+                </div>
+          </div>
+
+          <div>
+          <label
+                  htmlFor="quantity"
+                  className="block text-base font-medium leading-6 text-gray-900"
+                >
+                  Quantity:
+                </label>
+                <div className="mt-3">
+                  <input
+                    type="number"
+                    placeholder='Enter Quantity of equipment'
+                    name="quantity"
+                    id="quantity"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                      errors.quantity ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                  />
+                  {errors.quantity && <div className="mt-1 text-sm text-red-500">{errors.quantity}</div>}
                 </div>
           </div>
 

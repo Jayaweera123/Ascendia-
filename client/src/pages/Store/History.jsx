@@ -211,7 +211,7 @@ function History() {
             <section className="flex">
                 <SideNavigationStore open={open} setOpen={setOpen} />
 
-                <div className="relative w-screen h-screen">
+                <div className="relative flex-auto w-8/12 h-screen">
                     <div className="absolute top-0 left-0 pt-3 pl-10">
                         <h1 className="text-4xl leading-relaxed font-bold text-[#101d3f] whitespace-nowrap">History</h1>
                     </div>
