@@ -1,6 +1,7 @@
 package com.Ascendia.server.dto.Project;
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
+import com.Ascendia.server.entity.Administrator.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,7 +25,7 @@ public class ProjectDto {
     private String projectStatus;
     private LocalDate createdDate;
     private LocalDate endDate;
-    private Long pmId;
+    private User projectManger;
     private String image;
 
 }

@@ -2,11 +2,13 @@ package com.Ascendia.server.service.Project.impl;
 
 import com.Ascendia.server.dto.Project.ProjectDto;
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
+import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.exceptions.ResourceNotFoundException;
 import com.Ascendia.server.mapper.Project.ProjectMapper;
 import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
+import com.Ascendia.server.repository.Administrator.UserRepository;
 import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.repository.ProjectManager.TaskRepository;
 import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
@@ -29,6 +31,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Autowired
     private JobRepository jobRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
 
 
 
@@ -59,8 +65,13 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectDto> getProjectsByPmId(Long pmId) {
-        List<Project> projects = projectRepository.findByPmId(pmId);
-        return projects.stream().map((project) -> ProjectMapper.mapToProjectDto(project))
+
+            User projectManager = userRepository.findById(pmId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid project manager ID: " + pmId));
+            //return projectRepository.findProjectsByProjectManager(projectManager);
+
+        List<Project> projects = projectRepository.findProjectsByProjectManager(projectManager);
+        return projects.stream().map(ProjectMapper::mapToProjectDto)
                 .collect(Collectors.toList());
     }
 

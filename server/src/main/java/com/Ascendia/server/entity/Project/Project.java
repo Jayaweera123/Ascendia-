@@ -1,5 +1,6 @@
 package com.Ascendia.server.entity.Project;
 
+import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.entity.ProjectManager.Task;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -40,11 +41,12 @@ public class Project {
     private LocalDate endDate;
 
 
-    @Column(name = "pm_id", nullable = false)
-    private Long pmId; // Changed field name to follow Java naming conventions
-
     @Column(name = "image")
     private String image;
+
+    @ManyToOne
+    @JoinColumn(name = "pmanager_id", referencedColumnName = "userID")
+    private User projectManager;
 
 
     /*@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
