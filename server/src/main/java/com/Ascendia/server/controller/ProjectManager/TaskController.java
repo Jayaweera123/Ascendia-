@@ -81,7 +81,7 @@ public class TaskController {
         return ResponseEntity.ok(completedJobCount);
     }
 
-    @PutMapping("/pmanager/{taskId}/set-status")
+    @PutMapping("/sengineer/{taskId}/status")
     public String setTaskStatusLable(@PathVariable Long taskId) {
         return taskService.CheckCompletionUpdateStatus(taskId);
     }
@@ -93,7 +93,7 @@ public class TaskController {
     }
 
     //Get the time between the deadline
-    @GetMapping("/pmanager/{taskId}/time-difference")
+    @GetMapping("/pmanager/{taskId}/due-days")
     public String getTimeDifference(@PathVariable("taskId") Long taskId) {
         TaskDto taskDto = taskService.getTaskId(taskId);
         return taskService.calculateTimeDifference(taskDto);

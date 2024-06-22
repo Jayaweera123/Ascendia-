@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  getAllProjectCards,
+  getProjectByProjectManagerId,
   getProjectForPM,
   searchProject,
 } from "../../services/ProjectService.jsx";

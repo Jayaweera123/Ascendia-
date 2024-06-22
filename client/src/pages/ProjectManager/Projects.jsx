@@ -7,10 +7,19 @@ import ProjectCard from "../../components/ProjectManager/ProjectCardCopy copy";
 import { useParams } from "react-router-dom";
 
 function Projects() {
-  const { pmId } = useParams();
+  // const { pmId } = useParams();
   const [projects, setProjects] = useState([]);
 
+  const [pmId, setPmId] = useState(null);
+
   useEffect(() => {
+    const userId = localStorage.getItem("userID");
+    if (userId) {
+      setPmId(userId);
+    }
+  }, []);
+
+  /*useEffect(() => {
     const loadProjects = async () => {
       try {
         const response = await fetch(`/api/projects/pm/${pmId}`); // Adjust URL to your backend endpoint
@@ -25,7 +34,7 @@ function Projects() {
       }
     };
     loadProjects();
-  }, [pmId]);
+  }, [pmId]);*/
 
   return (
     <>
@@ -36,13 +45,13 @@ function Projects() {
         <div className="flex-auto w-8/12">
           <div className="mx-10 my-5">
             <PageTitle title="Projects" />
-            <ul>
+            {/*<ul>
               {projects.map((project) => (
                 <li key={project.id}>{project.name}</li>
               ))}
-            </ul>
+            </ul>*/}
 
-            <ProjectCard projectManagerId={pmId} />
+            <ProjectCard projectManagerId={1} />
 
             {/* Uncomment and adjust this section for linking to tasks page */}
             {/* <Link to="/projects/tasks">

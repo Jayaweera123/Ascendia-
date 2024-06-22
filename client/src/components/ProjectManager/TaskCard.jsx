@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { deleteTask, getAllTaskCards } from "../../services/TaskService.jsx";
+//import { deleteTask, getAllTaskCards } from "../../services/TaskService.jsx";
 import { Link, useParams } from "react-router-dom";
 import { LuClipboardEdit } from "react-icons/lu";
 import { LuCalendarClock } from "react-icons/lu";

@@ -26,6 +26,8 @@ public interface ProjectService {
     //Nethuni
     ProjectDto getProjectId(Long projectId);
 
+    List<ProjectGetDto> getProjectsByPmId(Long pmId);
+
     //List<ProjectDto> getProjectsByPmId(String pmId);
 
 

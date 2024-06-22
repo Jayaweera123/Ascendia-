@@ -4,7 +4,6 @@ import {
   getTasksForProject,
   getJobCountForTask,
   setStatusLabel,
-  getAllTaskCards,
   searchTask,
 } from "../../services/TaskService.jsx";
 import { Link, useParams, useNavigate } from "react-router-dom";
@@ -323,8 +322,13 @@ const TaskCardforProject = ({ projectId }) => {
                           Jobs
                         </div>
                         <div className="flex items-center text-red-500">
-                          <LuCalendarClock className="mr-2 text-lg" />
-                          {formatDate(task.endDate)}
+                          {/*formatDate(task.endDate)*/}
+                          {taskStatus[task.taskId] !== "Completed" && (
+                            <div className="flex items-center text-red-500">
+                              <LuCalendarClock className="mr-1 text-lg" />
+                              {formatDate(task.endDate)}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </Link>

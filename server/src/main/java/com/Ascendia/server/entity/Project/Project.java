@@ -42,7 +42,7 @@ public class Project {
     private String image;
 
     @ManyToOne
-    @JoinColumn(name = "pmanager_id")
+    @JoinColumn(name = "pmanager_id", referencedColumnName = "userID")
     private User projectManager;
 
     @Column(name = "progress", nullable = false)

@@ -8,11 +8,10 @@ import { FaUserCircle } from "react-icons/fa";
 import { FaUnlockKeyhole } from "react-icons/fa6";
 import axios from "axios";
 
-
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -22,38 +21,38 @@ const Login = () => {
       const userData = await UserService.login(username, password);
       console.log(userData);
       if (userData.token) {
-        localStorage.setItem('token', userData.token);
-        localStorage.setItem('designation', userData.designation);
-        localStorage.setItem('userID', userData.userID);
+        localStorage.setItem("token", userData.token);
+        localStorage.setItem("designation", userData.designation);
+        localStorage.setItem("userID", userData.userID);
         // Navigate to the appropriate dashboard based on user designation
         switch (userData.designation) {
-          case 'Administrator':
-            navigate('/admin/dashboard');
+          case "Administrator":
+            navigate("/admin/dashboard");
             break;
           case 'Client':
           case 'Consultant':
             navigate('/client/dashboard');
             break;
-          case 'Project Creation Team':
-            navigate('/project/addProject');
+          case "Project Creation Team":
+            navigate("/project/addProject");
             break;
-          case 'Project Manager':
-            navigate('/pmanager/dashboard');
+          case "Project Manager":
+            navigate("/pmanager/projects");
             break;
-          case 'Site Engineer':
-            navigate('/sengineer/dashboard');
+          case "Site Engineer":
+            navigate("/sengineer/dashboard");
             break;
-          case 'Supervisor':
-            navigate('/supervisor/dashboard');
+          case "Supervisor":
+            navigate("/supervisor/dashboard");
             break;
-          case 'Store Keeper':
-            navigate('/store/dashboard');
+          case "Store Keeper":
+            navigate("/store/dashboard");
             break;
-          case 'Quantity Surveyor':
-            navigate('/store/dashboard');
+          case "Quantity Surveyor":
+            navigate("/store/dashboard");
             break;
-          case 'USER':
-            navigate('/user/dashboard');
+          case "USER":
+            navigate("/user/dashboard");
             break;
           default:
             navigate('/client/dashboard'); // Default page if designation is not recognized
@@ -66,12 +65,10 @@ const Login = () => {
       console.log(error);
       setError(error.message);
       setTimeout(() => {
-        setError('');
+        setError("");
       }, 5000);
     }
   };
-  
-
 
   return (
     <div>
@@ -151,10 +148,6 @@ const Login = () => {
       </div>
     </div>
   );
-
-  
 };
-
-
 
 export default Login;

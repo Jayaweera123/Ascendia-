@@ -8,6 +8,7 @@ import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.mapper.Project.ProjectGetMapper;
 import com.Ascendia.server.mapper.Project.ProjectMapper;
 import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
+import com.Ascendia.server.repository.Administrator.UserRepository;
 import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.repository.ProjectManager.TaskRepository;
 import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
@@ -41,9 +42,12 @@ public class ProjectServiceImpl implements ProjectService {
     private  UserProjectAssignmentRepository userProjectAssignmentRepository;
     @Autowired
     private JobRepository jobRepository;
-    private final String uploadDir;
+    
     @Autowired
     private TaskService taskService;// Path to the directory where profile images will be stored
+    @Autowired
+    private UserRepository userRepository;
+    private final String uploadDir; // Path to the directory where profile images will be stored
 
     @Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository, @Value("${user.profile.image.upload-dir}") String uploadDir) {
@@ -153,6 +157,17 @@ public class ProjectServiceImpl implements ProjectService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Project not found with the given ID : " + projectId));
         return ProjectMapper.mapToProjectDto(project);
+    }
+
+    @Override
+    public List<ProjectGetDto> getProjectsByPmId(Long pmId) {
+        User projectManager = userRepository.findById(pmId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid project manager ID: " + pmId));
+        //return projectRepository.findProjectsByProjectManager(projectManager);
+
+        List<Project> projects = projectRepository.findProjectsByProjectManager(projectManager);
+        return projects.stream().map(ProjectGetMapper::mapToProjectGetDto)
+                .collect(Collectors.toList());
     }
 
     @Override
