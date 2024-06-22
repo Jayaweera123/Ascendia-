@@ -4,7 +4,6 @@ import {
   getTasksForProject,
   getJobCountForTask,
   setStatusLabel,
-  getAllTaskCards,
   searchTask,
 } from "../../services/TaskService.jsx";
 import { Link, useParams, useNavigate } from "react-router-dom";

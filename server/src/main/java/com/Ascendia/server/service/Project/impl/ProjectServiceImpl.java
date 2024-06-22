@@ -157,13 +157,13 @@ public class ProjectServiceImpl implements ProjectService {
     }*/
 
     @Override
-    public List<ProjectDto> getProjectsByPmId(Long pmId) {
+    public List<ProjectGetDto> getProjectsByPmId(Long pmId) {
         User projectManager = userRepository.findById(pmId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid project manager ID: " + pmId));
         //return projectRepository.findProjectsByProjectManager(projectManager);
 
         List<Project> projects = projectRepository.findProjectsByProjectManager(projectManager);
-        return projects.stream().map(ProjectMapper::mapToProjectDto)
+        return projects.stream().map(ProjectGetMapper::mapToProjectGetDto)
                 .collect(Collectors.toList());
     }
 

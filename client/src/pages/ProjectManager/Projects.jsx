@@ -7,8 +7,17 @@ import ProjectCard from "../../components/ProjectManager/ProjectCardCopy copy";
 import { useParams } from "react-router-dom";
 
 function Projects() {
-  const { pmId } = useParams();
+  // const { pmId } = useParams();
   const [projects, setProjects] = useState([]);
+
+  const [pmId, setPmId] = useState(null);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userID");
+    if (userId) {
+      setPmId(userId);
+    }
+  }, []);
 
   /*useEffect(() => {
     const loadProjects = async () => {
@@ -31,7 +40,7 @@ function Projects() {
     <>
       <TopNavigationPM />
       <section className="flex">
-        <SideNavigationPM pmId={1} />
+        <SideNavigationPM pmId={pmId} />
 
         <div className="flex-auto w-8/12">
           <div className="mx-10 my-5">
