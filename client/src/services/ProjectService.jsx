@@ -1,31 +1,3 @@
-/*import axios from "axios";
-
-// Helper function to get the token
-const getToken = () => localStorage.getItem("token");
-
-// Create an axios instance with a base URL and default headers
-const api = axios.create({
-  baseURL: "http://localhost:8080",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-// Add a request interceptor to include the JWT token in the headers
-api.interceptors.request.use(
-  (config) => {
-    const token = getToken();
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
-    console.log(config.headers); // Log headers to verify token presence
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);*/
-
 import axios from "axios";
 
 // Helper function to get the token
