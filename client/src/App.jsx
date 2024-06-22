@@ -20,11 +20,11 @@ import SideNavigationAdmin from "./components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "./components/Admin/TopNavigationAdmin";
 import TopNavigationClient from "./components/Client/TopNavigationClient";
 import UserService from "./services/UserService";
-import Login from "./pages/Login/Login";
 import AddUser from "./pages/Admin/AddUser";
 import DashBoard from "./pages/Admin/Dashboard";
 import UserList from "./pages/Admin/UserList";
 import ClDashboard from "./pages/Client/ClDashboard";
+import NewLogin from "./pages/Login/NewLogin";
 import AddReview from "./pages/Client/AddReview";
 import Reviews from "./pages/Client/Reviews";
 import ReviewService from "./services/ReviewService";
@@ -66,8 +66,9 @@ const App = () => {
         <Routes>
 
           {/* Rashmi - Login */}
-          <Route exact path="/" element={<Login />} /> 
-          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/" element={<NewLogin />} /> 
+          <Route exact path="/login" element={<NewLogin />} />
+          <Route exact path="/newlogin" element={<NewLogin />} />
           <Route path="*" element={<Navigate to="/login" />} />‰
 
           {/* Ravindu - Progress */}
