@@ -139,7 +139,7 @@ class UserService{
         localStorage.removeItem('token');
         localStorage.removeItem('designation');
         localStorage.removeItem('userID');
-        //localStorage.setItem('projectIDs', JSON.stringify(userData.projectIDs)); // Remove userID
+        //localStorage.setItem('projectIDs', JSON.stringify(userData.projectIDs));
     }
 
     static isAuthenticated(){

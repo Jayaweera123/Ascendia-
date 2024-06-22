@@ -94,7 +94,6 @@ const App = () => {
           {/* Rashmi - Client */}
           {ReviewService.creviewOnly() && (
             <>
-              {/*<Route path="/client/dashboard" element={<ClDashboard/>}/>*/}
               <Route path="/addreview" element={<AddReview />} />
               <Route path="/client/dashboard" element={<ClDashboard />} />
             </>

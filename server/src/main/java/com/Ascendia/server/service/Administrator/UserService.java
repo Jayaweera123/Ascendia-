@@ -11,6 +11,8 @@ public interface UserService {
 
     UserDto login(UserDto loginRequest);
 
+    void logout(Long userId);
+
     UserDto refreshToken(UserDto refreshTokenRequest);
 
     UserDto getUserById(Long userID);

@@ -68,9 +68,6 @@ public class User implements UserDetails {
     @Column(name = "online_status")
     private boolean onlineStatus;
 
-    @Column(name = "last_active_time")
-    private LocalDateTime lastActiveTime;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

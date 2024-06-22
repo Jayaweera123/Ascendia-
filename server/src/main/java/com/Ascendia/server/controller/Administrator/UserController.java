@@ -107,7 +107,6 @@ public class UserController {
         return new ResponseEntity<>(onlineUsers, HttpStatus.OK);
     }
 
-
     {/*
 
     @GetMapping("/adminuser/get-profile")

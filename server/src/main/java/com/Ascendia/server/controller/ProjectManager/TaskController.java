@@ -127,6 +127,7 @@ public class TaskController {
         return ResponseEntity.ok(progress);
     }
 
+
     //Ravindu
     @GetMapping("/progress/{projectId}/taskprogress")
     public ResponseEntity<List<TaskProgressDto>> getTasksProgressByProjectId(@PathVariable Long projectId) {

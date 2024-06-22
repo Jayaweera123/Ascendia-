@@ -24,8 +24,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     int countByActiveFalse();
 
-    // Fetch users who were active within a certain time window
-    List<User> findByLastActiveTimeGreaterThanEqual(LocalDateTime activeThreshold);
+    List<User> findByOnlineStatusTrue();
+
 }
 
 

@@ -210,7 +210,7 @@ const UserList = () => {
                           <div>
                             <LiaUserTimesSolid size={20} />
                           </div>
-                          <div>Delete</div>
+                          <div>Deactivate</div>
                         </button>
                       </td>
                     </tr>

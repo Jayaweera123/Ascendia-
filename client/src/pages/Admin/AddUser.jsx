@@ -28,7 +28,9 @@ const AddUser = () => {
     firstName: '',
     lastName: '',
     phoneNumber: '',
-    email: ''
+    email: '',
+    designation: '',
+    profileImage: ''
   });
 
   // Use navigate hook for routing
@@ -81,10 +83,22 @@ const AddUser = () => {
   
   // Handle file input change for profile image
   const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      profileImage: e.target.files[0]
-    });
+    const file = e.target.files[0];
+    if (file && file.size > 2 * 1024 * 1024) {
+      setErrors({
+        ...errors,
+        profileImage: 'Profile image size should not exceed 2MB'
+      });
+    } else {
+      setFormData({
+        ...formData,
+        profileImage: file
+      });
+      setErrors({
+        ...errors,
+        profileImage: ''
+      });
+    }
   };
 
   // Handle form submission
@@ -190,6 +204,20 @@ const AddUser = () => {
       valid = false;
     } else {
       errorsCopy.email = '';
+    }
+
+    if (!formData.designation.trim()) {
+      errorsCopy.designation = 'Designation is required!';
+      valid = false;
+    } else {
+      errorsCopy.designation = '';
+    }
+
+    if (formData.profileImage && formData.profileImage.size > 2 * 1024 * 1024) {
+      errorsCopy.profileImage = 'Profile image size should not exceed 2MB';
+      valid = false;
+    } else {
+      errorsCopy.profileImage = '';
     }
 
     // Update errors state
@@ -328,7 +356,7 @@ const AddUser = () => {
                             autoComplete="off"
                             value={formData.designation} 
                             onChange={handleChange}
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                            className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6 ${errors.designation ? 'border-red-500' : ''}`}
                           >
                             <option value="" disabled selected>Select Designation</option>
                             <option>Project Manager</option>
@@ -384,8 +412,14 @@ const AddUser = () => {
                               </svg>
                             </span>
                           )}
-                          <input type="file" name="profileImage" onChange={handleFileChange} className="ml-5 rounded-md bg-white py-2 px-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" />
+                          <input
+                            type="file"
+                            name="profileImage"
+                            onChange={handleFileChange}
+                            className={`ml-5 rounded-md bg-white py-2 px-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ${errors.profileImage ? 'border-red-500' : ''}`}
+                          />
                         </div>
+                        {errors.profileImage && <div className="text-red-500 mt-2">{errors.profileImage}</div>}
                       </div>
 
                     </div>

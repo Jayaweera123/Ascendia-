@@ -72,7 +72,6 @@ public class ProjectController {
     }
 
 
-
     //Nethuni
     @GetMapping("/pmanager/{id}")
     public ResponseEntity<ProjectDto> getProjectById(@PathVariable("id") Long projectId) {

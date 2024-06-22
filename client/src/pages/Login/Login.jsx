@@ -32,7 +32,7 @@ const Login = () => {
             break;
           case 'Client':
           case 'Consultant':
-            navigate('/addreview');
+            navigate('/client/dashboard');
             break;
           case 'Project Creation Team':
             navigate('/project/addProject');
@@ -56,7 +56,7 @@ const Login = () => {
             navigate('/user/dashboard');
             break;
           default:
-            navigate('/creview/dashboard'); // Default page if designation is not recognized
+            navigate('/client/dashboard'); // Default page if designation is not recognized
             break;
         }
       } else {

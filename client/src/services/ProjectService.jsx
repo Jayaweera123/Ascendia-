@@ -23,6 +23,7 @@ const fetchProjects = async () => {
   }
 };
 
+
 export const getAllProjectCards = () => axiosInstance.get("/project/all");
 
 export const getProjectById = (projectId) => axiosInstance.get(`/pmanager/${projectId}`);

@@ -27,8 +27,7 @@ const OnlineUserList = () => {
       console.error('Error fetching users:', error);
     }
   };
-
-
+  
   // Render the component JSX
   return (
             <div className="relative m-5 overflow-x-auto bg-white rounded-lg shadow-md">

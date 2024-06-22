@@ -156,8 +156,9 @@ public class UserServiceImpl implements UserService {
                 throw new BadCredentialsException("Invalid username or password");
             }
 
-            // Update last login date
+            // Update last login date and set online status
             user.setLastLoginDate(LocalDateTime.now());
+            user.setOnlineStatus(true);
             userRepository.save(user);
 
             // Fetch the projects the user is engaged with
@@ -187,6 +188,14 @@ public class UserServiceImpl implements UserService {
             userDto.setMessage("Error occurred during login: " + e.getMessage());
         }
         return userDto;
+    }
+
+    @Override
+    public void logout(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setOnlineStatus(false);
+        userRepository.save(user);
     }
 
     public UserDto refreshToken(UserDto refreshTokenRequest) {
@@ -338,6 +347,9 @@ public class UserServiceImpl implements UserService {
         // Set the user's status to deactivated
         user.setActive(false); // Assuming there's a field named 'active' indicating user status
 
+        // Set the user's online status to false
+        user.setOnlineStatus(false);
+
         // Save the updated user entity
         userRepository.save(user);
     }
@@ -418,11 +430,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getOnlineUsers() {
-        LocalDateTime activeThreshold = LocalDateTime.now().minusMinutes(15); // Active within the last 15 minutes
-        List<User> onlineUsers = userRepository.findByLastActiveTimeGreaterThanEqual(activeThreshold);
+        List<User> onlineUsers = userRepository.findByOnlineStatusTrue();
         return onlineUsers.stream().map(UserMapper::mapToUserDto).collect(Collectors.toList());
     }
-
 
     //Nethuni
     @Override
