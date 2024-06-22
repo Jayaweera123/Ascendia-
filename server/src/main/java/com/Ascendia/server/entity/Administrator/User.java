@@ -16,7 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="User")
+@Table(name="User", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"firstName", "lastName"})
+})
 @Data
 
 public class User implements UserDetails {
@@ -44,16 +46,16 @@ public class User implements UserDetails {
     @Column(name="password",nullable=false, unique = true)
     private String password;
 
-    @Column(name="email",nullable=false)
+    @Column(name="email",nullable=false, unique = true)
     private String email;
 
-    @Column(name="phoneNumber",nullable=false)
+    @Column(name="phoneNumber",nullable=false, unique = true)
     private String phoneNumber;
 
     @Column(name="addedDate")
     private LocalDate addedDate;
 
-    @Column(name = "profile_pic_url", nullable = false)
+    @Column(name = "profile_pic_url", nullable = false, unique = true)
     private String profilePicUrl;
 
     @Column(name = "availability", nullable = false)

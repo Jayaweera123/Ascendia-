@@ -354,6 +354,25 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public UserDto getUserByFirstNameAndLastName(String firstName, String lastName) {
+        UserDto userDto = new UserDto();
+        try {
+            User user = userRepository.findByFirstNameAndLastName(firstName, lastName)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with firstName: " + firstName + " and lastName: " + lastName));
+            userDto = UserMapper.mapToUserDto(user);
+            userDto.setStatusCode(200);
+            userDto.setMessage("User found successfully");
+        } catch (ResourceNotFoundException e) {
+            userDto.setStatusCode(404);
+            userDto.setMessage(e.getMessage());
+        } catch (Exception e) {
+            userDto.setStatusCode(500);
+            userDto.setMessage("Error occurred: " + e.getMessage());
+        }
+        return userDto;
+    }
+
     // Helper method to generate username
     @Override
     public String generateUsername(String firstName, String lastName, String department, String phoneNumber) {

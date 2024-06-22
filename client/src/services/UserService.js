@@ -122,6 +122,19 @@ class UserService{
         }
     }
 
+    static async getUserByFirstNameAndLastName(firstName, lastName, token) {
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/admin/name`, {
+                headers: { Authorization: `Bearer ${token}` },
+                params: { firstName, lastName }
+            });
+            return response.data;
+        } catch (err) {
+            console.error(`Error fetching user by name ${firstName} ${lastName}:`, err);
+            throw err;
+        }
+    }
+
     static async getOnlineUsers(token) {
         try {
             const response = await axios.get(`${UserService.BASE_URL}/admin/onlineUsers`, {

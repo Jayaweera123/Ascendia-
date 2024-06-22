@@ -37,6 +37,8 @@ public interface UserService {
 
     List<UserDto> getOnlineUsers();
 
+    UserDto getUserByFirstNameAndLastName(String firstName, String lastName);
+
     //Nethuni
     List<UserDto> getAllAvailableUsers();
 

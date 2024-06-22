@@ -26,6 +26,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByOnlineStatusTrue();
 
+    Optional<User> findByFirstNameAndLastName(String firstName, String lastName);
+
 }
 
 

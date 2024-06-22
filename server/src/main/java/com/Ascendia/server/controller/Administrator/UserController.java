@@ -78,6 +78,14 @@ public class UserController {
         return ResponseEntity.ok("User deactivated successfully!.");
     }
 
+    @GetMapping("/admin/name")
+    public ResponseEntity<UserDto> getUserByFirstNameAndLastName(
+            @RequestParam("firstName") String firstName,
+            @RequestParam("lastName") String lastName) {
+        UserDto userDto = userService.getUserByFirstNameAndLastName(firstName, lastName);
+        return ResponseEntity.status(userDto.getStatusCode()).body(userDto);
+    }
+
     @GetMapping("/admin/todayActiveUsers")
     public int getTodayActiveUsers() {
         return userService.getTodayActiveUsers();
