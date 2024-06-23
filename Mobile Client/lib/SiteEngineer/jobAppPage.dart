@@ -19,11 +19,13 @@ import 'package:my_project/SiteEngineer/JobCommentFormSiteEngineer.dart';
 class jobAppPage extends StatefulWidget {  
  final int taskId;
  final String taskName;
+ //final String taskStatus;
 
   jobAppPage({
     Key? key,
     required this.taskId,
     required this.taskName
+  //  required this.taskStatus
   
   }) : super(key: key);
 
@@ -211,10 +213,10 @@ Container(
             )
           ),
 
-          child:const Center(
+          child: Center(
 child:Text(
-                          'To-Do',
-                            style: TextStyle(
+                    "To-Do"  ,   // widget.taskStatus,
+                            style:const TextStyle(
                               color: Color.fromARGB(255, 255, 255, 255),
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
@@ -410,22 +412,9 @@ Center(
 
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 Center(
   child: SizedBox(
-    height: 450,
+    height: 560,
     width: 300,
     child: SingleChildScrollView(
       child: FutureBuilder<List<Job>>(
@@ -480,29 +469,7 @@ Center(
                       Row(
                         mainAxisSize: MainAxisSize.min,
                                children: [
-
-GestureDetector(
-  onTap: () {
-    setState(() {
-      isFocused[job.jobId] = !(isFocused[job.jobId] ?? false); // Toggle the isChecked state with null check
-    });
-  },
-  child: Icon(
-    (isFocused[job.jobId] ?? false)
-      ? Icons.check_box_outlined 
-      : Icons.check_box_outline_blank, // Change icon based on isChecked
-  ),
-),
-         
-
-
-
-
-
-
-
-
-    
+   
         const Padding(padding: EdgeInsets.all(19)),
           GestureDetector(
             onTap: () {
@@ -671,34 +638,7 @@ PopupMenuButton<String>(
 */
 
 
-const Padding(padding: EdgeInsets.all(10)),
 
-Center(
-        child: SizedBox(
-          width: 284,
-          height: 42,
-          child: ElevatedButton(
-            onPressed: () {
-              
-            },
-            style: ElevatedButton.styleFrom(
-              primary: const Color.fromRGBO(0, 31, 63, 1), // Background color
-              onPrimary: const Color.fromARGB(255, 255, 255, 255), // Text color
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(75.0), // Rounded corners
-              ),
-            ),
-            child:const  Text(
-             'Add',
-              style:  TextStyle(
-                fontSize: 19,
-                fontFamily: 'Intel',
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-),
                   ],
                 )
                 ),

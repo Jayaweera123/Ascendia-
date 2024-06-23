@@ -1,5 +1,4 @@
-/*
-package com.Ascendia.server.entity.SiteEngineer;
+package com.Ascendia.server.entity.SiteManager;
 
 import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.entity.ProjectManager.Task;
@@ -44,5 +43,3 @@ public class Comment {
     private LocalDateTime commentDate;
 
 }
-
-*/

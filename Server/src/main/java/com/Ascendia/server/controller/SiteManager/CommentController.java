@@ -1,9 +1,8 @@
-/*
-package com.Ascendia.server.controller.SiteEngineer;
+package com.Ascendia.server.controller.SiteManager;
 
-import com.Ascendia.server.dto.SiteEngineer.CommentDto;
-import com.Ascendia.server.dto.SiteEngineer.CommentResponseDto;
-import com.Ascendia.server.service.SiteEngineer.CommentService;
+import com.Ascendia.server.dto.SiteManager.CommentDto;
+import com.Ascendia.server.dto.SiteManager.CommentResponseDto;
+import com.Ascendia.server.service.SiteManager.CommentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +33,7 @@ public class CommentController {
         CommentResponseDto savedComment = commentService.createComment(commentDto);
         return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }
-
-
+/*
     @PostMapping("/comments")
     public ResponseEntity<?> createComment(@RequestBody CommentDto commentDto) {
         if (commentDto.getCommentedUser() == null) {
@@ -50,7 +48,7 @@ public class CommentController {
         }
     }
 
-
+*/
 
 
 
@@ -80,5 +78,3 @@ public class CommentController {
     }
 
 }
-
-*/

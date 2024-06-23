@@ -1,5 +1,4 @@
-/*
-package com.Ascendia.server.dto.SiteEngineer;
+package com.Ascendia.server.dto.SiteManager;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,5 +18,3 @@ public class CommentResponseDto {
     private String commentText;
     private String commentDateTime;
 }
-
-*/

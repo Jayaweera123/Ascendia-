@@ -1,8 +1,7 @@
-/*
-package com.Ascendia.server.service.SiteEngineer;
+package com.Ascendia.server.service.SiteManager;
 
-import com.Ascendia.server.dto.SiteEngineer.CommentDto;
-import com.Ascendia.server.dto.SiteEngineer.CommentResponseDto;
+import com.Ascendia.server.dto.SiteManager.CommentDto;
+import com.Ascendia.server.dto.SiteManager.CommentResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,4 +20,3 @@ public interface CommentService {
     List<CommentResponseDto> getCommentsByTaskId(Long taskId);
 
 }
-*/

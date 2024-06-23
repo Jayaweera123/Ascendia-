@@ -1,17 +1,16 @@
-/*
-package com.Ascendia.server.service.SiteEngineer.impl;
+package com.Ascendia.server.service.SiteManager.impl;
 
-import com.Ascendia.server.dto.SiteEngineer.CommentDto;
-import com.Ascendia.server.dto.SiteEngineer.CommentResponseDto;
+import com.Ascendia.server.dto.SiteManager.CommentDto;
+import com.Ascendia.server.dto.SiteManager.CommentResponseDto;
 import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.entity.ProjectManager.Task;
-import com.Ascendia.server.entity.SiteEngineer.Comment;
+import com.Ascendia.server.entity.SiteManager.Comment;
 import com.Ascendia.server.exceptions.ResourceNotFoundException;
-import com.Ascendia.server.mapper.SiteEngineer.CommentMapper;
+import com.Ascendia.server.mapper.SiteManager.CommentMapper;
 import com.Ascendia.server.repository.Administrator.UserRepository;
 import com.Ascendia.server.repository.ProjectManager.TaskRepository;
-import com.Ascendia.server.repository.SiteEngineer.CommentRepository;
-import com.Ascendia.server.service.SiteEngineer.CommentService;
+import com.Ascendia.server.repository.SiteManager.CommentRepository;
+import com.Ascendia.server.service.SiteManager.CommentService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -121,4 +120,3 @@ public class CommentServiceimpl implements CommentService{
         return comments.stream().map(CommentMapper::mapToCommentResponseDto).collect(Collectors.toList());
     }
 }
-*/

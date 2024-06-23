@@ -1,12 +1,15 @@
 package com.Ascendia.server.dto.Administrator;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import com.Ascendia.server.entity.Administrator.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 import java.time.LocalDate;
+import java.util.List;
 
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,34 +20,31 @@ public class UserDto {
     private String lastName;
     private String designation;
     private String department;
+    // Setter for username (not obtained from frontend)
+    @Setter
     private String username;
+    // Setter for password (not obtained from frontend)
+    @Setter
     private String password;
     private String email;
     private String phoneNumber;
     private LocalDate addedDate;
     private String profilePicUrl;
+    // Setter for availability (not obtained from frontend)
+    @Setter
     private boolean availability;
+    @Setter
     private boolean active;
 
-
-    // Setter for username (not obtained from frontend)
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    // Setter for password (not obtained from frontend)
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    // Setter for availability (not obtained from frontend)
-    public void setAvailability(boolean availability) {
-        this.availability = availability;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
+    private int statusCode;
+    private String error;
+    private String message;
+    private String token;
+    private String refreshToken;
+    private String expirationTime;
+    private User user;
+    private List<User> usersList;
+    @Setter
+    private List<Long> projectIDs;
 
 }

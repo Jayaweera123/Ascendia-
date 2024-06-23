@@ -1,9 +1,8 @@
-/*
-package com.Ascendia.server.mapper.SiteEngineer;
+package com.Ascendia.server.mapper.SiteManager;
 
-import com.Ascendia.server.dto.SiteEngineer.CommentDto;
-import com.Ascendia.server.dto.SiteEngineer.CommentResponseDto;
-import com.Ascendia.server.entity.SiteEngineer.Comment;
+import com.Ascendia.server.dto.SiteManager.CommentDto;
+import com.Ascendia.server.dto.SiteManager.CommentResponseDto;
+import com.Ascendia.server.entity.SiteManager.Comment;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -55,5 +54,3 @@ public class CommentMapper {
 
 
 }
-
-*/
