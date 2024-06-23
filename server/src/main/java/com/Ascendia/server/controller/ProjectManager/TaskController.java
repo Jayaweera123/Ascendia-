@@ -1,19 +1,14 @@
 package com.Ascendia.server.controller.ProjectManager;
 
-import com.Ascendia.server.dto.ProjectManager.TaskDto;
-<<<<<<< HEAD
-=======
 import com.Ascendia.server.dto.Project.TaskProgressDto;
-import com.Ascendia.server.dto.Store.EquipmentDto;
-import com.Ascendia.server.entity.ProjectManager.Task;
-import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
->>>>>>> origin/Rashmi_Merge-2.2
+import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.service.ProjectManager.TaskService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +36,6 @@ public class TaskController {
         return ResponseEntity.ok(taskDto);
     }
 
-<<<<<<< HEAD
     //Get all Tasks REST API
     @GetMapping("all")
     public ResponseEntity<List<TaskDto>> getAllTasks() {
@@ -59,10 +53,8 @@ public class TaskController {
         return ResponseEntity.ok(taskDto);
     }*/
 
-    @PutMapping("/{taskId}/edit")
-=======
     @PutMapping("/sengineer/{taskId}/edit")
->>>>>>> origin/Rashmi_Merge-2.2
+
     public ResponseEntity<TaskDto> updateTask(@PathVariable Long taskId, @RequestBody TaskDto taskDto) {
         // Update the task
         TaskDto updatedTaskDto = taskService.updateTask(taskId, taskDto);
@@ -105,16 +97,7 @@ public class TaskController {
     }
 */
 
-<<<<<<< HEAD
-    @PutMapping("/{taskId}/set-status")
-    public String setTaskStatusLable(@PathVariable Long taskId) {
-        return taskService.CheckCompletionUpdateStatus(taskId);
-    }
 
-    //Build search REST API
-    @GetMapping("/search/{projectId}")
-    public ResponseEntity<List<TaskDto>> searchTask(@PathVariable Long projectId, @RequestParam("query") String query) {
-=======
     //Completed Job Count
     @GetMapping("/pmanager/{taskId}/job/completed")
     public ResponseEntity<Integer> getCompletedJobCountForTask(@PathVariable Long taskId) {
@@ -130,7 +113,6 @@ public class TaskController {
     //Task search REST API
     @GetMapping("/pmanager/search/task/{projectId}")
     public ResponseEntity<List<TaskDto>> searchTask(@PathVariable Long projectId, @RequestParam("query") String query){
->>>>>>> origin/Rashmi_Merge-2.2
         return ResponseEntity.ok(taskService.searchTask(projectId, query));
     }
 
@@ -141,11 +123,8 @@ public class TaskController {
         return taskService.calculateTimeDifference(taskDto);
     }
 
-<<<<<<< HEAD
-    @PutMapping("/{taskId}/mark-as-ongoing")
-=======
+
     @PutMapping("/sengineer/{taskId}/mark-as-ongoing")
->>>>>>> origin/Rashmi_Merge-2.2
     public void markAsInProgress(@PathVariable Long taskId) {
         taskService.moveToInProgress(taskId);
     }
@@ -175,12 +154,7 @@ public class TaskController {
 
     //========== new Rest API ========
 
-<<<<<<< HEAD
-    @GetMapping("/api/task/{projectId}/scheduled")
-    public ResponseEntity<List<TaskDto>> getTasksByScheduledStatus(@PathVariable Long projectId) {
-        List<TaskDto> tasks = taskService.getTasksByScheduledStatus(projectId);
-        return ResponseEntity.ok(tasks);
-=======
+
     //Ravindu
     @GetMapping("/progress/{projectId}/taskprogress")
     public ResponseEntity<List<TaskProgressDto>> getTasksProgressByProjectId(@PathVariable Long projectId) {
@@ -189,7 +163,7 @@ public class TaskController {
                 .map(task -> new TaskProgressDto(task.getTaskId(), task.getTaskName(), taskService.getTaskProgress(task.getTaskId())))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(taskProgressList);
->>>>>>> origin/Rashmi_Merge-2.2
+
     }
 
     @GetMapping("/api/task/{projectId}/inProgress")
