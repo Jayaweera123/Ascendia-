@@ -12,8 +12,14 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     int countJobsByTask_TaskId(Long taskId);
 
+
+
     @Query("SELECT CASE WHEN COUNT(j) > 0 THEN false ELSE true END FROM Job j WHERE j.task.taskId = :taskId AND j.isDone = false")
     boolean areAllJobsCompletedForTask(@Param("taskId") Long taskId);
+
+
+    @Query("SELECT COUNT(j) FROM Job j WHERE j.task.taskId = :taskId AND j.status = 'Completed'")
+    int countJobsByTask_TaskIdAndStatusCompleted(@Param("taskId") Long taskId);
 
     @Query(
             "SELECT t FROM Job t WHERE " +
@@ -25,4 +31,13 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query("SELECT COUNT(j) FROM Job j JOIN j.task t JOIN t.project p WHERE p.projectId = :projectId")
     Long countJobsByProjectId(@Param("projectId") Long projectId);
 
+<<<<<<< HEAD:Server/src/main/java/com/Ascendia/server/repository/SiteManager/JobRepository.java
 }
+=======
+    @Query("SELECT COUNT(j) FROM Job j JOIN j.task t JOIN t.project p WHERE p.projectId = :projectId AND j.status = 'Completed'")
+    Long countCompletedJobsByProjectId(@Param("projectId") Long projectId);
+
+
+
+}
+>>>>>>> origin/Rashmi_Merge-2.2:server/src/main/java/com/Ascendia/server/repository/SiteManager/JobRepository.java

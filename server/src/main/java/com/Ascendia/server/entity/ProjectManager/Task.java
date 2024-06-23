@@ -40,15 +40,19 @@ public class Task {
 
     @Column(nullable = false)
     private boolean completed;
+<<<<<<< HEAD
 
     /*@Column(name = "task_status")
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;*/
+=======
+>>>>>>> origin/Rashmi_Merge-2.2
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "projectId")
     private Project project;
 
+<<<<<<< HEAD
    /* public enum TaskStatus {
         SCHEDULED,
         IN_PROGRESS,
@@ -61,3 +65,6 @@ public class Task {
 
 
 }
+=======
+}
+>>>>>>> origin/Rashmi_Merge-2.2

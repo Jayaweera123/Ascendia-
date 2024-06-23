@@ -17,5 +17,7 @@ public class UpdateEquipmentDto {
     private String action; //Add,Issue, or return
     private LocalDateTime UpdatedDate;
     private Long equipmentId;
+    private String equipmentCode;
+    private String equipmentName;
 
 }

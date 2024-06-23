@@ -6,12 +6,16 @@ import {
   markAsCompleted,
   getJobCountForTask,
   deleteTask,
+  getCommetsForTask,
 } from "../../services/TaskService";
 import { IoIosArrowForward } from "react-icons/io";
 import { LuClipboardEdit, LuCalendarClock } from "react-icons/lu";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Swal from "sweetalert2";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import { comment } from "postcss";
+import CommentCard from "./CommentCard"; // Import the CommentCard component
+import { formatDate } from "./Functions"; // Import the formatDate function
 
 const TaskDetailsinJobPage = ({ taskId }) => {
   // Your component logic goes here
@@ -21,9 +25,11 @@ const TaskDetailsinJobPage = ({ taskId }) => {
   const [endDate, setEndDate] = useState("");
   const [project, setProject] = useState("");
   const [taskStatus, setTaskStatus] = useState("");
+  const [iscompleted, setCompleted] = useState(false);
   const [timeDifference, setTimeDifference] = useState({});
   const [jobCounts, setJobCounts] = useState({});
   const [projectId, setProjectId] = useState({});
+  const [comments, setComments] = useState([]);
 
   const [isEndDateGreaterThanCurrentDate, setIsEndDateGreaterThanCurrentDate] =
     useState(false);
@@ -59,6 +65,7 @@ const TaskDetailsinJobPage = ({ taskId }) => {
         setProject(response.data.project.projectName); // Set the project data
         setTaskStatus(response.data.taskStatus);
         setProjectId(response.data.project.projectId);
+        setCompleted(response.data.completed);
         //setTimeDifference(response.data);
       })
       .catch((error) => {
@@ -77,11 +84,16 @@ const TaskDetailsinJobPage = ({ taskId }) => {
       });
   }, [taskId]); // Add taskId to the dependency array
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return date.toLocaleDateString("en-US", options);
-  };
+  useEffect(() => {
+    getCommetsForTask(taskId)
+      .then((response) => {
+        console.log(response.data);
+        setComments(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [taskId]);
 
   useEffect(() => {
     // Fetch job counts for each task
@@ -187,11 +199,11 @@ const TaskDetailsinJobPage = ({ taskId }) => {
       </div>
       <div className="flex justify-between items-center mt-2">
         <div className="flex flex-col   text-gray-700">
-          <p>Start Date: {formatDate(startDate)}</p>
-          <p>End Date: {formatDate(endDate)}</p>
+          <p>Start Date: {startDate ? formatDate(startDate) : ""}</p>
+          <p>Due Date: {formatDate(endDate)}</p>
         </div>
         <div className="ml-auto">
-          {taskStatus === "COMPLETED" ? (
+          {iscompleted ? (
             <div className="ml-auto font-semibold" style={{ color: "#239B56" }}>
               Task is completed
             </div>
@@ -204,6 +216,11 @@ const TaskDetailsinJobPage = ({ taskId }) => {
               overdue by {JSON.stringify(timeDifference).replace(/"/g, "")}
             </div>
           )}
+
+          {/* Render the comment cards */}
+          <div className="mt-1  text-gray-700 font-semibold">
+            <CommentCard comments={comments} />
+          </div>
         </div>
       </div>
     </div>

@@ -12,33 +12,41 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/job")
+@RequestMapping
 public class JobController {
 
     private JobService jobService;
+<<<<<<< HEAD:Server/src/main/java/com/Ascendia/server/controller/SiteManager/JobController.java
+=======
+    @GetMapping("/senginner/job/{id}")
+    public ResponseEntity<JobDto> getJobById(@PathVariable("id") Long jobId) {
+        JobDto jobDto = jobService.getJobById(jobId);
+        return ResponseEntity.ok(jobDto);
+    }
+>>>>>>> origin/Rashmi_Merge-2.2:server/src/main/java/com/Ascendia/server/controller/SiteManager/JobController.java
 
-    @GetMapping("/api/task/{taskId}/jobs")
+    @GetMapping("/senginner/task/{taskId}/jobs")
     public ResponseEntity<List<JobDto>> getJobsByTaskId(@PathVariable Long taskId) {
         List<JobDto> jobs = jobService.getJobsByTaskId(taskId);
         return ResponseEntity.ok(jobs);
     }
 
-    @GetMapping("/search/{taskId}")
+    @GetMapping("/senginner/search/{taskId}")
     public ResponseEntity<List<JobDto>> searchJob(@PathVariable Long taskId, @RequestParam("query") String query){
         return ResponseEntity.ok(jobService.searchJob(taskId, query));
     }
 
-    @PutMapping("/complete/{jobId}")
+    @PutMapping("/senginner/complete/{jobId}")
     public ResponseEntity<Void> completeJobById(@PathVariable Long jobId) {
         jobService.markJobAsCompletedById(jobId);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/updateStatus/{jobId}")
+    /*@PutMapping("/senginner/updateStatus/{jobId}")
     public ResponseEntity<String> updateJobStatus(@PathVariable Long jobId) {
         String newStatus = jobService.updateJobStatus(jobId);
         return ResponseEntity.ok(newStatus);
-    }
+    }*/
 
     // add the sample API
     @PostMapping("createJob")

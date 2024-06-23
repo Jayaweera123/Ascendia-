@@ -17,7 +17,7 @@ function AddTaskForm(projectId) {
   const [errors, setErrors] = useState({
     taskName: "",
     description: "",
-    startDate: "",
+    //startDate: "",
     endDate: "",
   });
 
@@ -49,10 +49,14 @@ function AddTaskForm(projectId) {
       const task = {
         taskName,
         description,
-        startDate,
         endDate,
         project: projectId,
       };
+
+      // Add startDate only if it is provided
+      if (startDate) {
+        task.startDate = startDate;
+      }
       console.log(task);
 
       if (id) {
@@ -133,13 +137,12 @@ function AddTaskForm(projectId) {
   // Determine if the form is invalid
   const isFormInvalid =
     !taskName ||
-    !startDate ||
     !endDate ||
     !description ||
-    description.trim().length == 0 ||
-    endDate < startDate ||
-    endDate == startDate ||
-    startDate < projectStartDate ||
+    description.trim().length === 0 ||
+    (endDate && startDate && endDate < startDate) ||
+    (endDate && startDate && endDate === startDate) ||
+    (startDate && startDate < projectStartDate) ||
     endDate > projectEndDate ||
     description.length > 999 ||
     taskName.length > 99;
@@ -223,9 +226,9 @@ function AddTaskForm(projectId) {
                       className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                     />
                     {/* Conditional rendering to display the required message */}
-                    {startDate.trim().length === 0 && (
+                    {/*startDate.trim().length === 0 && (
                       <span className="mt-2 text-sm text-red-500"></span>
-                    )}
+                    )*/}
                     {endDate && startDate && endDate < startDate && (
                       <span className="mt-2 text-sm text-red-500">
                         Start date must be before end date.

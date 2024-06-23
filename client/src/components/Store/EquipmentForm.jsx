@@ -3,6 +3,8 @@ import SideNavigationStore from "./SideNavigationStore"; // Adjust the path base
 import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
 import { createEquipment, editEquipment, getEquipment } from '../../services/StoreServices'
 import { useNavigate, useParams } from 'react-router-dom'
+import Swal from 'sweetalert2';
+import { searchEquipment } from '../../services/StoreServices';
 
 function EquipmentForm() {
   const [open, setOpen] = useState(true);
@@ -43,40 +45,76 @@ function EquipmentForm() {
 
   }, [id]) 
 
-  function saveOrEditEquipment(e){
+  function saveOrEditEquipment(e) {
     e.preventDefault();
+  
+    if (validateForm()) {
+      const equipment = { equipmentCode, equipmentName, quantity, description, createdDate, projectId };
+  
+      const confirmationOptions = {
+        title: 'Edit this equipment?',
+        text: 'Are you sure you want to edit this equipment?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#001b5e',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Edit',
+        cancelButtonText: 'Cancel',
+      };
 
-    if(validateForm()){
+      const editEquipmentAndShowConfirmation = () => {
+        editEquipment(id, equipment)
+          .then((response) => {
+            console.log(response.data);
+            Swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: 'Equipment edited successfully!',
+              confirmButtonColor: '#001b5e'
+            }).then(() => {
+              navigator('/equipment');
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
 
-      const equipment = {equipmentCode, equipmentName,quantity,description,createdDate, projectId}
-      console.log(equipment)
+      const createEquipmentAndShowSuccess = () => {
+        createEquipment(equipment)
+          .then((response) => {
+            console.log(response.data);
+            Swal.fire({
+              icon: 'success',
+              title: 'Success!',
+              text: 'Equipment created successfully!',
+              confirmButtonColor: '#001b5e'
+            }).then(() => {
+              navigator('/equipment');
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
 
       if(id){
-        editEquipment(id, equipment).then((response) => {
-          console.log(response.data)
-          navigator('/equipment')
-        }).catch(error => {
-          console.error(error)
+        Swal.fire(confirmationOptions).then((result) => {
+          if (result.isConfirmed) {
+            editEquipmentAndShowConfirmation();
+          }
         })
-      }else{
-          createEquipment(equipment).then((response) => {
-          console.log(response.data);
-          navigator('/equipment')
-        }).catch(error => {
-           console.error(error)
-        })
-  
+      } else {
+        createEquipmentAndShowSuccess();
       }
-  
-      
     }
-
-  }
+}
 
 function handleCancel(e){
   navigator('/equipment')
 }
 
+//Form validation
 //Form validation
 function validateForm(){
   let valid = true;
@@ -209,7 +247,7 @@ function formTitle(){
                 </label>
                 <div className="mt-3">
                   <input
-                    type="text"
+                    type="number"
                     placeholder='Enter Quantity of equipment'
                     name="quantity"
                     id="quantity"

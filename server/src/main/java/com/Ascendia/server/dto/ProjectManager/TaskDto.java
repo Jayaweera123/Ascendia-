@@ -1,6 +1,12 @@
 package com.Ascendia.server.dto.ProjectManager;
 
 import com.Ascendia.server.entity.Project.Project;
+<<<<<<< HEAD
+=======
+import com.Ascendia.server.entity.ProjectManager.Task;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
+>>>>>>> origin/Rashmi_Merge-2.2
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,6 +31,7 @@ public class TaskDto {
     private boolean completed;
     private Project project;
 
+<<<<<<< HEAD
 
     // Method to calculate and set status based on start and end dates
    /* public void calculateAndSetStatus() {
@@ -39,3 +46,6 @@ public class TaskDto {
     }*/
 
 }
+=======
+}
+>>>>>>> origin/Rashmi_Merge-2.2

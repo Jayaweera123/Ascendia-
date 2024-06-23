@@ -1,84 +1,137 @@
-// Import necessary dependencies and components
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import SideNavigationAdmin from "../../components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin";
 import { FaUsers } from "react-icons/fa";
-import { userList, deleteUser } from "../../services/UserService";
 import { useNavigate } from "react-router-dom";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { TiUserAddOutline } from "react-icons/ti";
 import { LiaUserTimesSolid } from "react-icons/lia";
+import debounce from 'lodash/debounce';
+import UserService from "../../services/UserService";
+
 
 // Define the UserList component
 const UserList = () => {
   // State variables to manage component state
   const [open, setOpen] = useState(true);
   const [users, setUsers] = useState([]);
-  const navigator = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [matchedUserIDs, setMatchedUserIDs] = useState([]);
+  const navigate = useNavigate();
 
   // useEffect hook to fetch user list when component mounts
   useEffect(() => {
-    getAllUsers();
+    fetchUsers();
   }, []);
 
-  // Function to fetch all users from the server
-  function getAllUsers() {
-    userList()
-      .then((response) => {
-        setUsers(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+      if (!token) {
+        throw new Error('No token found');
+      }
+      const response = await UserService.getAllUsers(token);
+      console.log("API Response:", response); // Log the entire response object
 
-  // Function to navigate to the Add User page
-  function addNewUser() {
-    navigator("/adduser");
-  }
+      // Check if the response is in the expected format
+      if (response && Array.isArray(response.usersList)) {
+        const activeUsers = response.usersList.filter(user => user.active);
+        setUsers(activeUsers);
+      } else {
+        console.error("Unexpected response format:", response);
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
 
-  // Function to navigate to the Edit User page for a specific user
-  function editUser(userID) {
-    navigator(`/edituser/${userID}`);
-  }
+  const handleSearch = async (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+    if (query.trim() === "") {
+      fetchUsers();
+      setMatchedUserIDs([]);
+      return;
+    }
+    const [firstName, lastName] = query.split(" ");
+    if (firstName) {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+        let response;
+        if (lastName) {
+          response = await UserService.getUserByFirstNameAndLastName(firstName, lastName, token);
+        } else {
+          response = await UserService.getUserByFirstName(firstName, token);
+        }
+        if (response && response.users) {
+          setUsers(response.users);
+          setMatchedUserIDs(response.users.map(user => user.userID));
+        } else {
+          setUsers([]);
+          setMatchedUserIDs([]);
+        }
+      } catch (error) {
+        console.error('Error fetching user by name:', error);
+        setUsers([]);
+        setMatchedUserIDs([]);
+      }
+    }
+  };
 
-  // Function to remove a user from the list
-  function removeUser(userID) {
-    deleteUser(userID)
-      .then((response) => {
-        getAllUsers(); // Fetch updated user list after deletion
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
+  const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), []);
 
-  // Render the component JSX
+  
+  const addNewUser = () => {
+    navigate("/admin/adduser");
+  };
+
+  const editUser = (userID) => {
+    navigate(`/admin/update/${userID}`);
+  };
+
+  const removeUser = async (userID) => {
+    try {
+      const confirmDeactivation = window.confirm('Are you sure you want to deactivate this user?');
+      if (confirmDeactivation) {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+        await UserService.deactivateUser(userID, token);
+        fetchUsers();
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+
   return (
     <div>
-      {/* Render the top navigation component */}
       <TopNavigationAdmin />
       <section className="flex">
-        {/* Render the side navigation component */}
         <SideNavigationAdmin open={open} setOpen={setOpen} />
-        <div class="relative bg-zinc-100 bg-cover h-fit w-screen">
+        <div className="relative bg-zinc-100 bg-cover h-fit w-screen">
           <div className="m-3 text-xl font-semibold text-gray-900">
             <div className="flex flex-row gap-3 pt-2 pb-1 ml-5 items-centered">
-              {/* Render the icon for user list */}
+             
               <FaUsers size={80} color="#001b5e" />
               <div>
-                {/* Render the title for user list */}
+                
                 <h1 className="place-items-baseline text-4xl leading-relaxed py-4 tracking-tight font-bold text-left text-[#001b5e]">
                   User List
                 </h1>
               </div>
             </div>
             <div className="relative m-5 overflow-x-auto bg-white rounded-lg shadow-md">
-              <div class="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4">
+              <div className="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4">
                 {/* Button to add a new user */}
                 <div>
                   <button
-                    class="inline-flex flex-row gap-1 ml-10 items-center pb-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-[#101d3f] dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                    className="inline-flex flex-row gap-1 ml-10 items-center pb-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-[#101d3f] dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                     type="button"
                     onClick={addNewUser}
                   >
@@ -89,14 +142,14 @@ const UserList = () => {
                   </button>
                 </div>
                 {/* Input field for searching users */}
-                <label for="table-search" class="sr-only">
+                <label htmlFor="table-search" className="sr-only">
                   Search
                 </label>
-                <div class="relative">
-                  <div class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                <div className="relative">
+                  <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
                     {/* Icon for search */}
                     <svg
-                      class="w-4 h-4 text-gray-100 dark:text-gray-400"
+                      className="w-4 h-4 text-gray-100 dark:text-gray-400"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -117,34 +170,30 @@ const UserList = () => {
                     id="table-search-users"
                     className="block pt-2 pb-2 mr-5 text-sm text-gray-600 border-gray-100 rounded-lg ps-10 w-80 focus:ring-blue-100 focus:border-blue-100 bg-slate-50 dark:border-gray-100 dark:placeholder-gray-300 dark:text-gray-500 dark:focus:ring-blue-100 dark:focus:border-blue-100"
                     placeholder="Search for users"
+                    value={searchQuery}
+                    onChange={debouncedHandleSearch}
                   />
                 </div>
               </div>
             </div>
             <div className="relative m-5 overflow-x-auto bg-white rounded-lg shadow-md">
-              <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 rounded-lg shadow-md">
-                <thead className="text-sm text-white uppercase bg-gray-500 ">
+              <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 rounded-lg shadow-md">
+                <thead className="text-sm text-white uppercase bg-gray-500 h-20">
                   {/* Table headers */}
                   <tr>
-                    <th scope="col" className="px-5 py-3 w-28">
-                      User Id
-                    </th>
-                    <th scope="col" className="w-24 px-5 py-3">
+                    <th scope="col" className="w-60 px-5 py-3">
                       Name
                     </th>
-                    <th scope="col" className="w-56 px-4 py-3">
-                      Phone Number
-                    </th>
-                    <th scope="col" className="px-4 py-3 w-52">
-                      Username
-                    </th>
-                    <th scope="col" className="w-20 px-4 py-3">
+                    <th scope="col" className="w-60 px-4 py-3">
                       Designation
                     </th>
-                    <th scope="col" className="w-10 px-4 py-3">
+                    <th scope="col" className="w-32 px-4 py-3">
                       Department
                     </th>
-                    <th scope="col" className="px-5 py-3 w-15">
+                    <th scope="col" className="w-36 px-4 py-3">
+                      Phone Number
+                    </th>
+                    <th scope="col" className="w-40 px-5 py-3">
                       Actions
                     </th>
                   </tr>
@@ -154,39 +203,42 @@ const UserList = () => {
                   {users.map((user) => (
                     <tr
                       key={user.userID}
-                      class="bg-white border-b dark:border-gray-100 hover:bg-gray-50"
+                      className={`bg-white border-b dark:border-gray-100 hover:bg-gray-50 ${
+                        matchedUserIDs.includes(user.userID) ? 'bg-yellow-500' : ''
+                      }`}
                     >
                       {/* Display user information */}
-                      <td class="px-6 py-3 w-20">{user.userID}</td>
+                      
                       <th
                         scope="row"
-                        class="flex items-center px-5 py-3 text-gray-900 whitespace-nowrap dark:text-black"
+                        className="flex items-center px-5 py-3 text-gray-900 whitespace-nowrap dark:text-black"
                       >
                         <img
-                          src={user.profilePicUrl}
-                          className="w-10 h-10 rounded-full"
+                          src={user.profilePicUrl ? `http://localhost:8080/${user.profilePicUrl.replace(/\\/g, "/")}` : ""} // Assuming the server is running on localhost:8080
+                          className="w-12 h-12 rounded-full"
                           alt={`Profile of ${user.firstName} ${user.lastName}`}
                         />
-                        <div class="ps-3">
+
+                        <div className="ps-3">
                           <div className="flex flex-row text-base font-semibold">
                             <div>{user.firstName}</div>
                             <div className="ml-1">{user.lastName}</div>
                           </div>
-                          <div class="font-normal text-gray-500">
+                          <div className="font-normal text-gray-500">
                             {user.email}
                           </div>
                         </div>
                       </th>
-                      <td class="px-4 py-3 w-40">{user.designation}</td>
-                      <td class="px-4 py-3">{user.department}</td>
-                      <td class="px-4 py-3">{user.username}</td>
-                      <td class="px-4 py-3">{user.phoneNumber}</td>
+                      <td className="px-4 py-3 w-60">{user.designation}</td>
+                      <td className="px-4 py-3 w-32">{user.department}</td>
+                      <td className="px-4 py-3">{user.phoneNumber}</td>
+                      
                       {/* Buttons for editing and deleting users */}
-                      <td class="px-2 py-3">
+                      <td className="px-2 py-3">
                         <button
-                          class="inline-flex flex-row gap-1 pb-2 pl-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-[#101d3f] dark:text-white dark:border-gray-100 dark:hover:bg-gray-400 dark:hover:border-gray-100 dark:focus:ring-gray-100"
+                          className="inline-flex flex-row gap-1 pb-2 pl-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-[#101d3f] dark:text-white dark:border-gray-100 dark:hover:bg-gray-400 dark:hover:border-gray-100 dark:focus:ring-gray-100"
                           type="button"
-                          onClick={() => editUser(user.userId)}
+                          onClick={() => editUser(user.userID)}
                         >
                           <div>
                             <LiaUserEditSolid size={20} />
@@ -194,14 +246,14 @@ const UserList = () => {
                           <div>Edit</div>
                         </button>
                         <button
-                          class="inline-flex flex-row gap-1 pb-2 pl-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-red-600 dark:text-white dark:border-gray-100 dark:hover:bg-gray-400 dark:hover:border-gray-100 dark:focus:ring-gray-100"
+                          className="inline-flex flex-row gap-1 pb-2 pl-2 text-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 bg-red-600 dark:text-white dark:border-gray-100 dark:hover:bg-gray-400 dark:hover:border-gray-100 dark:focus:ring-gray-100"
                           type="button"
-                          onClick={() => removeUser(user.userId)}
+                          onClick={() => removeUser(user.userID)}
                         >
                           <div>
                             <LiaUserTimesSolid size={20} />
                           </div>
-                          <div>Delete</div>
+                          <div>Deactivate</div>
                         </button>
                       </td>
                     </tr>

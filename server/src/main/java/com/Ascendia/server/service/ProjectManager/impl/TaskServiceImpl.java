@@ -82,6 +82,7 @@ public class  TaskServiceImpl implements TaskService {
         return taskRepository.findById(taskId)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + taskId));
     }
+<<<<<<< HEAD
 
 
 
@@ -92,6 +93,9 @@ public class  TaskServiceImpl implements TaskService {
                 .collect(Collectors.toList());
     }*/
     //From Chat gpt
+=======
+
+>>>>>>> origin/Rashmi_Merge-2.2
     @Override
     public List<TaskDto> getAllTasks() {
         List<Task> tasks = taskRepository.findAll();
@@ -103,6 +107,7 @@ public class  TaskServiceImpl implements TaskService {
         LocalDate currentDate = LocalDate.now();
         LocalDate startDate = task.getStartDate();
         LocalDate endDate = task.getEndDate();
+<<<<<<< HEAD
 
         if (!task.isCompleted()) {
             if (startDate == null && currentDate.isAfter(endDate)) {
@@ -125,10 +130,26 @@ public class  TaskServiceImpl implements TaskService {
     //Overdue
 
 
+=======
+>>>>>>> origin/Rashmi_Merge-2.2
 
-
-    //================================UPDATE TASK=======================================
-
+        if (!task.isCompleted()) {
+           if (startDate == null && currentDate.isAfter(endDate)) {
+               return ("Overdue");
+           } else if (startDate == null || currentDate.isBefore(startDate)) {
+                return ("Scheduled");
+           } else if (currentDate.isAfter(endDate)) {
+                return ("Overdue");
+           } else if ((currentDate.isEqual(startDate)) || currentDate.isEqual(endDate)) {
+                return ("In-Progress");
+           } else {
+                return ("In-Progress");
+           }
+        }
+        else {
+            return ("Completed");
+        }
+    }
 
     @Override
     public TaskDto updateTask(Long taskId, TaskDto updateTask) {
@@ -161,6 +182,7 @@ public class  TaskServiceImpl implements TaskService {
         taskRepository.deleteById(taskId);
     }
 
+<<<<<<< HEAD
     /*@Override
     public void calculateStatus(TaskDto taskDto) {
         LocalDate currentDate = LocalDate.now();
@@ -172,6 +194,8 @@ public class  TaskServiceImpl implements TaskService {
             taskDto.setStatus("Ongoing");
         }
     }*/
+=======
+>>>>>>> origin/Rashmi_Merge-2.2
     @Override
     public List<TaskDto> getTasksByProjectId(Long projectId) {
         List<Task> tasks = taskRepository.findByProjectProjectId(projectId);
@@ -192,10 +216,18 @@ public class  TaskServiceImpl implements TaskService {
 
 
     @Override
+    public int getCompletedJobCountForTask(Long taskId) {
+        return jobRepository.countJobsByTask_TaskIdAndStatusCompleted(taskId);
+    }
+
+
+
+    @Override
     public void updateTaskStatus(Long taskId) {
         Task task = taskRepository.findById(taskId).orElseThrow(
                 () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
         );
+<<<<<<< HEAD
         // Recalculate task status
         //Task.TaskStatus newStatus = task.calculateStatus();
 
@@ -209,6 +241,8 @@ public class  TaskServiceImpl implements TaskService {
         // Save the updated task
 
 
+=======
+>>>>>>> origin/Rashmi_Merge-2.2
     }
 
 
@@ -344,6 +378,7 @@ public class  TaskServiceImpl implements TaskService {
             return ("Completed");
         }
     }
+<<<<<<< HEAD
 //==========================================================
     @Override
     public List<TaskDto> getTasksByScheduledStatus(Long projectId) {
@@ -381,11 +416,42 @@ public class  TaskServiceImpl implements TaskService {
                 .collect(Collectors.toList());
 
         return filteredTasks.stream().map(TaskMapper::mapToTaskDto).collect(Collectors.toList());
+=======
 
+    //Ravindu
+    @Override
+    public int getTaskProgress(Long taskId) {
+        Task task = getTaskById(taskId);
+        if (task.isCompleted()) {
+            return 100; // Completed task
+        } else {
+            // Optionally implement more detailed progress calculation logic
+            return 0; // Incomplete task
+        }
     }
 
+    @Override
+    public double calculateProjectProgress(Long projectId) {
+        List<Task> tasks = taskRepository.findByProjectProjectId(projectId);
+        if (tasks.isEmpty()) {
+            return 0.0; // No tasks means no progress
+        }
+>>>>>>> origin/Rashmi_Merge-2.2
+
+        double totalProgress = 0.0;
+        for (Task task : tasks) {
+            totalProgress += getTaskProgress(task.getTaskId());
+        }
+
+        return totalProgress / tasks.size();
+    }
+
+<<<<<<< HEAD
 
 
 
 
 }
+=======
+}
+>>>>>>> origin/Rashmi_Merge-2.2

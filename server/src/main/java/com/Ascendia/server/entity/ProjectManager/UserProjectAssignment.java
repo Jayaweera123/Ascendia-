@@ -38,5 +38,4 @@ public class  UserProjectAssignment {
 
     @Column(name = "assignment_status", nullable = false)
     private String assignmentStatus;
-
 }

@@ -28,7 +28,11 @@ public class TaskMapper {
                 taskDto.getDescription(),
                 taskDto.getStartDate(),
                 taskDto.getEndDate(),
+<<<<<<< HEAD
                 // taskDto.getTaskStatus(),
+=======
+               // taskDto.getTaskStatus(),
+>>>>>>> origin/Rashmi_Merge-2.2
                 taskDto.getCreatedDate(),
                 taskDto.getStatus(),
                 taskDto.getPrevStatus(),

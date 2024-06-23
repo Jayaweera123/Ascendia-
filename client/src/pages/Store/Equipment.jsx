@@ -5,6 +5,7 @@ import SearchBar from "../../components/Store/SearchBar";
 import TopNavigationStore from "../../components/Store/TopNavigationStore";
 import SideNavigationStore from "../../components/Store/SideNavigationStore";
 import { searchEquipment } from "../../services/StoreServices";
+import NotificationBar from "../../components/Store/NotificationBar";
 
 function Equipment() {
 
@@ -15,6 +16,12 @@ function Equipment() {
     const navigator = useNavigate();
 
     const [search, setSearch] = useState("");
+
+    const [isOpen, setIsOpen] = useState(false);
+  
+    const notificationHandler = (status) => {
+        setIsOpen(status);
+    };
 
     const givenProjectId = 3;
 
@@ -87,19 +94,21 @@ function Equipment() {
 
   return (
     <div>
-        <TopNavigationStore />
+        <TopNavigationStore notificationHandler={notificationHandler} />
+        {isOpen && <NotificationBar isOpen={isOpen} notificationHandler={notificationHandler} />}
+
         <section className="flex">
             <SideNavigationStore open={open} setOpen={setOpen} />
       
-            <div className="relative h-screen">
+            <div className="relative w-screen h-screen">
   
                 <div className="absolute top-0 left-0 pt-3 pl-10">
                 <h1 className="text-4xl leading-relaxed font-bold text-[#101d3f] whitespace-nowrap">Equipment List</h1>
                 </div>
 
                 <div className="flex justify-center min-h-screen mx-auto mt-20 ml-10 ">
-                    <div className="overflow-x-auto ">
-                    <div className="pt-3 pb-10 pl-10 pr-10 bg-white rounded-lg shadow-md">
+                    <div className="overflow-x-auto basis-full">
+                    <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md">
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                             
                                 <SearchBar search = {search} setSearch={setSearch}/>
@@ -122,7 +131,7 @@ function Equipment() {
                         <table className="min-w-full text-sm bg-white">
                             <thead>
                                 <tr className="text-gray-700 border-b bg-blue-gray-100 border-blue-gray-50 border-y">
-                                <th scope="col" className="p-4"> </th>
+                                {/* <th scope="col" className="p-4"> </th> */}
                                 <th className="px-4 py-5 text-left">Equipment Code</th>
                                 <th className="px-4 py-5 text-left">Equipment Name</th>
                                 <th className="px-4 py-5 text-left">Quantity</th>
@@ -137,12 +146,12 @@ function Equipment() {
                                     records
                                     .map(equipment =>
                                         <tr className="bg-white border-b border-blue-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600" key={equipment.equipmentId}>
-                                            <td class="w-4 p-4">
+                                            {/* <td class="w-4 p-4">
                                                 <div class="flex items-center">
                                                     <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onChange={() => handleCheckboxChange(equipment.equipmentCode)}/>
                                                     <label for="checkbox-table-search-1" className="sr-only">checkbox</label>
                                                 </div>
-                                            </td>
+                                            </td> */}
                                             <td className="px-4 py-3">{equipment.equipmentCode}</td>
                                             <td className="px-4 py-3">{equipment.equipmentName}</td>
                                             <td className="px-4 py-3">{equipment.quantity}</td>
@@ -164,7 +173,7 @@ function Equipment() {
                                                         </svg>
 
                                                     </button>
-                                                    <div className="absolute hidden px-4 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
+                                                    <div className="absolute hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
                                                         Edit
                                                     </div>
                                                 </div>
@@ -187,8 +196,8 @@ function Equipment() {
 
 
                                                     </button>
-                                                    <div className="absolute hidden px-4 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
-                                                        Update
+                                                    <div className="absolute hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
+                                                        Add/Issue
                                                     </div>
                                                 </div>
 
