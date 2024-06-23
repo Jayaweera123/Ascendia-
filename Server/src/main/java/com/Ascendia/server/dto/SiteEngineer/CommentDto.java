@@ -1,4 +1,3 @@
-/*
 package com.Ascendia.server.dto.SiteEngineer;
 
 import com.Ascendia.server.entity.Administrator.User;
@@ -22,5 +21,3 @@ public class CommentDto {
     private String commentText;
     private LocalDateTime commentDate;
 }
-
-*/

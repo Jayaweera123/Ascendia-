@@ -1,4 +1,3 @@
-/*
 package com.Ascendia.server.service.SiteEngineer;
 
 import com.Ascendia.server.dto.SiteEngineer.CommentDto;
@@ -21,4 +20,3 @@ public interface CommentService {
     List<CommentResponseDto> getCommentsByTaskId(Long taskId);
 
 }
-*/

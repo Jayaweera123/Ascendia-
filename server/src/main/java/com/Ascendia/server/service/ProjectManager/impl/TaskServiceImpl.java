@@ -190,10 +190,6 @@ public class  TaskServiceImpl implements TaskService {
     }
 */
 
-    @Override
-    public int getCompletedJobCountForTask(Long taskId) {
-        return jobRepository.countJobsByTask_TaskIdAndStatusCompleted(taskId);
-    }
 
     @Override
     public void updateTaskStatus(Long taskId) {
@@ -348,37 +344,6 @@ public class  TaskServiceImpl implements TaskService {
             return ("Completed");
         }
     }
-
-
-    //Ravindu
-    @Override
-    public int getTaskProgress(Long taskId) {
-        Task task = getTaskById(taskId);
-        if (task.isCompleted()) {
-            return 100; // Completed task
-        } else {
-            // Optionally implement more detailed progress calculation logic
-            return 0; // Incomplete task
-        }
-    }
-
-    @Override
-    public double calculateProjectProgress(Long projectId) {
-        List<Task> tasks = taskRepository.findByProjectProjectId(projectId);
-        if (tasks.isEmpty()) {
-            return 0.0; // No tasks means no progress
-        }
-
-        double totalProgress = 0.0;
-        for (Task task : tasks) {
-            totalProgress += getTaskProgress(task.getTaskId());
-        }
-
-        return totalProgress / tasks.size();
-    }
-
-
-
 //==========================================================
     @Override
     public List<TaskDto> getTasksByScheduledStatus(Long projectId) {

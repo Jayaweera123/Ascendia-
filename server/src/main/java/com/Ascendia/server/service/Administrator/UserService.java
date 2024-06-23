@@ -5,37 +5,22 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+
 public interface UserService {
 
     UserDto addUser(UserDto userDto, MultipartFile profileImage);
 
-    UserDto login(UserDto loginRequest);
-
-    void logout(Long userId);
-
-    UserDto refreshToken(UserDto refreshTokenRequest);
-
     UserDto getUserById(Long userID);
 
-    UserDto getAllUsers();
+    List<UserDto> getAllUsers();
 
-    UserDto updateUser(Long userID, UserDto updatedUser, MultipartFile profileImage);
+    UserDto updateUser(Long userID, UserDto updatedUser);
 
     void deactivateUser(Long userID);
 
-    String generateUsername(String firstName, String lastName, String department, String phoneNumber);
+    String generateUsername(String firstName, String lastName, String department, long userId);
 
-    String generatePassword(String firstName, String lastName, String email, String phoneNumber);
-
-    int getTodayActiveUsers();
-
-    int countAllUsers();
-
-    int countActiveUsers();
-
-    int countDeactivatedUsers();
-
-    List<UserDto> getOnlineUsers();
+    String generatePassword(UserDto userDto);
 
     //Nethuni
     List<UserDto> getAllAvailableUsers();

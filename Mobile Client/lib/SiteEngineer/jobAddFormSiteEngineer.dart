@@ -573,25 +573,6 @@ print("object 04");
 
       _dateTime1 = DateTime.now(); // Update dateTime
       _dateTime2 = DateTime.now();
-
-      AlertDialog(
-          title: Text('Success!'),
-          content: Text('Create job successfully.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-
-      Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) =>const JobAddSite()),
-     );          
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-
-
       Navigator.push(
       context,
       MaterialPageRoute(builder: (context) =>const JobAddSite()),
@@ -604,7 +585,7 @@ print("object 04");
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Error'),
-          content: Text('Please enter data before saving.'),
+          content: Text('Please enter some data before saving.'),
           actions: [
             TextButton(
               onPressed: () {

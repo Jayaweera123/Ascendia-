@@ -1,15 +1,11 @@
 package com.Ascendia.server.entity.Administrator;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
 
 @Getter
 @Setter
@@ -17,9 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name="User")
-@Data
 
-public class User implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -38,16 +33,16 @@ public class User implements UserDetails {
     @Column(name="department")
     private String department;
 
-    @Column(name="username",nullable=false, unique = true)
+    @Column(name="username",nullable=false)
     private String username;
 
     @Column(name="password",nullable=false, unique = true)
     private String password;
 
-    @Column(name="email",nullable=false)
+    @Column(name="email",nullable=false, unique = true)
     private String email;
 
-    @Column(name="phoneNumber",nullable=false)
+    @Column(name="phoneNumber",nullable=false, unique = true)
     private String phoneNumber;
 
     @Column(name="addedDate")
@@ -61,37 +56,4 @@ public class User implements UserDetails {
 
     @Column(name = "active", nullable = false)
     private boolean active;
-
-    @Column(name = "lastLoginDate")
-    private LocalDateTime lastLoginDate;
-
-    @Column(name = "online_status")
-    private boolean onlineStatus;
-
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(designation));
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
 }

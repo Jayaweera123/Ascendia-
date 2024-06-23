@@ -1,6 +1,5 @@
 package com.Ascendia.server.entity.Project;
 
-import com.Ascendia.server.entity.Administrator.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -38,26 +37,9 @@ public class Project {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
+    @Column(name = "pm_id", nullable = false)
+    private Long pmId; // Changed field name to follow Java naming conventions
+
     @Column(name = "image")
     private String image;
-
-    @ManyToOne
-    @JoinColumn(name = "pmanager_id")
-    private User projectManager;
-
-    @Column(name = "progress", nullable = false)
-    private double progress; // New field for project progress
-
-    public Project(String projectName, String projectType, String projectDescription, String projectStatus, LocalDate createdDate, LocalDate endDate, String image, User ProjectManager, double progress) {
-        this.projectName = projectName;
-        this.projectType = projectType;
-        this.projectDescription = projectDescription;
-        this.projectStatus = projectStatus;
-        this.createdDate = createdDate;
-        this.endDate = endDate;
-        //this.pmId = pmId;
-        this.image = image;
-        this.projectManager = ProjectManager;
-        this.progress = progress; // Initialize the progress field
-    }
 }

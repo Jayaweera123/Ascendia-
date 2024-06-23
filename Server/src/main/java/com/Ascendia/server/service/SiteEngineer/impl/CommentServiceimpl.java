@@ -1,4 +1,3 @@
-/*
 package com.Ascendia.server.service.SiteEngineer.impl;
 
 import com.Ascendia.server.dto.SiteEngineer.CommentDto;
@@ -121,4 +120,3 @@ public class CommentServiceimpl implements CommentService{
         return comments.stream().map(CommentMapper::mapToCommentResponseDto).collect(Collectors.toList());
     }
 }
-*/

@@ -24,7 +24,7 @@ public interface TaskService {
 
     int getJobCountForTask(Long taskId);
 
-    int getCompletedJobCountForTask(Long taskId);
+   // int getCompletedJobCountForTask(Long taskId);
 
     String CheckCompletionUpdateStatus(Long taskId);
 
@@ -44,16 +44,14 @@ public interface TaskService {
 
     String calculateTimeDifference(TaskDto taskDto);
 
-    //Ravindu
-    int getTaskProgress(Long taskId);
-    double calculateProjectProgress(Long projectId);
 
 
 
 
 
 
-    //=============gimhan===============
+
+    //============================
     List<TaskDto> getTasksByScheduledStatus(Long projectId);
 
     List<TaskDto> getTasksByInProgresStatus(Long projectId);

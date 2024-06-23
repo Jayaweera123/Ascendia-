@@ -50,7 +50,6 @@ class _DisplayDataPageState extends State<inProgressSite> {
   //bool isFocused= false;
   Service service = Service();
     List<String> savedData = [];
-    String taskSentStatus = "To-Do";
 
      
     void toDoGoToNewOne(){
@@ -422,7 +421,7 @@ Center(
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.hasData) {
             print("object10");
-            final List<Task> tasks = snapshot.data!;           
+            final List<Task> tasks = snapshot.data!;            
             return Column(
               children: tasks.map((task) {
                 updateStatus(task.taskId);
@@ -515,8 +514,7 @@ GestureDetector(
                 MaterialPageRoute(
                   builder: (context) =>  TaskCommentSite(
                     taskId:task.taskId,
-                    taskName:task.taskName,
-                    
+                    taskName:task.taskName
                     
                   ),
                 ),

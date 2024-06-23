@@ -15,10 +15,6 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query("SELECT CASE WHEN COUNT(j) > 0 THEN false ELSE true END FROM Job j WHERE j.task.taskId = :taskId AND j.isDone = false")
     boolean areAllJobsCompletedForTask(@Param("taskId") Long taskId);
 
-
-    @Query("SELECT COUNT(j) FROM Job j WHERE j.task.taskId = :taskId AND j.status = 'Completed'")
-    int countJobsByTask_TaskIdAndStatusCompleted(@Param("taskId") Long taskId);
-
     @Query(
             "SELECT t FROM Job t WHERE " +
                     "t.task.taskId = :taskId AND " +
@@ -28,8 +24,5 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @Query("SELECT COUNT(j) FROM Job j JOIN j.task t JOIN t.project p WHERE p.projectId = :projectId")
     Long countJobsByProjectId(@Param("projectId") Long projectId);
-
-    @Query("SELECT COUNT(j) FROM Job j JOIN j.task t JOIN t.project p WHERE p.projectId = :projectId AND j.status = 'Completed'")
-    Long countCompletedJobsByProjectId(@Param("projectId") Long projectId);
 
 }

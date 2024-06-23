@@ -1,4 +1,3 @@
-/*
 package com.Ascendia.server.controller.SiteEngineer;
 
 import com.Ascendia.server.dto.SiteEngineer.CommentDto;
@@ -34,8 +33,7 @@ public class CommentController {
         CommentResponseDto savedComment = commentService.createComment(commentDto);
         return new ResponseEntity<>(savedComment, HttpStatus.CREATED);
     }
-
-
+/*
     @PostMapping("/comments")
     public ResponseEntity<?> createComment(@RequestBody CommentDto commentDto) {
         if (commentDto.getCommentedUser() == null) {
@@ -50,7 +48,7 @@ public class CommentController {
         }
     }
 
-
+*/
 
 
 
@@ -80,5 +78,3 @@ public class CommentController {
     }
 
 }
-
-*/
