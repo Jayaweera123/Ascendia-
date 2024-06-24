@@ -12,13 +12,13 @@ import AssignEmployee from "./pages/ProjectCreationTeam/AssignEmployee";
 import AssignPM from "./pages/ProjectCreationTeam/AssignPM";
 import ContactForm from "./pages/ContactForm";
 import ProjectsList from "./pages/ProjectCreationTeam/ProjectList";
-import CreationDashboard from "./pages/ProjectCreationTeam/CreationDashboard";
+import EmployeeTable from "./components/ProjectCreationTeam/EmployeeTable";
+import AssignProjectManager from "./pages/ProjectCreationTeam/AssignProjectManager";
+import New from "./pages/ProjectCreationTeam/New";
+import SideNavigationPCTeam from "./components/ProjectCreationTeam/SideNavigationPCTeam";
 
   {/*DashBoard*/}
      import NewDashBoard from "./pages/ProjectCreationTeam/NewDashBoard";
-
-
-
 
 
 {/*Rashmi*/}
@@ -72,6 +72,8 @@ import Jobs from "./pages/ProjectManager/Jobs";
 
 
 
+
+
 const App = () => {
   return (
     <div>
@@ -81,13 +83,16 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/sideNavigation" element={<SideNavigation />} />
         <Route path="/topNavigation" element={<TopNavigation />} />
+        <Route path="/sideNavigationPCTeam" element={<SideNavigationPCTeam />} />
         <Route path="/addProject" element={<AddProject/>}/>
         <Route path="/assignEmployee" element={<AssignEmployee/>}/>
         <Route path="/assignPM" element={<AssignPM/>}/>
         <Route path="/projectslist" element={<ProjectsList/>}/>
-        <Route path="/creationDashboard" element={<CreationDashboard/>}/>
+        
         <Route path="/addEmployee" element={<AssignPM/>}/>
         <Route path="/newDashBoard" element={<NewDashBoard/>}/>
+        <Route path="/AssignProjectManager" element={<AssignProjectManager/>}/>
+        <Route path="/New" element={<New/>}/>
     
 
 

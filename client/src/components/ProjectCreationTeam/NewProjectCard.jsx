@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { getAllProjectCards } from "../../services/ProjectService.jsx";
 import { MdEdit, MdDelete, MdPerson } from "react-icons/md";
@@ -7,6 +6,7 @@ import axios from "axios";
 
 const NewProjectCard = () => {
   const [projects, setProjects] = useState([]);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   useEffect(() => {
     getAllProjectCards()
@@ -45,6 +45,14 @@ const NewProjectCard = () => {
     });
   };
 
+  const handleCardClick = (project) => {
+    setSelectedProject(project);
+  };
+
+  const closeModal = () => {
+    setSelectedProject(null);
+  };
+
   if (projects.length === 0) {
     return <div className="mt-10 text-center">No projects available.</div>;
   }
@@ -59,7 +67,7 @@ const NewProjectCard = () => {
                 {projects.map((project) => (
                   <div
                     key={project.projectId}
-                    className="mb-6 bg-white rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105 hover:shadow-xl"
+                    className="mb-6 transition-transform duration-300 transform bg-white rounded-lg shadow-lg hover:scale-105 hover:shadow-xl"
                   >
                     {/* Project Image */}
                     <img
@@ -78,7 +86,10 @@ const NewProjectCard = () => {
                       <div className="flex items-center justify-between pb-2 border-b-2 border-gray-300">
                         <div className="flex items-center">
                           <div>
-                            <h3 className="text-lg font-semibold text-gray-700">
+                            <h3
+                              className="text-lg font-semibold text-gray-700 cursor-pointer"
+                              onClick={() => handleCardClick(project)}
+                            >
                               {project.projectName}
                             </h3>
                           </div>
@@ -93,15 +104,15 @@ const NewProjectCard = () => {
                         </p>
                         <div className="flex">
                           <MdPerson
-                            className="cursor-pointer mr-2 text-green-500"
+                            className="mr-2 text-green-500 cursor-pointer"
                             size={20}
                           />
                           <MdEdit
-                            className="cursor-pointer mr-2 text-blue-800"
+                            className="mr-2 text-blue-800 cursor-pointer"
                             size={20}
                           />
                           <MdDelete
-                            className="cursor-pointer text-red-600"
+                            className="text-red-600 cursor-pointer"
                             size={20}
                             onClick={() => handleDelete(project.projectId)}
                           />
@@ -109,7 +120,7 @@ const NewProjectCard = () => {
                       </div>
 
                       <p className="my-6 text-sm font-normal text-gray-500">
-                        {project.projectDescription}
+                        {project.projectDescription.slice(0, 100)}...
                       </p>
                       <div className="flex justify-between">
                         <span className="badge badge-green">
@@ -127,6 +138,27 @@ const NewProjectCard = () => {
           </main>
         </div>
       </div>
+
+      {selectedProject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="w-full max-w-lg p-6 bg-white rounded-lg shadow-lg">
+            <h2 className="mb-4 text-2xl font-bold">{selectedProject.projectName}</h2>
+            <p><strong>Client:</strong> {selectedProject.client}</p>
+            <p><strong>Budget:</strong> {selectedProject.budget}</p>
+            <p><strong>Description:</strong> {selectedProject.projectDescription}</p>
+            <p><strong>Status:</strong> {selectedProject.projectStatus}</p>
+            <p><strong>Created Date:</strong> {new Date(selectedProject.createdDate).toLocaleDateString()}</p>
+            <p><strong>End Date:</strong> {new Date(selectedProject.endDate).toLocaleDateString()}</p>
+            <button
+              className="px-4 py-2 mt-4 text-white bg-red-500 rounded hover:bg-red-700"
+              onClick={closeModal}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Style tag for embedding CSS */}
       <style>{`
         .status-label-completed {
@@ -174,4 +206,3 @@ const NewProjectCard = () => {
 };
 
 export default NewProjectCard;
-

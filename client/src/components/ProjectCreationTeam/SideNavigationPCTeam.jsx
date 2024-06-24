@@ -7,10 +7,10 @@ import { FaRegClipboard } from 'react-icons/fa6';
 import { GiProgression } from 'react-icons/gi';
 import { PiProjectorScreenChartBold } from 'react-icons/pi';
 
-const SideNavigation = () => {
+const SideNavigationPCTeam = () => {
   const menus = [
     { name: 'Home', link: '/pmhome', icon: IoHome },
-    { name: 'Dashboard', link: '/newDashboard', icon: PiProjectorScreenChartBold },
+    { name: 'Dashboard', link: '/newDashBoard', icon: PiProjectorScreenChartBold },
     { name: 'Projects', link: '/projectslist', icon: MdOutlineDashboard, margin: true,},
     { name: 'Create Project', link: '/addproject', icon: FaRegClipboard },
     { name: 'Progress', link: '/progress', icon: GiProgression },
@@ -59,4 +59,4 @@ const SideNavigation = () => {
   );
 };
 
-export default SideNavigation;
+export default SideNavigationPCTeam;

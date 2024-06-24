@@ -14,17 +14,17 @@ const SideNavigationPM = () => {
 
   return (
     <div
-      className={`min-h-screen ${
-        open ? "w-72" : "w-16"
-      } duration-500 text-gray-100 px-4`}
-      style={{
-        background: "#101d3f",
-      }}
-    >
+  className={`min-h-screen bg-[#101d3f] ${
+    open ? "w-72" : "w-16"
+  } duration-500 text-gray-100 px-4`}
+  
+>
+
+  
       <div className="flex justify-end py-3">
         <HiMenuAlt3
           size={26}
-          className="cursor-pointer"
+          className="cursor-pointer "
           onClick={() => setOpen(!open)}
         />
       </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import TopNavigation from "../../components/TopNavigation";
-import SideNavigation from "../../components/ProjectManager/SideNavigation";
+import SideNavigationPCTeam from "../../components/ProjectManager/SideNavigation";
 import { MdAssignmentAdd } from "react-icons/md";
 import { IoPersonAdd } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
@@ -170,7 +170,7 @@ const AddProject = () => {
     <div>
       <TopNavigation />
       <section className="flex">
-        <SideNavigation open={open} setOpen={setOpen} />
+        <SideNavigationPCTeam open={open} setOpen={setOpen} />
         <div className="relative w-screen bg-cover bg-zinc-50 h-fit">
           <div className="m-3 text-xl font-semibold text-gray-900">
             <form method="POST" encType="multipart/form-data">
@@ -183,19 +183,15 @@ const AddProject = () => {
                     </h1>
                   </div>
                 </div>
-
-                <div className="relative m-32 overflow-x-auto bg-white shadow-md rouwinded-lg">
-                  <div className="pb-20 border-b border-red-600">
+                <div className="relative m-5 overflow-x-auto bg-white rounded-lg shadow-md">
+                  <div className="pb-12 border-b border-gray-900/10">
+                
                     <div className="grid grid-cols-1 m-5 mt-10 gap-x-6 gap-y-8 sm:grid-cols-12">
                       <div className="flex flex-col sm:col-span-8">
-                        <div className="flex justify-end mt-8 mb-8">
-                          <h1 className="text-4xl font-bold">
-                            Project Creation Form
-                          </h1>
-                        </div>
+                        
                         <div>
-                          <div className="flex flex-col mt-12 ml-24 sm:col-span-8">
-                            <div className="mt-8">
+                          <div className="flex flex-col ml-5 sm:col-span-8">
+                            
                               <label
                                 htmlFor="project-type"
                                 className="block text-base font-medium leading-6 text-gray-900"
@@ -230,7 +226,7 @@ const AddProject = () => {
                                   </p>
                                 )}
                               </div>
-                            </div>
+                            
                             <div className="mt-8">
                               <label
                                 htmlFor="projectName"
@@ -417,7 +413,7 @@ const AddProject = () => {
                             <div className="mt-16">
                               <button
                                 onClick={handleAssignProjectManager}
-                                className="flex items-center px-4 h-10 py-2 mr-4 font-bold text-gray-300 bg-[#101d3f] rounded-md text-gray hover:bg-blue-800"
+                                className="flex items-center px-4 h-10 py-2 mr-4 text-xl font-semibold text-white bg-[#101d3f] rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                               >
                                 <span className="mr-2">
                                   <IoPersonAdd />
@@ -426,11 +422,12 @@ const AddProject = () => {
                               </button>
                             </div>
 
-                            <div className="flex justify-center mt-6 mb-5 gap-x-6">
+                            <div className="flex items-center justify-center mt-6 mb-5 mr-5 gap-x-6">
+                            
                               <button
-                                type="button"
+                                type="submit"
                                 onClick={saveProject}
-                                className="px-3 py-2 text-xl font-semibold text-gray-300 bg-[#101d3f] rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                className="w-24 px-4 py-2 text-xl font-semibold text-white bg-[#101d3f] rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                               >
                                 Create
                               </button>
@@ -438,8 +435,8 @@ const AddProject = () => {
                               <button
                                 type="button"
                                 onClick={handleClearForm}
-                                className="px-3 py-2 text-xl font-semibold leading-6 text-gray-900 bg-gray-300 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                              >
+                                className="w-24 px-4 py-2 text-xl font-semibold text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                    >
                                 Clear
                               </button>
                             </div>
