@@ -264,57 +264,48 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(Long userID, UserDto updatedUser, MultipartFile profileImage) {
-        UserDto userDto4 = new UserDto();
-        try {
-            Optional<User> userOptional = userRepository.findById(userID);
-            if (userOptional.isPresent()) {
-                User existingUser = userOptional.get();
+    public UserDto updateUser(Long userID, UserDto updatedUserDto, MultipartFile profileImage) {
+        User user = userRepository.findById(userID)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userID));
 
-                // Update basic user details
-                existingUser.setFirstName(updatedUser.getFirstName());
-                existingUser.setLastName(updatedUser.getLastName());
-                existingUser.setEmail(updatedUser.getEmail());
-                existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-                existingUser.setDesignation(updatedUser.getDesignation());
-                existingUser.setDepartment(updatedUser.getDepartment());
-
-                // Check if a new profile image is provided
-                if (profileImage != null && !profileImage.isEmpty()) {
-                    try {
-                        // Get the file name
-                        String fileName = StringUtils.cleanPath(profileImage.getOriginalFilename());
-                        // Set the file path where the image will be stored
-                        Path uploadPath = Paths.get(uploadDir + fileName);
-                        // Copy the file to the upload path
-                        Files.copy(profileImage.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
-                        // Set the profile picture URL in the user entity
-                        existingUser.setProfilePicUrl(uploadPath.toString());
-                    } catch (IOException e) {
-                        e.printStackTrace(); // Handle the exception appropriately
-                        userDto4.setStatusCode(500);
-                        userDto4.setMessage("Error occurred while uploading profile image: " + e.getMessage());
-                        return userDto4;
-                    }
-                }
-
-                // Save the user entity with updated details
-                User savedUser = userRepository.save(existingUser);
-                userDto4.setUser(savedUser);
-                userDto4.setStatusCode(200);
-                userDto4.setMessage("User updated successfully");
-            } else {
-                userDto4.setStatusCode(404);
-                userDto4.setMessage("User not found for update");
-            }
-        } catch (Exception e) {
-            userDto4.setStatusCode(500);
-            userDto4.setMessage("Error occurred while updating user: " + e.getMessage());
+        if (updatedUserDto.getFirstName() != null) {
+            user.setFirstName(updatedUserDto.getFirstName());
         }
-        return userDto4;
+        if (updatedUserDto.getLastName() != null) {
+            user.setLastName(updatedUserDto.getLastName());
+        }
+        if (updatedUserDto.getEmail() != null) {
+            user.setEmail(updatedUserDto.getEmail());
+        }
+        if (updatedUserDto.getPhoneNumber() != null) {
+            user.setPhoneNumber(updatedUserDto.getPhoneNumber());
+        }
+        if (updatedUserDto.getDesignation() != null) {
+            user.setDesignation(updatedUserDto.getDesignation());
+        }
+        if (updatedUserDto.getDepartment() != null) {
+            user.setDepartment(updatedUserDto.getDepartment());
+        }
+
+        // Check if a profile image is provided
+        if (profileImage != null && !profileImage.isEmpty()) {
+            try {
+                // Get the file name
+                String fileName = StringUtils.cleanPath(profileImage.getOriginalFilename());
+                // Set the file path where the image will be stored
+                Path uploadPath = Paths.get(uploadDir + fileName);
+                // Copy the file to the upload path
+                Files.copy(profileImage.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
+                // Set the profile picture URL in the user entity
+                user.setProfilePicUrl(uploadPath.toString());
+            } catch (IOException e) {
+                e.printStackTrace(); // Handle the exception appropriately
+            }
+        }
+
+        User updatedUser = userRepository.save(user);
+        return UserMapper.mapToUserDto(updatedUser);
     }
-
-
 
     {/*public ReqRes getMyInfo(String email){
         ReqRes reqRes = new ReqRes();

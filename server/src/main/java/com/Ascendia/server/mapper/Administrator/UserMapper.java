@@ -20,15 +20,6 @@ public class UserMapper {
         userDto.setProfilePicUrl(user.getProfilePicUrl());
         userDto.setAvailability(user.isAvailability()); // Availability is kept as it is
         userDto.setActive(user.isActive());
-        userDto.setStatusCode(0); // default statusCode
-        userDto.setError(null); // default error
-        userDto.setMessage(null); // default message
-        userDto.setToken(null); // default token
-        userDto.setRefreshToken(null); // default refreshToken
-        userDto.setExpirationTime(null); // default expirationTime
-        userDto.setUser(null); // default User reference
-        userDto.setUsersList(null); // default Users list
-        userDto.setProjectIDs(null); // default projectIDs
 
         return userDto;
     }

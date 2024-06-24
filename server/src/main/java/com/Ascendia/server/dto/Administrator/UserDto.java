@@ -46,5 +46,5 @@ public class UserDto {
     private List<User> usersList;
     @Setter
     private List<Long> projectIDs;
-
+    
 }

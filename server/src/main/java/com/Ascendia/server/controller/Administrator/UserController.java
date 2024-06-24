@@ -2,10 +2,13 @@ package com.Ascendia.server.controller.Administrator;
 
 import com.Ascendia.server.dto.Project.ProjectGetDto;
 import com.Ascendia.server.entity.Administrator.User;
+import com.Ascendia.server.exception.Administrator.ResourceNotFoundException;
 import com.Ascendia.server.service.Project.ProjectService;
 import lombok.AllArgsConstructor;
 import com.Ascendia.server.dto.Administrator.UserDto;
 import com.Ascendia.server.service.Administrator.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,9 @@ import java.util.List;
 @AllArgsConstructor
 
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
 
     private final UserService userService;
     private final ProjectService projectService;

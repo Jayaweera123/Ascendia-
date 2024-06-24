@@ -9,10 +9,7 @@ import { LiaUserTimesSolid } from "react-icons/lia";
 import debounce from 'lodash/debounce';
 import UserService from "../../services/UserService";
 
-
-// Define the UserList component
 const UserList = () => {
-  // State variables to manage component state
   const [open, setOpen] = useState(true);
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -45,43 +42,46 @@ const UserList = () => {
     }
   };
 
-  const handleSearch = async (event) => {
-    const query = event.target.value;
-    setSearchQuery(query);
-    if (query.trim() === "") {
-      fetchUsers();
-      setMatchedUserIDs([]);
-      return;
+  const handleSearch = async () => {
+    const query = searchQuery.trim();
+    if (query === "") {
+        fetchUsers();
+        setMatchedUserIDs([]);
+        return;
     }
     const [firstName, lastName] = query.split(" ");
     if (firstName) {
-      try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          throw new Error('No token found');
-        }
-        let response;
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('No token found');
+
+            let response;
         if (lastName) {
           response = await UserService.getUserByFirstNameAndLastName(firstName, lastName, token);
         } else {
           response = await UserService.getUserByFirstName(firstName, token);
         }
-        if (response && response.users) {
-          setUsers(response.users);
-          setMatchedUserIDs(response.users.map(user => user.userID));
-        } else {
-          setUsers([]);
-          setMatchedUserIDs([]);
+            if (response && response.users) {
+                setUsers(response.users);
+                setMatchedUserIDs(response.users.map(user => user.userID));
+            } else {
+                setUsers([]);
+                setMatchedUserIDs([]);
+            }
+        } catch (error) {
+            console.error('Error fetching user by name:', error);
+            setUsers([]);
+            setMatchedUserIDs([]);
         }
-      } catch (error) {
-        console.error('Error fetching user by name:', error);
-        setUsers([]);
-        setMatchedUserIDs([]);
-      }
     }
-  };
+};
 
-  const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), []);
+const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), [searchQuery]);
+
+useEffect(() => {
+    debouncedHandleSearch();
+    return debouncedHandleSearch.cancel;
+}, [searchQuery, debouncedHandleSearch]);
 
   
   const addNewUser = () => {
@@ -171,7 +171,7 @@ const UserList = () => {
                     className="block pt-2 pb-2 mr-5 text-sm text-gray-600 border-gray-100 rounded-lg ps-10 w-80 focus:ring-blue-100 focus:border-blue-100 bg-slate-50 dark:border-gray-100 dark:placeholder-gray-300 dark:text-gray-500 dark:focus:ring-blue-100 dark:focus:border-blue-100"
                     placeholder="Search for users"
                     value={searchQuery}
-                    onChange={debouncedHandleSearch}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
               </div>

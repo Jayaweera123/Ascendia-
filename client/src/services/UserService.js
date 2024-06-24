@@ -1,19 +1,5 @@
 import axios from "axios";
 
-{/*
-//you tube
-static async getYourProfile(token){
-        try{
-            const response = await axios.get(`${UserService.BASE_URL}/adminuser/get-profile`, 
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
-            return response.data;
-        }catch(err){
-            throw err;
-        }
-    } */}
-
 class UserService{
     static BASE_URL = "http://localhost:8080"
 
@@ -134,6 +120,7 @@ class UserService{
             throw err;
         }
     }
+    
 
     static async getOnlineUsers(token) {
         try {
@@ -146,6 +133,8 @@ class UserService{
             throw err;
         }
     }
+
+    
 
     /**AUTHENTICATION CHECKER */
     static logout() {
@@ -186,6 +175,22 @@ class UserService{
         return localStorage.getItem('token');
     }
 
+    
+
 }
+
+{/*
+    //you tube
+    static async getYourProfile(token){
+            try{
+                const response = await axios.get(`${UserService.BASE_URL}/adminuser/get-profile`, 
+                {
+                    headers: {Authorization: `Bearer ${token}`}
+                })
+                return response.data;
+            }catch(err){
+                throw err;
+            }
+        } */}
 
 export default UserService;
