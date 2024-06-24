@@ -42,6 +42,7 @@ import History from "./pages/Store/History";
 
 {/*Nethuni*/}
 import SideNavigationPM from "./components/ProjectManager/SideNavigationPM";
+import SideNavigation from "./components/ProjectManager/SideNavigation";
 import TopNavigationPM from "./components/ProjectManager/TopNavigationPM";
 import Projects from "./pages/ProjectManager/Projects";
 import HomePM from "./pages/ProjectManager/HomePM";
@@ -72,19 +73,10 @@ const App = () => {
           <Route path="/progress" element={<Progress />} />
           {/* Rashmi - Client */}
           <Route path="/reviews" element={<Reviews />} />
-          <Route
-            path="/sidenavigationclient"
-            element={<SideNavigationClient />}
-          />
-          <Route
-            path="/sidenavigationadmin"
-            element={<SideNavigationAdmin />}
-          />
+          <Route path="/sidenavigationclient" element={<SideNavigationClient />} />
+          <Route path="/sidenavigationadmin" element={<SideNavigationAdmin />}/>
           <Route path="/topNavigationAdmin" element={<TopNavigationAdmin />} />
-          <Route
-            path="/topNavigationClient"
-            element={<TopNavigationClient />}
-          />
+          <Route path="/topNavigationClient"element={<TopNavigationClient />}/>
           {/* Check if user is authenticated and admin before rendering admin-only routes */}
           {UserService.adminOnly() && (
             <>
@@ -104,18 +96,14 @@ const App = () => {
           {/* Ravindu */}
           {ProjectService.projectOnly() && (
             <>
-              <Route
-                path="/sideNavigationPCTeam"
-                element={<SideNavigationPCTeam />}
-              />
+              <Route path="/sideNavigationPCTeam" element={<SideNavigationPCTeam />}/>
               <Route path="/topNavigation" element={<TopNavigation />} />
-              <Route path="/addProject" element={<AddProject/>}/>
+              <Route path="/project/addProject" element={<AddProject/>}/>
               <Route path="/assignEmployee" element={<AssignEmployee/>}/>
               <Route path="/assignPM" element={<AssignPM/>}/>
               <Route path="/projectslist" element={<ProjectsList/>}/>
               <Route path="/creationDashboard" element={<CreationDashboard/>}/>
-              <Route path="/addEmployee" element={<AssignPM/>}/>
-              <Route path="/newDashBoard" element={<NewDashBoard/>}/>          
+              <Route path="/project/newDashBoard" element={<NewDashBoard/>}/>          
             </>
           )}
           {/*ProjectManager */}
@@ -124,6 +112,7 @@ const App = () => {
               <Route path="/:pmId/pmhome" element={<HomePM />} />
               <Route path="/topNavigationPM" element={<TopNavigationPM />} />       
               <Route path="/sideNavigationPM" element={<SideNavigationPM />} />
+              <Route path="/sideNavigation" element={<SideNavigation />} />
               <Route path="/pmanager/projects" element={<Projects />} />
               <Route
                 path="/pmanager/dashboard"
