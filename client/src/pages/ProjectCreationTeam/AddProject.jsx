@@ -218,12 +218,11 @@ const AddProject = () => {
                                   <option value="" disabled selected>
                                     Select Project Type
                                   </option>
-                                  <option value="web">Web Development</option>
-                                  <option value="mobile">
-                                    Mobile App Development
-                                  </option>
-                                  <option value="design">Design Project</option>
-                                  <option value="other">Other</option>
+                                  <option value="residential">Residential Construction</option>
+                                  <option value="commercial">Commercial Construction</option>
+                                  <option value="industrial">Industrial Construction</option>
+                                  <option value="infrastructure">Infrastructure Construction</option>
+                                  <option value="other">Other Constrction</option>
                                 </select>
                                 {errors.projectType && (
                                   <p className="mt-2 text-red-500">
