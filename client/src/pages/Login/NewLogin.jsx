@@ -11,10 +11,11 @@ const NewLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(''); // Clear previous errors
 
     try {
       const userData = await UserService.login(username, password);
-      console.log(userData);
+      console.log("User data received:", userData);
       if (userData.token) {
         localStorage.setItem('token', userData.token);
         localStorage.setItem('designation', userData.designation);
@@ -46,22 +47,19 @@ const NewLogin = () => {
           case 'Quantity Surveyor':
             navigate('/store/dashboard');
             break;
-          case 'USER':
-            navigate('/user/dashboard');
-            break;
           default:
             navigate('/client/dashboard'); // Default page if designation is not recognized
             break;
         }
       } else {
-        setError(userData.message);
+        setError(userData.message || 'Login failed. Please try again.');
       }
     } catch (error) {
-      console.log(error);
-      setError(error.message);
-      setTimeout(() => {
-        setError('');
-      }, 5000);
+      console.error("Login error:", error.response || error.message || error);
+    setError(error.response?.data?.message || error.message || 'An error occurred during login. Please try again.');
+    setTimeout(() => {
+      setError('');
+    }, 5000);
     }
   };
   
