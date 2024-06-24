@@ -2,11 +2,8 @@ import React from "react";
 import SideNavigationPM from "../../components/ProjectManager/SideNavigation";
 import TopNavigationPM from "../../components/ProjectManager/TopNavigationPM";
 import PageTitle from "../../components/ProjectManager/PageTitle";
-import EmployeeCard from "../../components/ProjectManager/EmployeeCard";
-import AddEmployeeButton from "../../components/ProjectManager/AddEmployeeButton";
 import { useParams } from "react-router-dom";
 import EmployeeHistoryRecords from "../../components/ProjectManager/EmployeeHistoryRecords";
-import Example from "../../components/ProjectManager/example";
 
 function EmployeeHistory() {
   const { projectId } = useParams();

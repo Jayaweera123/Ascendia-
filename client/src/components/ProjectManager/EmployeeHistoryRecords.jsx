@@ -127,7 +127,7 @@ function EmployeeHistoryRecords({ projectId }) {
                 onChange={handleDesignationChange}
               >
                 <option value="all">All</option>
-                <option value="Civil Engineer">Site Engineer</option>
+                <option value="Site Engineer">Site Engineer</option>
                 <option value="Technical Officer">Technical Officer</option>
                 <option value="Supervisor">Supervisor</option>
                 <option value="Store Keeper">Store Keeper</option>

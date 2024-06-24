@@ -1,35 +1,69 @@
 import axios from "axios";
 
-//Nethuni
+// Helper function to get the token
+const getToken = () => localStorage.getItem("token");
+
+// Create an axios instance with a base URL and default headers
+const api = axios.create({
+  baseURL: "http://localhost:8080",
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// Add a request interceptor to include the JWT token in the headers
+api.interceptors.request.use(
+  (config) => {
+    const token = getToken();
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    console.log(config.headers); // Log headers to verify token presence
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+const REST_API_BASE_URL = "http://localhost:8080"; // Ensure this is defined
+
+export const getAllProjectCards = () =>
+  axios.get(REST_API_BASE_URL + "/project/all");
+
 const REST_API_BASE_URL0 = "http://localhost:8080/api/users/";
 
-export const getUserDetails = (userId) =>
-  axios.get(REST_API_BASE_URL0 + userId);
+//export const getUserDetails = (userId) => api.get(REST_API_BASE_URL0 + userId);
 
 export const getAllAvailableUsers = () =>
-  axios.get(REST_API_BASE_URL0 + "all/available");
+  api.get("http://localhost:8080/pmanager/available/all");
 
 const REST_API_BASE_URL1 = "http://localhost:8080/api/project/user/";
 
 export const addAssignment = (assignment) =>
-  axios.post(REST_API_BASE_URL1 + "add", assignment);
+  api.post("http://localhost:8080/pmanager/user/add", assignment);
 
 export const deleteAssignment = (assignmentId) =>
-  axios.delete(REST_API_BASE_URL1 + "remove/" + assignmentId);
+  api.delete("http://localhost:8080/pmanager/user/remove/" + assignmentId);
 
 export const getAllEmployeesForProject = (projectId) =>
-  axios.get(REST_API_BASE_URL1 + projectId + "/all");
+  api.get("http://localhost:8080/pmanager/user/" + projectId + "/all");
 
 export const searchAssignment = (projectId, query) =>
-  axios.get(REST_API_BASE_URL1 + "search/" + projectId + "?query=" + query);
+  api.get(
+    "http://localhost:8080/pmanager/user/search/" +
+      projectId +
+      "?query=" +
+      query
+  );
 
-const REST_API_BASE_URL2 = "http://localhost:8080/api/history/";
+const REST_API_BASE_URL2 = "http://localhost:8080/pmanager/history/";
 
 export const getAllPreviousEmployees = (projectId) =>
-  axios.get(REST_API_BASE_URL2 + projectId + "/records");
+  api.get(REST_API_BASE_URL2 + projectId + "/records");
 
 export const getDurationForEmployee = (recordId) =>
-  axios.get(REST_API_BASE_URL2 + recordId + "/duration");
+  api.get(REST_API_BASE_URL2 + recordId + "/duration");
 
 export const searchHistory = (projectId, query) =>
-  axios.get(REST_API_BASE_URL2 + "search/" + projectId + "?query=" + query);
+  api.get(REST_API_BASE_URL2 + "search/" + projectId + "?query=" + query);

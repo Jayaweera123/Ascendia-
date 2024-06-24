@@ -1,31 +1,3 @@
-/*import axios from "axios";
-
-// Helper function to get the token
-const getToken = () => localStorage.getItem("token");
-
-// Create an axios instance with a base URL and default headers
-const api = axios.create({
-  baseURL: "http://localhost:8080",
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
-// Add a request interceptor to include the JWT token in the headers
-api.interceptors.request.use(
-  (config) => {
-    const token = getToken();
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
-    console.log(config.headers); // Log headers to verify token presence
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);*/
-
 import axios from "axios";
 
 // Helper function to get the token
@@ -59,12 +31,12 @@ const REST_API_BASE_URL = "http://localhost:8080"; // Ensure this is defined
 export const getAllProjectCards = () =>
   axios.get(REST_API_BASE_URL + "/project/all");
 
-export const getProjectById = (projectId) =>
-  axios.get("http://localhost:8080/pmanager/" + projectId);
-
 {
   /*Nethuni*/
 }
+export const getProjectById = (projectId) =>
+  api.get("http://localhost:8080/pmanager/" + projectId);
+
 export const getProjectByProjectManagerId = () =>
   api.get("http://localhost:8080/projects/user");
 

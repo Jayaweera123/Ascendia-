@@ -373,7 +373,9 @@ public class UserServiceImpl implements UserService {
     //Nethuni
     @Override
     public List<UserDto> getAllAvailableUsers() {
-        List<User> users = userRepository.findByAvailabilityTrue();
+        List<String> designations = List.of("Technical Officer", "Site Engineer", "Supervisor", "Store Keeper");
+        //return userRepository.findByAvailabilityTrueAndDesignations(designations);
+        List<User> users = userRepository.findByAvailabilityTrueAndDesignations(designations);
         return users.stream().map(UserMapper::mapToUserDto).collect(Collectors.toList());
     }
 }

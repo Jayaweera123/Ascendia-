@@ -3,6 +3,8 @@ package com.Ascendia.server.repository.Administrator;
 import com.Ascendia.server.dto.Administrator.UserDto;
 import com.Ascendia.server.entity.Administrator.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
@@ -14,7 +16,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
 
-    List<User> findByAvailabilityTrue();
+    //Nethuni
+    @Query("SELECT u FROM User u WHERE u.availability = true AND u.designation IN (:designations)")
+    List<User> findByAvailabilityTrueAndDesignations(@Param("designations") List<String> designations);
 }
 
 
