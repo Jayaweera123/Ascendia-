@@ -9,8 +9,7 @@ import { PiProjectorScreenChartBold } from 'react-icons/pi';
 
 const SideNavigationPCTeam = () => {
   const menus = [
-    { name: 'Home', link: '/pmhome', icon: IoHome },
-    { name: 'Dashboard', link: '/project/addProject', icon: PiProjectorScreenChartBold },
+    { name: 'Dashboard', link: '/project/newDashBoard', icon: PiProjectorScreenChartBold },
     { name: 'Projects', link: '/projectslist', icon: MdOutlineDashboard, margin: true,},
     { name: 'Create Project', link: '/project/addProject', icon: FaRegClipboard },
     { name: 'Progress', link: '/progress', icon: GiProgression },
