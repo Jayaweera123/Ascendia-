@@ -1,6 +1,7 @@
 package com.Ascendia.server.repository.ProjectManager;
 
-import com.Ascendia.server.entity.ProjectManager.Task;
+import com.Ascendia.server.entity.Administrator.User;
+import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.entity.ProjectManager.UserProjectAssignment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +11,9 @@ import java.util.List;
 
 public interface UserProjectAssignmentRepository  extends JpaRepository<UserProjectAssignment, Long> {
     List<UserProjectAssignment> findByProjectProjectId(Long projectId);
+
+    @Query("SELECT upa.project FROM UserProjectAssignment upa WHERE upa.assignedUser = :assignedUser")
+    List<Project> findProjectsByAssignedUser(@Param("assignedUser") User assignedUser);
 
     @Query("SELECT assignment FROM UserProjectAssignment assignment WHERE " +
             "assignment.project.projectId = :projectId AND " +
@@ -21,6 +25,7 @@ public interface UserProjectAssignmentRepository  extends JpaRepository<UserProj
     @Query("SELECT COUNT(DISTINCT upa.assignedUser) FROM UserProjectAssignment upa WHERE upa.project.projectId = :projectId")
     Long countDistinctAssignedUsersByProjectId(@Param("projectId") Long projectId);
 
-
+    @Query("SELECT upa.project.projectId FROM UserProjectAssignment upa WHERE upa.assignedUser.userID = :userId")
+    List<Long> findProjectIdsByUserId(@Param("userId") Long userId);
 
 }

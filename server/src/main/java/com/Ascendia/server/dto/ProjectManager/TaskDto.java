@@ -1,6 +1,9 @@
 package com.Ascendia.server.dto.ProjectManager;
 
 import com.Ascendia.server.entity.Project.Project;
+import com.Ascendia.server.entity.ProjectManager.Task;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

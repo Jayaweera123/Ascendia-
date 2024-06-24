@@ -39,7 +39,6 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
     @Autowired
     private UserRepository userRepository;
 
-
     @Override
     public UserProjectAssignmentDto addAssignment(UserProjectAssignmentDto assignmentDto) {
 
@@ -75,36 +74,11 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
         UserProjectAssignment savedAssignment = userProjectAssignmentRepository.save(assignment);
 
         return UserProjectAssignmentMapper.mapToUserProjectAssignmentDto(savedAssignment);
-/*
-        // Retrieve project details from the database based on projectId
-        Optional<Project> projectOptional = projectRepository.findById(assignmentDto.getProject().getProjectId());
+    }
 
-        //assignmentDto.setProject(projectOptional.get());
-
-        // Retrieve user details from the database based on userId
-        Optional<User> addedUser = userRepository.findById(assignmentDto.getAssignedUser().getUserID());
-        Optional<User> addedByUser = userRepository.findById(assignmentDto.getAssignedByUser().getUserID());
-
-        //User addedUser0 = addedUser.get();
-
-
-        // Set user availability to false
-        addedUser.get().setAvailability(false);
-
-        assignmentDto.setProject(projectOptional.get());
-        assignmentDto.setAssignedUser(addedUser.get());
-        assignmentDto.setAssignedByUser(addedByUser.get());
-
-
-
-        UserProjectAssignment assignment = UserProjectAssignmentMapper.mapToUserProjectAssignment(assignmentDto);
-        assignment.setAssignedDate(LocalDate.now()); // set the createdDate here
-        UserProjectAssignment savedAssignment = userProjectAssignmentRepository.save(assignment);
-
-        return UserProjectAssignmentMapper.mapToUserProjectAssignmentDto(savedAssignment);*/
-
-
-
+    @Override
+    public List<Project> getProjectsByAssignedUser(User assignedUser) {
+        return userProjectAssignmentRepository.findProjectsByAssignedUser(assignedUser);
     }
 
     @Override

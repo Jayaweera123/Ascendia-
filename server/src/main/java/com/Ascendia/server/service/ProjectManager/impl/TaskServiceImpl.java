@@ -121,14 +121,6 @@ public class  TaskServiceImpl implements TaskService {
             return ("Completed");
         }
     }
-//Scheduled
-    //Overdue
-
-
-
-
-    //================================UPDATE TASK=======================================
-
 
     @Override
     public TaskDto updateTask(Long taskId, TaskDto updateTask) {
@@ -154,9 +146,9 @@ public class  TaskServiceImpl implements TaskService {
 
     @Override
     public void deleteTaskById(Long taskId) {
-        Task task = taskRepository.findById(taskId).orElseThrow(
+        /*Task task = taskRepository.findById(taskId).orElseThrow(
                 () -> new ResourceNotFoundException("Task is not in exists with given id : " + taskId)
-        );
+        );*/
 
         taskRepository.deleteById(taskId);
     }
@@ -189,6 +181,13 @@ public class  TaskServiceImpl implements TaskService {
         return jobRepository.countJobsByTask_TaskIdAndStatusCompleted(taskId);
     }
 */
+
+
+    @Override
+    public int getCompletedJobCountForTask(Long taskId) {
+        return jobRepository.countJobsByTask_TaskIdAndStatusCompleted(taskId);
+    }
+
 
 
     @Override
@@ -344,7 +343,7 @@ public class  TaskServiceImpl implements TaskService {
             return ("Completed");
         }
     }
-//==========================================================
+    //===================================
     @Override
     public List<TaskDto> getTasksByScheduledStatus(Long projectId) {
 
@@ -381,11 +380,33 @@ public class  TaskServiceImpl implements TaskService {
                 .collect(Collectors.toList());
 
         return filteredTasks.stream().map(TaskMapper::mapToTaskDto).collect(Collectors.toList());
-
     }
 
+    //Ravindu
+    @Override
+    public int getTaskProgress(Long taskId) {
+        Task task = getTaskById(taskId);
+        if (task.isCompleted()) {
+            return 100; // Completed task
+        } else {
+            // Optionally implement more detailed progress calculation logic
+            return 0; // Incomplete task
+        }
+    }
 
+    @Override
+    public double calculateProjectProgress(Long projectId) {
+        List<Task> tasks = taskRepository.findByProjectProjectId(projectId);
+        if (tasks.isEmpty()) {
+            return 0.0; // No tasks means no progress
+        }
 
+        double totalProgress = 0.0;
+        for (Task task : tasks) {
+            totalProgress += getTaskProgress(task.getTaskId());
+        }
 
+        return totalProgress / tasks.size();
+    }
 
 }

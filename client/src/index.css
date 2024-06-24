@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* FOOTER STYLING */
+.footer{
+    background-color: black;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    }
+    
+    
+    
+    
+    
+    
+    /* PAGE NOT FOUND STYLING */
+    /* index.css */
+    .not-found-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    text-align: center;
+    }
+    
+    
+    p {
+    color: #333;
+    }
+    
+    @media only screen and (max-width: 600px) {
+    .not-found-container {
+    padding: 10px;
+    }
+    }
+    
+    /* ERROR STYLING */
+    .error-message {
+    color: red;
+    text-align: center;
+    }
+    

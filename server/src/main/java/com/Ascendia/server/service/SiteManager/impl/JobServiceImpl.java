@@ -5,6 +5,7 @@ import com.Ascendia.server.dto.SiteManager.JobDto;
 import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.entity.SiteManager.Job;
 import com.Ascendia.server.exceptions.ResourceNotFoundException;
+import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.mapper.SiteManager.JobMapper;
 import com.Ascendia.server.repository.ProjectManager.TaskRepository;
 import com.Ascendia.server.repository.SiteManager.JobRepository;
@@ -12,11 +13,11 @@ import com.Ascendia.server.service.SiteManager.JobService;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional; //can import this from spring framework also
 import org.springframework.stereotype.Service;
-
+import java.util.Optional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +29,12 @@ public class JobServiceImpl implements JobService {
 
     @Autowired
     private TaskRepository taskRepository;
+
+    // @Autowired
+    // private JobRepository jobRepository;
+
+    // private TaskRepository taskRepository;
+
 
     @Override
     public List<JobDto> getJobsByTaskId(Long taskId) {
@@ -49,7 +56,7 @@ public class JobServiceImpl implements JobService {
     }
 
 
-   @Override
+    @Override
     public void markJobAsCompletedById(Long jobId) {
         Job job = jobRepository.findById(jobId).orElseThrow(
                 () -> new ResourceNotFoundException("Job is not in exists with given id : " + jobId)
@@ -68,8 +75,10 @@ public class JobServiceImpl implements JobService {
         Job job = jobRepository.findById(jobId).orElseThrow(
                 () -> new ResourceNotFoundException("Job does not exist with given id: " + jobId)
         );
+
         // Calculate and update the job status
         String newStatus = calculateStatus(job);
+
         // If the job status is different, update it
         if (!newStatus.equals(job.getStatus())) {
             job.setStatus(newStatus);
@@ -148,14 +157,14 @@ public class JobServiceImpl implements JobService {
 
 
 
-/*
-    @Override
-    public JobDto createJob(JobDto jobDto) {
-        Job job = JobMapper.mapToJob(jobDto);
-        Job savedJob = jobRepository.save(job);
-        return JobMapper.mapToJobDto(savedJob);
-    }
-*/
+    /*
+        @Override
+        public JobDto createJob(JobDto jobDto) {
+            Job job = JobMapper.mapToJob(jobDto);
+            Job savedJob = jobRepository.save(job);
+            return JobMapper.mapToJobDto(savedJob);
+        }
+    */
     @Override
     public JobDto getJobById(Long jobId) {
         Job job = jobRepository.findById(jobId)

@@ -14,7 +14,7 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/project/user")
+@RequestMapping("/pmanager/user")
 public class UserProjectAssignmentController {
 
     private UserProjectAssignmentService userProjectAssignmentService;

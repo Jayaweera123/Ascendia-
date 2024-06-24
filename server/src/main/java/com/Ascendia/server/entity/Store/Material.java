@@ -15,8 +15,11 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "Materials")
+@Entity //marks this class as a JPA entity
+@Table(name = "Materials", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"material_code", "projectId"}),
+        @UniqueConstraint(columnNames = {"material_name", "projectId"})
+})
 public class Material {
 
     @Id

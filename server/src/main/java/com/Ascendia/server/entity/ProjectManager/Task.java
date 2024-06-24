@@ -51,13 +51,10 @@ public class Task {
 
    /* public enum TaskStatus {
         SCHEDULED,
-        IN_PROGRESS,
         COMPLETED,
         OVERDUE
     }*/
 
 
-
-
-
 }
+

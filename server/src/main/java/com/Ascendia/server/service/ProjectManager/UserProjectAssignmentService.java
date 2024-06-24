@@ -1,7 +1,8 @@
 package com.Ascendia.server.service.ProjectManager;
 
-import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.ProjectManager.UserProjectAssignmentDto;
+import com.Ascendia.server.entity.Administrator.User;
+import com.Ascendia.server.entity.Project.Project;
 
 import java.util.List;
 
@@ -10,9 +11,7 @@ public interface UserProjectAssignmentService {
 
     List<UserProjectAssignmentDto> getAssignsByProjectId(Long projectId);
 
-    void deleteAssignmentById(Long assignmentId);
-
-    void deleteAssignmentsByProjectId(Long projectId);
-
     List<UserProjectAssignmentDto> searchAssignment(Long projectId, String query);
+
+    List<Project> getProjectsByAssignedUser(User assignedUser);
 }

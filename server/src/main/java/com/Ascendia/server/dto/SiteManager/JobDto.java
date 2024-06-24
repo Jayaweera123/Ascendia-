@@ -22,3 +22,4 @@ public class JobDto {
     private boolean isDone; // Include the isDone field from the Job entity
     private Task task;
 }
+

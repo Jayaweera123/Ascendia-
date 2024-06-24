@@ -1,65 +1,80 @@
-/*package com.Ascendia.server.config;
+package com.Ascendia.server.config;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import com.Ascendia.server.service.Administrator.UserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import lombok.extern.slf4j.Slf4j;
-
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-@ConditionalOnProperty(name = "authorization.enabled", havingValue = "true", matchIfMissing = true)
-@Slf4j
-public class SecurityConfig {
+public class SecurityConfig{
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+    @Autowired
+    private JWTAuthFilter jwtAuthFilter;
+
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        log.info("SecurityConfig.filterChain() called");
-
-        http.authorizeHttpRequests(authz -> authz
-                .requestMatchers(new AntPathRequestMatcher("/actuator/"))
-                .permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/swagger-ui.html"))
-                .permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/swagger-ui**"))
-                .permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/swagger-ui/"))
-                .permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/v2/api-docs"))
-                .permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/swagger-resources/"))
-                .permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/v3/api-docs/"))
-                .permitAll()
-                .requestMatchers(new AntPathRequestMatcher("/api-docs/"))
-                .permitAll()
-                .requestMatchers(HttpMethod.PUT, "/")
-                .authenticated()
-                // .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                .requestMatchers(HttpMethod.GET, "/api/users/")
-                .authenticated()
-                // .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                .requestMatchers(HttpMethod.POST, "/")
-                .authenticated()
-                // .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                .requestMatchers(HttpMethod.DELETE, "/")
-                .authenticated()
-                // .hasAnyAuthority(ROLE_USER, ROLE_ADMIN)
-                .anyRequest()
-                .permitAll());
-//                          .authenticated())
-//                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
-        //log.info("RBAC for API removed for testing prometheus."); HFvkjVaPEYu5H0MY32rxzg90OkB44aut
-
-        return http.build();
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
+                .authorizeHttpRequests(requests -> requests
+                        .requestMatchers("/auth/**", "/public/**", "/progress/**" ,"/reviews/**" ,"/uploads/**").permitAll() // Allow unauthenticated access to static resources
+                        .requestMatchers("/admin/**").hasAnyAuthority("Administrator")
+                        .requestMatchers("/client/**").hasAnyAuthority("Client", "Consultant")
+                        .requestMatchers("/projects/**").hasAnyAuthority("Project Creation Team", "Project Manager", "Site Engineer", "Supervisor", "Technical Officer", "Store Keeper", "Quantity Surveyor")
+                        .requestMatchers("/project/**").hasAnyAuthority("Project Creation Team")
+                        .requestMatchers("/pmanager/**").hasAnyAuthority("Project Manager", "Project Creation Team")
+                        .requestMatchers("/pmanageronly/**").hasAnyAuthority("Project Manager")
+                        .requestMatchers("/sengineer/**").hasAnyAuthority("Site Engineer", "Project Manager", "Project Creation Team")
+                        .requestMatchers("/sengineeronly/**").hasAnyAuthority("Site Engineer")
+                        .requestMatchers("/supervisor/**").hasAnyAuthority("Site Engineer", "Supervisor", "Technical Officer", "Project Manager", "Project Creation Team")
+                        .requestMatchers("/supervisoronly/**").hasAnyAuthority("Supervisor", "Technical Officer")
+                        .requestMatchers("/store/**").hasAnyAuthority("Store Keeper", "Quantity Surveyor", "Site Engineer", "Project Manager", "Project Creation Team")
+                        .requestMatchers("/skeeper/**").hasAnyAuthority("Store Keeper", "Quantity Surveyor", "Project Manager", "Project Creation Team")
+                        .requestMatchers("/skeeperonly/**").hasAnyAuthority("Store Keeper")
+                        .requestMatchers("/user/**").hasAnyAuthority("USER")
+                        .requestMatchers("/adminuser/**").hasAnyAuthority("ADMIN", "USER")
+                        .anyRequest().authenticated())
+                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        return httpSecurity.build();
     }
-}*/
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(userDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        return daoAuthenticationProvider;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+}
+
 
 

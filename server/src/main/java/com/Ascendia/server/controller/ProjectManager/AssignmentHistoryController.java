@@ -15,18 +15,18 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/history")
+@RequestMapping("/pmanager/history")
 public class AssignmentHistoryController {
 
     @Autowired
     private AssignmentHistoryService assignmentHistoryService;
 
 
-    @PostMapping("/add")
+    /*@PostMapping("/add")
     public ResponseEntity<AssignmentHistoryDto> addRecord(@RequestBody AssignmentHistoryDto assignmentHistoryDto) {
         AssignmentHistoryDto savedRecord = assignmentHistoryService.createHistoryRecord(assignmentHistoryDto);
         return new ResponseEntity<>(savedRecord, HttpStatus.CREATED);
-    }
+    }*/
 
     @GetMapping("/{projectId}/records")
     public ResponseEntity<List<AssignmentHistoryDto>> getRecordsByProjectId(@PathVariable Long projectId) {
@@ -39,7 +39,6 @@ public class AssignmentHistoryController {
         AssignmentHistoryDto assignmentHistoryDto = assignmentHistoryService.getRecordById(Id);
         return assignmentHistoryService.calculateDuration(assignmentHistoryDto);
     }
-
     @GetMapping("/search/{projectId}")
     public ResponseEntity<List<AssignmentHistoryDto>> searchRecordbyNameORDep(@PathVariable Long projectId, @RequestParam("query") String query){
         return ResponseEntity.ok(assignmentHistoryService.searchRecord(projectId, query));

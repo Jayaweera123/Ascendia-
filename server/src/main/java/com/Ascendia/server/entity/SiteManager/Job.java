@@ -1,5 +1,6 @@
 package com.Ascendia.server.entity.SiteManager;
 
+import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.entity.ProjectManager.Task;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

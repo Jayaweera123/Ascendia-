@@ -130,4 +130,33 @@ public class MaterialServiceImpl implements MaterialService {
 
         return MaterialMapper.mapToMaterialDto(material);
     }
+
+    @Override
+    public List<UpdateMaterialDto> getAllUpdatedMaterials(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + projectId));
+        List<UpdateMaterial> updatedMaterials = updateMaterialRepository.findAllByProjectId(projectId);
+        return updatedMaterials.stream()
+                .map(UpdateMaterialMapper::mapToUpdateMaterialDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UpdateMaterialDto> searchUpdatedMaterials(Long projectId, String query) {
+        List<UpdateMaterial> updatedMaterials = updateMaterialRepository.searchUpdatedMaterials(projectId, query);
+        return updatedMaterials.stream()
+                .map(UpdateMaterialMapper::mapToUpdateMaterialDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<UpdateMaterialDto> getUpdatedMaterialsByDateRange(Long projectId, LocalDateTime startDate, LocalDateTime endDate) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + projectId));
+
+        List<UpdateMaterial> updatedMaterials = updateMaterialRepository.findAllByProjectIdAndDateRange(projectId, startDate, endDate);
+
+        return updatedMaterials.stream()
+                .map(UpdateMaterialMapper::mapToUpdateMaterialDto)
+                .collect(Collectors.toList());
+    }
 }

@@ -2,7 +2,10 @@ package com.Ascendia.server.service.ProjectManager;
 
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
+import com.Ascendia.server.dto.Store.MaterialDto;
 import com.Ascendia.server.entity.ProjectManager.Task;
+import com.Ascendia.server.entity.Store.Material;
+import com.Ascendia.server.mapper.Store.MaterialMapper;
 
 import java.util.List;
 
@@ -24,7 +27,7 @@ public interface TaskService {
 
     int getJobCountForTask(Long taskId);
 
-   // int getCompletedJobCountForTask(Long taskId);
+    int getCompletedJobCountForTask(Long taskId);
 
     String CheckCompletionUpdateStatus(Long taskId);
 
@@ -44,7 +47,9 @@ public interface TaskService {
 
     String calculateTimeDifference(TaskDto taskDto);
 
-
+    //Ravindu
+    int getTaskProgress(Long taskId);
+    double calculateProjectProgress(Long projectId);
 
 
 

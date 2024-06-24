@@ -1,12 +1,14 @@
 package com.Ascendia.server.service.SiteManager;
 
 
+import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.SiteManager.JobDto;
 
 import java.util.List;
 
 public interface JobService {
     //JobDto createJob(JobDto jobDto);
+
 
     //List<JobDto> getAllJobs();
 

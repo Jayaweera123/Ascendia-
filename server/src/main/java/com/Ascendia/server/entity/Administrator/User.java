@@ -1,20 +1,27 @@
 package com.Ascendia.server.entity.Administrator;
 
+import com.Ascendia.server.entity.Project.Project;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="User")
+@Table(name="User", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"firstName", "lastName"})
+})
+@Data
 
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -33,7 +40,7 @@ public class User {
     @Column(name="department")
     private String department;
 
-    @Column(name="username",nullable=false)
+    @Column(name="username",nullable=false, unique = true)
     private String username;
 
     @Column(name="password",nullable=false, unique = true)
@@ -48,7 +55,7 @@ public class User {
     @Column(name="addedDate")
     private LocalDate addedDate;
 
-    @Column(name = "profile_pic_url", nullable = false)
+    @Column(name = "profile_pic_url", nullable = false, unique = true)
     private String profilePicUrl;
 
     @Column(name = "availability", nullable = false)
@@ -56,4 +63,37 @@ public class User {
 
     @Column(name = "active", nullable = false)
     private boolean active;
+
+    @Column(name = "lastLoginDate")
+    private LocalDateTime lastLoginDate;
+
+    @Column(name = "online_status")
+    private boolean onlineStatus;
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(designation));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
 }
