@@ -1,8 +1,6 @@
 package com.Ascendia.server.controller.ProjectManager;
 
-import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.ProjectManager.UserProjectAssignmentDto;
-import com.Ascendia.server.entity.ProjectManager.UserProjectAssignment;
 import com.Ascendia.server.service.ProjectManager.UserProjectAssignmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

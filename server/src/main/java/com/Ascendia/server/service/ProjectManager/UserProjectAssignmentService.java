@@ -9,7 +9,12 @@ import java.util.List;
 public interface UserProjectAssignmentService {
     UserProjectAssignmentDto addAssignment(UserProjectAssignmentDto assignmentDto);
 
+
     List<UserProjectAssignmentDto> getAssignsByProjectId(Long projectId);
+
+    void deleteAssignmentById(Long assignmentId);
+
+    void deleteAssignmentsByProjectId(Long projectId);
 
     List<UserProjectAssignmentDto> searchAssignment(Long projectId, String query);
 

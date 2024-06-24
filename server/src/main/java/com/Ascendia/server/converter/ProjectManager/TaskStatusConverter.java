@@ -1,4 +1,5 @@
-/*package com.Ascendia.server.converter.ProjectManager;
+/*
+package com.Ascendia.server.converter.ProjectManager;
 
 import com.Ascendia.server.entity.ProjectManager.Task;
 import jakarta.persistence.AttributeConverter;

@@ -2,7 +2,6 @@ package com.Ascendia.server.service.Store;
 
 import com.Ascendia.server.dto.Store.EquipmentDto;
 import com.Ascendia.server.dto.Store.UpdateEquipmentDto;
-import com.Ascendia.server.dto.Store.UpdateMaterialDto;
 
 import java.util.List;
 
@@ -20,6 +19,8 @@ public interface EquipmentService {
     List<EquipmentDto> searchEquipment(Long projectId, String query);
 
     EquipmentDto updateInventory(Long equipmentId, UpdateEquipmentDto updateEquipmentDto);
+
+    List<UpdateEquipmentDto> getAllUpdatedEquipments(Long projectId);
 
     List<UpdateEquipmentDto> searchUpdatedEquipment(Long projectId, String query);
 }
