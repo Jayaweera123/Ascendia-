@@ -18,8 +18,8 @@ public interface UserProjectAssignmentRepository  extends JpaRepository<UserProj
     @Query("SELECT assignment FROM UserProjectAssignment assignment WHERE " +
             "assignment.project.projectId = :projectId AND " +
             "(assignment.assignedUser.firstName LIKE %:query% OR " +
-            "assignment.assignedUser.lastName LIKE %:query% OR " +
-            "assignment.assignedUser.department LIKE %:query%)")
+            "assignment.assignedUser.lastName LIKE %:query% )" ) //+
+            //"assignment.assignedUser.department LIKE %:query%)")
     List<UserProjectAssignment> searchAssignment(Long projectId, String query);
 
     @Query("SELECT COUNT(DISTINCT upa.assignedUser) FROM UserProjectAssignment upa WHERE upa.project.projectId = :projectId")
