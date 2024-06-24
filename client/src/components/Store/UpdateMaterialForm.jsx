@@ -118,7 +118,7 @@ function validateForm(){
       <TopNavigationStore />
       <section className="flex gap-6">
         <SideNavigationStore open={open} setOpen={setOpen} />
-        <div className="w-screen m-3">
+        <div className="flex-auto w-8/12 m-3">
         <div className="max-w-2xl pt-4 pb-4 pl-10 pr-10 mx-auto bg-white rounded-lg shadow-md">
        <form  className="space-y-4">
 

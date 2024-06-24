@@ -78,14 +78,14 @@ public class EquipmentController {
     }
 
     //Build get all updated equipments REST API
-    @GetMapping("/getAllUpdatedEquipments/{projectId}")
+    @GetMapping("/store/equipment/getAllUpdatedEquipments/{projectId}")
     public ResponseEntity<List<UpdateEquipmentDto>> getUpdatedEquipments(@PathVariable Long projectId) {
         List<UpdateEquipmentDto> updatedEquipments = equipmentService.getAllUpdatedEquipments(projectId);
         return ResponseEntity.ok(updatedEquipments);
     }
 
     // Build searchUpdatedEquipment REST API
-    @GetMapping("/searchUpdatedEquipment/{projectId}")
+    @GetMapping("/store/equipment/searchUpdatedEquipment/{projectId}")
     public ResponseEntity<List<UpdateEquipmentDto>> searchUpdatedEquipment(
             @PathVariable Long projectId,
             @RequestParam("query") String query) {
