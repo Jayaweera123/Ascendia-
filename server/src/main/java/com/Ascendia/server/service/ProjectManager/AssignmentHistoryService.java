@@ -1,6 +1,7 @@
 package com.Ascendia.server.service.ProjectManager;
 
 import com.Ascendia.server.dto.ProjectManager.AssignmentHistoryDto;
+import com.Ascendia.server.dto.ProjectManager.AssignmentHistoryGetDto;
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.ProjectManager.UserProjectAssignmentDto;
 
@@ -11,11 +12,11 @@ public interface AssignmentHistoryService {
 
     AssignmentHistoryDto createHistoryRecord(AssignmentHistoryDto assignmentHistoryDto);
 
-    List<AssignmentHistoryDto> getRecordsByProjectId(Long projectId);
+    List<AssignmentHistoryGetDto> getRecordsByProjectId(Long projectId);
 
-    public AssignmentHistoryDto getRecordById(Long Id);
+    public AssignmentHistoryGetDto getRecordById(Long Id);
 
-    String calculateDuration(AssignmentHistoryDto assignmentHistoryDto);
+    String calculateDuration(AssignmentHistoryGetDto assignmentHistoryDto);
 
-    List<AssignmentHistoryDto> searchRecord(Long projectId, String query);
+    List<AssignmentHistoryGetDto> searchRecord(Long projectId, String query);
 }

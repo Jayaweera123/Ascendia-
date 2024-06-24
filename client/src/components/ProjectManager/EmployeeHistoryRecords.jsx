@@ -174,8 +174,8 @@ function EmployeeHistoryRecords({ projectId }) {
                               <img
                                 className="w-full h-full rounded-full"
                                 src={
-                                  employee.assignedUser.profilePicUrl
-                                    ? `http://localhost:8080/${employee.assignedUser.profilePicUrl.replace(
+                                  employee.assignedUserProfilePicUrl
+                                    ? `http://localhost:8080/${employee.assignedUserProfilePicUrl.replace(
                                         /\\/g,
                                         "/"
                                       )}`
@@ -186,8 +186,7 @@ function EmployeeHistoryRecords({ projectId }) {
                             </div>
                             <div className="ml-3">
                               <p className="text-gray-900 whitespace-no-wrap">
-                                {employee.assignedUser.firstName}{" "}
-                                {employee.assignedUser.lastName}
+                                {employee.assignedUserName}
                               </p>
                               <p className="text-gray-600 text-xs whitespace-no-wrap">
                                 {employee.assignmentType}{" "}
@@ -198,7 +197,7 @@ function EmployeeHistoryRecords({ projectId }) {
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                           <p className="text-gray-900 whitespace-no-wrap">
                             {" "}
-                            {employee.assignedUser.department}
+                            {employee.assignedUserDepartment}
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">

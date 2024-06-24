@@ -1,6 +1,7 @@
 package com.Ascendia.server.service.ProjectManager.impl;
 
 import com.Ascendia.server.dto.ProjectManager.AssignmentHistoryDto;
+import com.Ascendia.server.dto.ProjectManager.AssignmentHistoryGetDto;
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.ProjectManager.UserProjectAssignmentDto;
 import com.Ascendia.server.entity.Administrator.User;
@@ -71,22 +72,22 @@ public class AssignmentHistoryServiceImpl implements AssignmentHistoryService {
     }
 
     @Override
-    public List<AssignmentHistoryDto> getRecordsByProjectId(Long projectId) {
+    public List<AssignmentHistoryGetDto> getRecordsByProjectId(Long projectId) {
         List<AssignmentHistory> records = assignmentHistoryRepository.findByProjectProjectId(projectId);
-        return records.stream().map(AssignmentHistoryMapper::mapToAssignmentHistoryDto).collect(Collectors.toList());
+        return records.stream().map(AssignmentHistoryMapper::mapToAssignmentHistoryGetDto).collect(Collectors.toList());
     }
 
     @Override
-    public AssignmentHistoryDto getRecordById(Long Id) {
+    public AssignmentHistoryGetDto getRecordById(Long Id) {
         AssignmentHistory record = assignmentHistoryRepository.findById(Id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Task not found with the given ID : "+Id));
-        return AssignmentHistoryMapper.mapToAssignmentHistoryDto(record);
+        return AssignmentHistoryMapper.mapToAssignmentHistoryGetDto(record);
 
     }
 
     @Override
-    public String calculateDuration(AssignmentHistoryDto assignmentHistoryDto) {
+    public String calculateDuration(AssignmentHistoryGetDto assignmentHistoryDto) {
         LocalDate startDate = assignmentHistoryDto.getAssignmentStartDate();
         LocalDate endDate = assignmentHistoryDto.getAssignmentEndDate();
 
@@ -134,9 +135,9 @@ public class AssignmentHistoryServiceImpl implements AssignmentHistoryService {
     }
 
     @Override
-    public List<AssignmentHistoryDto> searchRecord(Long projectId, String query) {
+    public List<AssignmentHistoryGetDto> searchRecord(Long projectId, String query) {
         List<AssignmentHistory> records = assignmentHistoryRepository.searchRecord(projectId, query);
-        return records.stream().map(AssignmentHistoryMapper::mapToAssignmentHistoryDto)
+        return records.stream().map(AssignmentHistoryMapper::mapToAssignmentHistoryGetDto)
                 .collect(Collectors.toList());
     }
 

@@ -1,6 +1,7 @@
 package com.Ascendia.server.mapper.ProjectManager;
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
+import com.Ascendia.server.dto.ProjectManager.TaskGetDto;
 import com.Ascendia.server.entity.ProjectManager.Task;
 
 import java.time.LocalDate;
@@ -40,8 +41,24 @@ public class TaskMapper {
         );
     }
 
-    //From ChapGPT
-    public static TaskDto mapToTaskDtoProjection(Task task) {
+    public static TaskGetDto mapToTaskGetDto(Task task) {
+        return new TaskGetDto(
+                task.getTaskId(),
+                task.getTaskName(),
+                task.getDescription(),
+                task.getStartDate(),
+                task.getEndDate(),
+                task.getCreatedDate(),
+                task.getStatus(),
+                task.getPrevStatus(),
+                task.isCompleted(),
+                task.getProject().getProjectId(),
+                task.getProject().getProjectName()
+                //ORDER MUST BE THERE AS SAME THE DTO CLASS
+        );
+    }
+
+    /*public static TaskDto mapToTaskDtoProjection(Task task) {
         TaskDto taskDto = new TaskDto();
         taskDto.setTaskId(task.getTaskId());
         taskDto.setTaskName(task.getTaskName());
@@ -53,7 +70,7 @@ public class TaskMapper {
         // Optionally include only necessary fields from the associated Project entity
         // taskDto.setProjectName(task.getProject().getName());
         return taskDto;
-    }
+    }*/
 
 
 }
