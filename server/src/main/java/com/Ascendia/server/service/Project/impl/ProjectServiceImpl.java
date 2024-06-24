@@ -1,12 +1,9 @@
 package com.Ascendia.server.service.Project.impl;
 
 import com.Ascendia.server.dto.Project.ProjectDto;
-import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.entity.Project.Project;
-import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.exceptions.ResourceNotFoundException;
 import com.Ascendia.server.mapper.Project.ProjectMapper;
-import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.repository.ProjectManager.TaskRepository;
 import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
@@ -15,8 +12,8 @@ import com.Ascendia.server.service.Project.ProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
 
+import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;

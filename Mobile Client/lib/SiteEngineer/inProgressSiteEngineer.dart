@@ -28,7 +28,7 @@ class inProgressSite extends StatefulWidget {
 
 
 Future<List<Task>> getAllScheduledTasks(int projectId) async {
-  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/task/api/task/$projectId/scheduled"));
+  final response = await http.get(Uri.parse("http://localhost:8080/api/task/api/task/$projectId/scheduled"));
   if(response.statusCode == 200){   //http://10.0.2.2:8080/api/task/api/task/1/scheduled
     final List<dynamic> jsonData = json.decode(response.body);
     return jsonData.map((taskData) => Task.fromJson(taskData)).toList();
@@ -457,6 +457,7 @@ Center(
                                       builder: (context) => jobAppPage(
                                         taskId: task.taskId,
                                         taskName: task.taskName,
+                                        
                                        
                                       ),
                                     ),

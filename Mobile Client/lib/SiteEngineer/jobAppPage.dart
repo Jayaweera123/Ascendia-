@@ -9,7 +9,7 @@ import 'package:my_project/SiteEngineer/Task.dart';
 import 'package:my_project/SiteEngineer/TaskCommentFormSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/updateSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/HomeSiteEngineer.dart';
-import 'package:my_project/SiteEngineer/updatingTaskForm.dart';
+import 'package:my_project/SiteEngineer/updatingJobForm.dart';
 import 'package:my_project/service.dart';
 import 'package:my_project/SiteEngineer/Task.dart';
 import 'package:my_project/SiteEngineer/JobCommentFormSiteEngineer.dart';
@@ -32,7 +32,7 @@ class jobAppPage extends StatefulWidget {
 }
 
 Future<List<Job>> getJobsByTasks(int taskId) async {//http://10.0.2.2:8080/api/job/api/task/19/jobs
-  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/job/api/task/$taskId/jobs"));
+  final response = await http.get(Uri.parse("http://localhost:8080/api/job/api/task/$taskId/jobs"));
   if(response.statusCode == 200){
     final List<dynamic> jsonData = json.decode(response.body);
     return jsonData.map((jobData) => Job.fromJson(jobData)).toList();
@@ -466,14 +466,7 @@ Center(
                             ),
                           ),
 
-                        onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => HomeSite(),
-                                    ),
-                                  );
-                                },
+
                         ),
                       ),
 
@@ -529,23 +522,33 @@ const Padding(padding: EdgeInsets.all(0)),
 PopupMenuButton<String>(
                                 onSelected: (String value) {
                                   if (value == 'Delete') {
-                              //   _deleteData( task.taskId);
+                                 _deleteData( job.jobId);
                                   } else if (value == 'Edit') {
-/*
+
+  //                                     int jobId;
+  // String jobName;
+  // String description;
+  // DateTime startDate;
+  // DateTime endDate;
+  // Task task;
+
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => UpdatingTaskForm(
-                                          taskId:task.taskId,
-                                          taskName:task.taskName,
-                                          description:task.description,
-                                          startDate:task.startDate,
-                                          endDate:task.endDate,
-                                          projectId:task.projectId
+                                        builder: (context) => UpdatingJobForm(
+                                          jobId:job.jobId,
+                                          jobName:job.jobName,
+                                          description: job.description,
+                                          startDate:job.startDate,
+                                          endDate:job.endDate,
+                                          task: job.task,
+                                          
+                                          
+                                          
                                         ),
                                       ),
                                     );
-                              */
+                              
                                   }
                                 },
                                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -775,8 +778,8 @@ setState(() {
 
 
 
-void _deleteData(int taskId) async {
-  print(taskId);
+void _deleteData(int jobId) async {
+  print(jobId);
   try {
     showDialog(
       context: context,
@@ -790,7 +793,7 @@ void _deleteData(int taskId) async {
             fontFamily: 'Inter',
             ),
           ),
-          content:const Text("Are you sure you want to delete this task ?",
+          content:const Text("Are you sure you want to delete this Job ?",
             style: TextStyle(
             color: Color.fromRGBO(50, 75, 101, 1),
             fontSize: 16.0,
@@ -800,7 +803,32 @@ void _deleteData(int taskId) async {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                     service.deleteTask(taskId);
+                     service.deleteJob(jobId);
+
+AlertDialog(
+  icon:const Icon(
+    Icons.delete_outlined
+  ),
+
+          content:const Text("Are you sure you want to delete this Job ?",
+            style: TextStyle(
+            color: Color.fromRGBO(50, 75, 101, 1),
+            fontSize: 16.0,
+            fontWeight: FontWeight.normal,
+            fontFamily: 'Inter',
+            )),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {                  
+                Navigator.of(context).pop(    );
+              },
+              child:const Text("OK"),
+            ),
+
+          ],
+
+        );
+
                 Navigator.of(context).pop(    );
               },
               child:const Text("OK"),

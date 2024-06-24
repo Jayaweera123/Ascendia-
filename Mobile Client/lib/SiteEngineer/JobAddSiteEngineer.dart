@@ -21,7 +21,7 @@ class JobAddSite extends StatefulWidget {
 }
 
 Future<List<Job>> getAllJobs() async {
-  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/job/allJobs"));
+  final response = await http.get(Uri.parse("http://localhost:8080/api/job/allJobs"));
   if(response.statusCode == 200){
     final List<dynamic> jsonData = json.decode(response.body);
     return jsonData.map((jobData) => Job.fromJson(jobData)).toList();

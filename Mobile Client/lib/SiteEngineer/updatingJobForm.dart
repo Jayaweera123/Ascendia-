@@ -29,7 +29,7 @@ class UpdatingJobForm extends StatefulWidget {
 
 
 Future<List<Task>> getAllTasks() async {
-  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/task/all"));
+  final response = await http.get(Uri.parse("http://localhost:8080/api/task/all"));
   if (response.statusCode == 200) {
     final List<dynamic> jsonData = json.decode(response.body);
     return jsonData.map((taskData) => Task.fromJson(taskData)).toList();

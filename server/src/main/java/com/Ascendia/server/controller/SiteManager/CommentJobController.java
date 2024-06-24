@@ -1,8 +1,5 @@
 /*
-
-
 package com.Ascendia.server.controller.SiteManager;
-
 
 import com.Ascendia.server.dto.SiteManager.CommentJobDto;
 import com.Ascendia.server.dto.SiteManager.CommentResponseJobDto;
@@ -16,15 +13,14 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("api/v2/commentjob")
+@RequestMapping("api/v2/comment")
 @AllArgsConstructor
 public class CommentJobController {
 
 
-
     private CommentJobService commentJobService;
 
-    @PostMapping("/job/createComment")
+    @PostMapping("/createJobComment")
     public ResponseEntity<CommentResponseJobDto> createJobComment(@RequestBody CommentJobDto commentJobDto) {
         if (commentJobDto == null ||  commentJobDto.getCommentedJobUser() == null || commentJobDto.getCommentedJobUser().getUserID() == null) {
             throw new IllegalArgumentException("Commented user information in CommentDto cannot be null");
@@ -38,8 +34,24 @@ public class CommentJobController {
         CommentResponseJobDto savedJobComment = commentJobService.createJobComment(commentJobDto);
         return new ResponseEntity<>(savedJobComment, HttpStatus.CREATED);
     }
+/*
+    @PostMapping("/comments")
+    public ResponseEntity<?> createComment(@RequestBody CommentDto commentDto) {
+        if (commentDto.getCommentedUser() == null) {
+            return ResponseEntity.badRequest().body("User information cannot be null");
+        }
 
+        try {
+            commentService.createComment(commentDto);
+            return ResponseEntity.ok("Comment created successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 
+*/
+
+/*
 
     @GetMapping("/job/{jobId}")
     public ResponseEntity <List<CommentResponseJobDto>> getCommentsForJob(@PathVariable Long jobId){
@@ -60,13 +72,11 @@ public class CommentJobController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteJobComment(@PathVariable("id") int commentJobId ) {
+    public ResponseEntity<String> deleteComment(@PathVariable("id") int commentJobId ){
         commentJobService.deleteJobComment(commentJobId);
         return ResponseEntity.ok("Comment is delete successfully");
 
-
     }
 
-
-    }
+}
 */

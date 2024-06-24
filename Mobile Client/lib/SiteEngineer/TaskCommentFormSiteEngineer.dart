@@ -23,7 +23,7 @@ class TaskCommentSite extends StatefulWidget {
 }
 
   Future<List<Comment>> getCommentByTask(int taskId) async {
-  final response = await http.get(Uri.parse("http://10.0.2.2:8080/api/v2/comment/task/$taskId"));
+  final response = await http.get(Uri.parse("http://localhost:8080/api/v2/comment/task/$taskId"));
   if(response.statusCode == 200){
     final List<dynamic> jsonData = json.decode(response.body);
     print('obect future get method');

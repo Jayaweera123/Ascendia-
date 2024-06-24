@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:my_project/SiteEngineer/CommentTasks.dart';
+
 class Service{
 
 
@@ -22,7 +23,7 @@ class Service{
       print(userID);
       print(commentText);
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8080/api/v2/comment/createComment'),
+        Uri.parse('http://localhost:8080/api/v2/comment/createComment'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(data),
       
@@ -51,7 +52,7 @@ print(commentId);
       print(CommentText);
 
     final response = await http.put(
-      Uri.parse('http://10.0.2.2:8080/api/v2/comment/$commentId'),
+      Uri.parse('http://localhost:8080/api/v2/comment/$commentId'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
 
@@ -111,7 +112,7 @@ print(" new 02");
     // Delete a comment from the backend
   Future<void> deleteComment(int commentId) async {
     print("object  21");
-    final response = await http.delete(Uri.parse('http://10.0.2.2:8080/api/v2/comment/$commentId'));
+    final response = await http.delete(Uri.parse('http://localhost:8080/api/v2/comment/$commentId'));
     print("object21");
     if (response.statusCode != 200) {
       throw Exception('Failed to delete comment');
@@ -136,7 +137,7 @@ print(" new 02");
 
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8080/api/task/add'),        //http://localhost:8080/api/task/add
+        Uri.parse('http://localhost:8080/api/task/add'),        //http://localhost:8080/api/task/add
         headers: {'Content-Type': 'application/json'},          //http://10.0.2.2:8080/api/task/all
         body: json.encode(data),
       );
@@ -166,7 +167,7 @@ final Map<String, dynamic> data = {
       };
   try {
     final response = await http.put(
-      Uri.parse('http://10.0.2.2:8080/api/task/$taskId/edit'),//http://10.0.2.2:8080/api/task//{taskId}/edit
+      Uri.parse('http://localhost:8080/api/task/$taskId/edit'),//http://10.0.2.2:8080/api/task//{taskId}/edit
       headers: {'Content-Type': 'application/json'},              // http://10.0.2.2:8080/api/v2/comment/$commentId
       body: json.encode(data),
     );
@@ -191,7 +192,7 @@ final Map<String, dynamic> data = {
 
   Future<void> deleteTask(int taskId) async {
     print("object  21");
-    final response = await http.delete(Uri.parse('http://10.0.2.2:8080/api/task/$taskId'));
+    final response = await http.delete(Uri.parse('http://localhost:8080/api/task/$taskId'));
     print("object21");
     if (response.statusCode != 200) {
       throw Exception('Failed to delete comment');
@@ -213,7 +214,7 @@ final Map<String, dynamic> data = {
 
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8080/api/job/createJob'),        //http://10.0.2.2:8080/api/job/createJob
+        Uri.parse('http://localhost:8080/api/job/createJob'),        //http://10.0.2.2:8080/api/job/createJob
         headers: {'Content-Type': 'application/json'},          //http://10.0.2.2:8080/api/task/all
         body: json.encode(data),
       );
@@ -247,7 +248,7 @@ final Map<String, dynamic> data = {
 
   try {
     final response = await http.put(
-      Uri.parse('http://10.0.2.2:8080/api/job/$jobId'),
+      Uri.parse('http://localhost:8080/api/job/$jobId'),
       headers: {'Content-Type': 'application/json'},             
       body: json.encode(data),
     );
@@ -272,7 +273,7 @@ final Map<String, dynamic> data = {
 
 
   Future<void> deleteJob(int jobId) async {
-    final response = await http.delete(Uri.parse('http://10.0.2.2:8080/api/job/$jobId'));
+    final response = await http.delete(Uri.parse('http://localhost:8080/api/job/$jobId'));
     if (response.statusCode != 200) {
       throw Exception('Failed to delete comment');
     }
@@ -300,7 +301,7 @@ final Map<String, dynamic> data = {
       print(userID);
       print(commentJobText);
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8080/api/v2/commentjob/job/createComment'),
+        Uri.parse('http://localhost:8080/api/v2/commentjob/job/createComment'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode(data),
       
@@ -332,7 +333,7 @@ print(commentJobId);
       print(CommentJobText);
 
     final response = await http.put(
-      Uri.parse('http://10.0.2.2:8080/api/v2/commentjob/$commentJobId'),
+      Uri.parse('http://localhost:8080/api/v2/commentjob/$commentJobId'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
 
@@ -367,7 +368,7 @@ print(commentJobId);
     print("object  21");
     print("delect comment job :");
     print(commentjobId);
-    final response = await http.delete(Uri.parse('http://10.0.2.2:8080/api/v2/commentjob/$commentjobId'));
+    final response = await http.delete(Uri.parse('http://localhost:8080/api/v2/commentjob/$commentjobId'));
     print("object21");
     if (response.statusCode != 200) {
       throw Exception('Failed to delete comment');
@@ -382,7 +383,7 @@ Future<void> updateTaskStatus(int taskId) async {
   try {
       print(taskId);
     final response = await http.put(
-      Uri.parse('http://10.0.2.2:8080/api/task/$taskId/set-status'),
+      Uri.parse('http://localhost:8080/api/task/$taskId/set-status'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
     'task': {
