@@ -32,13 +32,12 @@ export const getAllProjectCards = () =>
   axios.get(REST_API_BASE_URL + "/project/all");
 
 
-export const getProjectById = (projectId) =>
-  axios.get("http://localhost:8080/pmanager/" + projectId);
-
-
 {
   /*Nethuni*/
 }
+export const getProjectById = (projectId) =>
+  api.get("http://localhost:8080/pmanager/" + projectId);
+
 export const getProjectByProjectManagerId = () =>
   api.get("http://localhost:8080/projects/user");
 

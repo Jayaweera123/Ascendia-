@@ -20,10 +20,16 @@ function AddEmployeeForm({ projectId }) {
   const [selectedDesignation, setSelectedDesignation] = useState("all");
 
   useEffect(() => {
+    const userId = localStorage.getItem("userID");
+    if (userId) {
+      setPmId(userId);
+    }
+  }, []);
+
+  useEffect(() => {
     getProjectById(projectId)
       .then((response) => {
         setProjectName(response.data.projectName);
-        setPmId(response.data.pmId);
       })
       .catch((error) => {
         console.error(error);
@@ -76,6 +82,8 @@ function AddEmployeeForm({ projectId }) {
       },
       assignmentStatus: "Active",
     };
+
+    console.log(assignment);
 
     addAssignment(assignment)
       .then((response) => {
@@ -309,7 +317,7 @@ function AddEmployeeForm({ projectId }) {
                       <option className="text-5rem" value="all">
                         All
                       </option>
-                      <option className="option-style" value="Civil Engineer">
+                      <option className="option-style" value="Site Engineer">
                         Site Engineer
                       </option>
                       <option

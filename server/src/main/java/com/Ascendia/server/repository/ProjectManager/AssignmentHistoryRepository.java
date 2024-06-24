@@ -15,7 +15,7 @@ public interface AssignmentHistoryRepository extends JpaRepository<AssignmentHis
     @Query("SELECT record FROM AssignmentHistory record WHERE " +
             "record.project.projectId = :projectId AND " +
             "(record.assignedUser.firstName LIKE %:query% OR " +
-            "record.assignedUser.lastName LIKE %:query% OR " +
-            "record.assignedUser.department LIKE %:query%)")
+            "record.assignedUser.lastName LIKE %:query%)")// +
+            //"record.assignedUser.department LIKE %:query%)")
     List<AssignmentHistory> searchRecord(Long projectId, String query);
 }
