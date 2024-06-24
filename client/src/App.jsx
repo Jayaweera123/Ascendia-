@@ -77,10 +77,11 @@ const App = () => {
           {/* Rashmi - Login */}
           <Route exact path="/" element={<NewLogin />} /> 
           <Route exact path="/login" element={<NewLogin />} />
-          <Route exact path="/newlogin" element={<NewLogin />} />
           <Route path="*" element={<Navigate to="/login" />} />‰
+
           {/* Ravindu - Progress */}
           <Route path="/progress" element={<Progress />} />
+
           {/* Rashmi - Client */}
           <Route path="/reviews" element={<Reviews />} />
           <Route
