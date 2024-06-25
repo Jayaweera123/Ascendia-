@@ -16,6 +16,7 @@ import com.Ascendia.server.repository.Administrator.UserRepository;
 import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
 import com.Ascendia.server.service.ProjectManager.AssignmentHistoryService;
+import com.Ascendia.server.service.ProjectManager.SendEmailService;
 import com.Ascendia.server.service.ProjectManager.UserProjectAssignmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,14 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
 
     private final AssignmentHistoryService assignmentHistoryService;
 
+    private SendEmailService sendEmailService;
+
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired
     private UserRepository userRepository;
+
+
 
 
 
@@ -75,36 +80,26 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
         // Save assignment
         UserProjectAssignment savedAssignment = userProjectAssignmentRepository.save(assignment);
 
+        //Send email notification
+
+        String subject = "Project Assignment Notification";
+
+        String body =
+
+                "Dear " + assignedUser.getFirstName() + " " + assignedUser.getLastName() + ",\n\n" +
+                        "You have been assigned to a new project.\n\n" +
+                        "Project: " + project.getProjectName() + "\n" +
+                        "Assigned By: " + assignedByUser.getFirstName() + " " + assignedByUser.getLastName() + " ("+assignedByUser.getDesignation()+")\n\n" +
+                        "We are excited to have you on board and look forward to your contributions to the project. Please review the project details and get ready to dive in.\n\n" +
+                        "Best regards,\n" +
+                        "Ascendia Construction Management\n" +
+                        "\n";
+
+
+
+        sendEmailService.sendEmail(assignedUser.getEmail(), body, subject);
+
         return UserProjectAssignmentMapper.mapToUserProjectAssignmentDto(savedAssignment);
-/*
-        // Retrieve project details from the database based on projectId
-        Optional<Project> projectOptional = projectRepository.findById(assignmentDto.getProject().getProjectId());
-
-        //assignmentDto.setProject(projectOptional.get());
-
-        // Retrieve user details from the database based on userId
-        Optional<User> addedUser = userRepository.findById(assignmentDto.getAssignedUser().getUserID());
-        Optional<User> addedByUser = userRepository.findById(assignmentDto.getAssignedByUser().getUserID());
-
-        //User addedUser0 = addedUser.get();
-
-
-        // Set user availability to false
-        addedUser.get().setAvailability(false);
-
-        assignmentDto.setProject(projectOptional.get());
-        assignmentDto.setAssignedUser(addedUser.get());
-        assignmentDto.setAssignedByUser(addedByUser.get());
-
-
-
-        UserProjectAssignment assignment = UserProjectAssignmentMapper.mapToUserProjectAssignment(assignmentDto);
-        assignment.setAssignedDate(LocalDate.now()); // set the createdDate here
-        UserProjectAssignment savedAssignment = userProjectAssignmentRepository.save(assignment);
-
-        return UserProjectAssignmentMapper.mapToUserProjectAssignmentDto(savedAssignment);*/
-
-
 
     }
 
