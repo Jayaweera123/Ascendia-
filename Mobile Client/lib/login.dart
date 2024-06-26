@@ -1,5 +1,15 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:my_project/BackGround.dart';
+import 'package:http/http.dart' as http;
+import 'package:my_project/SiteEngineer/projectListSiteEngineer.dart';
+import 'package:my_project/service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:my_project/SiteEngineer/ProjectSiteEngineer.dart';
+
+
 
 class LoginPageone extends StatefulWidget {
   const LoginPageone({Key? key}) : super(key: key);
@@ -8,10 +18,82 @@ class LoginPageone extends StatefulWidget {
   State<LoginPageone> createState() => NameState();
 }
 
+
+
 class NameState extends State<LoginPageone> {
 
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+
+
+
+  Future<void> login(String username, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://10.0.2.2:8080/auth/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'username': username,
+          'password': password,
+        }),
+      );
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        final token = responseData['token'];
+        await storeToken(token);
+        print(token);
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Login Successful'),
+            content: Text('You have successfully logged in.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => projectList(
+        token:token,
+      )),
+    );
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }      
+      else {
+        throw Exception('Failed to login');
+      }
+    } catch (e) {
+      print('Error logging in: $e');
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Login Failed'),
+          content: Text('Failed to login. Please try again.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  Future<void> storeToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('jwt_token', token);
+  }
+
+
+
 
   bool isFocused1 = false;
    bool isFocused2 = false;
@@ -274,6 +356,35 @@ Positioned(
         String username = usernameController.text;
         String password = passwordController.text;
         print('Username: $username, Password: $password , remember buttor: $isFocused2');
+
+
+      if (rememberMe == true) {
+        login(username, password);
+        print("enter to the signup button");
+      } else {
+
+
+showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+          content: const Text('Please select "Remember me" to login.'),
+            actions: [
+              TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+            ],
+          ),
+        );
+
+
+      }
+
+
+
       },
       style: ElevatedButton.styleFrom(
         primary: const Color.fromRGBO(0, 31, 63, 1), // Background color
@@ -303,73 +414,6 @@ Positioned(
 
 
 
-/* ............forget ......... */   
-
-  const Positioned(
-  top: 559,
-  left: 0,
-  right: 0,
-  child: Center(
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-     // Add some space between the checkbox and text
-        Text(
-          'Forgot the password?',
-          style: TextStyle(
-            color: Color.fromRGBO(255, 215, 0, 1),
-            fontWeight: FontWeight.w600,
-            fontFamily: 'Inter',
-            fontSize: 13,
-          ),
-        ),
-      ],
-    ),
-  ),
-),
-
-
-/* ...................................... */   
-
-/* ............help ......... */   
-
-  const Positioned(
-  top: 633,
-  left: 0,
-  right: 0,
-  child: Center(
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-     // Add some space between the checkbox and text
-        Text(
-          'Don’t have an account?',
-          style: TextStyle(
-            color: Color.fromRGBO(154, 162, 167, 1),
-            fontWeight: FontWeight.w600,
-            fontFamily: 'Inter',
-            fontSize: 15,
-          ),
-        ),
-        
-Text(
-          ' Help',
-          style: TextStyle(
-            color: Color.fromRGBO(255, 215, 0, 1),
-            fontWeight: FontWeight.w600,
-            fontFamily: 'Inter',
-            fontSize: 15,
-          ),
-        ),
-
-      
-      ],
-    ),
-  ),
-),
-
-
-/* ...................................... */   
 
           ],
         ),

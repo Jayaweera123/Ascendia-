@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:my_project/SiteEngineer/User.dart';
 
 class Project {
   final int projectId;
@@ -13,7 +14,7 @@ class Project {
   final String projectStatus;
   final DateTime createdDate;
   final DateTime endDate;
-  final int pmId;
+  final User projectManager;
   final String image;
 
   Project({
@@ -24,7 +25,7 @@ class Project {
     required this.projectStatus,
     required this.createdDate,
     required this.endDate,
-    required this.pmId,
+    required this.projectManager,
     required this.image,
   });
 
@@ -37,7 +38,7 @@ class Project {
       projectStatus: json['projectStatus']??'',
       createdDate: DateTime.parse(json['createdDate']??DateTime.now().toIso8601String()),
       endDate: DateTime.parse(json['endDate']??DateTime.now().toIso8601String()),
-      pmId: (json['pmId']??0)as int,
+      projectManager: User.fromJson(json['pmId']??{}),
       image: json['image']??'',
     );
   }
@@ -49,7 +50,7 @@ class Project {
     'projectStatus': projectStatus,
     'createdDate': createdDate.toIso8601String(),
     'endDate': endDate.toIso8601String(),
-    'pmId': pmId,
+    'projectManager': projectManager.toJson(),
     'image': image,
   };
 

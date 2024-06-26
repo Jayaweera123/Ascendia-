@@ -3,8 +3,19 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:my_project/SiteEngineer/CommentTasks.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Service{
+
+  Future<void> storeToken(String token) async {
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('jwt_token', token);
+}
+
+Future<String?> getToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('jwt_token');
+}
 
 
  Future<void> saveComment(int taskId, int userID,String commentText) async {

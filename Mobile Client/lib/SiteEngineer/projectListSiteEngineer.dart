@@ -1,32 +1,74 @@
 import 'package:flutter/material.dart';
 import 'package:my_project/BackGround.dart';
+import 'package:my_project/SiteEngineer/Project.dart';
+import 'package:my_project/SiteEngineer/User.dart';
 import 'package:my_project/SiteEngineer/tasksSiteEngineer.dart';
-//import 'package:my_project/ConstentParts.dart';
+import 'package:my_project/login.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:my_project/SiteEngineer/CustomProjectCard.dart'; // Import the CustomCard widget
 
 class projectList extends StatefulWidget {
-  const projectList({Key? key}) : super(key: key);
+  final String token;
+
+  const projectList({
+    Key? key,
+    required this.token,
+  }) : super(key: key);
 
   @override
   State<projectList> createState() => _ProjectSiteState();
+}
+
+Future<String?> getToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('jwt_token');
+}
+
+Future<List<Project>> getAllProjectByToken() async {
+
+  print("enter to the getAllProjectByToken");
+  final token = await getToken();
+  if (token == null) {
+    throw Exception('Token not found');
+  }
+  print("project name");
+
+  final response = await http.get(
+    Uri.parse("http://10.0.2.2:8080/projects/user"),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
+  print("enter to the respones code");
+
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonData = json.decode(response.body);
+    return jsonData.map((projectData) => Project.fromJson(projectData)).toList();
+  } else {
+    throw Exception('Failed to load projects');
+  }
 }
 
 class _ProjectSiteState extends State<projectList> {
   final TextEditingController searchingcontroller = TextEditingController();
   bool isFocused2 = false;
 
-  void homeToTasks (){
-     Navigator.push(
+  void homeToTasks(BuildContext context) {
+    Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) =>const tasksSite()),
-     );
+      MaterialPageRoute(builder: (context) => const tasksSite()),
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Stack(
-        
           children: [
             const background(), // Assuming Background is a widget from BackGround.dart
 
@@ -45,59 +87,54 @@ class _ProjectSiteState extends State<projectList> {
               ),
             ),
 
-
             Container(
+              height: 800,
+              decoration: const BoxDecoration(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Padding(padding: EdgeInsets.only(top: 35)),
 
-                height: 800,
-                decoration: const BoxDecoration(),
-            
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-            
-                  children: [
-                    const Padding(padding: EdgeInsets.only(top: 35)),
-            
-                    Row(children: [
-                      const SizedBox(
-                        width: 35,
-                      ),
-            
+                  Row(
+                    children: [
+                      const SizedBox(width: 35),
+
                       Container(
-                        decoration: const BoxDecoration(
-                            //color: Color.fromARGB(255, 114, 89, 13),
-                            ),
+                        decoration: const BoxDecoration(),
                         alignment: Alignment.topLeft,
-            
-                        child: const Icon(
-                          Icons.arrow_back,
-                          color: Color.fromRGBO(0, 31, 63, 1),
-                          size: 30,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Color.fromRGBO(0, 31, 63, 1),
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => LoginPageone()),
+                            );
+                          },
                         ),
                       ),
-            
-                      Row(children: [
-                        Image.asset(
-                          'asset/campany logo.jpg',
-                          width: 50.0, // Set the width as needed
-                          height: 50.0, // Set the height as needed
-                          fit: BoxFit.cover, // Set the height as needed
-                        ),
-                      ]),
-                    ]),
-            
-                    Row(children: [
-                      const SizedBox(
-                        width: 50,
+
+                      Image.asset(
+                        'asset/campany logo.jpg',
+                        width: 50.0,
+                        height: 50.0,
+                        fit: BoxFit.cover,
                       ),
-            
+                    ],
+                  ),
+
+                  Row(
+                    children: [
+                      const SizedBox(width: 50),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-            
                           Container(
                             decoration: const BoxDecoration(),
-            
-                            child:const Text(
+                            child: const Text(
                               'My Projects',
                               style: TextStyle(
                                 color: Color.fromRGBO(50, 75, 101, 1),
@@ -107,65 +144,49 @@ class _ProjectSiteState extends State<projectList> {
                               ),
                             ),
                           ),
-            
                         ],
                       )
-                    ]
+                    ],
+                  ),
+
+                  Container(
+                    height: 630,
+                    width: 300,
+                    child: SingleChildScrollView(
+                      child: FutureBuilder<List<Project>>(
+                        future: getAllProjectByToken(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (snapshot.hasData) {
+                            final List<Project> projects = snapshot.data!;
+                            return Column(
+                              children: projects.map((project) {
+                                print(project.projectName);
+                                print(project.image);
+                                print(project.projectDescription);
+                                return CustomCard(
+                                  projectName: project.projectName,
+                                  projectDescription: project.projectDescription,
+                                  imageUrl: project.image, // Update as per your project model
+                                );
+                              }).toList(),
+                            );
+                          } else {
+                            return const Text('No data available');
+                          }
+                        },
+                      ),
                     ),
-
-
-
-Container(
-  height: 630,
-  width:300,
-  color: Colors.lightBlue,
-  child: Column(
-    children: [
-           Container(
-            height: 90,
-            width: 280,
-            decoration:const BoxDecoration(
-              color: Colors.red,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40.0),
-                topRight: Radius.circular(40.0),
+                  ),
+                ],
               ),
             ),
-          ),
-
-Container(
-            height: 70,
-            width: 280,
-            color: Colors.yellow,
-child:Center(
-            child:const Text('Project Name ''-'' Project ID'
-            ,style: TextStyle(
-              fontSize: 20,
-              
-              
-            ),
-            
-            
-            ),  
-          ),
-)
-
-    ],
-  ),
-),
-
-
-
-
-                  ],
-                )
-                ),
-
-
           ],
         ),
       ),
     );
   }
 }
-
