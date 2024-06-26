@@ -4,6 +4,8 @@ import SideNavigationStore from "../../components/Store/SideNavigationStore";
 import DashboardCards from "../../components/Store/dashboard/DashboardCards";
 import MaterialChart from "../../components/Store/dashboard/MaterialChart";
 import NotificationBar from "../../components/Store/NotificationBar";
+import Notification from "../../components/Store/Notification";
+import Test from "./Test";
 
  // Retrieve and parse projectIDs from local storage
  const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
@@ -59,6 +61,8 @@ function StoreKeeperDashboard() {
           </div>
           </div>
         </div>
+
+       
         
       </section>
     </>

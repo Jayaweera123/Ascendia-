@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import TopNavigation from "./components/TopNavigation";
+import './shim/global.js';
 
 {/*Ravindu*/}
 import SideNavigationPCTeam from "./components/ProjectCreationTeam/SideNavigationPCTeam";
@@ -41,6 +42,7 @@ import UpdateMaterialForm from "./components/Store/UpdateMaterialForm";
 import UpdateEquipmentForm from "./components/Store/UpdateEquipmentForm";
 import StoreServices from "./services/StoreServices";
 import History from "./pages/Store/History";
+import Test from "./pages/Store/Test";
 
 {/*Nethuni*/}
 import SideNavigationPM from "./components/ProjectManager/SideNavigationPM";
@@ -66,6 +68,7 @@ const App = () => {
        <BrowserRouter>
         <Routes>
 
+        {/* <Route exact path="/test" element={<Test />} />  */}
           {/* Rashmi - Login */}
           <Route exact path="/" element={<Login />} /> 
           <Route exact path="/login" element={<Login />} />
@@ -168,7 +171,8 @@ const App = () => {
               <Route path="/editEquipment/:id" element={<EquipmentForm />} />
               <Route path="/updateMaterial/:id" element={<UpdateMaterialForm />} />
               <Route path="/updateEquipment/:id" element={<UpdateEquipmentForm />} />
-              <Route path="/addMaterial" element={<MaterialForm />} />        
+              <Route path="/addMaterial" element={<MaterialForm />} />
+              <Route exact path="/test" element={<Test />} />         
               </>
           )}
 

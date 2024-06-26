@@ -16,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +34,10 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Autowired
     private UpdateMaterialRepository updateMaterialRepository;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
     @Override
     public MaterialDto createMaterial(MaterialDto materialDto) {
 
@@ -127,6 +132,11 @@ public class MaterialServiceImpl implements MaterialService {
 
         updateMaterial.setMaterial(material); // Set the Material entity
         updateMaterialRepository.save(updateMaterial);
+
+//        // Send notification if quantity is less than minimum level
+//        if (updatedQuantity < material.getMinimumLevel()) {
+//            messagingTemplate.convertAndSend("/user/private-message", "Material " + material.getMaterialName() + " is running low!");
+//        }
 
         return MaterialMapper.mapToMaterialDto(material);
     }
