@@ -25,9 +25,9 @@ public class Material {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long materialId;
-    @Column(name= "material_code", nullable = false)
+    @Column(name= "material_code", nullable = false, unique = true)
     private String materialCode;
-    @Column(name = "material_name", nullable = false)
+    @Column(name = "material_name", nullable = false, unique = true)
     private String materialName;
     @Column(name = "quantity", nullable = false)
     private int quantity;
@@ -40,7 +40,7 @@ public class Material {
     @CreationTimestamp
     private LocalDateTime createdDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "projectId" , referencedColumnName = "projectId")
     private Project project;
 
