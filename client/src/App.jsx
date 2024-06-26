@@ -1,9 +1,14 @@
+
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
+import './shim/global.js';
 
 import SideNavigation from "./components/ProjectManager/SideNavigation";
 import TopNavigation from "./components/TopNavigation";
+
+
+
 
 
 {/*Ravindu*/}
@@ -44,6 +49,7 @@ import EquipmentForm from "./components/Store/EquipmentForm";
 import UpdateMaterialForm from "./components/Store/UpdateMaterialForm";
 import UpdateEquipmentForm from "./components/Store/UpdateEquipmentForm";
 import History from "./pages/Store/History";
+import Test from "./pages/Store/Test";
 /*import { Routes, Route, useParams } from "react-router-dom";*/
 
 {/*Nethuni*/}
@@ -64,6 +70,8 @@ import Jobs from "./pages/ProjectManager/Jobs";
 
 
 const App = () => {
+
+
   return (
     <div>
        <BrowserRouter>
@@ -106,6 +114,7 @@ const App = () => {
       <Route path="/updateMaterial/:id" element={<UpdateMaterialForm />} />
       <Route path="/updateEquipment/:id" element={<UpdateEquipmentForm />} />
       <Route path="/history" element={<History />} />
+      <Route path="/test" element={<Test />} />
       
         <Route
           path="/projects/:projectId/tasks"
