@@ -5,8 +5,17 @@ import '../../shim/global.js';
 
 const Test = () => {
     const [message, setMessage] = useState('');
-    const [name, setName] = useState('');
+    const [privateMessage, setPrivateMessage] = useState('');
     const stompClientRef = useRef(null);
+    const [userData, setUserData] = useState({
+        userId: '',
+        message: ''
+    });
+
+    // Assuming this code is in a React component or a related function
+const userId = localStorage.getItem('userID');
+console.log('UserId',userId); // This will log the userID value
+
 
     useEffect(() => {
         const token = localStorage.getItem('token'); // Obtain the JWT token
@@ -28,9 +37,14 @@ const Test = () => {
             },
             onConnect: () => {
                 console.log('Connected to WebSocket');
-                stompClient.subscribe('/topic/greetings', (response) => {
+                stompClient.subscribe('/public/greetings', (response) => {
                     console.log('Received message:', response.body);
                     setMessage(JSON.parse(response.body).content);
+                });
+                stompClient.subscribe('/user/' + userId + '/private', (response) => {
+                    console.log('Received private message:', response.body);
+                    var payloadData = JSON.parse(response.body);
+                    setPrivateMessage(payloadData.message);
                 });
             },
             onStompError: (frame) => {
@@ -45,16 +59,33 @@ const Test = () => {
         return () => {
             stompClient.deactivate();
         };
-    }, []);
+    }, [userData.userId]); // Add userId as dependency to handle subscriptions correctly
 
-    const sendMessage = () => {
+    const handleMessage = (event) => {
+        const { value } = event.target;
+        setUserData({ ...userData, message: value });
+    }
+
+    const handleUserId = (event) => {
+        const { value } = event.target;
+        setUserData({ ...userData, userId: value });
+    }
+
+    const sendPrivateMessage = () => {
         const stompClient = stompClientRef.current;
         if (stompClient && stompClient.connected) {
-            console.log('Sending message:', name);
+            const chatMessage = {
+                userId: userData.userId,
+                message: userData.message,
+            };
+
+            console.log('Sending private message:', chatMessage);
             stompClient.publish({
-                destination: '/app/hello',
-                body: name,
+                destination: '/app/private-message',
+                body: JSON.stringify(chatMessage),
             });
+            setUserData({ ...userData, message: '' });
+
         } else {
             console.error('Stomp client is not connected');
         }
@@ -64,12 +95,18 @@ const Test = () => {
         <div>
             <input 
                 type="text" 
-                placeholder="Enter your name" 
-                value={name} 
-                onChange={(e) => setName(e.target.value)} 
+                placeholder="Enter userId" 
+                value={userData.userId} 
+                onChange={handleUserId} 
             />
-            <button onClick={sendMessage}>Send</button>
-            <p>{message}</p>
+            <input 
+                type="text" 
+                placeholder="Enter message" 
+                value={userData.message} 
+                onChange={handleMessage} 
+            />
+            <button onClick={sendPrivateMessage}>Send</button>
+            <p>{privateMessage}</p>
         </div>
     );
 };
