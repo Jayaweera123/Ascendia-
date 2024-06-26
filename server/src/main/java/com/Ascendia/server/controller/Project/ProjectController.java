@@ -19,7 +19,7 @@ import java.util.List;
 @CrossOrigin("*")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api")
+@RequestMapping
 public class ProjectController {
 
 
@@ -38,14 +38,15 @@ public class ProjectController {
         List<ProjectGetDto> projects = projectService.getAllProjects();
         return ResponseEntity.ok(projects);
     }
-    
+
     @DeleteMapping("/project/{projectId}")
-    public ResponseEntity<String> deleteProjectByName(@PathVariable Long projectId) {
+    public ResponseEntity<String> deleteProjectById(@PathVariable Long projectId, @RequestHeader("Authorization") String token) {
+        // Your logic to verify the token if needed
         try {
             projectService.deleteProjectById(projectId);
             return ResponseEntity.ok("Successfully deleted");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid name");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid ID");
         }
     }
 

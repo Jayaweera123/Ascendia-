@@ -15,6 +15,7 @@ import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentReposi
 import com.Ascendia.server.repository.SiteManager.JobRepository;
 import com.Ascendia.server.service.Project.ProjectService;
 import com.Ascendia.server.service.ProjectManager.TaskService;
+import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -88,14 +89,18 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     public void deleteProjectById(Long projectId) {
-        Project project = projectRepository.findByProjectId(projectId);
-        if (project != null) {
-            projectRepository.delete(project);
-        } else {
-            // Handle case where project with given name doesn't exist
-            throw new IllegalArgumentException("Project with name " + projectId + " not found");
+        try {
+            Project project = projectRepository.findByProjectId(projectId);
+            if (project != null) {
+                projectRepository.delete(project);
+            } else {
+                throw new IllegalArgumentException("Project with ID " + projectId + " not found");
+            }
+        } catch (MalformedJwtException e) {
+            throw new SecurityException("Invalid JWT token", e);
         }
     }
+
     @Override
     public ProjectDto updateProjectById(Long projectId, ProjectDto projectDto) {
         Project existingProject = projectRepository.findByProjectId(projectId);

@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { getAllProjectCards } from "../../services/ProjectService.jsx";
 import { MdEdit, MdDelete, MdPerson } from "react-icons/md";
@@ -14,7 +13,9 @@ const NewProjectCard = () => {
         setProjects(response.data);
       })
       .catch((error) => {
-        console.error(error);
+        console.error("Error fetching project cards:", error);
+        // Display an error message to the user
+        Swal.fire("Error", "Failed to fetch project cards. Please try again.", "error");
       });
   }, []);
 
@@ -29,22 +30,37 @@ const NewProjectCard = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
+        // Get the JWT token from localStorage
+        const token = localStorage.getItem('jwtToken');
+        console.log('Retrieved JWT Token:', token);
+        if (!token) {
+          Swal.fire("Error", "You are not authenticated. Please log in.", "error");
+          return;
+        }
+  
         axios
-          .delete(`http://localhost:8080/api/project/${projectId}`)
+          .delete(`http://localhost:8080/project/${projectId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          })
           .then(() => {
             Swal.fire("Deleted!", "Your project has been deleted.", "success");
-            setProjects(
-              projects.filter((project) => project.projectId !== projectId)
-            );
+            setProjects(projects.filter((project) => project.projectId !== projectId));
           })
           .catch((error) => {
             console.error("Delete error:", error);
-            Swal.fire("Error!", "Failed to delete the project.", "error");
+            if (error.response && error.response.status === 403) {
+              Swal.fire("Forbidden", "You do not have permission to delete this project.", "error");
+            } else {
+              Swal.fire("Error!", "Failed to delete the project.", "error");
+            }
           });
       }
     });
   };
-
+  
+  
   if (projects.length === 0) {
     return <div className="mt-10 text-center">No projects available.</div>;
   }
@@ -59,7 +75,7 @@ const NewProjectCard = () => {
                 {projects.map((project) => (
                   <div
                     key={project.projectId}
-                    className="mb-6 bg-white rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105 hover:shadow-xl"
+                    className="mb-6 transition-transform duration-300 transform bg-white rounded-lg shadow-lg hover:scale-105 hover:shadow-xl"
                   >
                     {/* Project Image */}
                     <img
@@ -85,23 +101,23 @@ const NewProjectCard = () => {
                         </div>
 
                         <p className="text-sm font-medium">
-                          <div
+                          <span
                             className={`bg-indigo-100 text-indigo-500 rounded-md pl-1 pr-1 status-label-${project.projectStatus.toLowerCase()}`}
                           >
                             {project.projectStatus}
-                          </div>
+                          </span>
                         </p>
                         <div className="flex">
                           <MdPerson
-                            className="cursor-pointer mr-2 text-green-500"
+                            className="mr-2 text-green-500 cursor-pointer"
                             size={20}
                           />
                           <MdEdit
-                            className="cursor-pointer mr-2 text-blue-800"
+                            className="mr-2 text-blue-800 cursor-pointer"
                             size={20}
                           />
                           <MdDelete
-                            className="cursor-pointer text-red-600"
+                            className="text-red-600 cursor-pointer"
                             size={20}
                             onClick={() => handleDelete(project.projectId)}
                           />
@@ -161,11 +177,11 @@ const NewProjectCard = () => {
           color: #ffffff;
         }
 
-        .hover:scale-105:hover {
+        .hover\\:scale-105:hover {
           transform: scale(1.05);
         }
 
-        .hover:shadow-xl:hover {
+        .hover\\:shadow-xl:hover {
           box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
       `}</style>
@@ -174,4 +190,3 @@ const NewProjectCard = () => {
 };
 
 export default NewProjectCard;
-

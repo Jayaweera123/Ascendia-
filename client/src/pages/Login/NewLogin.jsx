@@ -30,7 +30,7 @@ const NewLogin = () => {
             navigate('/client/dashboard');
             break;
           case 'Project Creation Team':
-            navigate('/project/addProject');
+            navigate('/project/DashBoard');
             break;
           case 'Project Manager':
             navigate('/pmanager/dashboard');
@@ -65,27 +65,27 @@ const NewLogin = () => {
   
 
   return (
-    <div className="h-screen overflow-hidden flex items-center justify-center" style={{ background: '#edf2f7' }}>
-      <div className="absolute top-0 left-0 bottom-0 leading-5 h-full w-full overflow-hidden" 
+    <div className="flex items-center justify-center h-screen overflow-hidden" style={{ background: '#edf2f7' }}>
+      <div className="absolute top-0 bottom-0 left-0 w-full h-full overflow-hidden leading-5" 
            style={{ background: 'linear-gradient(to bottom, #14244a 0%, #14244a 20%, #101d3f 70%, #101d3f 100%)' }}>
-        <div className="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent rounded-3xl shadow-xl">
-          <div className="flex-col flex self-center lg:px-14 sm:max-w-4xl xl:max-w-md z-10">
-            <div className="self-start hidden lg:flex flex-col text-gray-200">
-              <h1 className="my-3 font-semibold text-4xl">Welcome back</h1>
-              <p className="pr-3 text-sm opacity-75 text-gray-200">MASTER BUILDER ! It's time to breathe life into your blueprints and transform dreams into stunning reality. Let's build the extraordinary together!</p>
+        <div className="relative justify-center min-h-screen bg-transparent shadow-xl sm:flex sm:flex-row rounded-3xl">
+          <div className="z-10 flex flex-col self-center lg:px-14 sm:max-w-4xl xl:max-w-md">
+            <div className="flex-col self-start hidden text-gray-200 lg:flex">
+              <h1 className="my-3 text-4xl font-semibold">Welcome back</h1>
+              <p className="pr-3 text-sm text-gray-200 opacity-75">MASTER BUILDER ! It's time to breathe life into your blueprints and transform dreams into stunning reality. Let's build the extraordinary together!</p>
             </div>
           </div>
        
-          <div className="flex justify-center self-center z-10">
+          <div className="z-10 flex self-center justify-center">
           <form onSubmit={handleSubmit}>
-            <div className="p-12 bg-white mx-auto rounded-3xl w-96">
+            <div className="p-12 mx-auto bg-white rounded-3xl w-96">
               <div className="mb-7">
-                <h3 className="font-semibold text-2xl text-gray-800">Log In</h3>
+                <h3 className="text-2xl font-semibold text-gray-800">Log In</h3>
               </div>
               {error && <p className="error-message">{error}</p>}
               <div className="space-y-6">
                 <div>
-                  <input className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-indigo-500"  
+                  <input className="w-full px-4 py-3 text-sm bg-gray-200 border border-gray-200 rounded-lg focus:bg-gray-100 focus:outline-none focus:border-indigo-500"  
                           id="username"
                           name="username"
                           type="text"
@@ -105,9 +105,9 @@ const NewLogin = () => {
                         value={password}
                         type={showPassword ? 'text' : 'password'}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="text-sm px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-indigo-500"
+                        className="w-full px-4 py-3 text-sm bg-gray-200 border border-gray-200 rounded-lg focus:bg-gray-100 focus:outline-none focus:border-indigo-500"
                       />
-                      <div className="flex items-center absolute inset-y-0 right-0 mr-3 text-sm leading-5">
+                      <div className="absolute inset-y-0 right-0 flex items-center mr-3 text-sm leading-5">
                         <svg
                           onClick={() => setShowPassword(!showPassword)}
                           className={`h-4 text-[#101d3f] cursor-pointer ${showPassword ? 'hidden' : 'block'}`}
@@ -143,14 +143,14 @@ const NewLogin = () => {
                     Log in
                   </button>
                 </div>
-                <div className="flex items-center justify-center space-x-2 my-5">
+                <div className="flex items-center justify-center my-5 space-x-2">
                   <span className="h-px bg-gray-100 w-36"></span>
                   <span className="h-px bg-gray-100 w-36"></span>
                 </div>
                 
               </div>
 
-              <div className="mt-7 text-center text-gray-300 text-xs">
+              <div className="text-xs text-center text-gray-300 mt-7">
                 <span>
                   Copyright © 2023-2024{' '}
                   <a
@@ -168,8 +168,8 @@ const NewLogin = () => {
             </form>
           </div>
           
-          <footer className="bg-transparent absolute w-full bottom-0 left-0 z-30">
-            <div className="container p-5 mx-auto flex items-center justify-between">
+          <footer className="absolute bottom-0 left-0 z-30 w-full bg-transparent">
+            <div className="container flex items-center justify-between p-5 mx-auto">
               <div className="flex mr-auto">
                 <a
                   href="https://codepen.io/uidesignhub"
