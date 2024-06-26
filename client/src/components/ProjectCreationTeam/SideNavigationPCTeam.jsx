@@ -6,6 +6,7 @@ import { IoHome } from 'react-icons/io5';
 import { FaRegClipboard } from 'react-icons/fa6';
 import { GiProgression } from 'react-icons/gi';
 import { PiProjectorScreenChartBold } from 'react-icons/pi';
+import { GrUserManager } from "react-icons/gr";
 
 const SideNavigationPCTeam = () => {
   const menus = [
@@ -13,6 +14,9 @@ const SideNavigationPCTeam = () => {
     { name: 'Projects', link: '/projectslist', icon: MdOutlineDashboard, margin: true,},
     { name: 'Create Project', link: '/project/addProject', icon: FaRegClipboard },
     { name: 'Progress', link: '/progress', icon: GiProgression },
+    { name: 'Project Manager', link: '/project/pm', icon: GrUserManager },
+    
+    
   ];
   const [open, setOpen] = React.useState(true);
 

@@ -56,23 +56,6 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectGetDto> getProjectsForUser(User user) {
-        List<Project> projects = new ArrayList<>();
-
-        if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Creation Team"))) {
-            projects = projectRepository.findAll();
-
-        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Manager"))) {
-            projects = projectRepository.findByProjectManager(user);
-
-        } else {
-            projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);
-        }
-
-        return projects.stream().map(ProjectGetMapper::mapToProjectGetDto).collect(Collectors.toList());
-    }
-
-    @Override
     public ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage) {
         // Check if a profile image is provided
         if (profileImage != null && !profileImage.isEmpty()) {
@@ -168,6 +151,23 @@ public class ProjectServiceImpl implements ProjectService {
         List<Project> projects = projectRepository.findProjectsByProjectManager(projectManager);
         return projects.stream().map(ProjectGetMapper::mapToProjectGetDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProjectGetDto> getProjectsForUser(User user) {
+        List<Project> projects = new ArrayList<>();
+
+        if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Creation Team"))) {
+            projects = projectRepository.findAll();
+
+        } else if (user.getAuthorities().contains(new SimpleGrantedAuthority("Project Manager"))) {
+            projects = projectRepository.findByProjectManager(user);
+
+        } else {
+            projects = userProjectAssignmentRepository.findProjectsByAssignedUser(user);
+        }
+
+        return projects.stream().map(ProjectGetMapper::mapToProjectGetDto).collect(Collectors.toList());
     }
 
     @Override
