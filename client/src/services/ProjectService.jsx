@@ -17,8 +17,11 @@ api.interceptors.request.use(
     const token = getToken();
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
+      console.log("Token added to request headers:", token);
+    } else {
+      console.warn("No token found in localStorage");
     }
-    console.log(config.headers); // Log headers to verify token presence
+    console.log("Request headers:", config.headers); // Log headers to verify token presence
     return config;
   },
   (error) => {
@@ -29,7 +32,7 @@ api.interceptors.request.use(
 const REST_API_BASE_URL = "http://localhost:8080"; // Ensure this is defined
 
 export const getAllProjectCards = () =>
-  axios.get(REST_API_BASE_URL + "/project/all");
+  api.get(REST_API_BASE_URL + "/project/all");
 
 
 {

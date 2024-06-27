@@ -26,7 +26,7 @@ public class ProjectController {
     private ProjectService projectService;
     private TaskService taskService;
 
-    @PostMapping("/project/addProject")
+    @PostMapping("/project/createProject")
     public ResponseEntity<ProjectDto> createProject(@ModelAttribute ProjectDto projectDto,
                                                     @RequestParam("profileImage") MultipartFile profileImage){
         ProjectDto savedProject = projectService.createProject(projectDto, profileImage);
@@ -38,14 +38,15 @@ public class ProjectController {
         List<ProjectGetDto> projects = projectService.getAllProjects();
         return ResponseEntity.ok(projects);
     }
-    
+
     @DeleteMapping("/project/{projectId}")
-    public ResponseEntity<String> deleteProjectByName(@PathVariable Long projectId) {
+    public ResponseEntity<String> deleteProjectById(@PathVariable Long projectId, @RequestHeader("Authorization") String token) {
+        // Your logic to verify the token if needed
         try {
             projectService.deleteProjectById(projectId);
             return ResponseEntity.ok("Successfully deleted");
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid name");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid ID");
         }
     }
 

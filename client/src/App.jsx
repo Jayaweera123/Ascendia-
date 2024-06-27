@@ -5,13 +5,14 @@ import TopNavigation from "./components/TopNavigation";
 {/*Ravindu*/}
 import SideNavigationPCTeam from "./components/ProjectCreationTeam/SideNavigationPCTeam";
 import AddProject from "./pages/ProjectCreationTeam/AddProject";
-import AssignEmployee from "./pages/ProjectCreationTeam/AssignEmployee";
 import AssignPM from "./pages/ProjectCreationTeam/AssignPM";
 import ProjectService from "./services/ProjectService";
 import Progress from "./pages/Progress/Progress";
 import ProjectsList from "./pages/ProjectCreationTeam/ProjectList";
 import CreationDashboard from "./pages/ProjectCreationTeam/CreationDashboard";
 import NewDashBoard from "./pages/ProjectCreationTeam/NewDashBoard";
+import Assign from "./pages/ProjectCreationTeam/Assign";
+import Pm from "./pages/ProjectCreationTeam/Pm";
 
 {/*Rashmi*/}
 import SideNavigationClient from "./components/Client/SideNavigationClient";
@@ -99,11 +100,12 @@ const App = () => {
               <Route path="/sideNavigationPCTeam" element={<SideNavigationPCTeam />}/>
               <Route path="/topNavigation" element={<TopNavigation />} />
               <Route path="/project/addProject" element={<AddProject/>}/>
-              <Route path="/assignEmployee" element={<AssignEmployee/>}/>
               <Route path="/assignPM" element={<AssignPM/>}/>
               <Route path="/projectslist" element={<ProjectsList/>}/>
               <Route path="/creationDashboard" element={<CreationDashboard/>}/>
-              <Route path="/project/newDashBoard" element={<NewDashBoard/>}/>          
+              <Route path="/project/DashBoard" element={<NewDashBoard/>}/>   
+              <Route path="/project/assign" element={<Assign/>}/>
+              <Route path="/project/pm" element={<Pm/>}/>
             </>
           )}
           {/*ProjectManager */}

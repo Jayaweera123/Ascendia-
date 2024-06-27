@@ -27,6 +27,7 @@ const AssignPM = () => {
 
     {/* Main Section */}
     <section className="flex">
+      {/* Side Navigation Component */}
       <SideNavigationPCTeam open={open} setOpen={setOpen} />
 
       {/* Main Content */}
@@ -166,6 +167,12 @@ const AssignPM = () => {
                           </div>
                         
  
+
+
+
+
+
+
 
   {/* Card */}
   
