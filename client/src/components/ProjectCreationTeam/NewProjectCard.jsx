@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAllProjectCards } from "../../services/ProjectService.jsx";
+import { getAllProjectCards, deleteProjectById } from "../../services/ProjectService.jsx";
 import { MdEdit, MdDelete, MdPerson } from "react-icons/md";
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -21,45 +21,35 @@ const NewProjectCard = () => {
 
   const handleDelete = (projectId) => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You will not be able to recover this project!",
-      icon: "warning",
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this project!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Get the JWT token from localStorage
-        const token = localStorage.getItem('jwtToken');
-        console.log('Retrieved JWT Token:', token);
-        if (!token) {
-          Swal.fire("Error", "You are not authenticated. Please log in.", "error");
-          return;
-        }
-  
-        axios
-          .delete(`http://localhost:8080/project/${projectId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          })
+        deleteProjectById(projectId)
           .then(() => {
-            Swal.fire("Deleted!", "Your project has been deleted.", "success");
-            setProjects(projects.filter((project) => project.projectId !== projectId));
+            Swal.fire(
+              'Deleted!',
+              'Your project has been deleted.',
+              'success'
+            );
+            setProjects(projects.filter(project => project.projectId !== projectId));
           })
           .catch((error) => {
             console.error("Delete error:", error);
-            if (error.response && error.response.status === 403) {
-              Swal.fire("Forbidden", "You do not have permission to delete this project.", "error");
-            } else {
-              Swal.fire("Error!", "Failed to delete the project.", "error");
-            }
+            Swal.fire(
+              'Error!',
+              'Failed to delete the project.',
+              'error'
+            );
           });
       }
     });
-  };
-  
+  };  
   
   if (projects.length === 0) {
     return <div className="mt-10 text-center">No projects available.</div>;

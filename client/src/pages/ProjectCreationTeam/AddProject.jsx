@@ -47,7 +47,7 @@ const AddProject = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/project/createProject",
+        "http://localhost:8080/project/createProject",
         formData,
         {
           headers: {

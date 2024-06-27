@@ -34,6 +34,9 @@ const REST_API_BASE_URL = "http://localhost:8080"; // Ensure this is defined
 export const getAllProjectCards = () =>
   api.get(REST_API_BASE_URL + "/project/all");
 
+export const deleteProjectById = (projectId) =>
+  api.delete(`${REST_API_BASE_URL}/project/${projectId}`);
+
 
 {
   /*Nethuni*/

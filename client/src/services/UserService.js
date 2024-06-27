@@ -8,6 +8,7 @@ class UserService{
             const response = await axios.post(`${UserService.BASE_URL}/auth/login`, { username, password });
             const userData = response.data;
             if (userData.token) {
+                console.log('Storing token:', userData.token); // Debug: Log the token
                 localStorage.setItem('token', userData.token);
                 localStorage.setItem('userID', userData.userID);
                 localStorage.setItem('designation', userData.designation);          
