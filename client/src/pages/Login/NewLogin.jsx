@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import UserService from "../../services/UserService";
+import Swal from "sweetalert2";
+import 'sweetalert2/src/sweetalert2.scss';
 
 const NewLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +22,13 @@ const NewLogin = () => {
         localStorage.setItem('token', userData.token);
         localStorage.setItem('designation', userData.designation);
         localStorage.setItem('userID', userData.userID);
+
+        Swal.fire({
+          title: 'Success!',
+          text: 'Login successful!',
+          icon: 'success',
+        });
+
         // Navigate to the appropriate dashboard based on user designation
         switch (userData.designation) {
           case 'Administrator':
@@ -56,9 +65,12 @@ const NewLogin = () => {
       }
     } catch (error) {
       console.error("Login error:", error.response || error.message || error);
-    setError(error.response?.data?.message || error.message || 'An error occurred during login. Please try again.');
     setTimeout(() => {
-      setError('');
+      Swal.fire({
+        title: 'Error!',
+        text: error.response?.data?.message || error.message || 'An error occurred during login. Please try again.',
+        icon: 'error',
+      });
     }, 5000);
     }
   };

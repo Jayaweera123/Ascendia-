@@ -8,6 +8,8 @@ import { TiUserAddOutline } from "react-icons/ti";
 import { LiaUserTimesSolid } from "react-icons/lia";
 import debounce from 'lodash/debounce';
 import UserService from "../../services/UserService";
+import Swal from 'sweetalert2';
+import 'sweetalert2/src/sweetalert2.scss';
 
 const UserList = () => {
   const [open, setOpen] = useState(true);
@@ -15,6 +17,16 @@ const UserList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [matchedUserIDs, setMatchedUserIDs] = useState([]);
   const navigate = useNavigate();
+
+  //Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 5;
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = users.slice(firstIndex, lastIndex);
+  const numberOfPages = Math.ceil(users.length / recordsPerPage);
+  const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
+    const [isOpen, setIsOpen] = useState(false);
 
   // useEffect hook to fetch user list when component mounts
   useEffect(() => {
@@ -94,20 +106,45 @@ useEffect(() => {
 
   const removeUser = async (userID) => {
     try {
-      const confirmDeactivation = window.confirm('Are you sure you want to deactivate this user?');
-      if (confirmDeactivation) {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, deactivate!',
+        cancelButtonText: 'No, cancel!',
+      });
+
+      if (result.isConfirmed) {
         const token = localStorage.getItem('token');
         if (!token) {
           throw new Error('No token found');
         }
         await UserService.deactivateUser(userID, token);
         fetchUsers();
+        Swal.fire('Deactivated!', 'The user has been deactivated.', 'success');
       }
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('Error deactivating user:', error);
+      Swal.fire('Error!', 'There was an error deactivating the user.', 'error');
     }
   };
 
+  //Pagination
+  const prePage = () => {
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const changeCurrentPage = (id) => {
+    setCurrentPage(id);
+  };
+
+  const nextPage = () => {
+    if (currentPage !== numberOfPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
 
   return (
     <div>
@@ -260,6 +297,32 @@ useEffect(() => {
                   ))}
                 </tbody>
               </table>
+              <div className="flex items-center justify-between p-4 border-t border-blue-gray-50">
+                                <button className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none" onClick={prePage}>
+                                    Previous
+                                </button>
+
+                                    <div className="flex items-center gap-2">
+                                        
+                                    {/************************************************* Pagination *********************************************/}
+                                        {
+                                            numbers.map((n, i) => (
+                                                <button className={ `${currentPage ===n ? "px-3 py-1 text-sm border rounded-full border-blue-gray-500 focus:outline-none bg-slate-200" : "px-3 py-1 text-sm focus:outline-none border rounded-full border-blue-gray-500"}`} key={i} onClick={() => changeCurrentPage(n)}>
+                                                    {n}
+                                                </button>
+
+                                            ))
+                                        
+                                        }
+
+                                        
+                                    </div>
+
+                                    <button className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none" onClick={nextPage}>
+                                        Next
+                                    </button>
+
+                            </div>
             </div>
           </div>
         </div>
@@ -268,5 +331,4 @@ useEffect(() => {
   );
 };
 
-// Export the UserList component
 export default UserList;

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react"; // Import necessary hooks from React
+import React, { useEffect, useState } from "react"; 
 import SideNavigationAdmin from "../../components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin";
 import { RiUserAddFill } from "react-icons/ri";
 import { FaUserEdit } from "react-icons/fa";
 import UserService from "../../services/UserService";
-import { useNavigate, useParams } from "react-router-dom"; // Assuming react-router-dom is used for routing
+import { useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 
 // Define the AddUser component
@@ -124,9 +125,14 @@ const AddUser = () => {
     try {
         const token = localStorage.getItem('token');
         if (!token) {
-            alert('No token found, please login again.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Authentication Error',
+            text: 'No token found, please login again.',
+          }).then(() => {
             navigate('/login');  // Redirect to login if no token is found
-            return;
+          });
+          return;
         }
         
         // Check if we're adding or updating a user
@@ -148,13 +154,23 @@ const AddUser = () => {
             department: '',
             profileImage: null
         });
-        alert('User added/updated successfully');
-        navigate('/admin/userlist');
-    } catch (error) {
-      UserService.handleError(error);
-      alert('An error occurred while adding/updating the user. Please try again.');
-    }
-};
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'User added/updated successfully',
+        }).then(() => {
+          navigate('/admin/userlist');
+        });
+      } catch (error) {
+        UserService.handleError(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An error occurred while adding/updating the user. Please try again.',
+        });
+      }
+    };
+  
 
   // Function to clear form fields
   const removeUser = async () => {

@@ -6,6 +6,8 @@ import { LuUsers2 } from "react-icons/lu";
 import { RiUserAddLine } from "react-icons/ri";
 import UserService from "../../services/UserService";
 import { TbLogout } from "react-icons/tb";
+import Swal from "sweetalert2";
+import 'sweetalert2/src/sweetalert2.scss'; 
 
 
 const SideNavigationAdmin = () => {
@@ -14,11 +16,20 @@ const SideNavigationAdmin = () => {
   const isAdmin = UserService.isAdmin();
 
   const handleLogout = () => {
-    const confirmDelete = window.confirm('Are you sure you want to logout this user?');
-    if (confirmDelete) {
-      UserService.logout();
-      navigate('/');  // Redirect to login page after logout
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will be logged out!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, logout!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        UserService.logout();
+        navigate('/');  // Redirect to login page after logout
+        Swal.fire('Logged out!', 'You have been logged out.', 'success');
+      }
+    });
   };
 
   const menus = [

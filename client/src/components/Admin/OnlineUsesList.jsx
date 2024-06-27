@@ -3,6 +3,8 @@ import UserService from "../../services/UserService";
 
 const OnlineUserList = () => {
   const [users, setUsers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [usersPerPage] = useState(10); // Adjust this number as needed
 
   useEffect(() => {
     fetchOnlineUsers();
@@ -27,8 +29,12 @@ const OnlineUserList = () => {
       console.error('Error fetching users:', error);
     }
   };
+
+  // Calculate the indices for slicing the users array
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
   
-  // Render the component JSX
   return (
             <div className="relative m-5 overflow-x-auto bg-white rounded-lg shadow-md">
               <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 rounded-lg shadow-md">
@@ -77,6 +83,25 @@ const OnlineUserList = () => {
                   ))}
                 </tbody>
               </table>
+              <div className="flex justify-between mt-4">
+              <button
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-4 py-2 text-white bg-blue-500 rounded disabled:bg-gray-300"
+              >
+                Previous
+              </button>
+              <span className="self-center text-sm text-gray-700">
+                Page {currentPage} of {Math.ceil(users.length / usersPerPage)}
+              </span>
+              <button
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={currentPage === Math.ceil(users.length / usersPerPage)}
+                className="px-4 py-2 text-white bg-blue-500 rounded disabled:bg-gray-300"
+              >
+                Next
+              </button>
+            </div>
             </div>
          
   );

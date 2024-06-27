@@ -6,10 +6,11 @@ import TopNavigationClient from "../../components/Client/TopNavigationClient";
 import { MdOutlineRateReview } from "react-icons/md";
 import { MdOutlineAddBox } from "react-icons/md";
 import { format } from 'date-fns'; // Import date-fns for formatting dates
+import Swal from 'sweetalert2';
+import 'sweetalert2/src/sweetalert2.scss';
 import ReviewService from "../../services/ReviewService";
 
 const AddReview = () => {
-  // State variables
   const [open, setOpen] = useState(true);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [email, setEmail] = useState('')
@@ -48,9 +49,21 @@ const AddReview = () => {
 
       try {
         await ReviewService.addReview(review, token);
+        Swal.fire({
+          title: 'Success!',
+          text: 'Your review has been added.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
         navigator('/reviews');
       } catch (error) {
         console.error('Error adding review:', error);
+        Swal.fire({
+          title: 'Error!',
+          text: 'There was an error adding your review.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
       }
     }
   };

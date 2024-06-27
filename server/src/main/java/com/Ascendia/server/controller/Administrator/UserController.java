@@ -30,13 +30,6 @@ public class UserController {
     private final UserService userService;
     private final ProjectService projectService;
 
-    @GetMapping("/projects/user")
-    public ResponseEntity<List<ProjectGetDto>> getProjectsForCurrentUser(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        List<ProjectGetDto> projects = projectService.getProjectsForUser(user);
-        return ResponseEntity.ok(projects);
-    }
-
     @PostMapping(value = "/auth/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<UserDto> addUser(@ModelAttribute UserDto userDto,
                                            @RequestParam("profileImage") MultipartFile profileImage){
@@ -119,6 +112,13 @@ public class UserController {
     public ResponseEntity<List<UserDto>> getOnlineUsers() {
         List<UserDto> onlineUsers = userService.getOnlineUsers();
         return new ResponseEntity<>(onlineUsers, HttpStatus.OK);
+    }
+
+    @GetMapping("/projects/user")
+    public ResponseEntity<List<ProjectGetDto>> getProjectsForCurrentUser(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        List<ProjectGetDto> projects = projectService.getProjectsForUser(user);
+        return ResponseEntity.ok(projects);
     }
 
     {/*
