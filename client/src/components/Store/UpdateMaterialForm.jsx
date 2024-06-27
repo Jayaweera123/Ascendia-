@@ -4,6 +4,7 @@ import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based 
 import { getMaterial, inventoryUpdateMaterial } from '../../services/StoreServices';
 import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import NotificationBar from './NotificationBar';
 
 function UpdateMaterialForm() {
   const [open, setOpen] = useState(true);
@@ -19,6 +20,11 @@ function UpdateMaterialForm() {
     updatedQuantity: ''
 
   })
+
+  const [isOpen, setIsOpen] = useState(false);
+  const notificationHandler = (status) => {
+    setIsOpen(status);
+};
 
   const navigator = useNavigate();
 
@@ -115,7 +121,8 @@ function validateForm(){
 
   return (
     <div>
-      <TopNavigationStore />
+      <TopNavigationStore notificationHandler={notificationHandler} />
+      {isOpen && <NotificationBar isOpen={isOpen} notificationHandler={notificationHandler}  />}
       <section className="flex gap-6">
         <SideNavigationStore open={open} setOpen={setOpen} />
         <div className="flex-auto w-8/12 m-3">

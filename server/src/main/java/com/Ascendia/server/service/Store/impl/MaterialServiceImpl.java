@@ -1,11 +1,15 @@
 package com.Ascendia.server.service.Store.impl;
 
 import com.Ascendia.server.dto.Store.MaterialDto;
+import com.Ascendia.server.dto.Store.NotificationDto;
 import com.Ascendia.server.dto.Store.UpdateMaterialDto;
 import com.Ascendia.server.entity.Project.Project;
+import com.Ascendia.server.entity.Store.Notification;
 import com.Ascendia.server.entity.Store.UpdateMaterial;
+import com.Ascendia.server.mapper.Store.NotificationMapper;
 import com.Ascendia.server.mapper.Store.UpdateMaterialMapper;
 import com.Ascendia.server.repository.Project.ProjectRepository;
+import com.Ascendia.server.repository.Store.NotificationRepository;
 import com.Ascendia.server.repository.Store.UpdateMaterialRepository;
 import com.Ascendia.server.service.Store.MaterialService;
 import com.Ascendia.server.entity.Store.Material;
@@ -16,6 +20,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +38,13 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Autowired
     private UpdateMaterialRepository updateMaterialRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
     @Override
     public MaterialDto createMaterial(MaterialDto materialDto) {
 
@@ -128,7 +140,29 @@ public class MaterialServiceImpl implements MaterialService {
         updateMaterial.setMaterial(material); // Set the Material entity
         updateMaterialRepository.save(updateMaterial);
 
+        // Check if material quantity is less than minimum level and send notification if it is
+        if (updatedQuantity < material.getMinimumLevel()) {
+            sendLowStockNotification(material);
+        }
+
         return MaterialMapper.mapToMaterialDto(material);
+    }
+
+    // Method to send notification
+    private void sendLowStockNotification(Material material) {
+
+
+        String storeKeeperId = material.getUserId(); // Assuming you have a way to get storekeeper ID
+        String message = material.getMaterialCode() + " - " + material.getMaterialName()  +  " is running low !";
+
+        Notification notification = new Notification(storeKeeperId, message);
+
+        notification.setNotifyDate(LocalDateTime.now());
+        // Save notification to the database
+        notificationRepository.save(notification);
+
+        // Use SimpMessagingTemplate to send notification
+        simpMessagingTemplate.convertAndSendToUser(storeKeeperId, "/private", notification);
     }
 
     @Override
@@ -149,6 +183,8 @@ public class MaterialServiceImpl implements MaterialService {
                 .collect(Collectors.toList());
     }
 
+
+
     public List<UpdateMaterialDto> getUpdatedMaterialsByDateRange(Long projectId, LocalDateTime startDate, LocalDateTime endDate) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + projectId));
@@ -157,6 +193,14 @@ public class MaterialServiceImpl implements MaterialService {
 
         return updatedMaterials.stream()
                 .map(UpdateMaterialMapper::mapToUpdateMaterialDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<NotificationDto> getAllNotifications(String userId) {
+        List<Notification> notifications = notificationRepository.findByUserId(userId);
+        return notifications.stream()
+                .map(NotificationMapper::mapToNotificationDto)
                 .collect(Collectors.toList());
     }
 }

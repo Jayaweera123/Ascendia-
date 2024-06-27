@@ -25,9 +25,9 @@ public class WebSocketController {
         return new Greeting("Hello, " + name + "!");
     }
 
-    @MessageMapping("/private-message")
-    public void receivePrivateMessage(@Payload Message message){
-        simpMessagingTemplate.convertAndSendToUser(message.getUserId(),"/private",message); // /user/{username}/private
-        System.out.println(message.toString());
-    }
+//    @MessageMapping("/private-message")
+//    public void receivePrivateMessage(@Payload Message message){
+//        simpMessagingTemplate.convertAndSendToUser(message.getUserId(),"/private",message); // /user/{username}/private
+//        System.out.println(message.toString());
+//    }
 }

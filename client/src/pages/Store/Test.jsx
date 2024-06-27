@@ -4,17 +4,18 @@ import { Client } from '@stomp/stompjs';
 import '../../shim/global.js';
 
 const Test = () => {
-    const [message, setMessage] = useState('');
+    // const [message, setMessage] = useState('');
     const [privateMessage, setPrivateMessage] = useState('');
     const stompClientRef = useRef(null);
-    const [userData, setUserData] = useState({
-        userId: '',
-        message: ''
-    });
+    const [newNotification, setNewNotification] = useState(false); // Add this line
+    // const [userData, setUserData] = useState({
+    //     userId: '',
+    //     message: ''
+    // });
 
     // Assuming this code is in a React component or a related function
-const userId = localStorage.getItem('userID');
-console.log('UserId',userId); // This will log the userID value
+    const userId = localStorage.getItem('userID');
+    console.log('UserId',userId); // This will log the userID value
 
 
     useEffect(() => {
@@ -37,14 +38,19 @@ console.log('UserId',userId); // This will log the userID value
             },
             onConnect: () => {
                 console.log('Connected to WebSocket');
-                stompClient.subscribe('/public/greetings', (response) => {
-                    console.log('Received message:', response.body);
-                    setMessage(JSON.parse(response.body).content);
-                });
+                // stompClient.subscribe('/public/greetings', (response) => {
+                //     console.log('Received message:', response.body);
+                //     setMessage(JSON.parse(response.body).content);
+                // });
                 stompClient.subscribe('/user/' + userId + '/private', (response) => {
                     console.log('Received private message:', response.body);
                     var payloadData = JSON.parse(response.body);
-                    setPrivateMessage(payloadData.message);
+                    setPrivateMessage(payloadData.content);
+                    if(privateMessage){
+                        setNewNotification(true); // Add this line
+                        }
+                        console.log('privateMessage',privateMessage);
+                        console.log('New Notification',newNotification);
                 });
             },
             onStompError: (frame) => {
@@ -59,41 +65,41 @@ console.log('UserId',userId); // This will log the userID value
         return () => {
             stompClient.deactivate();
         };
-    }, [userData.userId]); // Add userId as dependency to handle subscriptions correctly
+    }, [/*userData.userId*/]); // Add userId as dependency to handle subscriptions correctly
 
-    const handleMessage = (event) => {
-        const { value } = event.target;
-        setUserData({ ...userData, message: value });
-    }
+    // const handleMessage = (event) => {
+    //     const { value } = event.target;
+    //     setUserData({ ...userData, message: value });
+    // }
 
-    const handleUserId = (event) => {
-        const { value } = event.target;
-        setUserData({ ...userData, userId: value });
-    }
+    // const handleUserId = (event) => {
+    //     const { value } = event.target;
+    //     setUserData({ ...userData, userId: value });
+    // }
 
-    const sendPrivateMessage = () => {
-        const stompClient = stompClientRef.current;
-        if (stompClient && stompClient.connected) {
-            const chatMessage = {
-                userId: userData.userId,
-                message: userData.message,
-            };
+    // const sendPrivateMessage = () => {
+    //     const stompClient = stompClientRef.current;
+    //     if (stompClient && stompClient.connected) {
+    //         const chatMessage = {
+    //             userId: userData.userId,
+    //             message: userData.message,
+    //         };
 
-            console.log('Sending private message:', chatMessage);
-            stompClient.publish({
-                destination: '/app/private-message',
-                body: JSON.stringify(chatMessage),
-            });
-            setUserData({ ...userData, message: '' });
+    //         console.log('Sending private message:', chatMessage);
+    //         stompClient.publish({
+    //             destination: '/app/private-message',
+    //             body: JSON.stringify(chatMessage),
+    //         });
+    //         setUserData({ ...userData, message: '' });
 
-        } else {
-            console.error('Stomp client is not connected');
-        }
-    };
+    //     } else {
+    //         console.error('Stomp client is not connected');
+    //     }
+    // };
 
     return (
         <div>
-            <input 
+            {/* <input 
                 type="text" 
                 placeholder="Enter userId" 
                 value={userData.userId} 
@@ -105,7 +111,8 @@ console.log('UserId',userId); // This will log the userID value
                 value={userData.message} 
                 onChange={handleMessage} 
             />
-            <button onClick={sendPrivateMessage}>Send</button>
+            <button onClick={sendPrivateMessage}>Send</button> */}
+            {console.log('noti',privateMessage)}
             <p>{privateMessage}</p>
         </div>
     );

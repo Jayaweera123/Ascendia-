@@ -1,6 +1,7 @@
 package com.Ascendia.server.controller.Store;
 
 import com.Ascendia.server.dto.Store.MaterialDto;
+import com.Ascendia.server.dto.Store.NotificationDto;
 import com.Ascendia.server.dto.Store.UpdateMaterialDto;
 import com.Ascendia.server.service.Store.MaterialService;
 import lombok.AllArgsConstructor;
@@ -105,4 +106,12 @@ public class MaterialController {
 
         return ResponseEntity.ok(updatedMaterials);
     }
+
+    //Build Get all notifications REST API
+    @GetMapping("/skeeperonly/material/getAllNotifications/{userId}")
+    public ResponseEntity<List<NotificationDto>> getAllNotifications(@PathVariable String userId){
+        List<NotificationDto> notifications =  materialService.getAllNotifications(userId);
+        return ResponseEntity.ok(notifications);
+    }
+
 }

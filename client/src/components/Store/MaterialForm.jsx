@@ -5,6 +5,7 @@ import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based 
 import { createMaterial, editMaterial, getMaterial } from '../../services/StoreServices'
 import { useNavigate, useParams } from 'react-router-dom'
 import { searchMaterial } from '../../services/StoreServices'
+import NotificationBar from "./NotificationBar";
 
 function MaterialForm() {
   const [open, setOpen] = useState(true);
@@ -15,6 +16,10 @@ function MaterialForm() {
   const [minimumLevel, setMinimumLevel] = useState('')
   const [description, setDescription] = useState('')
   const [createdDate, setCreatedDate] = useState('')
+  const [isOpen, setIsOpen] = useState(false);
+  const notificationHandler = (status) => {
+    setIsOpen(status);
+};
 
   // Retrieve and parse projectIDs from local storage
   const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
@@ -23,6 +28,9 @@ function MaterialForm() {
   const projectId = projectIDs ? projectIDs[0] : null;
 
   console.log('projectId', projectId);
+
+  const userId = localStorage.getItem('userID');
+  console.log('UserId',userId); // This will log the userID value
 
   const {id} = useParams();
 
@@ -61,7 +69,7 @@ function MaterialForm() {
 
     if(validateForm()){
 
-      const material = {materialCode, materialName,quantity,measuringUnit,minimumLevel,description, createdDate, projectId}
+      const material = {materialCode, materialName,quantity,measuringUnit,minimumLevel,description, createdDate, projectId, userId}
       console.log(material)
 
       const confirmationOptions = {
@@ -208,7 +216,8 @@ function formTitle(){
 
   return (
     <div>
-      <TopNavigationStore />
+      <TopNavigationStore notificationHandler={notificationHandler} />
+      {isOpen && <NotificationBar isOpen={isOpen} notificationHandler={notificationHandler}  />}
       <section className="flex gap-6">
         <SideNavigationStore open={open} setOpen={setOpen} />
         <div className="flex-auto w-8/12 m-3">

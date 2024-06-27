@@ -39,6 +39,8 @@ public class Material {
     @Column(name="created_date", nullable = false)
     @CreationTimestamp
     private LocalDateTime createdDate;
+    @Column(name="user_id")
+    private String userId;
 
     @ManyToOne
     @JoinColumn(name = "projectId" , referencedColumnName = "projectId")

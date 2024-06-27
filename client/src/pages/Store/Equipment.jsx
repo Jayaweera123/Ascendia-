@@ -23,6 +23,7 @@ function Equipment() {
         setIsOpen(status);
     };
 
+
     // Retrieve and parse projectIDs from local storage
     const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
     
@@ -101,7 +102,7 @@ function Equipment() {
   return (
     <div>
         <TopNavigationStore notificationHandler={notificationHandler} />
-        {isOpen && <NotificationBar isOpen={isOpen} notificationHandler={notificationHandler} />}
+        {isOpen && <NotificationBar isOpen={isOpen} notificationHandler={notificationHandler}  />}
 
         <section className="flex">
             <SideNavigationStore open={open} setOpen={setOpen} />
