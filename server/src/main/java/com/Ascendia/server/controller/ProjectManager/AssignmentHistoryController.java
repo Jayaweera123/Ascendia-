@@ -1,6 +1,7 @@
 package com.Ascendia.server.controller.ProjectManager;
 
 import com.Ascendia.server.dto.ProjectManager.AssignmentHistoryDto;
+import com.Ascendia.server.dto.ProjectManager.AssignmentHistoryGetDto;
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.service.ProjectManager.AssignmentHistoryService;
 import com.Ascendia.server.service.ProjectManager.TaskService;
@@ -29,18 +30,18 @@ public class AssignmentHistoryController {
     }*/
 
     @GetMapping("/{projectId}/records")
-    public ResponseEntity<List<AssignmentHistoryDto>> getRecordsByProjectId(@PathVariable Long projectId) {
-        List<AssignmentHistoryDto> records = assignmentHistoryService.getRecordsByProjectId(projectId);
+    public ResponseEntity<List<AssignmentHistoryGetDto>> getRecordsByProjectId(@PathVariable Long projectId) {
+        List<AssignmentHistoryGetDto> records = assignmentHistoryService.getRecordsByProjectId(projectId);
         return ResponseEntity.ok(records);
     }
 
     @GetMapping("/{Id}/duration")
     public String getDuration(@PathVariable Long Id) {
-        AssignmentHistoryDto assignmentHistoryDto = assignmentHistoryService.getRecordById(Id);
+        AssignmentHistoryGetDto assignmentHistoryDto = assignmentHistoryService.getRecordById(Id);
         return assignmentHistoryService.calculateDuration(assignmentHistoryDto);
     }
     @GetMapping("/search/{projectId}")
-    public ResponseEntity<List<AssignmentHistoryDto>> searchRecordbyNameORDep(@PathVariable Long projectId, @RequestParam("query") String query){
+    public ResponseEntity<List<AssignmentHistoryGetDto>> searchRecordbyNameORDep(@PathVariable Long projectId, @RequestParam("query") String query){
         return ResponseEntity.ok(assignmentHistoryService.searchRecord(projectId, query));
     }
 

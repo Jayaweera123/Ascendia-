@@ -92,11 +92,21 @@ public class  TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + taskId));
     }
 
+
+
+
+    /*public List<TaskDto> getAllTasks() {
+        List<Task> tasks = taskRepository.findAll();
+        return tasks.stream().map((task) -> TaskMapper.mapToTaskDto(task))
+                .collect(Collectors.toList());
+    }*/
+
+   /* @Override
     @Override
     public List<TaskDto> getAllTasks() {
         List<Task> tasks = taskRepository.findAll();
         return tasks.stream().map(TaskMapper::mapToTaskDtoProjection).collect(Collectors.toList());
-    }
+    }*/
 
     @Override
     public String calculateStatus(Task task) {
@@ -129,8 +139,21 @@ public class  TaskServiceImpl implements TaskService {
         // Update task properties
         task.setTaskName(updateTask.getTaskName());
         task.setDescription(updateTask.getDescription());
-        task.setStartDate(updateTask.getStartDate());
-        task.setEndDate(updateTask.getEndDate());
+
+        if (updateTask.getStartDate()!=null && task.getProject().getCreatedDate().isAfter(updateTask.getStartDate())) {
+            // Handle error: Start date cannot be before project creation date
+            throw new IllegalArgumentException("Start date cannot be before project creation date");
+        }
+        else {
+            task.setStartDate(updateTask.getStartDate());
+        }
+        if (updateTask.getEndDate().isAfter(task.getProject().getEndDate())) {
+            // Handle error: End date cannot be after project end date
+            throw new IllegalArgumentException("End date cannot be after project end date");
+        }
+        else {
+            task.setEndDate(updateTask.getEndDate());
+        }
 
         // Recalculate task status
         String updatedStatus = calculateStatus(task);

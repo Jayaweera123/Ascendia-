@@ -102,6 +102,9 @@ function EditTaskForm({ id, prePageNavigator }) {
     navigator(prePageNavigator); //navigator("/project/" + pID + "/task");
   }
 
+  /*const isEndDateInPast = new Date(endDate) < new Date();
+  const isEndDateInPast = new Date(endDate) < new Date();*/
+
   // Determine if the form is invalid
   const isFormInvalid =
     !taskName ||
