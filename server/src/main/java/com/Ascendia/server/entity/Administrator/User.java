@@ -7,16 +7,18 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="User")
+@Table(name="User", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"firstName", "lastName"})
+})
 @Data
 
 public class User implements UserDetails {
@@ -44,16 +46,16 @@ public class User implements UserDetails {
     @Column(name="password",nullable=false, unique = true)
     private String password;
 
-    @Column(name="email",nullable=false)
+    @Column(name="email",nullable=false, unique = true)
     private String email;
 
-    @Column(name="phoneNumber",nullable=false)
+    @Column(name="phoneNumber",nullable=false, unique = true)
     private String phoneNumber;
 
     @Column(name="addedDate")
     private LocalDate addedDate;
 
-    @Column(name = "profile_pic_url", nullable = false)
+    @Column(name = "profile_pic_url", nullable = false, unique = true)
     private String profilePicUrl;
 
     @Column(name = "availability", nullable = false)
@@ -61,6 +63,12 @@ public class User implements UserDetails {
 
     @Column(name = "active", nullable = false)
     private boolean active;
+
+    @Column(name = "lastLoginDate")
+    private LocalDateTime lastLoginDate;
+
+    @Column(name = "online_status")
+    private boolean onlineStatus;
 
 
     @Override

@@ -20,17 +20,14 @@ public class UserDto {
     private String lastName;
     private String designation;
     private String department;
-    // Setter for username (not obtained from frontend)
     @Setter
     private String username;
-    // Setter for password (not obtained from frontend)
     @Setter
     private String password;
     private String email;
     private String phoneNumber;
     private LocalDate addedDate;
     private String profilePicUrl;
-    // Setter for availability (not obtained from frontend)
     @Setter
     private boolean availability;
     @Setter
@@ -46,6 +43,5 @@ public class UserDto {
     private List<User> usersList;
     @Setter
     private List<Long> projectIDs;
-
-
+    
 }

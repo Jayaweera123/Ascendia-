@@ -49,11 +49,4 @@ public class AssignmentHistory {
     @Column(name = "assignment_end_date")
     private LocalDate assignmentEndDate;
 
-
-
-
-
-    // YOU CAN ADD THE DESIGNATIONS OF THE PEOPLE WHO ADDED AND REMOVED THEM TOO IN THE COLUMS
-
-
 }

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react"; // Import necessary hooks from React
+import React, { useEffect, useState } from "react"; 
 import SideNavigationAdmin from "../../components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin";
 import { RiUserAddFill } from "react-icons/ri";
 import { FaUserEdit } from "react-icons/fa";
 import UserService from "../../services/UserService";
-import { useNavigate, useParams } from "react-router-dom"; // Assuming react-router-dom is used for routing
+import { useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 
 // Define the AddUser component
@@ -28,7 +29,9 @@ const AddUser = () => {
     firstName: '',
     lastName: '',
     phoneNumber: '',
-    email: ''
+    email: '',
+    designation: '',
+    profileImage: ''
   });
 
   // Use navigate hook for routing
@@ -81,10 +84,22 @@ const AddUser = () => {
   
   // Handle file input change for profile image
   const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      profileImage: e.target.files[0]
-    });
+    const file = e.target.files[0];
+    if (file && file.size > 2 * 1024 * 1024) {
+      setErrors({
+        ...errors,
+        profileImage: 'Profile image size should not exceed 2MB'
+      });
+    } else {
+      setFormData({
+        ...formData,
+        profileImage: file
+      });
+      setErrors({
+        ...errors,
+        profileImage: ''
+      });
+    }
   };
 
   // Handle form submission
@@ -110,9 +125,14 @@ const AddUser = () => {
     try {
         const token = localStorage.getItem('token');
         if (!token) {
-            alert('No token found, please login again.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Authentication Error',
+            text: 'No token found, please login again.',
+          }).then(() => {
             navigate('/login');  // Redirect to login if no token is found
-            return;
+          });
+          return;
         }
         
         // Check if we're adding or updating a user
@@ -134,13 +154,23 @@ const AddUser = () => {
             department: '',
             profileImage: null
         });
-        alert('User added/updated successfully');
-        navigate('/admin/userlist');
-    } catch (error) {
-      UserService.handleError(error);
-      alert('An error occurred while adding/updating the user. Please try again.');
-    }
-};
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'User added/updated successfully',
+        }).then(() => {
+          navigate('/admin/userlist');
+        });
+      } catch (error) {
+        UserService.handleError(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An error occurred while adding/updating the user. Please try again.',
+        });
+      }
+    };
+  
 
   // Function to clear form fields
   const removeUser = async () => {
@@ -190,6 +220,20 @@ const AddUser = () => {
       valid = false;
     } else {
       errorsCopy.email = '';
+    }
+
+    if (!formData.designation.trim()) {
+      errorsCopy.designation = 'Designation is required!';
+      valid = false;
+    } else {
+      errorsCopy.designation = '';
+    }
+
+    if (formData.profileImage && formData.profileImage.size > 2 * 1024 * 1024) {
+      errorsCopy.profileImage = 'Profile image size should not exceed 2MB';
+      valid = false;
+    } else {
+      errorsCopy.profileImage = '';
     }
 
     // Update errors state
@@ -328,7 +372,7 @@ const AddUser = () => {
                             autoComplete="off"
                             value={formData.designation} 
                             onChange={handleChange}
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                            className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6 ${errors.designation ? 'border-red-500' : ''}`}
                           >
                             <option value="" disabled selected>Select Designation</option>
                             <option>Project Manager</option>
@@ -384,8 +428,14 @@ const AddUser = () => {
                               </svg>
                             </span>
                           )}
-                          <input type="file" name="profileImage" onChange={handleFileChange} className="ml-5 rounded-md bg-white py-2 px-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" />
+                          <input
+                            type="file"
+                            name="profileImage"
+                            onChange={handleFileChange}
+                            className={`ml-5 rounded-md bg-white py-2 px-3 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ${errors.profileImage ? 'border-red-500' : ''}`}
+                          />
                         </div>
+                        {errors.profileImage && <div className="text-red-500 mt-2">{errors.profileImage}</div>}
                       </div>
 
                     </div>

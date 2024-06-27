@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import SideNavigationAdmin from "../../components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin";
 import { FaUsers } from "react-icons/fa";
@@ -6,16 +6,27 @@ import { useNavigate } from "react-router-dom";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { TiUserAddOutline } from "react-icons/ti";
 import { LiaUserTimesSolid } from "react-icons/lia";
-import { Link } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 import UserService from "../../services/UserService";
+import Swal from 'sweetalert2';
+import 'sweetalert2/src/sweetalert2.scss';
 
-
-// Define the UserList component
 const UserList = () => {
-  // State variables to manage component state
   const [open, setOpen] = useState(true);
   const [users, setUsers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [matchedUserIDs, setMatchedUserIDs] = useState([]);
   const navigate = useNavigate();
+
+  //Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 5;
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = users.slice(firstIndex, lastIndex);
+  const numberOfPages = Math.ceil(users.length / recordsPerPage);
+  const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
+    const [isOpen, setIsOpen] = useState(false);
 
   // useEffect hook to fetch user list when component mounts
   useEffect(() => {
@@ -42,6 +53,48 @@ const UserList = () => {
       console.error('Error fetching users:', error);
     }
   };
+
+  const handleSearch = async () => {
+    const query = searchQuery.trim();
+    if (query === "") {
+        fetchUsers();
+        setMatchedUserIDs([]);
+        return;
+    }
+    const [firstName, lastName] = query.split(" ");
+    if (firstName) {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) throw new Error('No token found');
+
+            let response;
+        if (lastName) {
+          response = await UserService.getUserByFirstNameAndLastName(firstName, lastName, token);
+        } else {
+          response = await UserService.getUserByFirstName(firstName, token);
+        }
+            if (response && response.users) {
+                setUsers(response.users);
+                setMatchedUserIDs(response.users.map(user => user.userID));
+            } else {
+                setUsers([]);
+                setMatchedUserIDs([]);
+            }
+        } catch (error) {
+            console.error('Error fetching user by name:', error);
+            setUsers([]);
+            setMatchedUserIDs([]);
+        }
+    }
+};
+
+const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), [searchQuery]);
+
+useEffect(() => {
+    debouncedHandleSearch();
+    return debouncedHandleSearch.cancel;
+}, [searchQuery, debouncedHandleSearch]);
+
   
   const addNewUser = () => {
     navigate("/admin/adduser");
@@ -53,23 +106,46 @@ const UserList = () => {
 
   const removeUser = async (userID) => {
     try {
-      const confirmDeactivation = window.confirm('Are you sure you want to deactivate this user?');
-      if (confirmDeactivation) {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, deactivate!',
+        cancelButtonText: 'No, cancel!',
+      });
+
+      if (result.isConfirmed) {
         const token = localStorage.getItem('token');
         if (!token) {
           throw new Error('No token found');
         }
         await UserService.deactivateUser(userID, token);
         fetchUsers();
+        Swal.fire('Deactivated!', 'The user has been deactivated.', 'success');
       }
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('Error deactivating user:', error);
+      Swal.fire('Error!', 'There was an error deactivating the user.', 'error');
     }
   };
 
-  
+  //Pagination
+  const prePage = () => {
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
-  // Render the component JSX
+  const changeCurrentPage = (id) => {
+    setCurrentPage(id);
+  };
+
+  const nextPage = () => {
+    if (currentPage !== numberOfPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
   return (
     <div>
       <TopNavigationAdmin />
@@ -131,6 +207,8 @@ const UserList = () => {
                     id="table-search-users"
                     className="block pt-2 pb-2 mr-5 text-sm text-gray-600 border-gray-100 rounded-lg ps-10 w-80 focus:ring-blue-100 focus:border-blue-100 bg-slate-50 dark:border-gray-100 dark:placeholder-gray-300 dark:text-gray-500 dark:focus:ring-blue-100 dark:focus:border-blue-100"
                     placeholder="Search for users"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
               </div>
@@ -162,7 +240,9 @@ const UserList = () => {
                   {users.map((user) => (
                     <tr
                       key={user.userID}
-                      className="bg-white border-b dark:border-gray-100 hover:bg-gray-50"
+                      className={`bg-white border-b dark:border-gray-100 hover:bg-gray-50 ${
+                        matchedUserIDs.includes(user.userID) ? 'bg-yellow-500' : ''
+                      }`}
                     >
                       {/* Display user information */}
                       
@@ -210,13 +290,39 @@ const UserList = () => {
                           <div>
                             <LiaUserTimesSolid size={20} />
                           </div>
-                          <div>Delete</div>
+                          <div>Deactivate</div>
                         </button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+              <div className="flex items-center justify-between p-4 border-t border-blue-gray-50">
+                                <button className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none" onClick={prePage}>
+                                    Previous
+                                </button>
+
+                                    <div className="flex items-center gap-2">
+                                        
+                                    {/************************************************* Pagination *********************************************/}
+                                        {
+                                            numbers.map((n, i) => (
+                                                <button className={ `${currentPage ===n ? "px-3 py-1 text-sm border rounded-full border-blue-gray-500 focus:outline-none bg-slate-200" : "px-3 py-1 text-sm focus:outline-none border rounded-full border-blue-gray-500"}`} key={i} onClick={() => changeCurrentPage(n)}>
+                                                    {n}
+                                                </button>
+
+                                            ))
+                                        
+                                        }
+
+                                        
+                                    </div>
+
+                                    <button className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none" onClick={nextPage}>
+                                        Next
+                                    </button>
+
+                            </div>
             </div>
           </div>
         </div>
@@ -225,5 +331,4 @@ const UserList = () => {
   );
 };
 
-// Export the UserList component
 export default UserList;

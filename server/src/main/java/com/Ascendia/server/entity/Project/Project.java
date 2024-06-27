@@ -7,10 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -48,10 +45,10 @@ public class Project {
     @JoinColumn(name = "pmanager_id", referencedColumnName = "userID")
     private User projectManager;
 
-    /*@OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<Task> tasks;*/
+    @Column(name = "progress", nullable = false)
+    private double progress; // New field for project progress
 
-    public Project(String projectName, String projectType, String projectDescription, String projectStatus, LocalDate createdDate, LocalDate endDate, String image, User ProjectManager) {
+    public Project(String projectName, String projectType, String projectDescription, String projectStatus, LocalDate createdDate, LocalDate endDate, String image, User ProjectManager, double progress) {
         this.projectName = projectName;
         this.projectType = projectType;
         this.projectDescription = projectDescription;
@@ -61,5 +58,6 @@ public class Project {
         //this.pmId = pmId;
         this.image = image;
         this.projectManager = ProjectManager;
+        this.progress = progress; // Initialize the progress field
     }
 }

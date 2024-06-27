@@ -1,6 +1,7 @@
 package com.Ascendia.server.controller.ProjectManager;
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
+import com.Ascendia.server.dto.Project.TaskProgressDto;
 import com.Ascendia.server.dto.Store.EquipmentDto;
 import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
@@ -10,8 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin("*")
 @RestController
@@ -36,17 +37,6 @@ public class TaskController {
         TaskDto taskDto = taskService.getTaskId(taskId);
         return ResponseEntity.ok(taskDto);
     }
-
-/*
-    //Update Tasks REST API
-    @PutMapping("/pmanageronly/task/{id}")
-    public ResponseEntity<TaskDto> updateTask(@PathVariable("id") Long taskId,
-                                              @RequestBody TaskDto updatedTask) {
-
-        TaskDto taskDto = taskService.updateTask(taskId, updatedTask);
-        Task.calculateStatus(taskDto);
-        return ResponseEntity.ok(taskDto);
-    }*/
 
     @PutMapping("/sengineer/{taskId}/edit")
     public ResponseEntity<TaskDto> updateTask(@PathVariable Long taskId, @RequestBody TaskDto taskDto) {
@@ -124,13 +114,29 @@ public class TaskController {
         taskService.markAsUncompleted(taskId);
     }
 
-    /*@GetMapping("/pmanager/{taskId}/jobcount")
-    public ResponseEntity<Object> getJobCountForTask(@PathVariable Long taskId) {
-        int jobCount = taskService.getJobCountForTask(taskId);
-        return ResponseEntity.ok().body(jobCount + "");
-    }*/
+    //Ravindu
+    @GetMapping("/progress/{taskId}/taskprogress")
+    public ResponseEntity<Integer> getTaskProgress(@PathVariable Long taskId) {
+        int progress = taskService.getTaskProgress(taskId);
+        return ResponseEntity.ok(progress);
+    }
+
+    @GetMapping("/progress/{projectId}/projectprogress")
+    public ResponseEntity<Double> getProjectProgress(@PathVariable Long projectId) {
+        double progress = taskService.calculateProjectProgress(projectId);
+        return ResponseEntity.ok(progress);
+    }
 
 
+    //Ravindu
+    @GetMapping("/progress/{projectId}/taskprogress")
+    public ResponseEntity<List<TaskProgressDto>> getTasksProgressByProjectId(@PathVariable Long projectId) {
+        List<TaskDto> tasks = taskService.getTasksByProjectId(projectId);
+        List<TaskProgressDto> taskProgressList = tasks.stream()
+                .map(task -> new TaskProgressDto(task.getTaskId(), task.getTaskName(), taskService.getTaskProgress(task.getTaskId())))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(taskProgressList);
+    }
 
 }
 

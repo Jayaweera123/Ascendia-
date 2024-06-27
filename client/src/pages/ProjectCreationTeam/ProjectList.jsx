@@ -2,7 +2,7 @@ import React from "react";
 import SideNavigationPCTeam from "../../components/ProjectCreationTeam/SideNavigationPCTeam";
 import TopNavigationPM from "../../components/ProjectManager/TopNavigationPM";
 import PageTitle from "../../components/ProjectManager/PageTitle";
-import ProjectCard from "../../components/project/ProjectCard";
+import NewProjectCard from "../../components/ProjectCreationTeam/NewProjectCard";
 import { Link } from "react-router-dom";
 
 import { BsClipboard2PlusFill } from "react-icons/bs";
@@ -21,8 +21,7 @@ function ProjectsList() {
             <PageTitle title="Projects" />
             <AddProjectButton />
           </div>
-
-          <ProjectCard />
+          <NewProjectCard />
         </div>
       </section>
     </>

@@ -11,6 +11,8 @@ public interface UserService {
 
     UserDto login(UserDto loginRequest);
 
+    void logout(Long userId);
+
     UserDto refreshToken(UserDto refreshTokenRequest);
 
     UserDto getUserById(Long userID);
@@ -24,6 +26,18 @@ public interface UserService {
     String generateUsername(String firstName, String lastName, String department, String phoneNumber);
 
     String generatePassword(String firstName, String lastName, String email, String phoneNumber);
+
+    int getTodayActiveUsers();
+
+    int countAllUsers();
+
+    int countActiveUsers();
+
+    int countDeactivatedUsers();
+
+    List<UserDto> getOnlineUsers();
+
+    UserDto getUserByFirstNameAndLastName(String firstName, String lastName);
 
     //Nethuni
     List<UserDto> getAllAvailableUsers();

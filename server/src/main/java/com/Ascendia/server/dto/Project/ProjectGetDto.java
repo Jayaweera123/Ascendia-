@@ -20,4 +20,5 @@ public class ProjectGetDto {
     private LocalDate endDate;
     //private String pmId;
     private String image;
+    private double progress; // New field for project progress
 }

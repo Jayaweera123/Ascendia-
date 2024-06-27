@@ -16,7 +16,13 @@ function MaterialForm() {
   const [description, setDescription] = useState('')
   const [createdDate, setCreatedDate] = useState('')
 
-  const projectId = 3;
+  // Retrieve and parse projectIDs from local storage
+  const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
+  
+  // Set a specific project ID (e.g., the first one)
+  const projectId = projectIDs ? projectIDs[0] : null;
+
+  console.log('projectId', projectId);
 
   const {id} = useParams();
 
@@ -205,7 +211,7 @@ function formTitle(){
       <TopNavigationStore />
       <section className="flex gap-6">
         <SideNavigationStore open={open} setOpen={setOpen} />
-        <div className="w-screen m-3">
+        <div className="flex-auto w-8/12 m-3">
         <div className="max-w-2xl pt-4 pb-4 pl-10 pr-10 mx-auto bg-white rounded-lg shadow-md">
 
        <form  className="space-y-4">

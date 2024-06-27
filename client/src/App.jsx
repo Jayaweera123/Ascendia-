@@ -2,43 +2,33 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import TopNavigation from "./components/TopNavigation";
 
-{
-  /*Ravindu*/
-}
+{/*Ravindu*/}
 import SideNavigationPCTeam from "./components/ProjectCreationTeam/SideNavigationPCTeam";
 import AddProject from "./pages/ProjectCreationTeam/AddProject";
-import AssignEmployee from "./pages/ProjectCreationTeam/AssignEmployee";
 import AssignPM from "./pages/ProjectCreationTeam/AssignPM";
 import ProjectService from "./services/ProjectService";
-
-{
-  /* Ravindu - Progress */
-}
 import Progress from "./pages/Progress/Progress";
 import ProjectsList from "./pages/ProjectCreationTeam/ProjectList";
-import CreationDashboard from "./pages/ProjectCreationTeam/CreationDashboard";
+import NewDashBoard from "./pages/ProjectCreationTeam/NewDashBoard";
+import Assign from "./pages/ProjectCreationTeam/Assign";
+import Pm from "./pages/ProjectCreationTeam/Pm";
 
-{
-  /*Rashmi*/
-}
+{/*Rashmi*/}
 import SideNavigationClient from "./components/Client/SideNavigationClient";
 import SideNavigationAdmin from "./components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "./components/Admin/TopNavigationAdmin";
 import TopNavigationClient from "./components/Client/TopNavigationClient";
 import UserService from "./services/UserService";
-import Login from "./pages/Login/Login";
 import AddUser from "./pages/Admin/AddUser";
-import AdDashboard from "./pages/Admin/AdDashboard";
 import DashBoard from "./pages/Admin/Dashboard";
 import UserList from "./pages/Admin/UserList";
-//import ClDashboard from "./pages/Client/ClDashboard";
+import ClDashboard from "./pages/Client/ClDashboard";
+import NewLogin from "./pages/Login/NewLogin";
 import AddReview from "./pages/Client/AddReview";
 import Reviews from "./pages/Client/Reviews";
 import ReviewService from "./services/ReviewService";
 
-{
-  /*Deshani*/
-}
+{/*Deshani*/}
 import StoreKeeperDashboard from "./pages/Store/StoreKeeperDashboard";
 import ViewHistory from "./pages/Store/ViewHistory";
 import Material from "./pages/Store/Material";
@@ -50,10 +40,9 @@ import UpdateEquipmentForm from "./components/Store/UpdateEquipmentForm";
 import StoreServices from "./services/StoreServices";
 import History from "./pages/Store/History";
 
-{
-  /*Nethuni*/
-}
+{/*Nethuni*/}
 import SideNavigationPM from "./components/ProjectManager/SideNavigationPM";
+import SideNavigation from "./components/ProjectManager/SideNavigation";
 import TopNavigationPM from "./components/ProjectManager/TopNavigationPM";
 import Projects from "./pages/ProjectManager/Projects";
 import HomePM from "./pages/ProjectManager/HomePM";
@@ -76,68 +65,54 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           {/* Rashmi - Login */}
-          <Route exact path="/" element={<Login />} />
-          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/" element={<NewLogin />} /> 
+          <Route exact path="/login" element={<NewLogin />} />
+          <Route exact path="/newlogin" element={<NewLogin />} />
           <Route path="*" element={<Navigate to="/login" />} />‰
           {/* Ravindu - Progress */}
           <Route path="/progress" element={<Progress />} />
           {/* Rashmi - Client */}
           <Route path="/reviews" element={<Reviews />} />
-          <Route
-            path="/sidenavigationclient"
-            element={<SideNavigationClient />}
-          />
-          <Route
-            path="/sidenavigationadmin"
-            element={<SideNavigationAdmin />}
-          />
+          <Route path="/sidenavigationclient" element={<SideNavigationClient />} />
+          <Route path="/sidenavigationadmin" element={<SideNavigationAdmin />}/>
           <Route path="/topNavigationAdmin" element={<TopNavigationAdmin />} />
-          <Route
-            path="/topNavigationClient"
-            element={<TopNavigationClient />}
-          />
+          <Route path="/topNavigationClient"element={<TopNavigationClient />}/>
           {/* Check if user is authenticated and admin before rendering admin-only routes */}
           {UserService.adminOnly() && (
             <>
-              <Route path="/admin/adduser" element={<AddUser />} />
-              <Route path="/admin/dashboard" element={<AdDashboard />} />
-              <Route path="/admin/newdashboard" element={<DashBoard />} />
-              <Route path="/admin/userlist" element={<UserList />} />
-              <Route path="/admin/update/:userID" element={<AddUser />} />
+              <Route path="/admin/adduser" element={<AddUser />} />         
+              <Route path="/admin/dashboard" element={<DashBoard/>}/>
+              <Route path="/admin/userlist" element={<UserList/>}/>
+              <Route path="/admin/update/:userID" element={<AddUser/>}/>
             </>
           )}
           {/* Rashmi - Client */}
           {ReviewService.creviewOnly() && (
             <>
-              {/*<Route path="/client/dashboard" element={<ClDashboard/>}/>*/}
               <Route path="/addreview" element={<AddReview />} />
+              <Route path="/client/dashboard" element={<ClDashboard />} />
             </>
           )}
           {/* Ravindu */}
           {ProjectService.projectOnly() && (
             <>
-              <Route
-                path="/sideNavigationPCTeam"
-                element={<SideNavigationPCTeam />}
-              />
+              <Route path="/sideNavigationPCTeam" element={<SideNavigationPCTeam />}/>
               <Route path="/topNavigation" element={<TopNavigation />} />
-              <Route path="/project/addProject" element={<AddProject />} />
-              <Route path="/assignEmployee" element={<AssignEmployee />} />
-              <Route path="/assignPM" element={<AssignPM />} />
-              <Route path="/project/projectslist" element={<ProjectsList />} />
-              <Route
-                path="/creationDashboard"
-                element={<CreationDashboard />}
-              />
-              <Route path="/addEmployee" element={<AssignPM />} />
+              <Route path="/project/addProject" element={<AddProject/>}/>
+              <Route path="/assignPM" element={<AssignPM/>}/>
+              <Route path="/projectslist" element={<ProjectsList/>}/>
+              <Route path="/project/DashBoard" element={<NewDashBoard/>}/>   
+              <Route path="/project/assign" element={<Assign/>}/>
+              <Route path="/project/pm" element={<Pm/>}/>
             </>
           )}
           {/*ProjectManager */}
           {TaskService.pmanagerOnly() && (
             <>
               <Route path="/:pmId/pmhome" element={<HomePM />} />
-              <Route path="/topNavigationPM" element={<TopNavigationPM />} />
+              <Route path="/topNavigationPM" element={<TopNavigationPM />} />       
               <Route path="/sideNavigationPM" element={<SideNavigationPM />} />
+              <Route path="/sideNavigation" element={<SideNavigation />} />
               <Route path="/pmanager/projects" element={<Projects />} />
               <Route
                 path="/pmanager/dashboard"

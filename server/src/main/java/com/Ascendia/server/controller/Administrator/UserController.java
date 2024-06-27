@@ -2,10 +2,13 @@ package com.Ascendia.server.controller.Administrator;
 
 import com.Ascendia.server.dto.Project.ProjectGetDto;
 import com.Ascendia.server.entity.Administrator.User;
+import com.Ascendia.server.exception.Administrator.ResourceNotFoundException;
 import com.Ascendia.server.service.Project.ProjectService;
 import lombok.AllArgsConstructor;
 import com.Ascendia.server.dto.Administrator.UserDto;
 import com.Ascendia.server.service.Administrator.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +24,11 @@ import java.util.List;
 
 public class UserController {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+
     private final UserService userService;
     private final ProjectService projectService;
-
-    @GetMapping("/projects/user")
-    public ResponseEntity<List<ProjectGetDto>> getProjectsForCurrentUser(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        List<ProjectGetDto> projects = projectService.getProjectsForUser(user);
-        return ResponseEntity.ok(projects);
-    }
 
     @PostMapping(value = "/auth/add", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<UserDto> addUser(@ModelAttribute UserDto userDto,
@@ -76,6 +75,50 @@ public class UserController {
     public ResponseEntity<String> deactivateUser(@PathVariable("userID") Long userID){
         userService.deactivateUser(userID);
         return ResponseEntity.ok("User deactivated successfully!.");
+    }
+
+    @GetMapping("/admin/name")
+    public ResponseEntity<UserDto> getUserByFirstNameAndLastName(
+            @RequestParam("firstName") String firstName,
+            @RequestParam("lastName") String lastName) {
+        UserDto userDto = userService.getUserByFirstNameAndLastName(firstName, lastName);
+        return ResponseEntity.status(userDto.getStatusCode()).body(userDto);
+    }
+
+    @GetMapping("/admin/todayActiveUsers")
+    public int getTodayActiveUsers() {
+        return userService.getTodayActiveUsers();
+    }
+
+    @GetMapping("/admin/countUsers")
+    public ResponseEntity<Integer> countUsers() {
+        int userCount = userService.countAllUsers();
+        return ResponseEntity.ok(userCount);
+    }
+
+    @GetMapping("/admin/countActiveUsers")
+    public ResponseEntity<Integer> countActiveUsers() {
+        int activeUserCount = userService.countActiveUsers();
+        return ResponseEntity.ok(activeUserCount);
+    }
+
+    @GetMapping("/admin/countDeactivatedUsers")
+    public ResponseEntity<Integer> countDeactivatedUsers() {
+        int deactivatedUserCount = userService.countDeactivatedUsers();
+        return ResponseEntity.ok(deactivatedUserCount);
+    }
+
+    @GetMapping("/admin/onlineUsers")
+    public ResponseEntity<List<UserDto>> getOnlineUsers() {
+        List<UserDto> onlineUsers = userService.getOnlineUsers();
+        return new ResponseEntity<>(onlineUsers, HttpStatus.OK);
+    }
+
+    @GetMapping("/projects/user")
+    public ResponseEntity<List<ProjectGetDto>> getProjectsForCurrentUser(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        List<ProjectGetDto> projects = projectService.getProjectsForUser(user);
+        return ResponseEntity.ok(projects);
     }
 
     {/*

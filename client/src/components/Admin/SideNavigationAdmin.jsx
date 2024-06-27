@@ -1,31 +1,43 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { LuUsers2 } from "react-icons/lu";
 import { RiUserAddLine } from "react-icons/ri";
 import UserService from "../../services/UserService";
 import { TbLogout } from "react-icons/tb";
+import Swal from "sweetalert2";
+import 'sweetalert2/src/sweetalert2.scss'; 
 
 
 const SideNavigationAdmin = () => {
+  const navigate = useNavigate();
   const isAuthenticated = UserService.isAuthenticated();
   const isAdmin = UserService.isAdmin();
 
   const handleLogout = () => {
-    const confirmDelete = window.confirm('Are you sure you want to logout this user?');
-    if (confirmDelete) {
-      UserService.logout();
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will be logged out!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, logout!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        UserService.logout();
+        navigate('/');  // Redirect to login page after logout
+        Swal.fire('Logged out!', 'You have been logged out.', 'success');
+      }
+    });
   };
 
   const menus = [
     { name: "Dashboard", link: "/admin/dashboard", icon: MdOutlineDashboard },
     { name: "User List", link: "/admin/userlist", icon: LuUsers2, condition: isAdmin },
-    { name: "Add User", link: "/admin/adduser", icon: RiUserAddLine },
-    { name: "New Dashboard", link: "/admin/newdashboard", icon: MdOutlineDashboard },
-    { name: "Ascendia", link: "/", icon: null, condition: !isAuthenticated },
-    
+    { name: "Add User", link: "/admin/adduser", icon: RiUserAddLine },,
+    { name: "Logout", link: "#", icon: TbLogout, action: handleLogout },
+    { name: "Ascendia", link: "/ascendia", icon: null, condition: !isAuthenticated },    
   ];
 
   const [open, setOpen] = useState(true);
@@ -43,6 +55,7 @@ const SideNavigationAdmin = () => {
                 <Link
                   to={menu.link}
                   key={i}
+                  onClick={menu.action}
                   className={`${menu.margin && "mt-5"} group flex items-center text-sm gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md`}
                 >
                   {menu.icon && <div>{React.createElement(menu.icon, { size: "20" })}</div>}
@@ -64,29 +77,6 @@ const SideNavigationAdmin = () => {
           })}
         </div>
       </div>
-      {isAuthenticated && (
-        <div className="group flex items-center text-sm gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md cursor-pointer mb-20" onClick={handleLogout}>
-          <div>{React.createElement(TbLogout, { size: "20" })}</div>
-          <h2
-            style={{ transitionDelay: `${menus.length + 3}00ms` }}
-            className={`whitespace-pre duration-500 ${!open && "opacity-0 translate-x-28 overflow-hidden"}`}
-          >
-            Logout
-          </h2>
-          <h2
-            className={`${open && "hidden"} absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
-          >
-            Logout
-          </h2>
-        </div>
-      )}
-      <style>{`
-        .min-h-screen {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-        }
-      `}</style>
     </div>
   );
 };

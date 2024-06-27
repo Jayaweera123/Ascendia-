@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import SideNavigationClient from "../../components/Client/SideNavigationClient"; // Adjust the path based on your project structure
 import TopNavigationClient from "../../components/Client/TopNavigationClient";
 import { MdOutlineRateReview } from "react-icons/md";
-import { MdOutlineAddBox } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import ReviewService from "../../services/ReviewService";
 import { format } from 'date-fns'; // Import date-fns for formatting dates
@@ -41,7 +40,7 @@ const AddReview = () => {
               <div className="max-w-2xl mx-auto lg:mx-0">
                 <div className="flex flex-row gap-3 pt-2 pb-1 border-b items-centered border-gray-900/10">
                   <MdOutlineRateReview size={100} color="#001b5e"/>
-                  <div><h1 className="place-items-baseline text-4xl leading-relaxed py-4 font-bold text-left text-[#001b5e]">Add Review</h1></div>
+                  <div><h1 className="place-items-baseline text-4xl leading-relaxed py-4 font-bold text-left text-[#001b5e]">Reviews</h1></div>
                 </div>
           <p className="mt-2 text-lg leading-8 text-gray-600">
           Your valuable review is instrumental in ensuring that our project aligns seamlessly with your expectations and aspirations.

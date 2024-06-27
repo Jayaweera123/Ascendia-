@@ -1,19 +1,5 @@
 import axios from "axios";
 
-{/*
-//you tube
-static async getYourProfile(token){
-        try{
-            const response = await axios.get(`${UserService.BASE_URL}/adminuser/get-profile`, 
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
-            return response.data;
-        }catch(err){
-            throw err;
-        }
-    } */}
-
 class UserService{
     static BASE_URL = "http://localhost:8080"
 
@@ -22,9 +8,10 @@ class UserService{
             const response = await axios.post(`${UserService.BASE_URL}/auth/login`, { username, password });
             const userData = response.data;
             if (userData.token) {
+                console.log('Storing token:', userData.token); // Debug: Log the token
                 localStorage.setItem('token', userData.token);
-                localStorage.setItem('designation', userData.designation);
                 localStorage.setItem('userID', userData.userID);
+                localStorage.setItem('designation', userData.designation);          
                 localStorage.setItem('projectIDs', JSON.stringify(userData.projectIDs)); // Store project IDs
             }
             return userData;
@@ -96,9 +83,6 @@ class UserService{
         }
     }
 
-
-    
-
     static async getUserById(userID, token){
         try{
             const response = await axios.get(`${UserService.BASE_URL}/admin/getUser/${userID}`, 
@@ -125,11 +109,40 @@ class UserService{
         }
     }
 
+    static async getUserByFirstNameAndLastName(firstName, lastName, token) {
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/admin/name`, {
+                headers: { Authorization: `Bearer ${token}` },
+                params: { firstName, lastName }
+            });
+            return response.data;
+        } catch (err) {
+            console.error(`Error fetching user by name ${firstName} ${lastName}:`, err);
+            throw err;
+        }
+    }
+    
+
+    static async getOnlineUsers(token) {
+        try {
+            const response = await axios.get(`${UserService.BASE_URL}/admin/onlineUsers`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return response.data;
+        } catch (err) {
+            console.error("Error fetching online users:", err);
+            throw err;
+        }
+    }
+
+    
+
     /**AUTHENTICATION CHECKER */
     static logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('designation');
-        localStorage.removeItem('userID'); // Remove userID
+        localStorage.removeItem('userID');
+        //localStorage.setItem('projectIDs', JSON.stringify(userData.projectIDs));
     }
 
     static isAuthenticated(){
@@ -163,6 +176,22 @@ class UserService{
         return localStorage.getItem('token');
     }
 
+    
+
 }
+
+{/*
+    //you tube
+    static async getYourProfile(token){
+            try{
+                const response = await axios.get(`${UserService.BASE_URL}/adminuser/get-profile`, 
+                {
+                    headers: {Authorization: `Bearer ${token}`}
+                })
+                return response.data;
+            }catch(err){
+                throw err;
+            }
+        } */}
 
 export default UserService;

@@ -22,6 +22,8 @@ import java.nio.file.Paths;
 import java.io.IOException;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -154,6 +156,11 @@ public class UserServiceImpl implements UserService {
                 throw new BadCredentialsException("Invalid username or password");
             }
 
+            // Update last login date and set online status
+            user.setLastLoginDate(LocalDateTime.now());
+            user.setOnlineStatus(true);
+            userRepository.save(user);
+
             // Fetch the projects the user is engaged with
             List<Long> projectIds = userProjectAssignmentRepository.findProjectIdsByUserId(user.getUserID());
 
@@ -181,6 +188,14 @@ public class UserServiceImpl implements UserService {
             userDto.setMessage("Error occurred during login: " + e.getMessage());
         }
         return userDto;
+    }
+
+    @Override
+    public void logout(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setOnlineStatus(false);
+        userRepository.save(user);
     }
 
     public UserDto refreshToken(UserDto refreshTokenRequest) {
@@ -249,57 +264,48 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(Long userID, UserDto updatedUser, MultipartFile profileImage) {
-        UserDto userDto4 = new UserDto();
-        try {
-            Optional<User> userOptional = userRepository.findById(userID);
-            if (userOptional.isPresent()) {
-                User existingUser = userOptional.get();
+    public UserDto updateUser(Long userID, UserDto updatedUserDto, MultipartFile profileImage) {
+        User user = userRepository.findById(userID)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userID));
 
-                // Update basic user details
-                existingUser.setFirstName(updatedUser.getFirstName());
-                existingUser.setLastName(updatedUser.getLastName());
-                existingUser.setEmail(updatedUser.getEmail());
-                existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
-                existingUser.setDesignation(updatedUser.getDesignation());
-                existingUser.setDepartment(updatedUser.getDepartment());
-
-                // Check if a new profile image is provided
-                if (profileImage != null && !profileImage.isEmpty()) {
-                    try {
-                        // Get the file name
-                        String fileName = StringUtils.cleanPath(profileImage.getOriginalFilename());
-                        // Set the file path where the image will be stored
-                        Path uploadPath = Paths.get(uploadDir + fileName);
-                        // Copy the file to the upload path
-                        Files.copy(profileImage.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
-                        // Set the profile picture URL in the user entity
-                        existingUser.setProfilePicUrl(uploadPath.toString());
-                    } catch (IOException e) {
-                        e.printStackTrace(); // Handle the exception appropriately
-                        userDto4.setStatusCode(500);
-                        userDto4.setMessage("Error occurred while uploading profile image: " + e.getMessage());
-                        return userDto4;
-                    }
-                }
-
-                // Save the user entity with updated details
-                User savedUser = userRepository.save(existingUser);
-                userDto4.setUser(savedUser);
-                userDto4.setStatusCode(200);
-                userDto4.setMessage("User updated successfully");
-            } else {
-                userDto4.setStatusCode(404);
-                userDto4.setMessage("User not found for update");
-            }
-        } catch (Exception e) {
-            userDto4.setStatusCode(500);
-            userDto4.setMessage("Error occurred while updating user: " + e.getMessage());
+        if (updatedUserDto.getFirstName() != null) {
+            user.setFirstName(updatedUserDto.getFirstName());
         }
-        return userDto4;
+        if (updatedUserDto.getLastName() != null) {
+            user.setLastName(updatedUserDto.getLastName());
+        }
+        if (updatedUserDto.getEmail() != null) {
+            user.setEmail(updatedUserDto.getEmail());
+        }
+        if (updatedUserDto.getPhoneNumber() != null) {
+            user.setPhoneNumber(updatedUserDto.getPhoneNumber());
+        }
+        if (updatedUserDto.getDesignation() != null) {
+            user.setDesignation(updatedUserDto.getDesignation());
+        }
+        if (updatedUserDto.getDepartment() != null) {
+            user.setDepartment(updatedUserDto.getDepartment());
+        }
+
+        // Check if a profile image is provided
+        if (profileImage != null && !profileImage.isEmpty()) {
+            try {
+                // Get the file name
+                String fileName = StringUtils.cleanPath(profileImage.getOriginalFilename());
+                // Set the file path where the image will be stored
+                Path uploadPath = Paths.get(uploadDir + fileName);
+                // Copy the file to the upload path
+                Files.copy(profileImage.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
+                // Set the profile picture URL in the user entity
+                user.setProfilePicUrl(uploadPath.toString());
+            } catch (IOException e) {
+                e.printStackTrace(); // Handle the exception appropriately
+            }
+        }
+
+        User updatedUser = userRepository.save(user);
+        return UserMapper.mapToUserDto(updatedUser);
     }
-
-
 
     {/*public ReqRes getMyInfo(String email){
         ReqRes reqRes = new ReqRes();
@@ -332,8 +338,30 @@ public class UserServiceImpl implements UserService {
         // Set the user's status to deactivated
         user.setActive(false); // Assuming there's a field named 'active' indicating user status
 
+        // Set the user's online status to false
+        user.setOnlineStatus(false);
+
         // Save the updated user entity
         userRepository.save(user);
+    }
+
+    @Override
+    public UserDto getUserByFirstNameAndLastName(String firstName, String lastName) {
+        UserDto userDto = new UserDto();
+        try {
+            User user = userRepository.findByFirstNameAndLastName(firstName, lastName)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with firstName: " + firstName + " and lastName: " + lastName));
+            userDto = UserMapper.mapToUserDto(user);
+            userDto.setStatusCode(200);
+            userDto.setMessage("User found successfully");
+        } catch (ResourceNotFoundException e) {
+            userDto.setStatusCode(404);
+            userDto.setMessage(e.getMessage());
+        } catch (Exception e) {
+            userDto.setStatusCode(500);
+            userDto.setMessage("Error occurred: " + e.getMessage());
+        }
+        return userDto;
     }
 
     // Helper method to generate username
@@ -368,6 +396,52 @@ public class UserServiceImpl implements UserService {
 
         // Concatenate all parts to form the password
         return String.valueOf(firstLetterFirstName) + firstLetterLastName + firstTwoLettersEmail + lastTwoDigitsPhoneNumber;
+    }
+
+    @Override
+    public int getTodayActiveUsers() {
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
+
+        List<User> users = userRepository.findAllByLastLoginDateBetween(startOfDay, endOfDay);
+        return users.size();
+    }
+
+    @Override
+    public int countAllUsers() {
+        try {
+            return userRepository.findAll().size();
+        } catch (Exception e) {
+            logger.error("Error occurred while counting users: {}", e.getMessage());
+            return -1; // or throw a custom exception
+        }
+    }
+
+    @Override
+    public int countActiveUsers() {
+        try {
+            return userRepository.countByActiveTrue();
+        } catch (Exception e) {
+            logger.error("Error occurred while counting active users: {}", e.getMessage());
+            return -1; // or throw a custom exception
+        }
+    }
+
+    @Override
+    public int countDeactivatedUsers() {
+        try {
+            return userRepository.countByActiveFalse();
+        } catch (Exception e) {
+            logger.error("Error occurred while counting deactivated users: {}", e.getMessage());
+            return -1; // or throw a custom exception
+        }
+    }
+
+    @Override
+    public List<UserDto> getOnlineUsers() {
+        List<User> onlineUsers = userRepository.findByOnlineStatusTrue();
+        return onlineUsers.stream().map(UserMapper::mapToUserDto).collect(Collectors.toList());
     }
 
     //Nethuni

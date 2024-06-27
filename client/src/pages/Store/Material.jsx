@@ -16,8 +16,15 @@ function Material() {
 
   const [search, setSearch] = useState("");
 
-  const givenProjectId = 3;
+  // Retrieve and parse projectIDs from local storage
+  const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
+  
+  // Set a specific project ID (e.g., the first one)
+  const givenProjectId = projectIDs ? projectIDs[0] : null;
 
+  console.log('projectId', givenProjectId);
+
+  
   //Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
@@ -102,7 +109,7 @@ function Material() {
         <section className="flex">
             <SideNavigationStore open={open} setOpen={setOpen} />
       
-            <div className="relative w-screen h-screen ">
+            <div className="relative flex-auto w-8/12 h-screen">
   
                 <div className="absolute top-0 left-0 pt-3 pl-10 ">
                     <h1 className="text-4xl leading-relaxed font-bold text-[#101d3f] whitespace-nowrap">Material List</h1>
@@ -123,7 +130,7 @@ function Material() {
                                                     <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
                                                 </svg>
                                             </div>
-                                            Add Material
+                                            New Material
                                             </div>
                                         </button>
                                     </div>     
@@ -138,8 +145,8 @@ function Material() {
                                     <th className="px-4 py-5 text-left">Quantity</th>
                                     <th className="px-4 py-5 text-left">Measuring Unit</th>
                                     <th className="px-4 py-5 text-left">Description</th>
-                                    <th className="w-16 px-4 py-5 text-left"></th>
-                                    <th className="w-16 px-4 py-5 text-left"></th>
+                                    <th className="w-16 px-4 py-5 text-left">Edit</th>
+                                    <th className="w-16 px-4 py-5 text-left">Add/Issue</th>
                                     </tr>
                                 </thead>
                                 <tbody className="text-blue-gray-900">
@@ -160,7 +167,7 @@ function Material() {
                                                 <td className="px-4 py-3">{material.description}</td>
 
                                                 {/******************************** Edit material **************************************/}
-                                                <td className="px-4 py-3">
+                                                <td className="px-5 py-3">
                                                     <div className="relative inline-block group">
                                                         <button
                                                             type="button"
@@ -184,7 +191,7 @@ function Material() {
                                                 </td>
 
                                                 {/******************************** Update inventory **************************************/}
-                                                <td className="px-4 py-3">
+                                                <td className="px-10 py-3">
                                                     <div className="relative inline-block group">
                                                         <button
                                                             type="button"
