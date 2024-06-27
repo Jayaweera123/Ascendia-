@@ -30,4 +30,6 @@ public interface MaterialService {
 
     List<NotificationDto> getAllNotifications(String userId);
 
+    List<MaterialDto> getLowStockMaterials(Long projectId);
+
 }

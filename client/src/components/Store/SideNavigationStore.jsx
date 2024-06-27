@@ -27,7 +27,7 @@ const SideNavigationStore = () => {
     { name: "Material", link: "/material", icon: HiMiniRectangleGroup , condition: isStoreKeeper  },
     { name: "Equipment", link: "/equipment", icon: HiMiniWrenchScrewdriver },
     { name: "History", link: "/history", icon: VscHistory  },
-    { name: "Test", link: "/test", icon: VscHistory  },
+    // { name: "Test", link: "/test", icon: VscHistory  },
     { name: "Ascendia", link: "/", icon: null, condition: !isAuthenticated },
 
   ];

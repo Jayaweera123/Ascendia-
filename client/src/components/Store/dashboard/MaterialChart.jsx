@@ -42,14 +42,19 @@ const MaterialChart = ({givenProjectId}) => {
         return {
           name: String(material.materialName), // Assuming the field is materialName
           quantity: material.updatedQuantity, // Assuming the field is updatedQuantity
+          action: String(material.action), // Assuming the field is action
           // Add any additional transformations here
         };
       });
     }, [updatedMaterials]);
 
   return (
-    <div className='p-5 bg-white rounded-md shadow'>
-    <ResponsiveContainer width="100%" height={300}>
+    <div className='p-5 bg-white rounded-md shadow '>
+
+        <div className="flex items-center pb-3 space-x-2 text-sm font-medium text-gray-500 rtl:space-x-reverse dark:text-gray-400">
+              <span>Recent 10 Transactions of Material Inventory</span>
+        </div>
+    <ResponsiveContainer width="100%" height={280}>
       <BarChart
         data={data}
         margin={{
@@ -62,10 +67,9 @@ const MaterialChart = ({givenProjectId}) => {
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="name" />
         <YAxis />
-        <Tooltip />
-        <Legend />
+        <Tooltip /> 
         <Bar dataKey="quantity" fill="#8884d8" shape={<CustomizedActiveShape />} />
-        <Bar dataKey="Add" fill="#82ca9d" shape={<CustomizedActiveShape />} />
+        <Bar dataKey="action" fill="#8884d8" shape={<CustomizedActiveShape />} />
       </BarChart>
     </ResponsiveContainer>
     </div>

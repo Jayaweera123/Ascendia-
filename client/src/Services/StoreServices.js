@@ -41,6 +41,8 @@ export const searchUpdatedMaterial = (projectId, query) => api.get(`/store/mater
 
 export const getAllNotifications = (userId) => api.get('/skeeperonly/material/getAllNotifications/' + userId);
 
+export const getLowStockMaterials = (projectId) => api.get('/store/material/lowStockMaterials/' + projectId);
+
 //Equipment
 export const listEquipment = (projectId) => api.get('/store/equipment/getAllEquipment/' + projectId);
 

@@ -4,6 +4,7 @@ import SideNavigationStore from "../../components/Store/SideNavigationStore";
 import DashboardCards from "../../components/Store/dashboard/DashboardCards";
 import MaterialChart from "../../components/Store/dashboard/MaterialChart";
 import NotificationBar from "../../components/Store/NotificationBar";
+import LowStockMaterials from "../../components/Store/dashboard/LowStockMaterials";
 
  // Retrieve and parse projectIDs from local storage
  const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
@@ -48,13 +49,10 @@ function StoreKeeperDashboard() {
               </div>
 
               <div className="py-5 lg:w-8/12">
-                <MaterialChart />
+                <LowStockMaterials givenProjectId={givenProjectId} />
               </div>
               
 
-              {/*<div className="py-5 lg:w-4/12">
-                <TasksPieChart projectId={projectId} />
-              </div>*/}
             </div> 
           </div>
           </div>

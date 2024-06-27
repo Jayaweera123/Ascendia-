@@ -33,11 +33,12 @@ function Material() {
   const records = material.slice(firstIndex, lastIndex);
   const numberOfPages = Math.ceil(material.length / recordsPerPage);
   const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
-    const [isOpen, setIsOpen] = useState(false);
+    
+  const [isOpen, setIsOpen] = useState(false);
   
-    const notificationHandler = (status) => {
+  const notificationHandler = (status) => {
         setIsOpen(status);
-    };
+  };
 
   //Get all materials
   useEffect(() => {

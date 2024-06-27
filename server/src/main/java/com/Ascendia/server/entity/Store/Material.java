@@ -41,6 +41,7 @@ public class Material {
     private LocalDateTime createdDate;
     @Column(name="user_id")
     private String userId;
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "projectId" , referencedColumnName = "projectId")

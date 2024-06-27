@@ -22,5 +22,6 @@ public class MaterialDto {
     private LocalDateTime createdDate;
     private Long projectId;
     private String userId;
+    private String status;
 
 }

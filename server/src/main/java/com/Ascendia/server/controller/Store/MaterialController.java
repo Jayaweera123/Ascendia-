@@ -114,4 +114,9 @@ public class MaterialController {
         return ResponseEntity.ok(notifications);
     }
 
+    @GetMapping("/store/material/lowStockMaterials/{projectId}")
+    public ResponseEntity<List<MaterialDto>> getLowStockMaterials(@PathVariable Long projectId){
+        return ResponseEntity.ok(materialService.getLowStockMaterials(projectId));
+    }
+
 }

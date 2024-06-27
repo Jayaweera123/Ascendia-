@@ -17,7 +17,8 @@ public class MaterialMapper {
                 material.getDescription(),
                 material.getCreatedDate(),
                 material.getProject().getProjectId(),
-                material.getUserId()
+                material.getUserId(),
+                material.getStatus()
 
 
         );
@@ -35,6 +36,7 @@ public class MaterialMapper {
                 materialDto.getDescription(),
                 materialDto.getCreatedDate(),
                 materialDto.getUserId(),
+                materialDto.getStatus(),
                 project
         );
     }

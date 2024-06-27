@@ -143,6 +143,9 @@ public class MaterialServiceImpl implements MaterialService {
         // Check if material quantity is less than minimum level and send notification if it is
         if (updatedQuantity < material.getMinimumLevel()) {
             sendLowStockNotification(material);
+            material.setStatus("Low Stock");
+        }else{
+            material.setStatus("In Stock");
         }
 
         return MaterialMapper.mapToMaterialDto(material);
@@ -203,4 +206,12 @@ public class MaterialServiceImpl implements MaterialService {
                 .map(NotificationMapper::mapToNotificationDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<MaterialDto> getLowStockMaterials(Long projectId) {
+        List<Material> materials = materialRepository.findProjectsWithLowStockMaterials(projectId);
+        return materials.stream().map(MaterialMapper::mapToMaterialDto)
+                .collect(Collectors.toList());
+    }
+
 }
