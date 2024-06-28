@@ -34,7 +34,21 @@ api.interceptors.request.use(
 
 export const createProject = (formData) => api.post("/project/createProject", formData);
 
-export const updateProjectById = (projectId, formData) => api.put(`/project/update/${projectId}`, formData);
+export const updateProjectById = async (projectId, formData) => {
+  if (!projectId || !formData) throw new Error("Invalid project data or projectId");
+
+  try {
+    const response = await api.put(`/project/update/${projectId}`, formData);
+    return response.data;
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+const handleError = (error) => {
+  console.error('API call failed:', error);
+  throw error; // or handle error as needed
+};
 
 export const getAllProjectCards = () => api.get(REST_API_BASE_URL + "/project/all");
 

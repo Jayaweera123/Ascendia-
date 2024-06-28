@@ -23,7 +23,7 @@ const AddProject = () => {
     createdDate: '',
     endDate: '',
     profileImage: null,
-    projectManager: null
+    projectManager: ''
   });
 
   const [errors, setErrors] = useState({
@@ -63,7 +63,7 @@ const AddProject = () => {
         createdDate,
         endDate,
         profileImage: image ? `http://localhost:8080/${image}` : null,
-        projectManager
+        projectManager: projectManager ? projectManager.id : ''
       });
     } catch (error) {
       console.error('Error fetching project data:', error);
@@ -127,11 +127,6 @@ const AddProject = () => {
       }
     });
   
-    console.log("Form Data to Send:");
-    for (let [key, value] of formDataToSend.entries()) {
-      console.log(`${key}: ${value}`);
-    }
-  
     try {
       const token = localStorage.getItem('token');
       if (!token) {
@@ -140,18 +135,17 @@ const AddProject = () => {
           title: 'Authentication Error',
           text: 'No token found, please login again.',
         }).then(() => {
-          navigate('/login');  // Redirect to login if no token is found
+          navigate('/login');
         });
         return;
       }
+  
       let response;
       if (projectId) {
         response = await ProjectService.updateProjectById(projectId, formDataToSend);
       } else {
         response = await ProjectService.createProject(formDataToSend);
       }
-
-      console.log('Project added/updated successfully:', response);
   
       Swal.fire({
         icon: 'success',
@@ -160,21 +154,22 @@ const AddProject = () => {
       }).then(() => {
         navigate('/projectslist');
       });
-  
     } catch (error) {
-      console.error('Error adding/updating project:', error.response || error);
+      console.error('Error adding/updating project:', error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: `An error occurred while adding/updating the project: ${error.response?.data?.message || error.message}. Please try again.`,
+        text: `An error occurred while adding/updating the project. Please try again.`,
       });
     }
   };
   
-  
   const handleAssignProjectManager = () => {
-    navigate(`/assignPM/${projectId}`);
+    navigate(`/assignPM/${projectId}`, {
+      state: { setProjectManager: (manager) => setFormData({ ...formData, projectManager: manager.id }) },
+    });
   };
+  
 
   const validateForm = () => {
     let valid = true;
