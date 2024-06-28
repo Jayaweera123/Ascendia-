@@ -128,6 +128,19 @@ public class MaterialController {
 
     }
 
-   
+    @PutMapping("/skeeperonly/material/markAllAsSeen/{userId}")
+    public ResponseEntity<Void> markAllNotificationsAsSeen(@PathVariable String userId) {
+        try {
+            materialService.markAllAsSeen(userId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/skeeperonly/material/unseenNotifications/{userId}")
+    public ResponseEntity<List<NotificationDto>> getUnseenNotifications(@PathVariable String userId){
+        return ResponseEntity.ok(materialService.getUnseenNotifications(userId));
+    }
 
 }

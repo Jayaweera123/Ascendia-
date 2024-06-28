@@ -22,6 +22,7 @@ public class Notification {
     private String content;
     private LocalDateTime notifyDate;
     private String isSeen;
+    private boolean isAllSeen;
 
     public Notification(String userId, String content) {
         this.userId = userId;
@@ -32,5 +33,14 @@ public class Notification {
     public Notification(Long notificationId, String isSeen) {
         this.notificationId = notificationId;
         this.isSeen = isSeen;
+    }
+
+    public Notification(Long notificationId, String userId, String content, LocalDateTime notifyDate, String isSeen) {
+        this.notificationId = notificationId;
+        this.userId = userId;
+        this.content = content;
+        this.notifyDate = notifyDate;
+        this.isSeen = isSeen;
+
     }
 }

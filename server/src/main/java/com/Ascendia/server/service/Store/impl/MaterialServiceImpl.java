@@ -229,7 +229,21 @@ public class MaterialServiceImpl implements MaterialService {
 
         return NotificationIsSeenMapper.mapToNotificationSeenDto(notificationSeenDataObj);
 
+    }
 
+    public void markAllAsSeen(String userId) {
+        List<Notification> notifications = notificationRepository.findByUserId(userId);
+        for (Notification notification : notifications) {
+            notification.setAllSeen(true);
+        }
+        notificationRepository.saveAll(notifications);
+    }
+
+    @Override
+    public List<NotificationDto> getUnseenNotifications(String userId) {
+        List<Notification> notifications = notificationRepository.findUserIdWithUnseenNotifications(userId);
+        return notifications.stream().map(NotificationMapper::mapToNotificationDto)
+                .collect(Collectors.toList());
     }
 
 }

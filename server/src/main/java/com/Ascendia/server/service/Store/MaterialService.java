@@ -35,4 +35,8 @@ public interface MaterialService {
 
     NotificationSeenDto setNotificationSeen(Long notificationId, NotificationSeenDto notificationSeenData);
 
+    void markAllAsSeen(String userId);
+
+    List<NotificationDto> getUnseenNotifications(String userId);
+
 }

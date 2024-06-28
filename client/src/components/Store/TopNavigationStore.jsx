@@ -4,6 +4,7 @@ import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import Swal from 'sweetalert2'; // Import SweetAlert2
 import '../../shim/global.js';
+import { markAllNotificationsAsSeen, getUnseenNotifications } from '../../services/StoreServices';
 
 const TopNavigationStore = ({ notificationHandler }) => {
 
@@ -12,6 +13,8 @@ const TopNavigationStore = ({ notificationHandler }) => {
     const [privateMessage, setPrivateMessage] = useState('');
     const [newNotification, setNewNotification] = useState(false); // Add this line
     const stompClientRef = useRef(null);
+    const [notifications, setNotifications] = useState([]);
+    const [newNotificationCount, setNewNotificationCount] = useState(0); // Assuming you have a state setter named setMaterialCount
     
     const userId = localStorage.getItem('userID');
     console.log('UserId', userId); // This will log the userID value
@@ -65,6 +68,38 @@ const TopNavigationStore = ({ notificationHandler }) => {
         };
     },[]);
 
+    useEffect(() => {
+        
+            const userId = localStorage.getItem('userID');
+            getUnseenNotifications(userId)
+                .then((response) => {
+                    const sortedNotifications = response.data.sort((a, b) => new Date(b.notifyDate) - new Date(a.notifyDate));
+                    setNotifications(sortedNotifications);
+                    setNewNotificationCount(response.data.length); // Assuming you have a state setter named setMaterialCount
+                    console.log('newNotificationCount', newNotificationCount);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        
+    }, []);
+
+    useEffect(() => {
+        if(newNotificationCount > 0){
+            setNewNotification(true);
+        }
+    },[newNotificationCount]);
+
+    const handleNotificationClick = () => {
+        markAllNotificationsAsSeen(userId)
+            .then(() => {
+                notificationHandler(true);
+                setNewNotification(false);
+            })
+            .catch((error) => {
+                console.error('Error marking all notifications as seen:', error);
+            });
+    };
 
 
     /*************************Notification code************************************************/
@@ -80,7 +115,7 @@ const TopNavigationStore = ({ notificationHandler }) => {
                 <div className="flex space-x-3 md:order-2 md:space-x-0 rtl:space-x-reverse">
                     <button
                         type="button"
-                        onClick={() => notificationHandler(true)}
+                        onClick={handleNotificationClick}
                         className="relative flex text-sm bg-white rounded-full md:me-4 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                         id="user-menu-button"
                         aria-expanded="false"
@@ -94,7 +129,7 @@ const TopNavigationStore = ({ notificationHandler }) => {
                         )}
                     </button>
                 </div>
-                <p>{privateMessage}</p>
+                {/* <p>{privateMessage}</p> */}
             </div>
         </nav>
     );
