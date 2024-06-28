@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Service;
+
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 
 import java.util.ArrayList;
@@ -43,7 +45,7 @@ public class ProjectServiceImpl implements ProjectService {
     private  UserProjectAssignmentRepository userProjectAssignmentRepository;
     @Autowired
     private JobRepository jobRepository;
-    
+
     @Autowired
     private TaskService taskService;// Path to the directory where profile images will be stored
     @Autowired
@@ -102,28 +104,51 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDto updateProjectById(Long projectId, ProjectDto projectDto) {
+    public ProjectDto updateProjectById(Long projectId, ProjectDto projectDto, MultipartFile profileImage) {
         Project existingProject = projectRepository.findByProjectId(projectId);
-        if (existingProject != null) {
-            // Update the fields of existing project entity with the values from DTO
+
+        if (projectDto.getProjectType() != null) {
             existingProject.setProjectType(projectDto.getProjectType());
-            existingProject.setProjectDescription(projectDto.getProjectDescription());
-            existingProject.setProjectStatus(projectDto.getProjectStatus());
-            existingProject.setCreatedDate(projectDto.getCreatedDate());
-            existingProject.setEndDate(projectDto.getEndDate());
-            //existingProject.setPmId(projectDto.getPmId());
-            existingProject.setImage(projectDto.getImage());
-
-            // Save the updated project entity
-            Project updatedProject = projectRepository.save(existingProject);
-
-            // Map the updated project entity back to DTO and return
-            return ProjectMapper.mapToProjectDto(updatedProject);
-        } else {
-            // Handle case where project with given name doesn't exist
-            throw new IllegalArgumentException("Project with name " + projectId + " not found");
         }
+        if (projectDto.getProjectDescription() != null) {
+            existingProject.setProjectDescription(projectDto.getProjectDescription());
+        }
+        if (projectDto.getProjectStatus() != null) {
+            existingProject.setProjectStatus(projectDto.getProjectStatus());
+        }
+        if (projectDto.getCreatedDate() != null) {
+            existingProject.setCreatedDate(projectDto.getCreatedDate());
+        }
+        if (projectDto.getEndDate() != null) {
+            existingProject.setEndDate(projectDto.getEndDate());
+        }
+        if (projectDto.getImage() != null) {
+            existingProject.setImage(projectDto.getImage());
+        }
+
+        // Check if a profile image is provided
+        if (profileImage != null && !profileImage.isEmpty()) {
+            try {
+                // Get the file name
+                String fileName = StringUtils.cleanPath(profileImage.getOriginalFilename());
+                // Set the file path where the image will be stored
+                Path uploadPath = Paths.get(uploadDir + fileName);
+                // Copy the file to the upload path
+                Files.copy(profileImage.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
+                // Set the image URL in the project entity
+                existingProject.setImage(uploadPath.toString());
+            } catch (IOException e) {
+                e.printStackTrace(); // Handle the exception appropriately
+            }
+        }
+
+        // Save the updated project entity
+        Project updatedProject = projectRepository.save(existingProject);
+
+        // Map the updated project entity back to DTO and return
+        return ProjectMapper.mapToProjectDto(updatedProject);
     }
+
 
     @Override
     public ProjectGetDto getProjectByProjectId(Long projectId) {
@@ -176,7 +201,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-   public Long getTotalJobsForProject(Long projectId) {
+    public Long getTotalJobsForProject(Long projectId) {
         return jobRepository.countJobsByProjectId(projectId);
     }
 

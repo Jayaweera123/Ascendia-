@@ -286,6 +286,9 @@ public class UserServiceImpl implements UserService {
         if (updatedUserDto.getDepartment() != null) {
             user.setDepartment(updatedUserDto.getDepartment());
         }
+        if (updatedUserDto.getProfilePicUrl() != null) {
+            user.setProfilePicUrl(updatedUserDto.getProfilePicUrl());
+        }
 
         // Check if a profile image is provided
         if (profileImage != null && !profileImage.isEmpty()) {

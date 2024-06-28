@@ -99,9 +99,10 @@ const App = () => {
               <Route path="/sideNavigationPCTeam" element={<SideNavigationPCTeam />}/>
               <Route path="/topNavigation" element={<TopNavigation />} />
               <Route path="/project/addProject" element={<AddProject/>}/>
+              <Route path="/project/update/:projectId" element={<AddProject/>}/>
               <Route path="/assignPM" element={<AssignPM/>}/>
               <Route path="/projectslist" element={<ProjectsList/>}/>
-              <Route path="/project/DashBoard" element={<NewDashBoard/>}/>   
+              <Route path="/project/Dashboard" element={<NewDashBoard/>}/>   
               <Route path="/project/assign" element={<Assign/>}/>
               <Route path="/project/pm" element={<Pm/>}/>
             </>

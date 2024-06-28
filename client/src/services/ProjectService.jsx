@@ -1,13 +1,15 @@
 import axios from "axios";
 
+const REST_API_BASE_URL = "http://localhost:8080"; 
+
 // Helper function to get the token
 const getToken = () => localStorage.getItem("token");
 
 // Create an axios instance with a base URL and default headers
 const api = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: REST_API_BASE_URL,
   headers: {
-    "Content-Type": "application/json",
+    "Content-Type": "multipart/form-data", // Set content type for multipart/form-data
   },
 });
 
@@ -29,18 +31,18 @@ api.interceptors.request.use(
   }
 );
 
-const REST_API_BASE_URL = "http://localhost:8080"; // Ensure this is defined
 
-export const getAllProjectCards = () =>
-  api.get(REST_API_BASE_URL + "/project/all");
+export const createProject = (formData) => api.post("/project/createProject", formData);
 
-export const deleteProjectById = (projectId) =>
-  api.delete(`${REST_API_BASE_URL}/project/${projectId}`);
+export const updateProjectById = (projectId, formData) => api.put(`/project/update/${projectId}`, formData);
 
+export const getAllProjectCards = () => api.get(REST_API_BASE_URL + "/project/all");
 
+export const deleteProjectById = (projectId) => api.delete(`${REST_API_BASE_URL}/project/${projectId}`);
 {
   /*Nethuni*/
 }
+
 export const getProjectById = (projectId) =>
   api.get("http://localhost:8080/pmanager/" + projectId);
 

@@ -19,7 +19,7 @@ public interface ProjectService {
 
     void deleteProjectById(Long projectId);
 
-    ProjectDto updateProjectById(Long projectId, ProjectDto projectDto);
+    ProjectDto updateProjectById(Long projectId, ProjectDto projectDto, MultipartFile profileImage);
 
     ProjectGetDto getProjectByProjectId(Long projectId);
 

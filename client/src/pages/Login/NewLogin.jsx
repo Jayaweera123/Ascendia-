@@ -39,7 +39,7 @@ const NewLogin = () => {
             navigate('/client/dashboard');
             break;
           case 'Project Creation Team':
-            navigate('/project/DashBoard');
+            navigate('/project/Dashboard');
             break;
           case 'Project Manager':
             navigate('/pmanager/dashboard');

@@ -7,12 +7,9 @@ import UserService from "../../services/UserService";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
-
-// Define the AddUser component
 const AddUser = () => {
-
-  // State variables to manage component state
   const [open, setOpen] = useState(true);
+  const { userID } = useParams();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -24,7 +21,6 @@ const AddUser = () => {
     profileImage: null
   });
  
-  const { userID } = useParams(); // Get the user ID from the URL parameters
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
@@ -34,7 +30,6 @@ const AddUser = () => {
     profileImage: ''
   });
 
-  // Use navigate hook for routing
   const navigate = useNavigate(); // Assuming this is used for navigation within the application
 
   // useEffect hook to fetch user data if editing an existing user
@@ -58,7 +53,7 @@ const AddUser = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await UserService.getUserById(userID, token);
-      const { firstName, lastName, phoneNumber, email, designation, department, profileImage } = response.user;
+      const { firstName, lastName, phoneNumber, email, designation, department, profilePicUrl } = response.user;
       setFormData({ 
         firstName, 
         lastName, 
@@ -66,7 +61,7 @@ const AddUser = () => {
         email, 
         designation, 
         department, 
-        profileImage: profileImage ? `${UserService.BASE_URL}/images/${profileImage}` : null 
+        profileImage: profilePicUrl ? `${UserService.BASE_URL}/${profilePicUrl}` : null 
       });
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -111,7 +106,7 @@ const AddUser = () => {
     Object.keys(formData).forEach(key => {
       if (key === 'profileImage' && formData[key] && formData[key] instanceof File) {
         formDataToSend.append(key, formData[key]);
-      } else {
+      } else if (key !== 'profileImage') {
         formDataToSend.append(key, formData[key]);
       }
     });
@@ -157,7 +152,7 @@ const AddUser = () => {
         Swal.fire({
           icon: 'success',
           title: 'Success',
-          text: 'User added/updated successfully',
+          text: `User ${userID ? 'updated' : 'added'} successfully`,
         }).then(() => {
           navigate('/admin/userlist');
         });

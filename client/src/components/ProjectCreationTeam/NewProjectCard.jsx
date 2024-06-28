@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from 'react-router-dom';
 import { getAllProjectCards, deleteProjectById } from "../../services/ProjectService.jsx";
 import { MdEdit, MdDelete, MdPerson } from "react-icons/md";
 import Swal from "sweetalert2";
@@ -6,6 +7,7 @@ import axios from "axios";
 
 const NewProjectCard = () => {
   const [projects, setProjects] = useState([]);
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     getAllProjectCards()
@@ -49,7 +51,11 @@ const NewProjectCard = () => {
           });
       }
     });
-  };  
+  }; 
+  
+  const editProject = (projectId) => {
+    navigate(`/project/update/${projectId}`);
+  };
   
   if (projects.length === 0) {
     return <div className="mt-10 text-center">No projects available.</div>;
@@ -104,7 +110,8 @@ const NewProjectCard = () => {
                           />
                           <MdEdit
                             className="mr-2 text-blue-800 cursor-pointer"
-                            size={20}
+                            size={20}                           
+                            onClick={() => editProject(project.projectId)}
                           />
                           <MdDelete
                             className="text-red-600 cursor-pointer"

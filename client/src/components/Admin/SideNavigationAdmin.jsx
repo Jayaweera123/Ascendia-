@@ -33,11 +33,10 @@ const SideNavigationAdmin = () => {
   };
 
   const menus = [
-    { name: "Dashboard", link: "/admin/dashboard", icon: MdOutlineDashboard },
+    { name: "Dashboard", link: "/admin/dashboard", icon: MdOutlineDashboard, condition: isAdmin },
     { name: "User List", link: "/admin/userlist", icon: LuUsers2, condition: isAdmin },
-    { name: "Add User", link: "/admin/adduser", icon: RiUserAddLine },,
-    { name: "Logout", link: "#", icon: TbLogout, action: handleLogout },
-    { name: "Ascendia", link: "/ascendia", icon: null, condition: !isAuthenticated },    
+    { name: "Add User", link: "/admin/adduser", icon: RiUserAddLine, condition: isAdmin },,
+    { name: "Logout", link: "#", icon: TbLogout, action: handleLogout },   
   ];
 
   const [open, setOpen] = useState(true);

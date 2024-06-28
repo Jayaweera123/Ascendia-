@@ -1,5 +1,6 @@
 package com.Ascendia.server.controller.Project;
 
+import com.Ascendia.server.dto.Administrator.UserDto;
 import com.Ascendia.server.dto.Project.ProjectDto;
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.Project.ProjectGetDto;
@@ -9,6 +10,7 @@ import com.Ascendia.server.service.ProjectManager.TaskService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,16 +52,14 @@ public class ProjectController {
         }
     }
 
-    @PutMapping("/project/{projectId}")
+    @PutMapping(value = "/project/update/{projectId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ProjectDto> updateProjectById(@PathVariable Long projectId,
-                                                          @RequestBody ProjectDto projectDto) {
-        try {
-            ProjectDto updatedProject = projectService.updateProjectById(projectId, projectDto);
-            return ResponseEntity.ok(updatedProject);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+                                                        @ModelAttribute ProjectDto updatedProject,
+                                                        @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
+        ProjectDto updatedProjectDto = projectService.updateProjectById(projectId, updatedProject, profileImage);
+        return ResponseEntity.ok(updatedProjectDto);
     }
+
 
     @GetMapping("/progress/{projectId}")
     public ResponseEntity<ProjectGetDto> getProjectByProjectId(@PathVariable Long projectId) {
@@ -71,6 +71,7 @@ public class ProjectController {
         }
         return ResponseEntity.ok(projectGetDto);
     }
+
 
 
     //Nethuni
