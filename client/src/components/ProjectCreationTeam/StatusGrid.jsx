@@ -3,11 +3,14 @@ import { MdFreeCancellation } from "react-icons/md";
 import { IoIosCloudDone } from "react-icons/io";
 import { GrInProgress } from "react-icons/gr";
 import { FaCircleStop } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 
 function StatusGrid() {
+    const navigate = useNavigate();
+
     return (
         <div className="grid w-full grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            <BoxWrapper>
+          <BoxWrapper onClick={() => navigate('/project/completed')}>
                 <div className="flex items-center justify-center w-12 h-12 bg-green-700 rounded-full">
                     <IoIosCloudDone className="text-2xl text-white" />
                 </div>

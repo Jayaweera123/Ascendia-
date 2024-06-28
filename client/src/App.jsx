@@ -13,6 +13,7 @@ import CreationDashboard from "./pages/ProjectCreationTeam/CreationDashboard";
 import NewDashBoard from "./pages/ProjectCreationTeam/NewDashBoard";
 import Assign from "./pages/ProjectCreationTeam/Assign";
 import Pm from "./pages/ProjectCreationTeam/Pm";
+import Completed from "./pages/ProjectCreationTeam/Completed"
 
 {/*Rashmi*/}
 import SideNavigationClient from "./components/Client/SideNavigationClient";
@@ -106,6 +107,8 @@ const App = () => {
               <Route path="/project/DashBoard" element={<NewDashBoard/>}/>   
               <Route path="/project/assign" element={<Assign/>}/>
               <Route path="/project/pm" element={<Pm/>}/>
+              <Route path="/project/completed" element={<Completed />} />
+
             </>
           )}
           {/*ProjectManager */}
