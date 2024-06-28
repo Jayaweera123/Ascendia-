@@ -2,10 +2,12 @@ package com.Ascendia.server.service.Store.impl;
 
 import com.Ascendia.server.dto.Store.MaterialDto;
 import com.Ascendia.server.dto.Store.NotificationDto;
+import com.Ascendia.server.dto.Store.NotificationSeenDto;
 import com.Ascendia.server.dto.Store.UpdateMaterialDto;
 import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.entity.Store.Notification;
 import com.Ascendia.server.entity.Store.UpdateMaterial;
+import com.Ascendia.server.mapper.Store.NotificationIsSeenMapper;
 import com.Ascendia.server.mapper.Store.NotificationMapper;
 import com.Ascendia.server.mapper.Store.UpdateMaterialMapper;
 import com.Ascendia.server.repository.Project.ProjectRepository;
@@ -161,6 +163,7 @@ public class MaterialServiceImpl implements MaterialService {
         Notification notification = new Notification(storeKeeperId, message);
 
         notification.setNotifyDate(LocalDateTime.now());
+        notification.setIsSeen("unseen");
         // Save notification to the database
         notificationRepository.save(notification);
 
@@ -212,6 +215,21 @@ public class MaterialServiceImpl implements MaterialService {
         List<Material> materials = materialRepository.findProjectsWithLowStockMaterials(projectId);
         return materials.stream().map(MaterialMapper::mapToMaterialDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public NotificationSeenDto setNotificationSeen(Long notificationId, NotificationSeenDto notificationSeenData) {
+        Notification notification = notificationRepository.findById(notificationId).orElseThrow(
+                () -> new ResourceNotFoundException("Notification is not exists with given id: " + notificationId)
+        );
+
+        notification.setIsSeen(notificationSeenData.getIsSeen());
+
+        Notification notificationSeenDataObj = notificationRepository.save(notification);
+
+        return NotificationIsSeenMapper.mapToNotificationSeenDto(notificationSeenDataObj);
+
+
     }
 
 }

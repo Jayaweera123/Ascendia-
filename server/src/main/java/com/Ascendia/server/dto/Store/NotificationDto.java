@@ -16,6 +16,7 @@ public class NotificationDto {
     private String userId;
     private String content;
     private LocalDateTime notifyDate;
+    private String isSeen;
 
     public NotificationDto(String userId, String content) {
         this.userId = userId;

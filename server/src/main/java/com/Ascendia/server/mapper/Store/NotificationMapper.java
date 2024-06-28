@@ -10,7 +10,8 @@ public class NotificationMapper {
                 notification.getNotificationId(),
                 notification.getUserId(),
                 notification.getContent(),
-                notification.getNotifyDate()
+                notification.getNotifyDate(),
+                notification.getIsSeen()
         );
     }
 
@@ -19,7 +20,8 @@ public class NotificationMapper {
                 notificationDto.getNotificationId(),
                 notificationDto.getUserId(),
                 notificationDto.getContent(),
-                notificationDto.getNotifyDate()
+                notificationDto.getNotifyDate(),
+                notificationDto.getIsSeen()
         );
     }
 }

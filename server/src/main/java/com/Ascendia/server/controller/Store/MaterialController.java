@@ -2,6 +2,7 @@ package com.Ascendia.server.controller.Store;
 
 import com.Ascendia.server.dto.Store.MaterialDto;
 import com.Ascendia.server.dto.Store.NotificationDto;
+import com.Ascendia.server.dto.Store.NotificationSeenDto;
 import com.Ascendia.server.dto.Store.UpdateMaterialDto;
 import com.Ascendia.server.service.Store.MaterialService;
 import lombok.AllArgsConstructor;
@@ -118,5 +119,15 @@ public class MaterialController {
     public ResponseEntity<List<MaterialDto>> getLowStockMaterials(@PathVariable Long projectId){
         return ResponseEntity.ok(materialService.getLowStockMaterials(projectId));
     }
+
+    //Build Edit material REST API
+    @PutMapping("/skeeperonly/material/notificationSeen/{id}")
+    public ResponseEntity<NotificationSeenDto> setNotificationSeen(@PathVariable("id") Long notificationId, @RequestBody NotificationSeenDto notificationSeenData) {
+        NotificationSeenDto notificationSeenDto = materialService.setNotificationSeen(notificationId, notificationSeenData);
+        return ResponseEntity.ok(notificationSeenDto);
+
+    }
+
+   
 
 }

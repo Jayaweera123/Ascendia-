@@ -43,6 +43,8 @@ export const getAllNotifications = (userId) => api.get('/skeeperonly/material/ge
 
 export const getLowStockMaterials = (projectId) => api.get('/store/material/lowStockMaterials/' + projectId);
 
+export const setAsNotificationSeen = (notificationId, notificationData) => api.put('/skeeperonly/material/notificationSeen/' + notificationId, notificationData);
+
 //Equipment
 export const listEquipment = (projectId) => api.get('/store/equipment/getAllEquipment/' + projectId);
 
