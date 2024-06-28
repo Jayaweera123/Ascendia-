@@ -9,7 +9,6 @@ import AssignPM from "./pages/ProjectCreationTeam/AssignPM";
 import ProjectService from "./services/ProjectService";
 import Progress from "./pages/Progress/Progress";
 import ProjectsList from "./pages/ProjectCreationTeam/ProjectList";
-import CreationDashboard from "./pages/ProjectCreationTeam/CreationDashboard";
 import NewDashBoard from "./pages/ProjectCreationTeam/NewDashBoard";
 import Assign from "./pages/ProjectCreationTeam/Assign";
 import Pm from "./pages/ProjectCreationTeam/Pm";
@@ -103,11 +102,12 @@ const App = () => {
               <Route path="/project/addProject" element={<AddProject/>}/>
               <Route path="/assignPM" element={<AssignPM/>}/>
               <Route path="/projectslist" element={<ProjectsList/>}/>
-              <Route path="/creationDashboard" element={<CreationDashboard/>}/>
               <Route path="/project/DashBoard" element={<NewDashBoard/>}/>   
               <Route path="/project/assign" element={<Assign/>}/>
               <Route path="/project/pm" element={<Pm/>}/>
               <Route path="/project/completed" element={<Completed />} />
+              <Route path="/project/assign/:projectId" element={<Assign/>}/>
+
 
             </>
           )}

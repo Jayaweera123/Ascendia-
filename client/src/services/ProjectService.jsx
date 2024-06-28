@@ -17,9 +17,6 @@ api.interceptors.request.use(
     const token = getToken();
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
-      console.log("Token added to request headers:", token);
-    } else {
-      console.warn("No token found in localStorage");
     }
     console.log("Request headers:", config.headers); // Log headers to verify token presence
     return config;
@@ -31,43 +28,25 @@ api.interceptors.request.use(
 
 const REST_API_BASE_URL = "http://localhost:8080"; // Ensure this is defined
 
-export const getAllProjectCards = () =>
-  api.get(REST_API_BASE_URL + "/project/all");
+export const getAllProjectCards = () => api.get("/project/all");
 
+export const getProjectById = (projectId) => api.get("/pmanager/" + projectId);
 
-{
-  /*Nethuni*/
-}
-export const getProjectById = (projectId) =>
-  api.get("http://localhost:8080/pmanager/" + projectId);
+export const getProjectByProjectManagerId = () => api.get("/projects/user");
 
-export const getProjectByProjectManagerId = () =>
-  api.get("http://localhost:8080/projects/user");
+export const getProjectForPM = (ProjectManagerId) => api.get(`/pmanager/${ProjectManagerId}/all`);
 
-export const getProjectForPM = (ProjectManagerId) =>
-  api.get(`/pmanager/${ProjectManagerId}/all`);
+export const searchProject = (pmId, searchTerm) => api.get(`/pmanager/search/${pmId}?query=${searchTerm}`);
 
-export const searchProject = (pmId, searchTerm) =>
-  api.get(
-    "http://localhost:8080/pmanager/search/" + pmId + "?query=" + searchTerm
-  );
+export const getProjectDuration = (projectId) => api.get(`/pmanager/duration/${projectId}`);
 
-export const getProjectDuration = (projectId) =>
-  api.get("http://localhost:8080/pmanager/duration/" + projectId);
+export const getJobCount = (projectId) => api.get(`/pmanager/${projectId}/jobs/count`);
 
-export const getJobCount = (projectId) =>
-  api.get("http://localhost:8080/pmanager/" + projectId + "/jobs/count");
+export const getCompletedJobCount = (projectId) => api.get(`/pmanager/${projectId}/completed/jobs/count`);
 
-export const getCompletedJobCount = (projectId) =>
-  api.get(
-    "http://localhost:8080/pmanager/" + projectId + "/completed/jobs/count"
-  );
+export const getEmployeeCount = (projectId) => api.get(`/pmanager/${projectId}/employees/count`);
 
-export const getEmployeeCount = (projectId) =>
-  api.get("http://localhost:8080/pmanager/" + projectId + "/employees/count");
-
-export const getTaskCount = (projectId) =>
-  api.get("http://localhost:8080/pmanager/" + projectId + "/task/count");
+export const getTaskCount = (projectId) => api.get(`/pmanager/${projectId}/task/count`);
 
 /** AUTHENTICATION CHECKER */
 class AuthService {

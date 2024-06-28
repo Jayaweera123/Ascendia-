@@ -451,5 +451,17 @@ public class UserServiceImpl implements UserService {
         //return userRepository.findByAvailabilityTrueAndDesignations(designations);
         List<User> users = userRepository.findByAvailabilityTrueAndDesignations(designations);
         return users.stream().map(UserMapper::mapToUserDto).collect(Collectors.toList());
+
+    }
+
+
+    //Ravindu
+    @Override
+    public List<UserDto> getAllAvailableProjectManagers() {
+        List<String> designations = List.of("Project Manager");
+        //return userRepository.findByAvailabilityTrueAndDesignations(designations);
+        List<User> users = userRepository.findByAvailabilityTrueAndDesignations(designations);
+        return users.stream().map(UserMapper::mapToUserDto).collect(Collectors.toList());
+
     }
 }

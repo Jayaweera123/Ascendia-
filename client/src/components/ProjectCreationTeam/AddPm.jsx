@@ -4,7 +4,7 @@ import {
   addAssignment,
 } from "../../services/EmployeeService";
 import { getProjectById } from "../../services/ProjectService";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
 function AddPm() {
@@ -17,7 +17,8 @@ function AddPm() {
   const [selectedCount, setSelectedCount] = useState(0);
   const [selectedDesignation, setSelectedDesignation] = useState("all");
 
-  const projectId = 1; // Assuming projectId is 1 for example purposes
+  const { projectId } = useParams(); // Get the projectId from the URL
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userId = localStorage.getItem("userID");
@@ -51,8 +52,6 @@ function AddPm() {
       });
   }, []);
 
-  const navigate = useNavigate();
-
   const handleCancel = () => {
     navigate("/project/" + projectId + "/employee");
   };
@@ -82,20 +81,7 @@ function AddPm() {
       assignmentStatus: "Active",
     };
 
-    addAssignment(assignment)
-      .then((response) => {
-        Swal.fire({
-          icon: "success",
-          title: "Success!",
-          text: `${selectedCount} employees added to the project`,
-        });
-      })
-      .then(() => {
-        navigate("/project/" + projectId + "/employee");
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    return addAssignment(assignment);
   };
 
   const handleSubmit = (e) => {
@@ -111,10 +97,21 @@ function AddPm() {
         if (result.isConfirmed) {
           Promise.all(selectedEmployees.map(saveNewAssignment))
             .then(() => {
-              // Success handling
+              Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: `${selectedCount} employees added to the project`,
+              }).then(() => {
+                navigate("/project/" + projectId + "/employee");
+              });
             })
             .catch((error) => {
               console.error(error);
+              Swal.fire({
+                icon: "error",
+                title: "Error!",
+                text: "Failed to add employees to the project",
+              });
             });
         }
       });
@@ -140,127 +137,77 @@ function AddPm() {
 
   return (
     <>
-      <section className="flex justify-start w-full gap-6 mt-8"> {/* Added margin-top */}
+      <section className="flex justify-start w-full gap-6 mt-8">
         <div className="w-full m-3">
           <div className="max-w-2xl pt-4 pb-4 pl-10 pr-10 mx-auto bg-white rounded-lg shadow-md">
             <form className="space-y-4" onSubmit={handleSubmit}>
-              <div className="flex flex-row gap-3 pt-2 pb-1 mx-auto border-b items-centered border-gray-900/10">
-                <h4 className="text-4xl leading-relaxed font-bold text-left text-[#001b5e]">
-                  Add Employee
-                </h4>
-              </div>
-
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div>
-                  <label
-                    htmlFor="projectName"
-                    className="block text-base font-medium leading-6 text-gray-900"
-                  >
-                    Project:
-                  </label>
-                  <div className="mt-3">
-                    <input
-                      type="text"
-                      name="projectName"
-                      id="projectName"
-                      value={projectName}
-                      onChange={(e) => setProjectName(e.target.value)}
-                      disabled
-                      className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="designation"
-                    className="block text-base font-medium leading-6 text-gray-900"
-                  >
-                    Designation:
-                  </label>
-                  <div className="mt-3">
-                    <select
-                      id="designation"
-                      name="designation"
-                      value={selectedDesignation}
-                      onChange={handleDesignationChange}
-                      className="block w-full rounded-md border-0 p-1.5 h-9 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-400 sm:text-sm sm:leading-6"
-                    >
-                      <option value="all">All</option>
-                      <option value="Site Engineer">Site Engineer</option>
-                      <option value="Technical Officer">Technical Officer</option>
-                      <option value="Supervisor">Supervisor</option>
-                      <option value="Store Keeper">Store Keeper</option>
-                    </select>
-                  </div>
-                </div>
+              <div>
+                <label
+                  htmlFor="projectName"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Project Name
+                </label>
+                <input
+                  id="projectName"
+                  type="text"
+                  className="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                  value={projectName}
+                  disabled
+                />
               </div>
 
               <div>
                 <label
-                  htmlFor="assignedUser"
-                  className="block text-base font-medium leading-6 text-gray-900"
+                  htmlFor="designation"
+                  className="block text-sm font-medium text-gray-700"
                 >
-                  Available Employees:
+                  Designation
                 </label>
-                <div className="mt-3">
-                  <div className="p-0 bg-white border rounded-lg sm:pl-5 sm:py-0 dark:bg-gray-800 dark:border-gray-700">
-                    <div className="flow-root">
-                      <ul
-                        role="list"
-                        className="pr-5 divide-y divide-gray-200 dark:divide-gray-700"
-                        style={{ height: "14.5rem", maxHeight: "14.5rem" }}
-                      >
-                        {filteredEmployees.length === 0 ? (
-                          <li className="py-1 text-center text-gray-500 sm:py-2">
-                            <em>No available employees</em>
-                          </li>
-                        ) : (
-                          filteredEmployees.map((user) => (
-                            <li key={user.userID} className="py-1 sm:py-2">
-                              <div className="flex items-center space-x-4">
-                                <input
-                                  type="checkbox"
-                                  className="w-4 h-4 text-blue-500 form-checkbox"
-                                  onChange={() => handleCheckboxChange(user.userID)}
-                                  checked={selectedEmployees.includes(user.userID)}
-                                />
-                                <div className="flex-shrink-0">
-                                  <img
-                                    className="w-8 h-8 rounded-full"
-                                    src={
-                                      user.profilePicUrl
-                                        ? `http://localhost:8080/${user.profilePicUrl.replace(
-                                            /\\/g,
-                                            "/"
-                                          )}`
-                                        : ""
-                                    }
-                                    alt={`${user.firstName} ${user.lastName}`}
-                                  />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                    {`${user.firstName} ${user.lastName}`}
-                                  </p>
-                                  <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                                    {user.designation}
-                                  </p>
-                                </div>
-                              </div>
-                            </li>
-                          ))
-                        )}
-                      </ul>
+                <select
+                  id="designation"
+                  className="block w-full mt-1 text-sm border-gray-300 rounded-md shadow-sm focus:border-gray-500 focus:ring-gray-500"
+                  value={selectedDesignation}
+                  onChange={handleDesignationChange}
+                >
+                  <option value="all">All</option>
+                  <option value="Role1">Role 1</option>
+                  <option value="Role2">Role 2</option>
+                  {/* Add more roles as needed */}
+                </select>
+              </div>
+
+              {message && (
+                <div className="p-4 mt-4 text-sm text-red-700 bg-red-100 rounded-lg">
+                  {message}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Available Employees
+                </label>
+                <div className="overflow-y-auto max-h-60">
+                  {filteredEmployees.map((user) => (
+                    <div key={user.userID} className="flex items-center">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 text-gray-800 border-gray-300 rounded focus:ring-gray-500"
+                        onChange={() => handleCheckboxChange(user.userID)}
+                        checked={selectedEmployees.includes(user.userID)}
+                      />
+                      <span className="ml-2 text-sm text-gray-700">
+                        {user.name} - {user.designation}
+                      </span>
                     </div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-x-6">
+              <div className="flex justify-end gap-4">
                 <button
                   type="button"
-                  className="text-sm font-semibold leading-6 text-gray-900"
+                  className="px-4 py-2 text-sm font-semibold text-gray-700 transition-colors duration-300 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
                   onClick={handleCancel}
                 >
                   Cancel

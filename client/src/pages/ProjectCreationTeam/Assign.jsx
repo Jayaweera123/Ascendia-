@@ -1,24 +1,26 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import TopNavigation from "../../components/TopNavigation";
 import SideNavigationPCTeam from "../../components/ProjectCreationTeam/SideNavigationPCTeam";
 import AddPm from "../../components/ProjectCreationTeam/AddPm";
 
 const Assign = () => {
-    const [open, setOpen] = useState(true);
-  
-    return (
-      <div>
-        <TopNavigation />
-        <section className="flex">
-          <SideNavigationPCTeam open={open} setOpen={setOpen} />
-          <div className="flex flex-col w-full">
-            <div className="flex justify-start mt-8"> {/* Added margin-top */}
-              <AddPm />
-            </div>
+  const { projectId } = useParams();
+  const [open, setOpen] = useState(true);
+
+  return (
+    <div>
+      <TopNavigation />
+      <section className="flex">
+        <SideNavigationPCTeam open={open} setOpen={setOpen} />
+        <div className="flex flex-col w-full">
+          <div className="flex justify-start mt-8">
+            <AddPm projectId={projectId} />
           </div>
-        </section>
-      </div>
-    );
-  };
-  
-  export default Assign;
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Assign;
