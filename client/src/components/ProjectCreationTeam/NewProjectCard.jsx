@@ -4,6 +4,7 @@ import { getAllProjectCards, deactivateProjectById } from "../../services/Projec
 import { MdEdit, MdDelete, MdPerson } from "react-icons/md";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const NewProjectCard = () => {
   const [projects, setProjects] = useState([]);
@@ -17,7 +18,6 @@ const NewProjectCard = () => {
       })
       .catch((error) => {
         console.error("Error fetching project cards:", error);
-        // Display an error message to the user
         Swal.fire("Error", "Failed to fetch project cards. Please try again.", "error");
       });
   }, []);
@@ -58,6 +58,11 @@ const NewProjectCard = () => {
     navigate(`/project/update/${projectId}`);
   };
   
+
+  const handleAssignEmployee = (projectId) => {
+    navigate(`/project/assign/${projectId}`);
+  };
+
   if (projects.length === 0) {
     return <div className="mt-10 text-center">No projects available.</div>;
   }
@@ -74,7 +79,6 @@ const NewProjectCard = () => {
                     key={project.projectId}
                     className="mb-6 transition-transform duration-300 transform bg-white rounded-lg shadow-lg hover:scale-105 hover:shadow-xl"
                   >
-                    {/* Project Image */}
                     <img
                       className="object-cover w-full h-48 rounded-t-lg"
                       src={
@@ -108,6 +112,7 @@ const NewProjectCard = () => {
                           <MdPerson
                             className="mr-2 text-green-500 cursor-pointer"
                             size={20}
+                            onClick={() => handleAssignEmployee(project.projectId)}
                           />
                           <MdEdit
                             className="mr-2 text-blue-800 cursor-pointer"
@@ -141,20 +146,19 @@ const NewProjectCard = () => {
           </main>
         </div>
       </div>
-      {/* Style tag for embedding CSS */}
       <style>{`
         .status-label-completed {
-          background-color: #34d399; /* Green color for completed projects */
+          background-color: #34d399;
           color: #ffffff;
         }
 
         .status-label-ongoing {
-          background-color: #60a5fa; /* Blue color for ongoing projects */
+          background-color: #60a5fa;
           color: #ffffff;
         }
 
         .status-label-upcoming {
-          background-color: #fcd34d; /* Yellow color for upcoming projects */
+          background-color: #fcd34d;
           color: #ffffff;
         }
 
@@ -166,12 +170,12 @@ const NewProjectCard = () => {
         }
 
         .badge-green {
-          background-color: #34d399; /* Green badge for createdDate */
+          background-color: #34d399;
           color: #ffffff;
         }
 
         .badge-red {
-          background-color: #f87171; /* Red badge for endDate */
+          background-color: #f87171;
           color: #ffffff;
         }
 

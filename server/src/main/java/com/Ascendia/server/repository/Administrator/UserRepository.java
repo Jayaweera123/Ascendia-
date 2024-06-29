@@ -31,6 +31,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //Nethuni
     @Query("SELECT u FROM User u WHERE u.availability = true AND u.designation IN (:designations)")
     List<User> findByAvailabilityTrueAndDesignations(@Param("designations") List<String> designations);
+    
 }
 
 

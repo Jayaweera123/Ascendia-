@@ -1,26 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { FaFilter } from "react-icons/fa";
-import { RiUserSearchLine } from "react-icons/ri";
-import { MdOutlinePersonSearch } from "react-icons/md";
-import { IoSearch } from "react-icons/io5";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import Swal from "sweetalert2";
+import SearchBar from "../../components/ProjectManager/SearchBar";
+import PageTitle from "../../components/ProjectManager/PageTitle"; // Import the PageTitle component
+import PreviousEmployeesButton from "../../components/ProjectManager/PreviousEmployeesButton"; // Import the PreviousEmployeesButton component
 import {
   getAllEmployeesForProject,
   deleteAssignment,
   searchAssignment,
 } from "../../services/EmployeeService";
-import { RiDeleteBin6Line } from "react-icons/ri";
-
-import Swal from "sweetalert2";
-import SearchBar from "../../components/ProjectManager/SearchBar";
 
 function PmCopy({ projectId }) {
   const [employees, setEmployees] = useState([]);
   const [selectedDesignation, setSelectedDesignation] = useState("all");
   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  //Get employees details
   useEffect(() => {
-    // Fetch employees for the project when projectId changes
     getAllEmployeesForProject(projectId)
       .then((response) => {
         setEmployees(response.data);
@@ -31,19 +27,16 @@ function PmCopy({ projectId }) {
       });
   }, [projectId]);
 
-  //format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = { year: "numeric", month: "long", day: "numeric" };
     return date.toLocaleDateString("en-US", options);
   };
 
-  //select employees based on designation
   const handleDesignationChange = (e) => {
     setSelectedDesignation(e.target.value);
   };
 
-  //filter selected employees
   const filteredEmployees =
     selectedDesignation === "all"
       ? employees
@@ -52,8 +45,7 @@ function PmCopy({ projectId }) {
             employee.assignedUser.designation === selectedDesignation
         );
 
-  //remove employees
-  function removeEmployee(id) {
+  const removeEmployee = (id) => {
     deleteAssignment(id)
       .then(() => {
         Swal.fire({
@@ -69,38 +61,30 @@ function PmCopy({ projectId }) {
       .catch((error) => {
         console.error(error);
       });
-  }
+  };
 
-  //popups
-  function popUpWarning(id) {
+  const popUpWarning = (id) => {
     Swal.fire({
       icon: "warning",
       title: "Warning!",
       text: "Are you sure? You won't be able to revert this!",
       showCancelButton: true,
-    })
-      .then((result) => {
-        if (result.isConfirmed) {
-          // If the user clicks "OK", call removeTask function
-          removeEmployee(id);
-        } else {
-          // If the user clicks "Cancel" or closes the modal without confirming, do nothing
-          console.log("Employee Removal canceled");
-        }
-      })
-      .then(() => {});
-  }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        removeEmployee(id);
+      } else {
+        console.log("Employee Removal canceled");
+      }
+    });
+  };
 
-  //Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 4;
+  const recordsPerPage = 3;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
   const records = filteredEmployees.slice(firstIndex, lastIndex);
   const numberOfPages = Math.ceil(filteredEmployees.length / recordsPerPage);
   const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
 
-  //Pagination
   const prePage = () => {
     if (currentPage !== 1) {
       setCurrentPage(currentPage - 1);
@@ -117,7 +101,6 @@ function PmCopy({ projectId }) {
     }
   };
 
-  //Search employee
   useEffect(() => {
     if (search !== "") {
       searchAssignment(projectId, search)
@@ -128,7 +111,6 @@ function PmCopy({ projectId }) {
           console.error("There was an error!", error);
         });
     } else {
-      //if search is empty fetch all employees
       getAllEmployeesForProject(projectId)
         .then((response) => {
           setEmployees(response.data);
@@ -140,164 +122,164 @@ function PmCopy({ projectId }) {
   }, [search]);
 
   return (
-    <div>
-      <div className="bg-white rounded-md shadow-md p-7">
-        <div className="flex items-center justify-between pb-4">
-          <SearchBar search={search} setSearch={setSearch} />
-          <div className="flex items-center ml-4 space-x-4"> {/* Added margin-left */}
-            <div className="relative">
-              <select
-                className="border border-[#101D3F] text-[#101D3F] font-bold py-2 px-4 rounded-md flex items-center"
-                value={selectedDesignation}
-                onChange={handleDesignationChange}
-              >
-                <option value="all">All</option>
-                <option value="Civil Engineer">Site Engineer</option>
-                <option value="Technical Officer">Technical Officer</option>
-                <option value="Supervisor">Supervisor</option>
-                <option value="Store Keeper">Store Keeper</option>
-              </select>
-            </div>
-
-            <button
-              className="flex items-center px-4 h-10 py-2 mr-4 text-xl font-semibold text-white bg-[#101d3f] rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            ></button>
-          </div>
-        </div>
-
-        <div>
-          <div className="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8">
-            <div className="inline-block min-w-full overflow-hidden rounded-lg shadow">
-              {filteredEmployees.length === 0 ? (
-                <p className="py-1 text-center text-gray-500 sm:py-2">
-                  <em>No Employees </em>
-                </p>
-              ) : (
-                <table className="min-w-full leading-normal">
-                  <thead>
-                    <tr>
-                      <th className="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
-                        Name
-                      </th>
-                      <th className="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
-                        Department
-                      </th>
-                      <th className="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
-                        Contact
-                      </th>
-                      <th className="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
-                        Added on
-                      </th>
-                      <th className="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
-                        Status
-                      </th>
-                      <th className="text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {records.map((employee) => (
-                      <tr key={employee.id}>
-                        <td className="px-5 py-4 text-sm bg-white border-b border-gray-200">
-                          <div className="flex items-center">
-                            <div className="flex-shrink-0 w-10 h-10">
-                              <img
-                                className="w-full h-full rounded-full"
-                                src={
-                                  employee.assignedUser.profilePicUrl
-                                    ? `http://localhost:8080/${employee.assignedUser.profilePicUrl.replace(
-                                        /\\/g,
-                                        "/"
-                                      )}`
-                                    : ""
-                                } //"https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80"
-                                alt=""
-                              />
-                            </div>
-                            <div className="ml-3">
-                              <p className="text-gray-900 whitespace-no-wrap">
-                                {employee.assignedUser.firstName}{" "}
-                                {employee.assignedUser.lastName}
-                              </p>
-                              <p className="text-xs text-gray-600 whitespace-no-wrap">
-                                {employee.assignedUser.designation}{" "}
-                              </p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                          <p className="text-gray-900 whitespace-no-wrap">
-                            {" "}
-                            {employee.assignedUser.department}
-                          </p>
-                        </td>
-                        <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                          <p className="text-gray-900 whitespace-no-wrap">
-                            {" "}
-                            {employee.assignedUser.contact}
-                          </p>
-                        </td>
-                        <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                          <p className="text-gray-900 whitespace-no-wrap">
-                            {" "}
-                            {formatDate(employee.assignedUser.createdAt)}
-                          </p>
-                        </td>
-                        <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
-                          <span className="relative inline-block px-3 py-1 font-semibold leading-tight text-green-900">
-                            <span
-                              aria-hidden="true"
-                              className="absolute inset-0 bg-green-200 rounded-full opacity-50"
-                            ></span>
-                            <span className="relative">
-                              {employee.assignedUser.status}
-                            </span>
-                          </span>
-                        </td>
-                        <td className="px-5 py-5 text-sm text-right bg-white border-b border-gray-200">
-                          <button
-                            onClick={() => popUpWarning(employee.id)}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            <RiDeleteBin6Line />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center justify-between px-5 py-5 bg-white border-t xs:justify-end">
-          <div className="flex justify-start">
-            <button
-              className="px-3 py-2 mr-2 text-sm font-medium text-gray-800 bg-gray-300 border border-gray-300 rounded-lg hover:bg-gray-400"
-              onClick={prePage}
+    <div className="w-full max-w-6xl p-10 mx-auto text-lg bg-white rounded-md shadow-md"> {/* Increased padding and width */}
+     {/*  <PageTitle title="Project Manager Assignments" /> {/* Add the PageTitle component */}
+      <div className="flex items-center justify-between pb-4">
+        <SearchBar search={search} setSearch={setSearch} />
+        <div className="flex items-center ml-4 space-x-4">
+          <div className="relative flex items-center">
+            <select
+              className="border border-[#101D3F] text-[#101D3F] font-bold py-2 px-4 rounded-md"
+              value={selectedDesignation}
+              onChange={handleDesignationChange}
             >
-              Previous
+              <option value="all">All</option>
+              <option value="Civil Engineer">Project Manager</option>
+              <option value="Technical Officer">General Manager</option>
+            </select>
+            <button
+              className="px-4 py-2 ml-4 font-bold text-white bg-blue-500 rounded-md hover:bg-blue-700"
+              onClick={() => alert('Add button clicked')}
+            >
+              Add
             </button>
-            {numbers.map((n, i) => (
+          </div>
+        </div>
+      </div>
+      {/* <PreviousEmployeesButton projectId={projectId} /> {/* Add the PreviousEmployeesButton component */}
+      <div className="mt-8 overflow-x-auto"> {/* Add some margin top */}
+        <table className="min-w-full leading-normal">
+          <thead>
+            <tr>
+              <th className="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                Name
+              </th>
+              <th className="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                Department
+              </th>
+              <th className="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                Contact
+              </th>
+              <th className="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                Added on
+              </th>
+              <th className="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200">
+                Status
+              </th>
+              <th className="px-5 py-3 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {records.length === 0 ? (
+              <tr>
+                <td colSpan="6" className="py-4 text-center">
+                  <em>No Employees</em>
+                </td>
+              </tr>
+            ) : (
+              records.map((employee) => (
+                <tr key={employee.id}>
+                  <td className="px-5 py-4 text-sm bg-white border-b border-gray-200">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0 w-10 h-10">
+                        <img
+                          className="w-full h-full rounded-full"
+                          src={
+                            employee.assignedUser.profilePicUrl
+                              ? `http://localhost:8080/${employee.assignedUser.profilePicUrl.replace(
+                                  /\\/g,
+                                  "/"
+                                )}`
+                              : ""
+                          }
+                          alt=""
+                        />
+                      </div>
+                      <div className="ml-3">
+                        <p className="text-gray-900 whitespace-no-wrap">
+                          {employee.assignedUser.firstName}{" "}
+                          {employee.assignedUser.lastName}
+                        </p>
+                        <p className="text-xs text-gray-600 whitespace-no-wrap">
+                          {employee.assignedUser.designation}
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                    <p className="text-gray-900 whitespace-no-wrap">
+                      {employee.assignedUser.department}
+                    </p>
+                  </td>
+                  <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                    <p className="text-gray-900 whitespace-no-wrap">
+                      {employee.assignedUser.contact}
+                    </p>
+                  </td>
+                  <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                    <p className="text-gray-900 whitespace-no-wrap">
+                      {formatDate(employee.assignedUser.createdAt)}
+                    </p>
+                  </td>
+                  <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                    <p className="text-gray-900 whitespace-no-wrap">
+                      {employee.assignedUser.status}
+                    </p>
+                  </td>
+                  <td className="px-5 py-5 text-sm bg-white border-b border-gray-200">
+                    <button
+                      className="text-red-500 hover:text-red-700"
+                      onClick={() => popUpWarning(employee.id)}
+                    >
+                      <RiDeleteBin6Line size={20} />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="flex items-center justify-between mt-4">
+        <nav>
+          <ul className="flex">
+            <li>
               <button
-                key={i}
-                className={`px-3 py-2 mr-2 text-sm font-medium border rounded-lg ${
-                  currentPage === n
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+                className={`px-4 py-2 mx-1 text-gray-500 border rounded-md ${
+                  currentPage === 1 ? "cursor-not-allowed" : ""
                 }`}
-                onClick={() => changeCurrentPage(n)}
+                onClick={prePage}
+                disabled={currentPage === 1}
               >
-                {n}
+                Prev
               </button>
+            </li>
+            {numbers.map((num) => (
+              <li key={num}>
+                <button
+                  className={`px-4 py-2 mx-1 text-gray-500 border rounded-md ${
+                    currentPage === num ? "bg-gray-200" : ""
+                  }`}
+                  onClick={() => changeCurrentPage(num)}
+                >
+                  {num}
+                </button>
+              </li>
             ))}
-            <button
-              className="px-3 py-2 text-sm font-medium text-gray-800 bg-gray-300 border border-gray-300 rounded-lg hover:bg-gray-400"
-              onClick={nextPage}
-            >
-              Next
-            </button>
-          </div>
-        </div>
+            <li>
+              <button
+                className={`px-4 py-2 mx-1 text-gray-500 border rounded-md ${
+                  currentPage === numberOfPages ? "cursor-not-allowed" : ""
+                }`}
+                onClick={nextPage}
+                disabled={currentPage === numberOfPages}
+              >
+                Next
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
   );

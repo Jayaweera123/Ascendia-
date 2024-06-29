@@ -42,4 +42,7 @@ public interface UserService {
     //Nethuni
     List<UserDto> getAllAvailableUsers();
 
+    //Ravindu
+    List<UserDto> getAllAvailableProjectManagers();
+
 }

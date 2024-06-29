@@ -139,4 +139,12 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
+
+    //Ravindu - Get All available Project Managers
+    @GetMapping("/project/available/allprojectmanagers")
+    public ResponseEntity<List<UserDto>> getAllAvailableProjectManagers(){
+        List<UserDto> users = userService.getAllAvailableProjectManagers();
+        return ResponseEntity.ok(users);
+    }
+
 }
