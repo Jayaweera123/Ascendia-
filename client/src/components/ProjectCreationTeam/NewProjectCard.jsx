@@ -4,7 +4,6 @@ import { getAllProjectCards, deactivateProjectById } from "../../services/Projec
 import { MdEdit, MdDelete, MdPerson } from "react-icons/md";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const NewProjectCard = () => {
   const [projects, setProjects] = useState([]);
@@ -25,7 +24,6 @@ const NewProjectCard = () => {
   const handleDeactivate = (projectId) => {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'You will not be able to recover this project!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
