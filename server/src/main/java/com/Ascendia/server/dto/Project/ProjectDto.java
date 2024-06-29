@@ -26,4 +26,12 @@ public class ProjectDto {
     private LocalDate endDate;
     private String image;
     private User projectManager;
+
+
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String profilePicUrl;
+
+
 }

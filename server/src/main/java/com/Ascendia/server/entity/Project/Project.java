@@ -48,6 +48,12 @@ public class Project {
     @Column(name = "progress", nullable = false)
     private double progress; // New field for project progress
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userID")
+    private User user;
+
+
+
     public Project(String projectName, String projectType, String projectDescription, String projectStatus, LocalDate createdDate, LocalDate endDate, String image, User ProjectManager, double progress) {
         this.projectName = projectName;
         this.projectType = projectType;

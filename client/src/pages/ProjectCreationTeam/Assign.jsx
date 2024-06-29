@@ -13,8 +13,8 @@ const Assign = () => {
       <TopNavigation />
       <section className="flex">
         <SideNavigationPCTeam open={open} setOpen={setOpen} />
-        <div className="flex flex-col w-full">
-          <div className="flex justify-start mt-8">
+        <div className="flex flex-col w-full p-8">
+          <div className="flex justify-center">
             <AddPm projectId={projectId} />
           </div>
         </div>
