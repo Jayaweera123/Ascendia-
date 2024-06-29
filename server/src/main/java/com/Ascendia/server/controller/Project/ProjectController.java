@@ -30,25 +30,31 @@ public class ProjectController {
 
     @PostMapping("/project/createProject")
     public ResponseEntity<ProjectDto> createProject(@ModelAttribute ProjectDto projectDto,
-                                                    @RequestParam("profileImage") MultipartFile profileImage){
-        ProjectDto savedProject = projectService.createProject(projectDto, profileImage);
+                                                    @RequestParam("profileImage") MultipartFile profileImage,
+                                                    @RequestParam("clientFirstName") String clientFirstName,
+                                                    @RequestParam("clientLastName") String clientLastName,
+                                                    @RequestParam("consultantFirstName") String consultantFirstName,
+                                                    @RequestParam("consultantLastName") String consultantLastName){
+        ProjectDto savedProject = projectService.createProject(projectDto, profileImage, clientFirstName, clientLastName, consultantFirstName, consultantLastName);
         return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
     }
 
     @GetMapping("/project/all")
-    public ResponseEntity<List<ProjectGetDto>>  getAllProjects() {
-        List<ProjectGetDto> projects = projectService.getAllProjects();
+    public ResponseEntity<List<ProjectDto>>  getAllProjects() {
+        List<ProjectDto> projects = projectService.getAllProjects();
         return ResponseEntity.ok(projects);
     }
 
     @DeleteMapping("/project/{projectId}")
-    public ResponseEntity<String> deleteProjectById(@PathVariable Long projectId, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<String> deactivateProjectById(@PathVariable Long projectId, @RequestHeader("Authorization") String token) {
         // Your logic to verify the token if needed
         try {
-            projectService.deleteProjectById(projectId);
-            return ResponseEntity.ok("Successfully deleted");
+            projectService.deactivateProjectById(projectId);
+            return ResponseEntity.ok("Project successfully deactivated");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid ID");
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized access");
         }
     }
 

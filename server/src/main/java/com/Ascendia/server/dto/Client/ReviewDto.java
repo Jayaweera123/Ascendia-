@@ -18,6 +18,7 @@ public class ReviewDto {
     private String reviewTitle;
     private String reviewContent;
     private LocalDate reviewedDate;
+    private Long projectId;
 
     private String firstName;
     private String lastName;

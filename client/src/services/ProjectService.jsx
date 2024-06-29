@@ -52,7 +52,8 @@ const handleError = (error) => {
 
 export const getAllProjectCards = () => api.get(REST_API_BASE_URL + "/project/all");
 
-export const deleteProjectById = (projectId) => api.delete(`${REST_API_BASE_URL}/project/${projectId}`);
+export const deactivateProjectById = (projectId) => api.delete(`/project/${projectId}`);
+
 {
   /*Nethuni*/
 }

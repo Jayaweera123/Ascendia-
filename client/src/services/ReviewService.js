@@ -40,13 +40,13 @@ class ReviewService {
         return !!token;
     }
 
-    static isCreview() {
+    static isClient() {
         const designation = localStorage.getItem('designation');
         return designation === 'Client' || designation === 'Consultant';
     }
 
-    static creviewOnly() {
-        return this.isAuthenticated() && this.isCreview();
+    static clientOnly() {
+        return this.isAuthenticated() && this.isClient();
     }
 
 }

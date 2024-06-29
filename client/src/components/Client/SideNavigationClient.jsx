@@ -10,27 +10,40 @@ import { TbTimelineEventExclamation } from "react-icons/tb";
 import { GiProgression } from "react-icons/gi";
 import { PiFilesFill } from "react-icons/pi";
 import UserService from "../../services/UserService";
+import ReviewService from "../../services/ReviewService";
 import { TbLogout } from "react-icons/tb";
+import Swal from "sweetalert2";
+import 'sweetalert2/src/sweetalert2.scss'; 
 
 const SideNavigationClient = () => {
   const navigate = useNavigate();
-  const isAuthenticated = UserService.isAuthenticated();
-  const isAdmin = UserService.isAdmin();
+  const isAuthenticated = ReviewService.isAuthenticated();
+  const isClient = ReviewService.isClient();
 
   const handleLogout = () => {
-    const confirmDelete = window.confirm('Are you sure you want to logout this user?');
-    if (confirmDelete) {
-      UserService.logout();
-      navigate('/');  // Redirect to login page after logout
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will be logged out!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, logout!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        UserService.logout();
+        navigate('/');  // Redirect to login page after logout
+        Swal.fire('Logged out!', 'You have been logged out.', 'success');
+      }
+    });
   };
+  
 
   const menus = [
     
-    { name: "Dashboard", link: "/client/dashboard", icon: MdOutlineDashboard },
+    { name: "Dashboard", link: "/client/dashboard", icon: MdOutlineDashboard, condition: isClient },
     { name: "Project Progress", link: "/progress", icon: GiProgression, margin: true },
     { name: "Reviews", link: "/reviews", icon: PiFilesFill },
-    { name: "Add Review", link: "/addreview", icon: MdOutlineRateReview },
+    { name: "Add Review", link: "/addreview", icon: MdOutlineRateReview, condition: isClient},
     { name: "Logout", link: "#", icon: TbLogout, action: handleLogout },
   ];
   const [open, setOpen] = useState(true);

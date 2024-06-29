@@ -1,6 +1,7 @@
 package com.Ascendia.server.service.Administrator.impl;
 
 import com.Ascendia.server.repository.Project.ProjectRepository;
+import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
 import com.Ascendia.server.service.Administrator.JWTUtils;
 import com.Ascendia.server.service.Administrator.UserService;
@@ -161,8 +162,25 @@ public class UserServiceImpl implements UserService {
             user.setOnlineStatus(true);
             userRepository.save(user);
 
-            // Fetch the projects the user is engaged with
-            List<Long> projectIds = userProjectAssignmentRepository.findProjectIdsByUserId(user.getUserID());
+            // Fetch project IDs for clients
+            List<Project> clientProjects = projectRepository.findProjectsByClient(user);
+            List<Long> clientProjectIds = clientProjects.stream().map(Project::getProjectId).collect(Collectors.toList());
+
+            List<Project> consultantProjects = projectRepository.findProjectsByConsultant(user);
+            List<Long> consultantProjectIds = consultantProjects.stream().map(Project::getProjectId).collect(Collectors.toList());
+
+            // Fetch project IDs for other roles (e.g., site engineers, store keepers)
+            List<Long> userRoleProjectIds = userProjectAssignmentRepository.findProjectIdsByUserId(user.getUserID());
+
+            // Merge or choose the project IDs based on the user role
+            List<Long> projectIds;
+            if ("CLIENT".equalsIgnoreCase(user.getDesignation())) {
+                projectIds = clientProjectIds;
+            } else if ("CONSULTANT".equalsIgnoreCase(user.getDesignation())) {
+                projectIds = consultantProjectIds;
+            } else {
+                projectIds = userRoleProjectIds;
+            }
 
             // Generate JWT token
             String jwtToken = jwtUtils.generateToken(user, projectIds);

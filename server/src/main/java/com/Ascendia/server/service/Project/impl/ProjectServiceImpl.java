@@ -21,14 +21,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Service;
-
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -40,26 +40,29 @@ import java.nio.file.Paths;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
-
-    @Autowired
-    private  UserProjectAssignmentRepository userProjectAssignmentRepository;
-    @Autowired
-    private JobRepository jobRepository;
-
-    @Autowired
-    private TaskService taskService;// Path to the directory where profile images will be stored
-    @Autowired
-    private UserRepository userRepository;
+    private final UserProjectAssignmentRepository userProjectAssignmentRepository;
+    private final JobRepository jobRepository;
+    private final TaskService taskService;// Path to the directory where profile images will be stored
+    private final UserRepository userRepository;
     private final String uploadDir; // Path to the directory where profile images will be stored
 
     @Autowired
-    public ProjectServiceImpl(ProjectRepository projectRepository, @Value("${user.profile.image.upload-dir}") String uploadDir) {
+    public ProjectServiceImpl(ProjectRepository projectRepository,
+                              UserProjectAssignmentRepository userProjectAssignmentRepository,
+                              JobRepository jobRepository,
+                              TaskService taskService,
+                              UserRepository userRepository,
+                              @Value("${user.profile.image.upload-dir}") String uploadDir) {
         this.projectRepository = projectRepository;
+        this.userProjectAssignmentRepository = userProjectAssignmentRepository;
+        this.jobRepository = jobRepository;
+        this.taskService = taskService;
+        this.userRepository = userRepository;
         this.uploadDir = uploadDir;
     }
 
     @Override
-    public ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage) {
+    public ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage, String clientFirstName, String clientLastName, String consultantFirstName, String consultantLastName) {
         // Check if a profile image is provided
         if (profileImage != null && !profileImage.isEmpty()) {
             try {
@@ -76,25 +79,40 @@ public class ProjectServiceImpl implements ProjectService {
             }
         }
         Project project = ProjectMapper.mapProject(projectDto);
-        project.setCreatedDate(LocalDate.now()); // set the createdDate here
-        Project savedProject = projectRepository.save(project);
+        project.setCreatedDate(LocalDate.now());
 
+        Optional<User> clientOpt = userRepository.findByFirstNameAndLastName(clientFirstName, clientLastName);
+        if (clientOpt.isPresent()) {
+            project.setClient(clientOpt.get());
+        } else {
+            throw new RuntimeException("Client not found");
+        }
+
+        Optional<User> consultantOpt = userRepository.findByFirstNameAndLastName(consultantFirstName, consultantLastName);
+        if (consultantOpt.isPresent()) {
+            project.setConsultant(consultantOpt.get());
+        } else {
+            throw new RuntimeException("Consultant not found");
+        }
+
+        Project savedProject = projectRepository.save(project);
         return ProjectMapper.mapToProjectDto(savedProject);
     }
 
     @Override
-    public List<ProjectGetDto> getAllProjects() {
+    public List<ProjectDto> getAllProjects() {
         List<Project> projects = projectRepository.findAll();
-        return projects.stream().map((project) -> ProjectGetMapper.mapToProjectGetDto(project))
+        return projects.stream().map((project) -> ProjectMapper.mapToProjectDto(project))
                 .collect(Collectors.toList());
 
     }
 
-    public void deleteProjectById(Long projectId) {
+    public void deactivateProjectById(Long projectId) {
         try {
             Project project = projectRepository.findByProjectId(projectId);
             if (project != null) {
-                projectRepository.delete(project);
+                project.setActive(false);
+                projectRepository.save(project);
             } else {
                 throw new IllegalArgumentException("Project with ID " + projectId + " not found");
             }
@@ -102,6 +120,7 @@ public class ProjectServiceImpl implements ProjectService {
             throw new SecurityException("Invalid JWT token", e);
         }
     }
+
 
     @Override
     public ProjectDto updateProjectById(Long projectId, ProjectDto projectDto, MultipartFile profileImage) {

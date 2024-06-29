@@ -73,10 +73,7 @@ const App = () => {
           <Route path="/progress" element={<Progress />} />
           {/* Rashmi - Client */}
           <Route path="/reviews" element={<Reviews />} />
-          <Route path="/sidenavigationclient" element={<SideNavigationClient />} />
-          <Route path="/sidenavigationadmin" element={<SideNavigationAdmin />}/>
-          <Route path="/topNavigationAdmin" element={<TopNavigationAdmin />} />
-          <Route path="/topNavigationClient"element={<TopNavigationClient />}/>
+         
           {/* Check if user is authenticated and admin before rendering admin-only routes */}
           {UserService.adminOnly() && (
             <>
@@ -84,13 +81,17 @@ const App = () => {
               <Route path="/admin/dashboard" element={<DashBoard/>}/>
               <Route path="/admin/userlist" element={<UserList/>}/>
               <Route path="/admin/update/:userID" element={<AddUser/>}/>
+              <Route path="/sidenavigationadmin" element={<SideNavigationAdmin />}/>
+              <Route path="/topNavigationAdmin" element={<TopNavigationAdmin />} />
             </>
           )}
           {/* Rashmi - Client */}
-          {ReviewService.creviewOnly() && (
+          {ReviewService.clientOnly() && (
             <>
               <Route path="/addreview" element={<AddReview />} />
               <Route path="/client/dashboard" element={<ClDashboard />} />
+              <Route path="/sidenavigationclient" element={<SideNavigationClient />} />
+              <Route path="/topNavigationClient"element={<TopNavigationClient />}/>
             </>
           )}
           {/* Ravindu */}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
-import { getAllProjectCards, deleteProjectById } from "../../services/ProjectService.jsx";
+import { getAllProjectCards, deactivateProjectById } from "../../services/ProjectService.jsx";
 import { MdEdit, MdDelete, MdPerson } from "react-icons/md";
 import Swal from "sweetalert2";
 import axios from "axios";
@@ -8,6 +8,7 @@ import axios from "axios";
 const NewProjectCard = () => {
   const [projects, setProjects] = useState([]);
   const navigate = useNavigate(); 
+  const { projectId } = useParams();
 
   useEffect(() => {
     getAllProjectCards()
@@ -21,7 +22,7 @@ const NewProjectCard = () => {
       });
   }, []);
 
-  const handleDelete = (projectId) => {
+  const handleDeactivate = (projectId) => {
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to recover this project!',
@@ -29,29 +30,29 @@ const NewProjectCard = () => {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Yes, deactivate it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteProjectById(projectId)
+        deactivateProjectById(projectId)
           .then(() => {
             Swal.fire(
-              'Deleted!',
-              'Your project has been deleted.',
+              'Deactivated!',
+              'Your project has been deactivated.',
               'success'
             );
             setProjects(projects.filter(project => project.projectId !== projectId));
           })
           .catch((error) => {
-            console.error("Delete error:", error);
+            console.error("Deactivate error:", error);
             Swal.fire(
               'Error!',
-              'Failed to delete the project.',
+              'Failed to deactivate the project.',
               'error'
             );
           });
       }
     });
-  }; 
+  };
   
   const editProject = (projectId) => {
     navigate(`/project/update/${projectId}`);
@@ -116,7 +117,7 @@ const NewProjectCard = () => {
                           <MdDelete
                             className="text-red-600 cursor-pointer"
                             size={20}
-                            onClick={() => handleDelete(project.projectId)}
+                            onClick={() => handleDeactivate(project.projectId)}
                           />
                         </div>
                       </div>

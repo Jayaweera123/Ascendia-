@@ -8,7 +8,12 @@ import { GiProgression } from 'react-icons/gi';
 import { PiProjectorScreenChartBold } from 'react-icons/pi';
 import { GrUserManager } from "react-icons/gr";
 import { TbLogout } from "react-icons/tb";
+import { PiFilesFill } from "react-icons/pi";
 import ProjectService from "../../services/ProjectService";
+import UserService from "../../services/UserService";
+import Swal from "sweetalert2";
+import 'sweetalert2/src/sweetalert2.scss'; 
+
 
 const SideNavigationPCTeam = () => {
   const navigate = useNavigate();
@@ -38,6 +43,7 @@ const SideNavigationPCTeam = () => {
     { name: 'Create Project', link: '/project/addProject', icon: FaRegClipboard, condition: isProject },
     { name: 'Progress', link: '/progress', icon: GiProgression, condition: isProject },
     { name: 'Add Project Manager', link: '/project/pm', icon: GrUserManager, condition: isProject },
+    { name: 'Reviews', link: '/reviews', icon: PiFilesFill },
     { name: "Logout", link: "#", icon: TbLogout, action: handleLogout },
     
     

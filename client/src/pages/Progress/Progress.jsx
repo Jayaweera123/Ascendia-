@@ -1,18 +1,45 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";  
 import { jwtDecode } from 'jwt-decode';
-import SideNavigationClient from "../../components/Client/SideNavigationClient"; // Adjust the path based on your project structure
+import SideNavigationClient from "../../components/Client/SideNavigationClient"; 
+import SideNavigationPCTeam from "../../components/ProjectCreationTeam/SideNavigationPCTeam";
+import SideNavigationPM from "../../components/ProjectManager/SideNavigationPM";
+import SideNavigationStore from "../../components/Store/SideNavigationStore"; 
 import TopNavigationClient from "../../components/Client/TopNavigationClient";
 import progresspark from "../../assets/progresspark.png";
-import { GiProgression } from "react-icons/gi"; // Adjust the path based on your project structure
+import { GiProgression } from "react-icons/gi";
 import RadialProgressBar1 from "../../components/Progress/RadialProgressBar1";
 import RadialProgressBar2 from "../../components/Progress/RadialProgressBar2";
 import RadialProgressBar3 from "../../components/Progress/RadialProgressBar3";
 import RadialProgressBar4 from "../../components/Progress/RadialProgressBar4";
 import RadialProgressBar5 from "../../components/Progress/RadialProgressBar5";
+import UserService from "../../services/UserService";
 
 const Progress = () => {
   const [open, setOpen] = useState(true);
+
+  const [designation, setDesignation] = useState('');
+
+  useEffect(() => {
+    const userDesignation = UserService.getDesignation();
+    setDesignation(userDesignation);
+  }, []);
+
+  const renderSideNavigation = () => {
+    switch (designation) {
+      case 'Store Keeper':
+      case 'Quantity Surveyor':
+        return <SideNavigationStore open={open} setOpen={setOpen} />;
+      case 'Project Manager':
+        return <SideNavigationPM open={open} setOpen={setOpen} />;
+      case 'Project Creation Team':
+        return <SideNavigationPCTeam open={open} setOpen={setOpen} />;
+      default:
+        return <SideNavigationClient open={open} setOpen={setOpen} />;
+    }
+  };
+
+
   const [project, setProject] = useState({
     projectId: '',
     projectName: '',
@@ -65,7 +92,7 @@ const Progress = () => {
     <div>
       <TopNavigationClient />
       <section className="flex">
-        <SideNavigationClient open={open} setOpen={setOpen} />
+        {renderSideNavigation()}
         <div class="relative bg-sky-50 bg-cover h-fit w-screen">
         <div className="m-3 text-xl font-semibold text-gray-900">
         <div className="flex flex-row gap-3 pt-2 pb-1 ml-3 items-centered">

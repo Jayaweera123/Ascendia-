@@ -6,9 +6,12 @@ import com.Ascendia.server.entity.ProjectManager.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface ProjectRepository  extends JpaRepository<Project, Long >{
 
     //List<Project> findByPmId(String pmId);
@@ -24,6 +27,11 @@ public interface ProjectRepository  extends JpaRepository<Project, Long >{
     List<Project> findProjectsByProjectManagerId(@Param("pmId") Long pmId);
 
     List<Project> findProjectsByProjectManager(User projectManager);
+
+    List<Project> findProjectsByClient(User client);
+    List<Project> findProjectsByConsultant(User consultant);
+
+    List<Project> findAllByActiveTrue();
 
     Project findByProjectId(Long projectId);
 

@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from "react";
-import SideNavigationClient from "../../components/Client/SideNavigationClient"; // Adjust the path based on your project structure
+import SideNavigationClient from "../../components/Client/SideNavigationClient"; 
+import SideNavigationPCTeam from "../../components/ProjectCreationTeam/SideNavigationPCTeam";
+import SideNavigationPM from "../../components/ProjectManager/SideNavigationPM";
+import SideNavigationStore from "../../components/Store/SideNavigationStore";
 import TopNavigationClient from "../../components/Client/TopNavigationClient";
 import { MdOutlineRateReview } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import UserService from "../../services/UserService";
 import ReviewService from "../../services/ReviewService";
 import { format } from 'date-fns'; // Import date-fns for formatting dates
 
-const AddReview = () => {
+const Reviews = () => {
   const [open, setOpen] = useState(true);
   const [reviews, setReviews] = useState([]);
   const navigate = useNavigate();
+  const [designation, setDesignation] = useState('');
 
   useEffect(() => {
+    const userDesignation = UserService.getDesignation();
+    setDesignation(userDesignation);
     fetchReviews();
   }, []);
 
@@ -29,11 +36,25 @@ const AddReview = () => {
     }
   };
 
+  const renderSideNavigation = () => {
+    switch (designation) {
+      case 'Store Keeper':
+      case 'Quantity Surveyor':
+        return <SideNavigationStore open={open} setOpen={setOpen} />;
+      case 'Project Manager':
+        return <SideNavigationPM open={open} setOpen={setOpen} />;
+      case 'Project Creation Team':
+        return <SideNavigationPCTeam open={open} setOpen={setOpen} />;
+      default:
+        return <SideNavigationClient open={open} setOpen={setOpen} />;
+    }
+  };
+
   return (
     <div>
       <TopNavigationClient />
       <section className="flex gap-6">
-        <SideNavigationClient open={open} setOpen={setOpen} />
+        {renderSideNavigation()}
         <div className="m-3 text-xl font-semibold text-gray-900">
           <div className="bg-white">
             <div className="px-6 mx-auto max-w-7xl lg:px-8">  
@@ -101,4 +122,4 @@ const AddReview = () => {
   );
 };
 
-export default AddReview;
+export default Reviews;

@@ -4,7 +4,6 @@ import TopNavigation from "../../components/TopNavigation";
 import SideNavigationPCTeam from "../../components/ProjectCreationTeam/SideNavigationPCTeam";
 import { MdAssignmentAdd } from "react-icons/md";
 import { MdEditDocument } from "react-icons/md";
-import { IoPersonAdd } from "react-icons/io5";
 import axios from "axios";
 import Swal from "sweetalert2";
 import * as ProjectService from "../../services/ProjectService";
@@ -23,7 +22,8 @@ const AddProject = () => {
     createdDate: '',
     endDate: '',
     profileImage: null,
-    projectManager: ''
+    clientName: '', 
+    consultantName: '', 
   });
 
   const [errors, setErrors] = useState({
@@ -33,11 +33,13 @@ const AddProject = () => {
     projectStatus: "",
     createdDate: "",
     endDate: "",
-    profileImage: ""
+    profileImage: "",
+    clientName: "",
+    consultantName: "",
   });
 
   useEffect(() => {
-    if (projectId) {
+    if (projectId && projectId !== "undefined") {
       fetchFormDataById(projectId); // Fetch project data if projectId exists
     } else {
       resetFormData();
@@ -48,13 +50,16 @@ const AddProject = () => {
     try {
       const token = localStorage.getItem('token');
       console.log('Token:', token);
+      if (!token) {
+        throw new Error('No token found');
+      }
       const response = await axios.get(`http://localhost:8080/pmanager/${projectId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
   
-      const { projectName, projectType, projectDescription, projectStatus, createdDate, endDate, image, projectManager } = response.data;
+      const { projectName, projectType, projectDescription, projectStatus, createdDate, endDate, image, clientFirstName, clientLastName, consultantFirstName, consultantLastName } = response.data;
       setFormData({
         projectName,
         projectType,
@@ -63,14 +68,29 @@ const AddProject = () => {
         createdDate,
         endDate,
         profileImage: image ? `http://localhost:8080/${image}` : null,
-        projectManager: projectManager ? projectManager.id : ''
+        clientName: `${clientFirstName} ${clientLastName}`,
+        consultantName: `${consultantFirstName} ${consultantLastName}` 
       });
     } catch (error) {
       console.error('Error fetching project data:', error);
+      if (error.response && error.response.status === 403) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Access Forbidden',
+          text: 'You do not have permission to view this project.'
+        }).then(() => {
+          navigate('/projectslist');
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An error occurred while fetching project data.'
+        });
+      }
     }
   };
   
-
   const resetFormData = () => {
     setFormData({
       projectName: '',
@@ -80,16 +100,39 @@ const AddProject = () => {
       createdDate: '',
       endDate: '',
       profileImage: null,
-      projectManager: ''
+      clientName: '',
+      consultantName: '',  
     });
   };
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+      if (name === 'clientName' || name === 'consultantName') {
+          // Split the name into first and last name
+          const [firstName, ...lastNameParts] = value.split(' ');
+          if (name === 'clientName') {
+              setFormData({
+                  ...formData,
+                  clientName: value,
+                  clientFirstName: firstName,
+                  clientLastName: lastNameParts.join(' ')
+              });
+          } else if (name === 'consultantName') {
+              setFormData({
+                  ...formData,
+                  consultantName: value,
+                  consultantFirstName: firstName,
+                  consultantLastName: lastNameParts.join(' ')
+              });
+          }
+      } else {
+          setFormData({
+              ...formData,
+              [name]: value
+          });
+      }
   };
+
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -164,12 +207,6 @@ const AddProject = () => {
     }
   };
   
-  const handleAssignProjectManager = () => {
-    navigate(`/assignPM/${projectId}`, {
-      state: { setProjectManager: (manager) => setFormData({ ...formData, projectManager: manager.id }) },
-    });
-  };
-  
 
   const validateForm = () => {
     let valid = true;
@@ -210,6 +247,20 @@ const AddProject = () => {
     } else {
       errorsCopy.profileImage = '';
     }
+
+    if (!formData.clientName) {
+      errorsCopy.clientName = "Client Name is required";
+      valid = false;
+    } else {
+      errorsCopy.clientName = "";
+    }
+
+    if (!formData.consultantName) {
+      errorsCopy.consultantName = "Consultant Name is required";
+      valid = false;
+    } else {
+      errorsCopy.consultantName = "";
+    }
   
     if (!formData.createdDate) {
       errorsCopy.createdDate = "Start date is required";
@@ -223,6 +274,19 @@ const AddProject = () => {
       valid = false;
     } else {
       errorsCopy.endDate = "";
+    }
+
+    // Check if endDate is after createdDate
+    if (formData.createdDate && formData.endDate) {
+      const createdDate = new Date(formData.createdDate);
+      const endDate = new Date(formData.endDate);
+
+      if (createdDate > endDate) {
+        errorsCopy.endDate = "End date must be after the start date";
+        valid = false;
+      } else {
+        errorsCopy.endDate = "";
+      }
     }
   
     setErrors(errorsCopy);
@@ -255,6 +319,9 @@ const AddProject = () => {
       projectStatus: "",
       createdDate: "",
       endDate: "",
+      profileImage: "",
+      clientName: "",
+      consultantName: "",
     });
   };
 
@@ -326,7 +393,7 @@ const AddProject = () => {
                                   name="projectName"
                                   id="projectName"
                                   autoComplete="given-name"
-                                  maxLength={200}
+                                  maxLength={100}
                                   value={formData.projectName}
                                   onChange={handleChange}
                                   className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -334,7 +401,7 @@ const AddProject = () => {
                                 />
                                 {errors.projectName && <span className="text-red-500">{errors.projectName}</span>}
                                 <p className="mt-1 text-sm text-gray-500">
-                                  Maximum 200 characters
+                                  Maximum 100 characters
                                 </p>
                               </div>
                             </div>
@@ -421,10 +488,62 @@ const AddProject = () => {
                                 </div>
                                 {errors.profileImage && <div className="text-red-500 mt-2">{errors.profileImage}</div>}
                               </div>
+
+                              <div className="mt-8">
+                              <label
+                                htmlFor="clientName"
+                                className="block text-base font-medium leading-6 text-gray-900"
+                              >
+                                Client Name
+                              </label>
+                              <div className="mt-2">
+                                <input
+                                  type="text"
+                                  name="clientName"
+                                  id="clientName"
+                                  autoComplete="given-name"                 
+                                  value={formData.clientName}
+                                  onChange={handleChange}
+                                  className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  required
+                                />
+                                {errors.clientName && (
+                                  <p className="mt-2 text-red-500">
+                                    {errors.clientName}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="mt-8">
+                              <label
+                                htmlFor="consultantName"
+                                className="block text-base font-medium leading-6 text-gray-900"
+                              >
+                                Consultant Name
+                              </label>
+                              <div className="mt-2">
+                                <input
+                                  type="text"
+                                  name="consultantName"
+                                  id="consultantName"
+                                  autoComplete="given-name"                 
+                                  value={formData.consultantName}
+                                  onChange={handleChange}
+                                  className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  required
+                                />
+                                {errors.consultantName && (
+                                  <p className="mt-2 text-red-500">
+                                    {errors.consultantName}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
                             
 
                             
-                              <div className="flex flex-wrap mt-8">
+                            <div className="flex flex-wrap mt-8">
                               <div className="pr-4 sm:w-1/2">
                                 <label
                                   htmlFor="created-date"
@@ -472,18 +591,9 @@ const AddProject = () => {
                                 
                               </div>
                             </div>
+
                             </div>
-                            <div className="mt-16">
-                              <button
-                                onClick={handleAssignProjectManager}
-                                className="flex items-center px-4 h-10 py-2 mr-4 text-xl font-semibold text-white bg-[#101d3f] rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                              >
-                                <span className="mr-2">
-                                  <IoPersonAdd />
-                                </span>
-                                {projectId ? 'Edit Project Manager' : 'Assign Project Manager'}
-                              </button>
-                            </div>
+                            
 
                             <div className="flex items-center justify-center mt-6 mb-5 mr-5 gap-x-6">
                             

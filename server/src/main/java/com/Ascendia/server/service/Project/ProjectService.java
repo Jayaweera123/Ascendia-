@@ -13,11 +13,11 @@ public interface ProjectService {
 
     List<ProjectGetDto> getProjectsForUser(User user);
 
-    ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage);
+    ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage, String clientFirstName, String clientLastName, String consultantFirstName, String consultantLastName);
 
-    List<ProjectGetDto> getAllProjects();
+    List<ProjectDto> getAllProjects();
 
-    void deleteProjectById(Long projectId);
+    void deactivateProjectById(Long projectId);
 
     ProjectDto updateProjectById(Long projectId, ProjectDto projectDto, MultipartFile profileImage);
 

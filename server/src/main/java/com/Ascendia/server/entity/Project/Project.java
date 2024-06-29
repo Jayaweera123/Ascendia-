@@ -45,8 +45,19 @@ public class Project {
     @JoinColumn(name = "pmanager_id", referencedColumnName = "userID")
     private User projectManager;
 
+    @ManyToOne
+    @JoinColumn(name = "client_id", referencedColumnName = "userID")
+    private User client;
+
+    @ManyToOne
+    @JoinColumn(name = "consultant_id", referencedColumnName = "userID")
+    private User consultant;
+
     @Column(name = "progress", nullable = false)
     private double progress; // New field for project progress
+
+    @Column(name = "active", nullable = false)
+    private boolean active = true;
 
     public Project(String projectName, String projectType, String projectDescription, String projectStatus, LocalDate createdDate, LocalDate endDate, String image, User ProjectManager, double progress) {
         this.projectName = projectName;

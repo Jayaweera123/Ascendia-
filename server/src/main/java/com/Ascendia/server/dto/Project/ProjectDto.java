@@ -18,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectDto {
+    private Long projectId;
     private String projectName;
     private String projectType;
     private String projectDescription;
@@ -26,4 +27,9 @@ public class ProjectDto {
     private LocalDate endDate;
     private String image;
     private User projectManager;
+    private String clientFirstName;
+    private String clientLastName;
+    private String consultantFirstName;
+    private String consultantLastName;
+
 }
