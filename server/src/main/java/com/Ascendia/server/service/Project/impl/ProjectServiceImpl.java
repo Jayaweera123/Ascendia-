@@ -1,6 +1,7 @@
 package com.Ascendia.server.service.Project.impl;
 
 import com.Ascendia.server.dto.Project.ProjectDto;
+import com.Ascendia.server.service.Project.SendEmailService;
 import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.exception.Administrator.ResourceNotFoundException;
 import com.Ascendia.server.dto.Project.ProjectGetDto;
@@ -17,6 +18,7 @@ import com.Ascendia.server.service.Project.ProjectService;
 import com.Ascendia.server.service.ProjectManager.TaskService;
 import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final UserProjectAssignmentRepository userProjectAssignmentRepository;
+    private final SendEmailService sendEmailService;
     private final JobRepository jobRepository;
     private final TaskService taskService;// Path to the directory where profile images will be stored
     private final UserRepository userRepository;
@@ -49,12 +52,14 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository,
                               UserProjectAssignmentRepository userProjectAssignmentRepository,
+                              @Qualifier("projectCreationTeamSendEmailServiceImpl") SendEmailService sendEmailService,
                               JobRepository jobRepository,
                               TaskService taskService,
                               UserRepository userRepository,
                               @Value("${user.profile.image.upload-dir}") String uploadDir) {
         this.projectRepository = projectRepository;
         this.userProjectAssignmentRepository = userProjectAssignmentRepository;
+        this.sendEmailService = sendEmailService;
         this.jobRepository = jobRepository;
         this.taskService = taskService;
         this.userRepository = userRepository;
@@ -96,6 +101,24 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         Project savedProject = projectRepository.save(project);
+
+        if (savedProject.getProjectManager() != null) {
+            User projectManager = savedProject.getProjectManager();
+            String subject = "Project Manager Assignment Notification";
+
+            String body = String.format(
+                    "Dear %s %s,<br><br>" +
+                            "You have been assigned as the Project Manager for the project:<br>" +
+                            "<strong>Project:</strong> %s<br><br>" +
+                            "Please review the project details and get ready to lead the team.<br><br>" +
+                            "Best regards,<br><br>" +
+                            "Ascendia Construction Management",
+                    projectManager.getFirstName(), projectManager.getLastName(), savedProject.getProjectName()
+            );
+
+            sendEmailService.sendEmail(projectManager.getEmail(), body, subject);
+        }
+
         return ProjectMapper.mapToProjectDto(savedProject);
     }
 

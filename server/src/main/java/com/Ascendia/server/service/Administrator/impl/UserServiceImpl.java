@@ -5,8 +5,11 @@ import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.repository.ProjectManager.UserProjectAssignmentRepository;
 import com.Ascendia.server.service.Administrator.JWTUtils;
 import com.Ascendia.server.service.Administrator.UserService;
+import com.Ascendia.server.service.Administrator.SendEmailService;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,13 +30,15 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.stream.Collectors;
+import java.io.IOException;
+import java.util.Map;
+
 
 @Service
 @Transactional
@@ -42,7 +47,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final UserProjectAssignmentRepository userProjectAssignmentRepository;
-
+    private final SendEmailService sendEmailService;
     private final JWTUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
@@ -51,10 +56,20 @@ public class UserServiceImpl implements UserService {
 
     private final String uploadDir; // Path to the directory where profile images will be stored
 
+    // Read the frontend URL from application properties or environment variables
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
+    @PostConstruct
+    public void printFrontendUrl() {
+        logger.info("Frontend URL: " + frontendUrl);
+    }
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository,
                            ProjectRepository projectRepository,
                            UserProjectAssignmentRepository userProjectAssignmentRepository,
+                           @Qualifier("administratorSendEmailServiceImpl") SendEmailService sendEmailService,
                            JWTUtils jwtUtils,
                            AuthenticationManager authenticationManager,
                            PasswordEncoder passwordEncoder,
@@ -62,6 +77,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.projectRepository = projectRepository;
         this.userProjectAssignmentRepository = userProjectAssignmentRepository;
+        this.sendEmailService = sendEmailService;
         this.jwtUtils = jwtUtils;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
@@ -97,9 +113,9 @@ public class UserServiceImpl implements UserService {
             String username = generateUsername(userDto.getFirstName(), userDto.getLastName(), userDto.getDepartment(), userDto.getPhoneNumber());
             userDto.setUsername(username);
 
-            // Generate password
-            String password = generatePassword(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(), userDto.getPhoneNumber());
-            userDto.setPassword(passwordEncoder.encode(password));
+            // Generate password and capture the raw password
+            String rawPassword = generatePassword(userDto.getFirstName(), userDto.getLastName(), userDto.getEmail(), userDto.getPhoneNumber());
+            userDto.setPassword(passwordEncoder.encode(rawPassword));
 
             // Set isAvailability based on designation
             String designation = userDto.getDesignation();
@@ -120,6 +136,28 @@ public class UserServiceImpl implements UserService {
 
             User user = UserMapper.mapToUser(userDto);
             User savedUser = userRepository.save(user);
+
+            // Send email notification
+            String subject = "Welcome to Ascendia – Your Account Details";
+
+            String body = String.format(
+                    "Dear %s,<br><br>" +
+                            "Welcome to Ascendia! We are excited to have you join our community. Your account has been successfully created, and you can now access our system using the details below:<br><br>" +
+                            "<strong>Username:</strong> %s<br>" +
+                            "<strong>Password:</strong> %s<br><br>" +
+                            "To get started, please <a href=\"%s\">log in to your account here</a> using your username and password.<br><br>" +
+                            "If you have any questions or need assistance, please feel free to contact our support team at <a href=\"mailto:ascendia.construction.management.administration@gmail.com\">ascendia.construction.management.administration@gmail.com</a>.<br><br>" +
+                            "Welcome once again to Ascendia! We look forward to working with you.<br><br>" +
+                            "Best Regards,<br><br>" +
+                            "The Ascendia Team<br>" +
+                            "Email: <a href=\"mailto:ascendia.construction.management@gmail.com\">ascendia.construction.management@gmail.com</a><br>" +
+                            "Phone: +94 011 7606606<br><br>" +
+                            "Security Notice: For your security, please do not share your login details with anyone. If you receive this email in error, please contact us immediately.",
+                    user.getFirstName(), user.getUsername(), rawPassword, frontendUrl
+            );
+
+            sendEmailService.sendEmail(user.getEmail(), body, subject);
+
             if (savedUser.getUserID() > 0) {
                 userDto1 = UserMapper.mapToUserDto(savedUser);
                 userDto1.setMessage("User Added Successfully");
@@ -286,26 +324,43 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userID)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + userID));
 
-        if (updatedUserDto.getFirstName() != null) {
+        boolean isUpdated = false;
+        Map<String, String> changes = new HashMap<>();
+
+        if (updatedUserDto.getFirstName() != null && !updatedUserDto.getFirstName().equals(user.getFirstName())) {
+            changes.put("First Name", user.getFirstName() + " -> " + updatedUserDto.getFirstName());
             user.setFirstName(updatedUserDto.getFirstName());
+            isUpdated = true;
         }
-        if (updatedUserDto.getLastName() != null) {
+        if (updatedUserDto.getLastName() != null && !updatedUserDto.getLastName().equals(user.getLastName())) {
+            changes.put("Last Name", user.getLastName() + " -> " + updatedUserDto.getLastName());
             user.setLastName(updatedUserDto.getLastName());
+            isUpdated = true;
         }
-        if (updatedUserDto.getEmail() != null) {
+        if (updatedUserDto.getEmail() != null && !updatedUserDto.getEmail().equals(user.getEmail())) {
+            changes.put("Email", user.getEmail() + " -> " + updatedUserDto.getEmail());
             user.setEmail(updatedUserDto.getEmail());
+            isUpdated = true;
         }
-        if (updatedUserDto.getPhoneNumber() != null) {
+        if (updatedUserDto.getPhoneNumber() != null && !updatedUserDto.getPhoneNumber().equals(user.getPhoneNumber())) {
+            changes.put("Phone Number", user.getPhoneNumber() + " -> " + updatedUserDto.getPhoneNumber());
             user.setPhoneNumber(updatedUserDto.getPhoneNumber());
+            isUpdated = true;
         }
-        if (updatedUserDto.getDesignation() != null) {
+        if (updatedUserDto.getDesignation() != null && !updatedUserDto.getDesignation().equals(user.getDesignation())) {
+            changes.put("Designation", user.getDesignation() + " -> " + updatedUserDto.getDesignation());
             user.setDesignation(updatedUserDto.getDesignation());
+            isUpdated = true;
         }
-        if (updatedUserDto.getDepartment() != null) {
+        if (updatedUserDto.getDepartment() != null && !updatedUserDto.getDepartment().equals(user.getDepartment())) {
+            changes.put("Department", user.getDepartment() + " -> " + updatedUserDto.getDepartment());
             user.setDepartment(updatedUserDto.getDepartment());
+            isUpdated = true;
         }
-        if (updatedUserDto.getProfilePicUrl() != null) {
+        if (updatedUserDto.getProfilePicUrl() != null && !updatedUserDto.getProfilePicUrl().equals(user.getProfilePicUrl())) {
+            changes.put("Profile Picture URL", user.getProfilePicUrl() + " -> " + updatedUserDto.getProfilePicUrl());
             user.setProfilePicUrl(updatedUserDto.getProfilePicUrl());
+            isUpdated = true;
         }
 
         // Check if a profile image is provided
@@ -318,15 +373,40 @@ public class UserServiceImpl implements UserService {
                 // Copy the file to the upload path
                 Files.copy(profileImage.getInputStream(), uploadPath, StandardCopyOption.REPLACE_EXISTING);
                 // Set the profile picture URL in the user entity
+                changes.put("Profile Picture URL", user.getProfilePicUrl() + " -> " + uploadPath.toString());
                 user.setProfilePicUrl(uploadPath.toString());
+                isUpdated = true;
             } catch (IOException e) {
                 e.printStackTrace(); // Handle the exception appropriately
             }
         }
 
         User updatedUser = userRepository.save(user);
+
+        // Send email notification if the user was updated
+        if (isUpdated) {
+            StringBuilder bodyBuilder = new StringBuilder();
+            bodyBuilder.append(String.format("Dear %s,<br><br>", user.getFirstName()));
+            bodyBuilder.append("Your account details have been successfully updated. Below are the changes made:<br><br>");
+            bodyBuilder.append("<ul>");
+            for (Map.Entry<String, String> entry : changes.entrySet()) {
+                bodyBuilder.append(String.format("<li><strong>%s:</strong> %s</li>", entry.getKey(), entry.getValue()));
+            }
+            bodyBuilder.append("</ul><br>");
+            bodyBuilder.append("If you have any questions or believe this is a mistake, please contact our support team at <a href=\"mailto:ascendia.construction.management.administration@gmail.com\">ascendia.construction.management.administration@gmail.com</a>.<br><br>");
+            bodyBuilder.append("Best Regards,<br><br>");
+            bodyBuilder.append("The Ascendia Team<br>");
+            bodyBuilder.append("Email: <a href=\"mailto:ascendia.construction.management@gmail.com\">ascendia.construction.management@gmail.com</a><br>");
+            bodyBuilder.append("Phone: +94 011 7606606<br><br>");
+            bodyBuilder.append("Security Notice: If you receive this email in error, please contact us immediately.");
+
+            String subject = "Your Account Details have been Updated";
+            sendEmailService.sendEmail(user.getEmail(), bodyBuilder.toString(), subject);
+        }
+
         return UserMapper.mapToUserDto(updatedUser);
     }
+
 
     {/*public ReqRes getMyInfo(String email){
         ReqRes reqRes = new ReqRes();
@@ -364,6 +444,20 @@ public class UserServiceImpl implements UserService {
 
         // Save the updated user entity
         userRepository.save(user);
+
+        // Send email notification
+        String subject = "Your Account has been Deactivated";
+        String body = String.format(
+                "Dear %s,<br><br>" +
+                        "Your account has been deactivated. If you have any questions or believe this is a mistake, please contact our support team at <a href=\"mailto:ascendia.construction.management.administration@gmail.com\">ascendia.construction.management.administration@gmail.com</a>.<br><br>" +
+                        "Best Regards,<br><br>" +
+                        "The Ascendia Team<br>" +
+                        "Email: <a href=\"mailto:ascendia.construction.management@gmail.com\">ascendia.construction.management@gmail.com</a><br>" +
+                        "Phone: +94 011 7606606<br><br>" +
+                        "Security Notice: If you receive this email in error, please contact us immediately.",
+                user.getFirstName()
+        );
+        sendEmailService.sendEmail(user.getEmail(), body, subject);
     }
 
     @Override
