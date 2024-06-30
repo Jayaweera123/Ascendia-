@@ -24,15 +24,15 @@ const CommentCardPopup = ({ comments }) => {
                   }"
                   alt=""
                 />
-          <div>
+          <div class="text-left">
             <h3 class="text-lg font-semibold">${
               comment.commentedJobUserName
             }</h3>
             <p class="text-sm text-gray-500">${comment.designationJob}</p>
           </div>
         </div>
-        <div class="mb-2">
-         
+
+        <div class="mt-2 mb-2 pl-10 text-left">
           <p class="text-gray-800">${comment.commentJobText}</p>
         </div>
         <div class="text-right text-gray-500 text-sm">
@@ -51,6 +51,12 @@ const CommentCardPopup = ({ comments }) => {
         popup: "swal-wide", // Optional: custom class for wider popup
         title: "my-swal-title",
         confirmButton: "my-swal-confirm-button",
+      },
+      showClass: {
+        popup: "swal2-noanimation", // Custom class to disable animation
+      },
+      hideClass: {
+        popup: "", // Custom class to disable animation
       },
     });
   };

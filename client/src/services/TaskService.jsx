@@ -83,6 +83,21 @@ export const getCommetsForTask = (taskId) =>
 export const getCommentsForJob = (JobId) =>
   api.get("http://localhost:8080/sengineer/comment/job/" + JobId);
 
+//====================  edit history ====================
+
+export const getEditHistoryForTask = (taskId) =>
+  api.get(
+    "http://localhost:8080/pmanageronly/task/" + taskId + "/edit-history"
+  );
+
+//====================== marks as done ====================
+
+export const markAsDone = (taskId) =>
+  api.put("http://localhost:8080/sengineer/" + taskId + "/mark-as-done");
+
+export const markAsUndone = (taskId) =>
+  api.put("http://localhost:8080/pmanageronly/" + taskId + "/mark-as-undone");
+
 /** AUTHENTICATION CHECKER */
 class AuthService {
   // Check if the user is authenticated by verifying if token exists in localStorage
