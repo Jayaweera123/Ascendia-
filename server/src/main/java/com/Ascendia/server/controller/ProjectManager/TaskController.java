@@ -2,6 +2,7 @@ package com.Ascendia.server.controller.ProjectManager;
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.Project.TaskProgressDto;
+import com.Ascendia.server.dto.ProjectManager.TaskUpdateDto;
 import com.Ascendia.server.dto.Store.EquipmentDto;
 import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
@@ -39,7 +40,7 @@ public class TaskController {
     }
 
     @PutMapping("/sengineer/{taskId}/edit")
-    public ResponseEntity<TaskDto> updateTask(@PathVariable Long taskId, @RequestBody TaskDto taskDto) {
+    public ResponseEntity<TaskDto> updateTask(@PathVariable Long taskId, @RequestBody TaskUpdateDto taskDto) {
         // Update the task
         TaskDto updatedTaskDto = taskService.updateTask(taskId, taskDto);
 

@@ -5,6 +5,7 @@ import com.Ascendia.server.dto.ProjectManager.TaskGetDto;
 import com.Ascendia.server.entity.ProjectManager.Task;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class TaskMapper {
     public static TaskDto mapToTaskDto(Task task) {
@@ -37,7 +38,6 @@ public class TaskMapper {
                 taskDto.getPrevStatus(),
                 taskDto.isCompleted(),
                 taskDto.getProject()
-                //ORDER MUST BE THERE AS SAME THE ENTITY CLASS
         );
     }
 
