@@ -1,13 +1,14 @@
 package com.Ascendia.server.service.Project.impl;
 
 import com.Ascendia.server.dto.Project.ProjectDto;
+import com.Ascendia.server.dto.Project.ProjectManagerUpdateDto;
 import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.exception.Administrator.ResourceNotFoundException;
 import com.Ascendia.server.dto.Project.ProjectGetDto;
 import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.mapper.Project.ProjectGetMapper;
+import com.Ascendia.server.mapper.Project.ProjectManagerUpdateMapper;
 import com.Ascendia.server.mapper.Project.ProjectMapper;
-import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.repository.Administrator.UserRepository;
 import com.Ascendia.server.repository.Project.ProjectRepository;
 import com.Ascendia.server.repository.ProjectManager.TaskRepository;
@@ -21,7 +22,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Service;
 import java.nio.file.StandardCopyOption;
@@ -202,6 +202,26 @@ public class ProjectServiceImpl implements ProjectService {
                 .collect(Collectors.toList());
     }
 
+
+    @Override
+    public void updateProjectManager(ProjectManagerUpdateDto projectManagerUpdateDto) {
+        Optional<Project> projectOpt = projectRepository.findById(projectManagerUpdateDto.getProjectId());
+        if (!projectOpt.isPresent()) {
+            throw new RuntimeException("Project not found");
+        }
+
+        Optional<User> userOpt = userRepository.findById(projectManagerUpdateDto.getProjectManagerId());
+        if (!userOpt.isPresent()) {
+            throw new RuntimeException("Project Manager not found");
+        }
+
+        Project project = projectOpt.get();
+        User projectManager = userOpt.get();
+
+        ProjectManagerUpdateMapper.updateProjectManager(project, projectManager);
+        projectRepository.save(project);
+    }
+
     @Override
     public List<ProjectGetDto> getProjectsForUser(User user) {
         List<Project> projects = new ArrayList<>();
@@ -240,6 +260,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public int getTaskCountForProject(Long projectId) {
         return taskRepository.countTasksByProject_ProjectId(projectId);
+
+
     }
 
 }

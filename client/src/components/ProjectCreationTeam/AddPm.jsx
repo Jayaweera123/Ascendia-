@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  getAllAvailableProjectManagers,
   getAllAvailableUsers,
   addAssignment,
 } from "../../services/EmployeeService";
@@ -31,11 +32,11 @@ function AddPm({ projectId }) {
   }, [projectId]);
 
   useEffect(() => {
-    getAllAvailableUsers()
+    getAllAvailableProjectManagers()
       .then((response) => {
         console.log(response.data);
         if (response.data.length === 0) {
-          setMessage("No available employees");
+          setMessage("No available managers");
         } else {
           setMessage("");
           setAvailableUsers(response.data);
@@ -53,14 +54,7 @@ function AddPm({ projectId }) {
   }
 
   const handleCheckboxChange = (userID) => {
-    const index = selectedEmployees.indexOf(userID);
-    if (index === -1) {
-      setSelectedEmployees([...selectedEmployees, userID]);
-      setSelectedCount(selectedCount + 1);
-    } else {
-      setSelectedEmployees(selectedEmployees.filter((id) => id !== userID));
-      setSelectedCount(selectedCount - 1);
-    }
+  setSelectedEmployees(userID);
   };
 
   function saveNewAssignment(userID) {
@@ -298,14 +292,13 @@ function AddPm({ projectId }) {
                                 <li key={user.userID} className="py-1 sm:py-2 ">
                                   <div className="flex items-center space-x-4">
                                     <input
-                                      type="checkbox"
-                                      className="w-4 h-4 text-blue-500 form-checkbox"
-                                      onChange={() =>
+										type="radio"
+										name="selectedEmployee"
+										className="w-4 h-4 text-blue-500 form-radio"
+										onChange={() =>
                                         handleCheckboxChange(user.userID)
                                       }
-                                      checked={selectedEmployees.includes(
-                                        user.userID
-                                      )}
+										checked={selectedEmployees === user.userID}
                                     />
                                     <option value="selected"></option>
 

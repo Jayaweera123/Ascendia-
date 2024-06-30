@@ -1,11 +1,10 @@
 package com.Ascendia.server.service.Project;
 
 import com.Ascendia.server.dto.Project.ProjectDto;
-import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.Project.ProjectGetDto;
 import com.Ascendia.server.entity.Administrator.User;
-import com.Ascendia.server.entity.Project.Project;
 import org.springframework.web.multipart.MultipartFile;
+import com.Ascendia.server.dto.Project.ProjectManagerUpdateDto;
 
 import java.util.List;
 
@@ -43,6 +42,6 @@ public interface ProjectService {
 
     int getTaskCountForProject(Long projectId);
 
-
+    void updateProjectManager(ProjectManagerUpdateDto projectManagerUpdateDto);
 
 }
