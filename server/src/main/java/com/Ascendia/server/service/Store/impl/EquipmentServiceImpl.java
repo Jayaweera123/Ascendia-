@@ -2,12 +2,9 @@ package com.Ascendia.server.service.Store.impl;
 
 import com.Ascendia.server.dto.Store.EquipmentDto;
 import com.Ascendia.server.dto.Store.UpdateEquipmentDto;
-import com.Ascendia.server.dto.Store.UpdateMaterialDto;
 import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.entity.Store.UpdateEquipment;
-import com.Ascendia.server.entity.Store.UpdateMaterial;
 import com.Ascendia.server.mapper.Store.UpdateEquipmentMapper;
-import com.Ascendia.server.mapper.Store.UpdateMaterialMapper;
 import com.Ascendia.server.repository.Store.UpdateEquipmentRepository;
 import com.Ascendia.server.repository.Store.EquipmentRepository;
 import com.Ascendia.server.entity.Store.Equipment;
@@ -39,6 +36,7 @@ public class EquipmentServiceImpl implements EquipmentService {
     @Autowired
     private UpdateEquipmentRepository updateEquipmentRepository;
 
+    //Crate new equipment
     @Override
     public EquipmentDto createEquipment(EquipmentDto equipmentDto) {
 
@@ -53,6 +51,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         return EquipmentMapper.mapToEquipmentDto(savedEquipment);
     }
 
+    //Get equipment by id
     @Override
     public EquipmentDto getEquipmentById(Long equipmentId) {
 
@@ -63,6 +62,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         return EquipmentMapper.mapToEquipmentDto(equipment);
     }
 
+    //Get all equipment by project id
     @Override
     public List<EquipmentDto> getAllEquipment(Long projectId) {
         Project project = projectRepository.findById(projectId)
@@ -75,6 +75,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     }
 
+    //Edit equipment by id
     @Override
     public EquipmentDto editEquipment(Long equipmentId, EquipmentDto editedEquipment) {
         Equipment equipment = equipmentRepository.findById(equipmentId).orElseThrow(
@@ -91,6 +92,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         return EquipmentMapper.mapToEquipmentDto(editedEquipmentObj);
     }
 
+    //Delete equipment by id
     @Override
     public void deleteEquipment(Long equipmentId) {
 
@@ -102,6 +104,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 
     }
 
+    //Search equipment by project id and query
     @Override
     public List<EquipmentDto> searchEquipment(Long projectId, String query) {
         List<Equipment> equipments = equipmentRepository.searchEquipment(projectId, query);
@@ -110,6 +113,7 @@ public class EquipmentServiceImpl implements EquipmentService {
                 .collect(Collectors.toList());
     }
 
+    //Update inventory of equipment
     @Override
     public EquipmentDto updateInventory(Long equipmentId, UpdateEquipmentDto updateEquipmentDto) {
         Equipment equipment = equipmentRepository.findById(equipmentId).orElseThrow(() ->
@@ -144,6 +148,7 @@ public class EquipmentServiceImpl implements EquipmentService {
         return EquipmentMapper.mapToEquipmentDto(equipment);
     }
 
+    //Get all updated equipments
     @Override
     public List<UpdateEquipmentDto> getAllUpdatedEquipments(Long projectId) {
         Project project = projectRepository.findById(projectId)
@@ -154,6 +159,7 @@ public class EquipmentServiceImpl implements EquipmentService {
                 .collect(Collectors.toList());
     }
 
+    //Search updated equipment by project id and query
     @Override
     public List<UpdateEquipmentDto> searchUpdatedEquipment(Long projectId, String query) {
         List<UpdateEquipment> updatedEquipment = updateEquipmentRepository.searchUpdatedEquipment(projectId, query);

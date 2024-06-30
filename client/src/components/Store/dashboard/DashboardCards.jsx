@@ -13,11 +13,12 @@ const DashboardCards = ({givenProjectId}) => {
   const [lowStockMaterialCount, setLowStockMaterialCount] = useState(0);
 
 
+  //Set total number of material count
   useEffect(() => {
     listMaterial(givenProjectId).then((response) => {
-        setMaterial(response.data); // Assuming setMaterial updates the state with the list of materials
+        setMaterial(response.data); 
         console.log('material', material);
-        setMaterialCount(response.data.length); // Assuming you have a state setter named setMaterialCount
+        setMaterialCount(response.data.length);
         console.log('materialCount', materialCount);
     }).catch(error => {
         console.error(error);
@@ -28,11 +29,12 @@ const DashboardCards = ({givenProjectId}) => {
     console.log('Updated materialCount', materialCount);
   }, [materialCount]);
 
+  //Set total number of equipment count
   useEffect(() => {
     listEquipment(givenProjectId).then((response) => {
-        setEquipment(response.data); // Assuming setEquipment updates the state with the list of equipment
+        setEquipment(response.data); 
         console.log('equipment', equipment);
-        setEquipmentCount(response.data.length); // Assuming you have a state setter named setEquipmentCount
+        setEquipmentCount(response.data.length);
         console.log('equipmentCount', equipmentCount);
     }).catch(error => {
         console.error(error);
@@ -43,11 +45,12 @@ const DashboardCards = ({givenProjectId}) => {
     console.log('Updated equipmentCount', equipmentCount);
   }, [equipmentCount]);
 
+  //Set total number of low stock material count
   useEffect(() => {
     getLowStockMaterials(givenProjectId).then((response) => {
-        setLowStockMaterial(response.data); // Assuming setMaterial updates the state with the list of materials
+        setLowStockMaterial(response.data);
         console.log('Low Stock Material', lowStockMaterial);
-        setLowStockMaterialCount(response.data.length); // Assuming you have a state setter named setMaterialCount
+        setLowStockMaterialCount(response.data.length); 
         console.log('LowStockMaterialCount', lowStockMaterialCount);
     }).catch(error => {
         console.error(error);
@@ -62,8 +65,9 @@ const DashboardCards = ({givenProjectId}) => {
 
   return (
     <div>
-      {/*counts.jobCount}, {counts.employeeCount}, {counts.taskCount}*/}
       <div className="grid gap-4 lg:gap-8 md:grid-cols-3">
+
+        {/***************************** Total number of material count card ****************************/}
         <div className="relative p-6 text-gray-700 bg-white rounded-md shadow dark:bg-gray-800">
           <div className="space-y-2">
             <div className="flex items-center space-x-2 text-sm font-medium text-gray-500 rtl:space-x-reverse dark:text-gray-400">
@@ -74,6 +78,8 @@ const DashboardCards = ({givenProjectId}) => {
             </div>
           </div>
         </div>
+
+        {/***************************** Total number of equipment count card ****************************/}
         <div className="relative p-6 text-gray-700 bg-white rounded-md shadow dark:bg-gray-800">
           <div className="space-y-2">
             <div className="flex items-center space-x-2 text-sm font-medium text-gray-500 rtl:space-x-reverse dark:text-gray-400">
@@ -84,6 +90,8 @@ const DashboardCards = ({givenProjectId}) => {
             </div>
           </div>
         </div>
+
+        {/************************** Total number of low stock material count card ***********************/}
         <div className="relative p-6 text-gray-700 bg-white rounded-md shadow dark:bg-gray-800">
           <div className="space-y-2">
             <div className="flex items-center space-x-2 text-sm font-medium text-gray-500 rtl:space-x-reverse dark:text-gray-400">

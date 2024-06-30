@@ -115,12 +115,13 @@ public class MaterialController {
         return ResponseEntity.ok(notifications);
     }
 
+    //Build get all low stock materials REST API
     @GetMapping("/store/material/lowStockMaterials/{projectId}")
     public ResponseEntity<List<MaterialDto>> getLowStockMaterials(@PathVariable Long projectId){
         return ResponseEntity.ok(materialService.getLowStockMaterials(projectId));
     }
 
-    //Build Edit material REST API
+    //Build
     @PutMapping("/skeeperonly/material/notificationSeen/{id}")
     public ResponseEntity<NotificationSeenDto> setNotificationSeen(@PathVariable("id") Long notificationId, @RequestBody NotificationSeenDto notificationSeenData) {
         NotificationSeenDto notificationSeenDto = materialService.setNotificationSeen(notificationId, notificationSeenData);
@@ -128,6 +129,7 @@ public class MaterialController {
 
     }
 
+    //Build mark all notifications as seen REST API
     @PutMapping("/skeeperonly/material/markAllAsSeen/{userId}")
     public ResponseEntity<Void> markAllNotificationsAsSeen(@PathVariable String userId) {
         try {
@@ -138,6 +140,7 @@ public class MaterialController {
         }
     }
 
+    //Build get all unseen notifications REST API
     @GetMapping("/skeeperonly/material/unseenNotifications/{userId}")
     public ResponseEntity<List<NotificationDto>> getUnseenNotifications(@PathVariable String userId){
         return ResponseEntity.ok(materialService.getUnseenNotifications(userId));

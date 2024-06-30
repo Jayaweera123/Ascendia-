@@ -1,36 +1,41 @@
 import React, { useEffect, useState } from "react";
-import SideNavigationStore from "./SideNavigationStore"; // Adjust the path based on your project structure
-import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
+import SideNavigationStore from "./SideNavigationStore"; 
+import TopNavigationStore from "./TopNavigationStore"; 
 import { createEquipment, editEquipment, getEquipment } from '../../services/StoreServices'
 import { useNavigate, useParams } from 'react-router-dom'
 import Swal from 'sweetalert2';
-import { searchEquipment } from '../../services/StoreServices';
 import NotificationBar from "./NotificationBar";
 
 function EquipmentForm() {
+
+  // State for controlling the side navigation menu
   const [open, setOpen] = useState(true);
+  // States for form fields
   const [equipmentCode, setEquipmentCode] = useState('')
   const [equipmentName, setEquipmentName] = useState('')
   const [quantity, setQuantity] = useState('')
   const [description, setDescription] = useState('')
   const [createdDate, setCreatedDate] = useState('')
 
+   // State for notification bar
   const [isOpen, setIsOpen] = useState(false);
+
   const notificationHandler = (status) => {
     setIsOpen(status);
-};
+  };
 
-
-   // Retrieve and parse projectIDs from local storage
-   const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
+  // Retrieve and parse projectIDs from local storage
+  const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
   
-   // Set a specific project ID (e.g., the first one)
-   const projectId = projectIDs ? projectIDs[0] : null;
+  // Set a specific project ID (e.g., the first one)
+  const projectId = projectIDs ? projectIDs[0] : null;
  
-   console.log('projectId', projectId);
+  console.log('projectId', projectId);
 
+  // Get the ID from the URL parameters
   const {id} = useParams();
 
+  // State for form validation errors
   const  [errors, setErrors] = useState({
     
     equipmentCode: '',
@@ -40,8 +45,10 @@ function EquipmentForm() {
     
   })
 
+  // Hook for navigation
   const navigator = useNavigate();
 
+  // Fetch equipment data if ID is present (editing mode)
   useEffect(() => {
 
       if(id){
@@ -58,23 +65,13 @@ function EquipmentForm() {
 
   }, [id]) 
 
+   // Save or edit equipment based on the presence of ID
   function saveOrEditEquipment(e) {
     e.preventDefault();
   
     if (validateForm()) {
       const equipment = { equipmentCode, equipmentName, quantity, description, createdDate, projectId };
   
-      // const confirmationOptions = {
-      //   title: 'Edit this equipment?',
-      //   text: 'Are you sure you want to edit this equipment?',
-      //   icon: 'warning',
-      //   showCancelButton: true,
-      //   confirmButtonColor: '#001b5e',
-      //   cancelButtonColor: '#6b7280',
-      //   confirmButtonText: 'Edit',
-      //   cancelButtonText: 'Cancel',
-      // };
-
       const editEquipmentAndShowConfirmation = () => {
         editEquipment(id, equipment)
           .then((response) => {
@@ -121,23 +118,19 @@ function EquipmentForm() {
       }
 
       if(id){
-        // Swal.fire(confirmationOptions).then((result) => {
-        //   if (result.isConfirmed) {
-            editEquipmentAndShowConfirmation();
-        //   }
-        // })
+        editEquipmentAndShowConfirmation();
       } else {
         createEquipmentAndShowSuccess();
       }
     }
 }
 
+// Handle form cancel button
 function handleCancel(e){
   navigator('/equipment')
 }
 
-//Form validation
-//Form validation
+//Form validation function
 function validateForm(){
   let valid = true;
 
@@ -188,6 +181,7 @@ function validateForm(){
   return valid;
 }
 
+// Function to determine the form title based on the presence of ID
 function formTitle(){
  if(id){
   return <h4 className="text-4xl leading-relaxed font-bold text-left text-[#001b5e] ">Edit Equipment</h4>

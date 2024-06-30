@@ -31,7 +31,6 @@ import ReviewService from "./services/ReviewService";
 
 {/*Deshani*/}
 import StoreKeeperDashboard from "./pages/Store/StoreKeeperDashboard";
-import ViewHistory from "./pages/Store/ViewHistory";
 import Material from "./pages/Store/Material";
 import MaterialForm from "./components/Store/MaterialForm";
 import Equipment from "./pages/Store/Equipment";
@@ -40,7 +39,6 @@ import UpdateMaterialForm from "./components/Store/UpdateMaterialForm";
 import UpdateEquipmentForm from "./components/Store/UpdateEquipmentForm";
 import StoreServices from "./services/StoreServices";
 import History from "./pages/Store/History";
-import Test from "./pages/Store/Test";
 
 {/*Nethuni*/}
 import SideNavigationPM from "./components/ProjectManager/SideNavigationPM";
@@ -183,7 +181,6 @@ const App = () => {
           )}
           {StoreServices.skeeperOnly() && (
             <>
-              <Route path="/viewHistory" element={<ViewHistory />} />
               <Route path="/history" element={<History />} />
             </>
           )}
@@ -194,8 +191,7 @@ const App = () => {
               <Route path="/editEquipment/:id" element={<EquipmentForm />} />
               <Route path="/updateMaterial/:id" element={<UpdateMaterialForm />} />
               <Route path="/updateEquipment/:id" element={<UpdateEquipmentForm />} />
-              <Route path="/addMaterial" element={<MaterialForm />} />
-              <Route exact path="/test" element={<Test />} />   
+              <Route path="/addMaterial" element={<MaterialForm />} />  
             </>
           )}
         </Routes>

@@ -11,16 +11,17 @@ import Swal from "sweetalert2";
 
 function Equipment() {
 
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(true); // State for controlling side navigation visibility
 
-    const [equipment, setEquipment] = useState([]);
+    const [equipment, setEquipment] = useState([]); // State for storing equipment data
 
-    const navigator = useNavigate();
+    const navigator = useNavigate(); // Navigation hook for redirecting
 
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState(""); // State for search input
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false); // State for controlling notification bar visibility
   
+    // Function to handle notification visibility
     const notificationHandler = (status) => {
         setIsOpen(status);
     };
@@ -44,11 +45,12 @@ function Equipment() {
     const numberOfPages = Math.ceil(equipment.length / recordsPerPage);
     const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
 
-    //Get all equipment
+    // Fetch all equipment on component mount
     useEffect(() => {
         getAllMaterials();
     }, []);
     
+    // Function to fetch all equipment
     const getAllMaterials = () => {
         listEquipment(givenProjectId).then((response) => {
             setEquipment(response.data);
@@ -57,7 +59,7 @@ function Equipment() {
         })
     }
 
-    //Search equipment
+    // Search equipment based on input
     useEffect(() => {
         if (search !== "") {
             searchEquipment(givenProjectId, search).then(response => {
@@ -75,20 +77,22 @@ function Equipment() {
         }
     }, [search]);
 
-
+    // Function to navigate to add new equipment page
     const addNewEquipment = () => {
             navigator("/addEquipment")
     }
 
+    // Function to navigate to edit equipment page
     const editEquipment = (id) => {
         navigator(`/editEquipment/${id}`)
     }
 
+    // Function to navigate to update equipment page
     const updateEquipment= (id) => {
         navigator(`/updateEquipment/${id}`)
     }
 
-    //Delete equipment
+    // Function to delete equipment
     const removeEquipment = (id) => {
         Swal.fire({
           title: 'Are you sure?',
@@ -124,16 +128,19 @@ function Equipment() {
       };
 
     //Pagination
+    // Function to navigate to previous page in pagination
     const prePage = () => {
         if(currentPage !== 1 ){
             setCurrentPage(currentPage - 1)
         }
     }
 
+    // Function to change current page in pagination
     const changeCurrentPage = (id) => {
         setCurrentPage(id)
     }
 
+    // Function to navigate to next page in pagination
     const nextPage = () => {
             if(currentPage !== numberOfPages ){
                 setCurrentPage(currentPage + 1)
@@ -159,8 +166,10 @@ function Equipment() {
                     <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md">
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                             
+                                {/* Search Bar Component */}
                                 <SearchBar search = {search} setSearch={setSearch}/>
 
+                                {/* Add new equipment button */}
                                 <div className="mb-8">
                                     <button className="mt-6 bg-[#101d3f] hover:bg-sky-800 text-white font-bold py-2 px-4 rounded al " onClick={addNewEquipment}>
                                         <div className="flex items-center">
@@ -179,14 +188,14 @@ function Equipment() {
                         <table className="min-w-full text-sm bg-white">
                             <thead>
                                 <tr className="text-gray-700 border-b bg-blue-gray-100 border-blue-gray-50 border-y">
-                                {/* <th scope="col" className="p-4"> </th> */}
-                                <th className="px-4 py-5 text-left">Equipment Code</th>
-                                <th className="px-4 py-5 text-left">Equipment Name</th>
-                                <th className="px-4 py-5 text-left">Quantity</th>
-                                <th className="px-4 py-5 text-left">Description</th>
-                                <th className="w-16 px-4 py-5 text-left">Edit</th>
-                                <th className="w-16 px-4 py-5 text-left">Delete</th>
-                                <th className="w-16 px-4 py-5 text-left">Add/Issue</th>
+
+                                    <th className="px-4 py-5 text-left">Equipment Code</th>
+                                    <th className="px-4 py-5 text-left">Equipment Name</th>
+                                    <th className="px-4 py-5 text-left">Quantity</th>
+                                    <th className="px-4 py-5 text-left">Description</th>
+                                    <th className="w-16 px-4 py-5 text-left">Edit</th>
+                                    <th className="w-16 px-4 py-5 text-left">Delete</th>
+                                    <th className="w-16 px-4 py-5 text-left">Add/Issue</th>
                                
                                 </tr>
                             </thead>
@@ -288,6 +297,7 @@ function Equipment() {
                                 <div className="flex items-center gap-2">
 
                                 {/***************************************** Pagination **********************************************/}
+                                    {/* Render pagination buttons */}
                                     {
                                         numbers.map((n, i) => (
                                             <button className={ `${currentPage ===n ? "px-3 py-1 text-sm border rounded-full border-blue-gray-500 focus:outline-none bg-slate-200" : "px-3 py-1 text-sm focus:outline-none border rounded-full border-blue-gray-500"}`} key={i} onClick={() => changeCurrentPage(n)}>

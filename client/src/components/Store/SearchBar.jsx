@@ -3,7 +3,7 @@ import React from 'react'
 function SearchBar({search, setSearch}) {
   return (
     <div>
-      <div className="mb-1 xl:w-80">
+          <div className="mb-1 xl:w-80">
                   <div className="relative flex flex-wrap items-stretch w-full ">
                       <input
                           type="search"
@@ -33,7 +33,7 @@ function SearchBar({search, setSearch}) {
                       </span>
                     
                   </div>
-                </div>
+           </div>
     </div>
   )
 }

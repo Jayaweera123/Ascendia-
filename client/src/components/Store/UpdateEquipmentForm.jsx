@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import SideNavigationStore from "./SideNavigationStore"; // Adjust the path based on your project structure
-import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
+import SideNavigationStore from "./SideNavigationStore"; 
+import TopNavigationStore from "./TopNavigationStore"; 
 import { getEquipment, inventoryUpdateEquipment } from '../../services/StoreServices'
 import { useNavigate, useParams } from 'react-router-dom'
 import Swal from 'sweetalert2';
@@ -8,28 +8,35 @@ import NotificationBar from "./NotificationBar";
 
 
 function UpdateEquipmentForm() {
-  const [open, setOpen] = useState(true);
+
+  const [open, setOpen] = useState(true); // State for controlling side navigation visibility
+
+  // State variables to manage form inputs
   const [equipmentCode, setEquipmentCode] = useState('')
   const [equipmentName, setEquipmentName] = useState('')
   const [updatedQuantity, setUpdatedQuantity] = useState('')
   const [action, setAction] = useState('Issue')
   const [quantity, setQuantity] = useState(0)
 
+  // State for controlling notification bar visibility
   const [isOpen, setIsOpen] = useState(false);
+  // Function to handle notification bar visibility
   const notificationHandler = (status) => {
     setIsOpen(status);
-};
+  };
   
 
-  const {id} = useParams();
+  const {id} = useParams(); // Fetching ID parameter from URL
 
+  // State for validation errors
   const  [errors, setErrors] = useState({
     updatedQuantity: ''
   })
 
-  const navigator = useNavigate();
+  const navigator = useNavigate(); // Navigation hook for redirecting
 
   useEffect(() => {
+    // Effect to fetch equipment details when ID changes
       if(id){
         getEquipment(id).then((response) => {
           setEquipmentCode(response.data.equipmentCode);
@@ -71,7 +78,7 @@ function UpdateEquipmentForm() {
              text: 'Inventory updated successfully!',
              confirmButtonColor: '#001b5e'
            }).then(() => {
-             navigator('/equipment');
+             navigator('/equipment'); // Redirect to equipment list after successful update
            });
          }).catch(error => {
            console.error(error)
@@ -81,11 +88,12 @@ function UpdateEquipmentForm() {
    }
 }
 
+// Cancel button handler to navigate back to equipment list
 function handleCancel(e){
   navigator('/equipment')
 }
 
-//Form validation
+//Form validation function
 function validateForm(){
   let valid = true;
 

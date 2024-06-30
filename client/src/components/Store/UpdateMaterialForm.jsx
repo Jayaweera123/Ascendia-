@@ -1,37 +1,41 @@
 import React, { useEffect, useState } from "react";
-import SideNavigationStore from "./SideNavigationStore"; // Adjust the path based on your project structure
-import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
+import SideNavigationStore from "./SideNavigationStore"; 
+import TopNavigationStore from "./TopNavigationStore"; 
 import { getMaterial, inventoryUpdateMaterial } from '../../services/StoreServices';
 import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import NotificationBar from './NotificationBar';
 
 function UpdateMaterialForm() {
+  // State for controlling side navigation visibility
   const [open, setOpen] = useState(true);
+  // State variables to manage form inputs
   const [materialCode, setMaterialCode] = useState('')
   const [materialName, setMaterialName] = useState('')
   const [updatedQuantity, setUpdatedQuantity] = useState(0)
   const [action, setAction] = useState('Issue')
   const [quantity, setQuantity] = useState(0)
 
-  const {id} = useParams();
+  const {id} = useParams(); // Fetching ID parameter from URL
 
+  // State for validation errors
   const  [errors, setErrors] = useState({
     
     updatedQuantity: ''
 
   })
 
+  // State for controlling notification bar visibility
   const [isOpen, setIsOpen] = useState(false);
+  // Function to handle notification bar visibility
   const notificationHandler = (status) => {
     setIsOpen(status);
 };
 
-  const navigator = useNavigate();
+  const navigator = useNavigate(); // Navigation hook for redirecting
 
   useEffect(() => {
-    
-
+    // Effect to fetch material details when ID changes
       if(id){
         getMaterial(id).then((response) => {
           setMaterialCode(response.data.materialCode);
@@ -85,13 +89,12 @@ function UpdateMaterialForm() {
     }
 }
 
-
-
+// Cancel button handler to navigate back to material list
 function handleCancel(e){
   navigator('/material')
 }
 
-//Form validation
+//Form validation function
 
 function validateForm(){
   let valid = true;
