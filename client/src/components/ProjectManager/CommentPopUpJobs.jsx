@@ -1,5 +1,6 @@
 import React from "react";
 import Swal from "sweetalert2";
+import { MdOutlineComment } from "react-icons/md";
 
 const CommentCardPopup = ({ comments }) => {
   const handlePopup = () => {
@@ -14,8 +15,8 @@ const CommentCardPopup = ({ comments }) => {
           <img
           class="w-10 h-10 rounded-full mr-4"
                   src="${
-                    comment.profilePicUrl
-                      ? `http://localhost:8080/${comment.profilePicUrl.replace(
+                    comment.profilePicUrlJob
+                      ? `http://localhost:8080/${comment.profilePicUrlJob.replace(
                           /\\/g,
                           "/"
                         )}`
@@ -24,16 +25,18 @@ const CommentCardPopup = ({ comments }) => {
                   alt=""
                 />
           <div>
-            <h3 class="text-lg font-semibold">${comment.commentedUserName}</h3>
-            <p class="text-sm text-gray-500">${comment.designation}</p>
+            <h3 class="text-lg font-semibold">${
+              comment.commentedJobUserName
+            }</h3>
+            <p class="text-sm text-gray-500">${comment.designationJob}</p>
           </div>
         </div>
         <div class="mb-2">
          
-          <p class="text-gray-800">${comment.commentText}</p>
+          <p class="text-gray-800">${comment.commentJobText}</p>
         </div>
         <div class="text-right text-gray-500 text-sm">
-          ${comment.commentDateTime}
+          ${comment.commentJobDateTime}
         </div>
       </div>
     `
@@ -54,12 +57,13 @@ const CommentCardPopup = ({ comments }) => {
 
   return (
     <>
-      <span
-        className="  text-gray-600 cursor-pointer"
+      <div
+        className="cursor-pointer flex"
         onClick={comments.length > 0 ? handlePopup : null}
       >
-        {comments.length} <em> Comments </em>
-      </span>
+        <span className="text-md"> {comments.length} </span>
+        <MdOutlineComment className="mx-2 w-6 h-6 text-gray-600" />
+      </div>
     </>
   );
 };

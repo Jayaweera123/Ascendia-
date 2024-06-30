@@ -7,6 +7,7 @@ import { getEmployeeCount } from "../../services/ProjectService";
 
 import { FaPlusCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { FaArrowRight } from "react-icons/fa";
 
 const GoToJob = ({ taskId }) => {
   const navigator = useNavigate();
@@ -21,10 +22,10 @@ const GoToJob = ({ taskId }) => {
       onClick={navigateToJobList}
     >
       <div className="flex items-center">
-        <div className="flex items-center justify-center mr-2 ">
-          <FaPlus className="font-bold" />
+        <span>Jobs</span>
+        <div className="flex items-center justify-center ml-2 cursor-pointer">
+          <FaArrowRight className="font-bold" />
         </div>
-        Jobs
       </div>
     </button>
   );

@@ -1,5 +1,6 @@
 package com.Ascendia.server.service.Project;
 
+import com.Ascendia.server.dto.Project.PmDto;
 import com.Ascendia.server.dto.Project.ProjectDto;
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.Project.ProjectGetDto;
@@ -43,6 +44,6 @@ public interface ProjectService {
 
     int getTaskCountForProject(Long projectId);
 
-
+    String updatePM(Long projectId, PmDto updatedPm);
 
 }

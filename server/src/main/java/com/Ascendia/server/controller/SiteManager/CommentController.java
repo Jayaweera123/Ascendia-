@@ -12,20 +12,20 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("sengineer/comment")
+@RequestMapping("sengineer/comment/task")
 @AllArgsConstructor
 public class CommentController {
 
 
     private CommentService commentService;
 
-    @PostMapping("/sengineer/comment/createComment")
+    @PostMapping("/add")
     public ResponseEntity<CommentResponseDto>createComment(@RequestBody CommentDto commentDto){
         CommentResponseDto savedComment = commentService.createComment(commentDto);
         return new ResponseEntity<>(savedComment , HttpStatus.CREATED);
     }
 
-    @GetMapping("/task/{taskId}")
+    @GetMapping("/{taskId}")
     public ResponseEntity <List<CommentResponseDto>> getCommentsForTask(@PathVariable Long taskId){
         List<CommentResponseDto> comments = commentService.getCommentsByTaskId(taskId);
         return ResponseEntity.ok(comments);

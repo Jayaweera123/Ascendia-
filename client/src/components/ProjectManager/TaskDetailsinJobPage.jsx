@@ -203,12 +203,6 @@ const TaskDetailsinJobPage = ({ taskId, projectId }) => {
           {/* Add whitespace if shorter */}
         </p>
       </div>
-      <Link to={`task/${taskId}/joblist`} className="group">
-        <div className="text-3xl flex cursor-pointer">
-          <span>Jobs</span>
-          <FaArrowRight />
-        </div>
-      </Link>
 
       <div className="flex justify-between items-center mt-2">
         <div className="flex flex-col   text-gray-700">

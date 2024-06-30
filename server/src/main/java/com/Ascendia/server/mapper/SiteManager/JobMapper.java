@@ -2,6 +2,7 @@ package com.Ascendia.server.mapper.SiteManager;
 
 
 import com.Ascendia.server.dto.SiteManager.JobDto;
+import com.Ascendia.server.dto.SiteManager.JobGetDto;
 import com.Ascendia.server.entity.SiteManager.Job;
 
 public class JobMapper {
@@ -28,6 +29,19 @@ public class JobMapper {
                 jobDto.getStatus(),
                 jobDto.isDone(),
                 jobDto.getTask()
+        );
+    }
+
+    public static JobGetDto mapToJobGetDto(Job job) {
+        return new JobGetDto (
+                job.getJobId(),
+                job.getJobName(),
+                job.getDescription(),
+                job.getStartDate(),
+                job.getEndDate(),
+                job.getStatus(),
+                job.isDone(),
+                job.getTask().getTaskId()
         );
     }
 

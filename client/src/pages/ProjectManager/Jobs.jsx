@@ -79,9 +79,11 @@ function Jobs() {
                 <TaskDetails taskId={taskId} projectId={projectId} />{" "}
               </div>
             </div>
+            <div className="flex justify-end">
+              <GoToJob taskId={taskId} />
+            </div>
 
-            <GoToJob taskId={taskId} />
-            <div className="flex justify-center mt-5 text-5xl">
+            {/*<div className="flex justify-center mt-5 text-5xl">
               <IoIosArrowDown onClick={scrollToJobs} />
             </div>
 
@@ -93,7 +95,7 @@ function Jobs() {
 
             <div className="flex justify-center mt-5 text-5xl">
               <IoIosArrowUp onClick={scrollToTop} />
-            </div>
+            </div>*/}
             <div ref={jobsRef} className="mt-10"></div>
           </div>
         </div>

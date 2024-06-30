@@ -1,5 +1,6 @@
 package com.Ascendia.server.service.Project.impl;
 
+import com.Ascendia.server.dto.Project.PmDto;
 import com.Ascendia.server.dto.Project.ProjectDto;
 import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.exception.Administrator.ResourceNotFoundException;
@@ -196,6 +197,39 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public int getTaskCountForProject(Long projectId) {
         return taskRepository.countTasksByProject_ProjectId(projectId);
+    }
+
+
+
+    @Override
+    public String updatePM(Long projectId, PmDto pmDto) {
+        //retrieve project
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Project not found with the given ID : " + projectId));
+
+
+        // Retrieve user details from the database based on userId(Assigned by :)
+        User projectManager = userRepository.findById(pmDto.getProjectManagerId())
+                .orElseThrow(() -> new ResourceNotFoundException("Project Manager not found with ID: " +pmDto.getProjectManagerId()));
+
+        //User projectManager = pmDto.getProjectManager();
+
+        if (projectManager != null) {
+
+            project.setProjectManager(projectManager);
+
+            // Save the updated project entity
+            Project UpdatedProject = projectRepository.save(project);
+
+            return "Prject manger is updated "+ projectManager.getFirstName() + " " + projectManager.getLastName();
+
+        } else {
+            // Handle the null case appropriately
+            // For example, log an error, throw an exception, or provide a default value
+            throw new NullPointerException("Project Manager is null in PmDto");
+        }
+
     }
 
 }
