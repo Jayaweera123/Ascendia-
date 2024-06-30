@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 @RestController
 @AllArgsConstructor
 @RequestMapping
-
 public class TaskController {
 
     @Autowired

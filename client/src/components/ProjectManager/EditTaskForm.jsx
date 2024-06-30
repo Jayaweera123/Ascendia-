@@ -13,11 +13,16 @@ function EditTaskForm({ id, prePageNavigator }) {
   const [projectStartDate, setProjectStartDate] = useState("");
   const [projectEndDate, setProjectEndDate] = useState("");
 
-  const navigator = useNavigate();
+  const [updatedByUserId, setUpdatedByUserId] = useState(null);
 
-  const goToPreviousPage = () => {
-    history.goBack(); // This will navigate back to the previous page
-  };
+  useEffect(() => {
+    const userId = localStorage.getItem("userID");
+    if (userId) {
+      setUpdatedByUserId(userId);
+    }
+  }, []);
+
+  const navigator = useNavigate();
 
   useEffect(() => {
     if (id) {
@@ -48,7 +53,7 @@ function EditTaskForm({ id, prePageNavigator }) {
         taskName,
         description,
         endDate,
-        //project: projectId,
+        updatedByUserId,
       };
 
       // Add startDate only if it is provided
@@ -116,7 +121,7 @@ function EditTaskForm({ id, prePageNavigator }) {
     (startDate && startDate < projectStartDate) ||
     (endDate && projectStartDate > endDate) ||
     (startDate &&
-      new Date(startDate) < new Date(new Date().setHours(0, 0, 0, 0))) ||
+      new Date(startDate) <= new Date(new Date().setHours(0, 0, 0, 0))) ||
     endDate > projectEndDate ||
     description.length > 999 ||
     taskName.length > 99;
@@ -215,7 +220,7 @@ function EditTaskForm({ id, prePageNavigator }) {
                       </span>
                     )}
                     {startDate &&
-                      new Date(startDate) <
+                      new Date(startDate) <=
                         new Date(new Date().setHours(0, 0, 0, 0)) && (
                         <span className="mt-2 text-sm text-red-500">
                           Start date must be today or a future date.

@@ -240,21 +240,24 @@ private boolean validateTaskDates(LocalDate projectStartDate, LocalDate projectE
                 task.setStatus(updatedStatus);
             }
 
+        if (!changeDescription.isEmpty()) {
+            // Create the edit history record
+            TaskEditHistoryDto editHistoryDto = new TaskEditHistoryDto();
+            editHistoryDto.setTask(task);
+            editHistoryDto.setUpdatedByDesignation(updatedByUser.getDesignation());
+            editHistoryDto.setUpdatedByName(updatedByUser.getFirstName() + " " + updatedByUser.getLastName());
+            editHistoryDto.setUpdatedByProfilePicUrl(updatedByUser.getProfilePicUrl());
+            editHistoryDto.setUpdateTime(LocalDateTime.now());
+            editHistoryDto.setChangeDescription(changeDescription.toString());
 
-        // Create the edit history record
-        TaskEditHistoryDto editHistoryDto = new TaskEditHistoryDto();
-        editHistoryDto.setTask(task);
-        editHistoryDto.setUpdatedByDesignation(updatedByUser.getDesignation());
-        editHistoryDto.setUpdatedByName(updatedByUser.getFirstName()+ " "+ updatedByUser.getLastName());
-        editHistoryDto.setUpdatedByProfilePicUrl(updatedByUser.getProfilePicUrl());
-        editHistoryDto.setUpdateTime(LocalDateTime.now());
-        editHistoryDto.setChangeDescription(changeDescription.toString());
-
-        // Call the service method to create the history record
-        taskEditHistoryService.createRecord(editHistoryDto);
+            // Call the service method to create the history record
+            taskEditHistoryService.createRecord(editHistoryDto);
+        }
 
             Task updatedTaskObj = taskRepository.save(task);
             return TaskMapper.mapToTaskDto(updatedTaskObj);
+
+
         }else {
             // Handle the case where UpdatedByUserId is null
             throw new IllegalArgumentException("UpdatedByUserId cannot be null");
