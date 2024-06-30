@@ -143,6 +143,9 @@ function AddTaskForm(projectId) {
     (endDate && startDate && endDate < startDate) ||
     (endDate && startDate && endDate === startDate) ||
     (startDate && startDate < projectStartDate) ||
+    (endDate && projectStartDate > endDate) ||
+    (startDate &&
+      new Date(startDate) < new Date(new Date().setHours(0, 0, 0, 0))) ||
     endDate > projectEndDate ||
     description.length > 999 ||
     taskName.length > 99;
@@ -239,6 +242,13 @@ function AddTaskForm(projectId) {
                         Invalid start date. Project starts in {projectStartDate}
                       </span>
                     )}
+                    {startDate &&
+                      new Date(startDate) <
+                        new Date(new Date().setHours(0, 0, 0, 0)) && (
+                        <span className="mt-2 text-sm text-red-500">
+                          Start date must be today or a future date.
+                        </span>
+                      )}
                   </div>
                 </div>
 
@@ -300,7 +310,13 @@ function AddTaskForm(projectId) {
                     )}
                     {endDate && endDate > projectEndDate && (
                       <span className="mt-2 text-sm text-red-500">
-                        Invalid end date. Project should be end in{" "}
+                        Invalid end date: Project should be end in{" "}
+                        {projectEndDate}
+                      </span>
+                    )}
+                    {endDate && projectStartDate > endDate && (
+                      <span className="mt-2 text-sm text-red-500">
+                        Invalid end date: Project starts in be end in{" "}
                         {projectEndDate}
                       </span>
                     )}
@@ -309,6 +325,13 @@ function AddTaskForm(projectId) {
                         Invalid end date.
                       </span>
                     )}
+                    {endDate &&
+                      new Date(endDate) <
+                        new Date(new Date().setHours(0, 0, 0, 0)) && (
+                        <span className="mt-2 text-sm text-red-500">
+                          End date must be future date.
+                        </span>
+                      )}
                   </div>
                 </div>
               </div>

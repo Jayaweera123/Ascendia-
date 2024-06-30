@@ -81,13 +81,12 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
         UserProjectAssignment savedAssignment = userProjectAssignmentRepository.save(assignment);
 
         //Send email notification
-
         String subject = "Project Assignment Notification";
 
         String body =
 
                 "Dear " + assignedUser.getFirstName() + " " + assignedUser.getLastName() + ",\n\n" +
-                        "You have been assigned to a new project.\n\n" +
+                        "You have been assigned to a new project as a " + assignedUser.getDesignation() + ".\n\n" +
                         "Project: " + project.getProjectName() + "\n" +
                         "Assigned By: " + assignedByUser.getFirstName() + " " + assignedByUser.getLastName() + " ("+assignedByUser.getDesignation()+")\n\n" +
                         "We are excited to have you on board and look forward to your contributions to the project. Please review the project details and get ready to dive in.\n\n" +

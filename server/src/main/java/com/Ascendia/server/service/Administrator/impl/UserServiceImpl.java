@@ -158,8 +158,9 @@ public class UserServiceImpl implements UserService {
 
             // Update last login date and set online status
             user.setLastLoginDate(LocalDateTime.now());
-            user.setOnlineStatus(true);
+            user.setOnlineStatus(true); // Ensure onlineStatus is set to a valid boolean value
             userRepository.save(user);
+
 
             // Fetch the projects the user is engaged with
             List<Long> projectIds = userProjectAssignmentRepository.findProjectIdsByUserId(user.getUserID());
@@ -450,6 +451,11 @@ public class UserServiceImpl implements UserService {
         List<String> designations = List.of("Technical Officer", "Site Engineer", "Supervisor", "Store Keeper");
         //return userRepository.findByAvailabilityTrueAndDesignations(designations);
         List<User> users = userRepository.findByAvailabilityTrueAndDesignations(designations);
+       /* users.forEach(user -> {
+            if (user.getOnlineStatus() == null) {
+                user.setOnlineStatus(false);
+            }
+        });*/
         return users.stream().map(UserMapper::mapToUserDto).collect(Collectors.toList());
     }
 }

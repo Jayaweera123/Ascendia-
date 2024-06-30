@@ -62,3 +62,6 @@ export const getDurationForEmployee = (recordId) =>
 
 export const searchHistory = (projectId, query) =>
   api.get(REST_API_BASE_URL2 + "search/" + projectId + "?query=" + query);
+
+export const removeAllEmployees = (projectId) =>
+  api.delete(REST_API_BASE_URL1 + projectId + "/remove/all");

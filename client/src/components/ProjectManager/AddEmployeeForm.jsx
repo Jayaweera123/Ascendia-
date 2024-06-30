@@ -274,7 +274,7 @@ function AddEmployeeForm({ projectId }) {
             <form className="space-y-4">
               <div className="flex flex-row gap-3 pt-2 pb-1 mx-auto border-b items-centered border-gray-900/10">
                 <h4 className="text-4xl leading-relaxed font-bold text-left text-[#001b5e] ">
-                  Add Employee
+                  Assign Employee
                 </h4>
               </div>
 

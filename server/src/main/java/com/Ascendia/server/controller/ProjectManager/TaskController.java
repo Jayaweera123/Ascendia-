@@ -105,8 +105,9 @@ public class TaskController {
     }
 
     @PutMapping("/sengineer/{taskId}/mark-as-done")
-    public void markAsDone(@PathVariable Long taskId) {
+    public String markAsDone(@PathVariable Long taskId) {
         taskService.markAsCompleted(taskId);
+        return ("task id "+taskId+" marked as Completed");
     }
 
     @PutMapping("/pmanageronly/{taskId}/mark-as-undone")

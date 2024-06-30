@@ -55,26 +55,52 @@ public class  TaskServiceImpl implements TaskService {
             // Set the project details in the taskDto
             taskDto.setProject(projectOptional.get());
 
+            if (validateTaskDates(projectOptional.get().getCreatedDate(), projectOptional.get().getEndDate(), taskDto.getStartDate(), taskDto.getEndDate())) {
+                Task task = TaskMapper.mapToTask(taskDto);
+                // Calculate the status
+                //Task.TaskStatus status = task.calculateStatus();
 
-            Task task = TaskMapper.mapToTask(taskDto);
-            // Calculate the status
-            //Task.TaskStatus status = task.calculateStatus();
-
-            task.setCompleted(false);
-            task.setStatus(calculateStatus(task));
-            task.setCreatedDate(LocalDate.now());
+                task.setCompleted(false);
+                task.setStatus(calculateStatus(task));
+                task.setCreatedDate(LocalDate.now());
 
 
-            //task.setTaskStatus(status);
+                //task.setTaskStatus(status);
 
-            Task savedTask = taskRepository.save(task);
-            return TaskMapper.mapToTaskDto(savedTask);
+                Task savedTask = taskRepository.save(task);
+                return TaskMapper.mapToTaskDto(savedTask);
+            } else {
+                // Handle invalid task dates scenario
+                throw new IllegalArgumentException("Task dates are not within valid project dates.");
+            }
         } else {
             // Handle the case where the project does not exist
             // For example, throw an exception or return null
             throw new ResourceNotFoundException("Project not found with ID: " + taskDto.getProject().getProjectId());
         }
     }
+
+
+
+private boolean validateTaskDates(LocalDate projectStartDate, LocalDate projectEndDate,
+                                  LocalDate taskStartDate, LocalDate taskEndDate) {
+    // Check if taskStartDate and taskEndDate are within project dates
+    if (taskStartDate != null && taskEndDate != null) {
+        return !taskStartDate.isBefore(projectStartDate) &&
+                !taskStartDate.isAfter(projectEndDate) &&
+                !taskEndDate.isBefore(projectStartDate) &&
+                !taskEndDate.isAfter(projectEndDate) &&
+                !taskEndDate.isBefore(taskStartDate);
+    } else if (taskStartDate == null && taskEndDate != null) {
+        // Only task end date must be within project dates
+        return !taskEndDate.isBefore(projectStartDate) &&
+                !taskEndDate.isAfter(projectEndDate);
+    }
+    return false; // Return false if taskStartDate is null and taskEndDate is null
+}
+
+
+
 
     @Override
     public TaskDto getTaskId(Long taskId) {

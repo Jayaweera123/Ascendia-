@@ -37,7 +37,6 @@ export const getAllProjectCards = () =>
 export const deleteProjectById = (projectId) =>
   api.delete(`${REST_API_BASE_URL}/project/${projectId}`);
 
-
 {
   /*Nethuni*/
 }
@@ -48,7 +47,7 @@ export const getProjectByProjectManagerId = () =>
   api.get("http://localhost:8080/projects/user");
 
 export const getProjectForPM = (ProjectManagerId) =>
-  api.get(`/pmanager/${ProjectManagerId}/all`);
+  api.get("http://localhost:8080/pmanager/" + ProjectManagerId + "/all");
 
 export const searchProject = (pmId, searchTerm) =>
   api.get(

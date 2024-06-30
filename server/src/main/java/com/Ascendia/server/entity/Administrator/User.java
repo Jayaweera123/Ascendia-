@@ -68,7 +68,7 @@ public class User implements UserDetails {
     private LocalDateTime lastLoginDate;
 
     @Column(name = "online_status")
-    private boolean onlineStatus;
+    private boolean onlineStatus = false;
 
 
     @Override
