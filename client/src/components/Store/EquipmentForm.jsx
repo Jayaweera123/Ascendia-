@@ -64,16 +64,16 @@ function EquipmentForm() {
     if (validateForm()) {
       const equipment = { equipmentCode, equipmentName, quantity, description, createdDate, projectId };
   
-      const confirmationOptions = {
-        title: 'Edit this equipment?',
-        text: 'Are you sure you want to edit this equipment?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#001b5e',
-        cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Edit',
-        cancelButtonText: 'Cancel',
-      };
+      // const confirmationOptions = {
+      //   title: 'Edit this equipment?',
+      //   text: 'Are you sure you want to edit this equipment?',
+      //   icon: 'warning',
+      //   showCancelButton: true,
+      //   confirmButtonColor: '#001b5e',
+      //   cancelButtonColor: '#6b7280',
+      //   confirmButtonText: 'Edit',
+      //   cancelButtonText: 'Cancel',
+      // };
 
       const editEquipmentAndShowConfirmation = () => {
         editEquipment(id, equipment)
@@ -108,15 +108,24 @@ function EquipmentForm() {
           })
           .catch((error) => {
             console.error(error);
+
+            const errorsCopy = {... errors}
+
+            errorsCopy.equipmentCode = '*This record already exists.';
+
+            errorsCopy.equipmentName = '*This record already exists.';
+
+            setErrors(errorsCopy);
+
           });
       }
 
       if(id){
-        Swal.fire(confirmationOptions).then((result) => {
-          if (result.isConfirmed) {
+        // Swal.fire(confirmationOptions).then((result) => {
+        //   if (result.isConfirmed) {
             editEquipmentAndShowConfirmation();
-          }
-        })
+        //   }
+        // })
       } else {
         createEquipmentAndShowSuccess();
       }
@@ -243,6 +252,7 @@ function formTitle(){
                     name="equipmentName"
                     id="equipmentName"
                     value={equipmentName}
+                    maxLength={25}
                     onChange={(e) => setEquipmentName(e.target.value)}
                     className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
                       errors.equipmentName ? 'border-red-500' : 'border-gray-300'

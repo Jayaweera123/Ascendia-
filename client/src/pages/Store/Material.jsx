@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { listMaterial } from "../../services/StoreServices";
+import { listMaterial, searchMaterial, deleteMaterial, getAllUpdatedMaterials } from "../../services/StoreServices";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../../components/Store/SearchBar";
 import TopNavigationStore from "../../components/Store/TopNavigationStore";
 import SideNavigationStore from "../../components/Store/SideNavigationStore";
-import { searchMaterial } from "../../services/StoreServices";
 import NotificationBar from "../../components/Store/NotificationBar";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import Swal from "sweetalert2";
+import { get } from "lodash";
 
 function Material() {
   const [open, setOpen] = useState(true);
@@ -42,6 +44,10 @@ function Material() {
 
   //Get all materials
   useEffect(() => {
+    getAllMaterials();
+  }, []);
+
+  const getAllMaterials = () => {
     listMaterial(givenProjectId)
       .then((response) => {
         setMaterial(response.data);
@@ -49,7 +55,7 @@ function Material() {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }
 
   //Search materials
   useEffect(() => {
@@ -85,6 +91,41 @@ function Material() {
     navigator(`/updateMaterial/${id}`);
   };
 
+
+const removeMaterial = (id) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#001b5e',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Delete'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteMaterial(id)
+          .then((response) => {
+            getAllMaterials();
+            Swal.fire({
+              icon: 'success',
+              title: 'Deleted!',
+              text: 'Your material has been deleted.',
+              confirmButtonColor: '#001b5e'
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'You cannot delete this material',
+              confirmButtonColor: '#001b5e'
+            });
+          });
+      }
+    });
+  };
+  
   //Pagination
   const prePage = () => {
     if (currentPage !== 1) {
@@ -147,6 +188,7 @@ function Material() {
                                     <th className="px-4 py-5 text-left">Measuring Unit</th>
                                     <th className="px-4 py-5 text-left">Description</th>
                                     <th className="w-16 px-4 py-5 text-left">Edit</th>
+                                    <th className="w-16 px-4 py-5 text-left">Delete</th>
                                     <th className="w-16 px-4 py-5 text-left">Add/Issue</th>
                                     </tr>
                                 </thead>
@@ -165,7 +207,14 @@ function Material() {
                                                 <td className="px-4 py-3">{material.materialName}</td>
                                                 <td className="px-4 py-3">{material.quantity}</td>
                                                 <td className="px-4 py-3">{material.measuringUnit}</td>
-                                                <td className="px-4 py-3">{material.description}</td>
+                                                <td className="px-4 py-3">
+                                                    <div className="relative group">
+                                                        {material.description.substring(0, 20)}...
+                                                        <div className="absolute z-10 hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
+                                                        {material.description}
+                                                        </div>
+                                                    </div>
+                                                </td>    
 
                                                 {/******************************** Edit material **************************************/}
                                                 <td className="px-5 py-3">
@@ -185,6 +234,26 @@ function Material() {
                                                         </button>
                                                         <div className="absolute hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
                                                             Edit
+                                                        </div>
+                                                    </div>
+
+                                                    
+                                                </td>
+
+                                                {/******************************** Delete material **************************************/}
+                                                <td className="py-3 px-7">
+                                                    <div className="relative inline-block group">
+                                                        <button
+                                                            type="button"
+                                                            className="focus:outline-none text-neutral-700 dark:text-neutral-200 group-hover:opacity-70"
+                                                            aria-label="Edit"
+                                                            onClick={() => removeMaterial(material.materialId)}
+                                                        >
+                                                            <RiDeleteBin6Line className="text-xl" />
+                                                      
+                                                        </button>
+                                                        <div className="absolute hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
+                                                            Delete
                                                         </div>
                                                     </div>
 

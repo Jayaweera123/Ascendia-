@@ -12,6 +12,7 @@ function UpdateMaterialForm() {
   const [materialName, setMaterialName] = useState('')
   const [updatedQuantity, setUpdatedQuantity] = useState(0)
   const [action, setAction] = useState('Issue')
+  const [quantity, setQuantity] = useState(0)
 
   const {id} = useParams();
 
@@ -35,6 +36,7 @@ function UpdateMaterialForm() {
         getMaterial(id).then((response) => {
           setMaterialCode(response.data.materialCode);
           setMaterialName(response.data.materialName);
+          setQuantity(response.data.quantity);
           setUpdatedQuantity(response.data.updatedQuantity);
         }).catch(error => {
           console.error(error);
@@ -53,8 +55,8 @@ function UpdateMaterialForm() {
         console.log(material, "id:", id)
 
         const confirmationOptions = {
-            title: 'Update Inventory?',
-            text: 'Are you sure you want to update inventory?',
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#001b5e',
@@ -109,6 +111,11 @@ function validateForm(){
     }
   } else {
     errorsCopy.updatedQuantity = '*Quantity must be a whole number';
+    valid = false;
+  }
+
+  if(updatedQuantity > quantity && action === 'Issue'){
+    errorsCopy.updatedQuantity = '*Quantity must not exceed available quantity';
     valid = false;
   }
   

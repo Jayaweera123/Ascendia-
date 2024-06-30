@@ -13,6 +13,7 @@ function UpdateEquipmentForm() {
   const [equipmentName, setEquipmentName] = useState('')
   const [updatedQuantity, setUpdatedQuantity] = useState('')
   const [action, setAction] = useState('Issue')
+  const [quantity, setQuantity] = useState(0)
 
   const [isOpen, setIsOpen] = useState(false);
   const notificationHandler = (status) => {
@@ -34,6 +35,7 @@ function UpdateEquipmentForm() {
           setEquipmentCode(response.data.equipmentCode);
           setEquipmentName(response.data.equipmentName);
           setUpdatedQuantity(response.data.updatedQuantity);
+          setQuantity(response.data.quantity);
         }).catch(error => {
           console.error(error);
         })
@@ -49,8 +51,8 @@ function UpdateEquipmentForm() {
      console.log(equipment,"id:",id)
 
      const confirmationOptions = {
-       title: 'Update Inventory?',
-       text: 'Are you sure you want to update inventory?',
+       title: 'Are you sure?',
+       text: "You won't be able to revert this!",
        icon: 'warning',
        showCancelButton: true,
        confirmButtonColor: '#001b5e',
@@ -101,6 +103,11 @@ function validateForm(){
     }
   } else {
     errorsCopy.updatedQuantity = '*Quantity must be a whole number';
+    valid = false;
+  }
+
+  if(updatedQuantity > quantity && action === 'Issue'){
+    errorsCopy.updatedQuantity = '*Quantity must not exceed available quantity';
     valid = false;
   }
   

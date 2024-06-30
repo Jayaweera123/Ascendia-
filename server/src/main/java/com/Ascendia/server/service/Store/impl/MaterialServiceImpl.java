@@ -143,7 +143,7 @@ public class MaterialServiceImpl implements MaterialService {
         updateMaterialRepository.save(updateMaterial);
 
         // Check if material quantity is less than minimum level and send notification if it is
-        if (updatedQuantity < material.getMinimumLevel()) {
+        if (updatedQuantity <= material.getMinimumLevel()) {
             sendLowStockNotification(material);
             material.setStatus("Low Stock");
         }else{

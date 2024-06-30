@@ -72,17 +72,17 @@ function MaterialForm() {
       const material = {materialCode, materialName,quantity,measuringUnit,minimumLevel,description, createdDate, projectId, userId}
       console.log(material)
 
-      const confirmationOptions = {
-        title: 'Edit this material?',
-        text: 'Are you sure you want to edit this material?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#001b5e',
-        cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Edit',
-        cancelButtonText: 'Cancel',
+      // const confirmationOptions = {
+      //   title: 'Edit this material?',
+      //   text: 'Are you sure you want to edit this material?',
+      //   icon: 'warning',
+      //   showCancelButton: true,
+      //   confirmButtonColor: '#001b5e',
+      //   cancelButtonColor: '#6b7280',
+      //   confirmButtonText: 'Edit',
+      //   cancelButtonText: 'Cancel',
         
-      };
+      // };
 
       const editMaterialAndShowConfirmation = () => {
         editMaterial(id, material).then((response) => {
@@ -115,15 +115,26 @@ function MaterialForm() {
           })
           .catch((error) => {
             console.error(error);
+           
+
+            const errorsCopy = {... errors}
+
+            errorsCopy.materialCode = '*This record already exists.';
+
+            errorsCopy.materialName = '*This record already exists.';
+
+            setErrors(errorsCopy);
+
+            
           });
       }
 
       if(id){
-        Swal.fire(confirmationOptions).then((result) => {
-          if (result.isConfirmed) {
+        // Swal.fire(confirmationOptions).then((result) => {
+        //   if (result.isConfirmed) {
             editMaterialAndShowConfirmation();
-          }
-        })
+        //   }
+        // })
       } else {
         createMaterialAndShowSuccess();
       }
@@ -134,7 +145,6 @@ function handleCancel(e){
   navigator('/material')
 }
 
-//Form validation
 //Form validation
 function validateForm(){
   let valid = true;
@@ -152,13 +162,6 @@ function validateForm(){
     errorsCopy.materialName = '';
   }else{
     errorsCopy.materialName = '*Material name is required';
-    valid = false;
-  }
-
-  if(materialCode.trim()){
-    errorsCopy.materialCode = '';
-  }else{
-    errorsCopy.materialCode = '*Material code is required';
     valid = false;
   }
 
@@ -188,11 +191,11 @@ function validateForm(){
       errorsCopy.minimumLevel = '*Minimum Level is required';
       valid = false;
     }
-}else{
-    errorsCopy.minimumLevel = '*Minimum Level must be a whole number';
-    valid = false;
-}
-    
+  }else{
+      errorsCopy.minimumLevel = '*Minimum Level must be a whole number';
+      valid = false;
+  }
+      
   if(description.length >= 0 && description.length < 100){
     errorsCopy.description = '';
   }else{
@@ -271,6 +274,7 @@ function formTitle(){
                         name="materialName"
                         id="materialName"
                         value={materialName}
+                        maxLength={20}
                         onChange={(e) => setMaterialName(e.target.value)}
                         className={`block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
                           errors.materialName ? 'border-red-500' : 'border-gray-300'

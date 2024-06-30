@@ -45,7 +45,7 @@ function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNe
       }, [action]);
 
     return (
-        <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md">
+        <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md " style={{height:'38rem'}}>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                             
                             <SearchBar search = {search} setSearch={setSearch}/>

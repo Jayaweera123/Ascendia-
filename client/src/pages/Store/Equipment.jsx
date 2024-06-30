@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { listEquipment } from "../../services/StoreServices";
+import { deleteEquipment, listEquipment } from "../../services/StoreServices";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../../components/Store/SearchBar";
 import TopNavigationStore from "../../components/Store/TopNavigationStore";
 import SideNavigationStore from "../../components/Store/SideNavigationStore";
 import { searchEquipment } from "../../services/StoreServices";
 import NotificationBar from "../../components/Store/NotificationBar";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import Swal from "sweetalert2";
 
 function Equipment() {
 
@@ -44,12 +46,16 @@ function Equipment() {
 
     //Get all equipment
     useEffect(() => {
+        getAllMaterials();
+    }, []);
+    
+    const getAllMaterials = () => {
         listEquipment(givenProjectId).then((response) => {
             setEquipment(response.data);
         }).catch(error => {
             console.error(error);
         })
-    }, [])
+    }
 
     //Search equipment
     useEffect(() => {
@@ -81,6 +87,41 @@ function Equipment() {
     const updateEquipment= (id) => {
         navigator(`/updateEquipment/${id}`)
     }
+
+    //Delete equipment
+    const removeEquipment = (id) => {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#001b5e',
+          cancelButtonColor: '#6b7280',
+          confirmButtonText: 'Delete'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            deleteEquipment(id)
+              .then((response) => {
+                getAllMaterials();
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Deleted!',
+                  text: 'Your equipment has been deleted.',
+                  confirmButtonColor: '#001b5e'
+                });
+              })
+              .catch((error) => {
+                console.error(error);
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'You cannot delete this equipment',
+                  confirmButtonColor: '#001b5e'
+                });
+              });
+          }
+        });
+      };
 
     //Pagination
     const prePage = () => {
@@ -144,6 +185,7 @@ function Equipment() {
                                 <th className="px-4 py-5 text-left">Quantity</th>
                                 <th className="px-4 py-5 text-left">Description</th>
                                 <th className="w-16 px-4 py-5 text-left">Edit</th>
+                                <th className="w-16 px-4 py-5 text-left">Delete</th>
                                 <th className="w-16 px-4 py-5 text-left">Add/Issue</th>
                                
                                 </tr>
@@ -153,16 +195,18 @@ function Equipment() {
                                     records
                                     .map(equipment =>
                                         <tr className="bg-white border-b border-blue-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600" key={equipment.equipmentId}>
-                                            {/* <td class="w-4 p-4">
-                                                <div class="flex items-center">
-                                                    <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onChange={() => handleCheckboxChange(equipment.equipmentCode)}/>
-                                                    <label for="checkbox-table-search-1" className="sr-only">checkbox</label>
-                                                </div>
-                                            </td> */}
+                                        
                                             <td className="px-4 py-3">{equipment.equipmentCode}</td>
                                             <td className="px-4 py-3">{equipment.equipmentName}</td>
                                             <td className="px-4 py-3">{equipment.quantity}</td>
-                                            <td className="px-4 py-3">{equipment.description}</td>
+                                            <td className="px-4 py-3">
+                                                    <div className="relative group">
+                                                        {equipment.description.substring(0, 20)}...
+                                                        <div className="absolute z-10 hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
+                                                        {equipment.description}
+                                                        </div>
+                                                    </div>
+                                            </td>
 
                                             {/* ******************* Edit equipment functionality ****************************/}
                                             <td className="px-5 py-3">
@@ -182,6 +226,26 @@ function Equipment() {
                                                     </button>
                                                     <div className="absolute hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
                                                         Edit
+                                                    </div>
+                                                </div>
+                                                
+                                            </td>
+
+                                            {/* ******************* Delete equipment functionality ****************************/}
+                                            <td className="py-3 px-7">
+                                                <div className="relative justify-center inline-block group">
+                                                    <button
+                                                        type="button"
+                                                        className="focus:outline-none text-neutral-700 dark:text-neutral-200 group-hover:opacity-70"
+                                                        aria-label="Edit"
+                                                        onClick={() => removeEquipment(equipment.equipmentId)}
+                                                    >
+
+                                                        <RiDeleteBin6Line className="text-xl" />
+
+                                                    </button>
+                                                    <div className="absolute hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
+                                                        Delete
                                                     </div>
                                                 </div>
                                                 
