@@ -3,6 +3,7 @@ import { useReactToPrint } from 'react-to-print';
 import SearchBar from "./SearchBar";
 import { FaDownload } from "react-icons/fa6";
 import DateRangePickerComponent from "./DateRangePickerComponent";
+import Swal from "sweetalert2";
 
 function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPage, 
     currentPage, numberOfPages, search, setSearch, action, setAction,
@@ -27,8 +28,16 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
         documentTitle: 'Equipment History',
         onAfterPrint: () => {
             console.log('After print');
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'PDF created successfully!',
+                confirmButtonColor: '#001b5e'
+            });
         }
     });
+    
+    
 
     {console.log(componentPDF)}
 

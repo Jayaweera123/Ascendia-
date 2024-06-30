@@ -32,8 +32,8 @@ const SideNavigationStore = () => {
 
   const menus = [
     { name: "Dashboard", link: "/store/dashboard", icon: MdOutlineDashboard },
-    { name: "Material", link: "/material", icon: HiMiniRectangleGroup, condition: isStoreKeeper },
-    { name: "Equipment", link: "/equipment", icon: HiMiniWrenchScrewdriver },
+    { name: "Material List", link: "/material", icon: HiMiniRectangleGroup, condition: isStoreKeeper },
+    { name: "Equipment List", link: "/equipment", icon: HiMiniWrenchScrewdriver },
     { name: "History", link: "/history", icon: VscHistory },
     { name: "Ascendia", link: "/", icon: null, condition: !isAuthenticated },
   ];

@@ -3,6 +3,7 @@ import { useReactToPrint } from 'react-to-print';
 import SearchBar from "../../components/Store/SearchBar";
 import { FaDownload } from "react-icons/fa6";
 import DateRangePickerComponent from "./DateRangePickerComponent";
+import Swal from "sweetalert2";
 
 function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNextPage, eCurrentPage, eNumberOfPages,
     search, setSearch ,action, setAction, value, setValue, updatedEquipment}) {
@@ -29,6 +30,12 @@ function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNe
         documentTitle: 'Equipment History',
         onAfterPrint: () => {
             console.log('After print');
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'PDF crated successfully!',
+                confirmButtonColor: '#001b5e'
+              })
         }
     });
 
