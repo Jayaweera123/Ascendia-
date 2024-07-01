@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin("*")
 @RestController
@@ -175,6 +176,26 @@ public class ProjectController {
     public ResponseEntity<Long> countPendingProjects() {
         Long count = projectService.countPendingProjects();
         return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/project/count/completed/byYear")
+    public ResponseEntity<Map<Integer, Long>> countCompletedProjectsByYear() {
+        return ResponseEntity.ok(projectService.countCompletedProjectsByYear());
+    }
+
+    @GetMapping("/project/count/inProgress/byYear")
+    public ResponseEntity<Map<Integer, Long>> countInProgressProjectsByYear() {
+        return ResponseEntity.ok(projectService.countInProgressProjectsByYear());
+    }
+
+    @GetMapping("/project/count/cancelled/byYear")
+    public ResponseEntity<Map<Integer, Long>> countCancelledProjectsByYear() {
+        return ResponseEntity.ok(projectService.countCancelledProjectsByYear());
+    }
+
+    @GetMapping("/project/count/pending/byYear")
+    public ResponseEntity<Map<Integer, Long>> countPendingProjectsByYear() {
+        return ResponseEntity.ok(projectService.countPendingProjectsByYear());
     }
 
 }

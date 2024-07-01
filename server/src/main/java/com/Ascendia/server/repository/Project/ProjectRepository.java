@@ -48,10 +48,17 @@ public interface ProjectRepository  extends JpaRepository<Project, Long >{
 
     @Query("SELECT COUNT(p) FROM Project p WHERE p.projectStatus = 'pending'")
     Long countPendingProjects();
-    /*
-    List<Project> findByStoreKeeper(User user);
-    List<Project> findBySiteEngineer(User user);
-    List<Project> findBySupervisor(User user);
-    List<Project> findByTechnicalOfficer(User user);
-    List<Project> findByQuantitySurveyor(User user);*/
+
+    @Query("SELECT YEAR(p.createdDate), COUNT(p) FROM Project p WHERE p.projectStatus = 'Completed' GROUP BY YEAR(p.createdDate)")
+    List<Object[]> countCompletedProjectsByYear();
+
+    @Query("SELECT YEAR(p.createdDate), COUNT(p) FROM Project p WHERE p.projectStatus = 'In-Progress' GROUP BY YEAR(p.createdDate)")
+    List<Object[]> countInProgressProjectsByYear();
+
+    @Query("SELECT YEAR(p.createdDate), COUNT(p) FROM Project p WHERE p.projectStatus = 'Cancelled' GROUP BY YEAR(p.createdDate)")
+    List<Object[]> countCancelledProjectsByYear();
+
+    @Query("SELECT YEAR(p.createdDate), COUNT(p) FROM Project p WHERE p.projectStatus = 'pending' GROUP BY YEAR(p.createdDate)")
+    List<Object[]> countPendingProjectsByYear();
+
 }

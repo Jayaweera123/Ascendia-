@@ -56,6 +56,23 @@ export const countInProgressProjects = () => api.get("/project/count/inprogress"
 export const countPendingProjects = () => api.get("/project/count/pending");
 export const countCancelledProjects = () => api.get("/project/count/cancelled");
 
+// Fetch project counts by year
+export const fetchProjectCountsByYear = () => {
+  return Promise.all([
+    api.get("/project/count/completed/byYear"),
+    api.get("/project/count/inProgress/byYear"),
+    api.get("/project/count/cancelled/byYear"),
+    api.get("/project/count/pending/byYear")
+  ]).then((responses) => {
+    return {
+      completed: responses[0].data,
+      inProgress: responses[1].data,
+      cancelled: responses[2].data,
+      pending: responses[3].data
+    };
+  });
+};
+
 {
   /*Nethuni*/
 }

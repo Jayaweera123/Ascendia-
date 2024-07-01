@@ -12,11 +12,11 @@ const NewDashBoard = () => {
   return (
     <div>
       <TopNavigation />
-      <section className="flex gap-6">
+      <section className="flex overflow-x-hidden overflow-y-hidden">
         <SideNavigationPCTeam open={open} setOpen={setOpen} />
         <div className="flex flex-col w-full gap-4">
           <StatusGrid />
-          <div className="flex gap-4">
+          <div className="flex gap-4 ml-4">
             <TransactionChart />
             <ProjectStatusChart />
           </div>

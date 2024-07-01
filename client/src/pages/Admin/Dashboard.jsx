@@ -11,7 +11,7 @@ const DashBoard = () => {
   return (
     <div>
       <TopNavigationAdmin />
-      <section className="flex">
+      <section className="flex overflow-x-hidden overflow-y-hidden">
         <SideNavigationAdmin open={open} setOpen={setOpen} />
         <div className="flex flex-col w-full gap-4">
           <StatusGrid />

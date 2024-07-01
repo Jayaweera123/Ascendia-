@@ -29,9 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Service;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -340,5 +338,33 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Long countPendingProjects() {
         return projectRepository.countPendingProjects();
+    }
+
+    @Override
+    public Map<Integer, Long> countCompletedProjectsByYear() {
+        return convertToMap(projectRepository.countCompletedProjectsByYear());
+    }
+
+    @Override
+    public Map<Integer, Long> countInProgressProjectsByYear() {
+        return convertToMap(projectRepository.countInProgressProjectsByYear());
+    }
+
+    @Override
+    public Map<Integer, Long> countCancelledProjectsByYear() {
+        return convertToMap(projectRepository.countCancelledProjectsByYear());
+    }
+
+    @Override
+    public Map<Integer, Long> countPendingProjectsByYear() {
+        return convertToMap(projectRepository.countPendingProjectsByYear());
+    }
+
+    private Map<Integer, Long> convertToMap(List<Object[]> results) {
+        Map<Integer, Long> resultMap = new HashMap<>();
+        for (Object[] result : results) {
+            resultMap.put((Integer) result[0], (Long) result[1]);
+        }
+        return resultMap;
     }
 }

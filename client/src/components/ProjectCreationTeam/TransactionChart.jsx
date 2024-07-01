@@ -1,18 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tooltip, Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis } from 'recharts';
-
-const data = [
-  { name: '2020', Residential: 12, Commercial: 8, Industrial: 6, Infrastructure: 10, Others: 4 },
-  { name: '2021', Residential: 15, Commercial: 10, Industrial: 9, Infrastructure: 12, Others: 5 },
-  { name: '2022', Residential: 18, Commercial: 14, Industrial: 12, Infrastructure: 15, Others: 8 },
-  { name: '2023', Residential: 20, Commercial: 17, Industrial: 14, Infrastructure: 18, Others: 10 },
-  { name: '2024', Residential: 19, Commercial: 16, Industrial: 13, Infrastructure: 17, Others: 9 },
-];
+import { fetchProjectCountsByYear } from '../../services/ProjectService';
 
 function TransactionChart() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const counts = await fetchProjectCountsByYear();
+        const years = Array.from(new Set([
+          ...Object.keys(counts.completed),
+          ...Object.keys(counts.inProgress),
+          ...Object.keys(counts.cancelled),
+          ...Object.keys(counts.pending)
+        ])).sort();
+
+        const formattedData = years.map(year => ({
+          name: year,
+          Completed: counts.completed[year] || 0,
+          'In Progress': counts.inProgress[year] || 0,
+          Cancelled: counts.cancelled[year] || 0,
+          Pending: counts.pending[year] || 0
+        }));
+
+        setData(formattedData);
+      } catch (error) {
+        console.error("Error fetching project counts", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <div className="flex flex-col flex-1 w-full p-4 mt-4 bg-white border border-gray-200 rounded-sm shadow-md h-96">
-      <strong className='font-medium text-gray-700'>Project Types</strong>
+    <div className="flex flex-col flex-1 w-full p-4 mt-4 bg-white border border-gray-200 rounded-lg shadow-md h-96">
+      <strong className='font-medium text-gray-700'>Project Status</strong>
       <div className='flex-1 w-full mt-3 text-xs'>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -29,11 +52,11 @@ function TransactionChart() {
             <YAxis ticks={[5, 10, 15, 20]} label={{ value: 'Projects', angle: -90, position: 'insideLeft' }} />
             <Tooltip />
             <Legend />
-            <Bar dataKey="Residential" fill="#cfe2ff" />
-            <Bar dataKey="Commercial" fill="#9ec5fe" />
-            <Bar dataKey="Industrial" fill="#6ea8fe" />
-            <Bar dataKey="Infrastructure" fill="#3d8bfd" />
-            <Bar dataKey="Others" fill="#0a58ca" />
+            <Bar dataKey="Completed" fill="#15803d" />
+            <Bar dataKey="In Progress" fill="#0369a1" />
+            <Bar dataKey="Pending" fill="#a16207" />
+            <Bar dataKey="Cancelled" fill="#b91c1c" />
+            
           </BarChart>
         </ResponsiveContainer>
       </div>

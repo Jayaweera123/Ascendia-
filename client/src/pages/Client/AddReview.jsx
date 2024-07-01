@@ -109,7 +109,7 @@ const AddReview = () => {
             <div className="px-6 mx-auto max-w-7xl lg:px-8">
               <div className="max-w-2xl mx-auto lg:mx-0">
                 <div className="flex flex-row gap-3 pt-2 pb-1 border-b items-centered border-gray-900/10">
-                  <MdOutlineAddBox size={100} color="#001b5e"/>
+                  
                   <div><h1 className="place-items-baseline text-4xl leading-relaxed py-4 font-bold text-left text-[#001b5e]">Add Review</h1></div>
                 </div>
                 <p className="mt-2 text-lg leading-8 text-gray-600">

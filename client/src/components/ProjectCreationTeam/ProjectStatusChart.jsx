@@ -36,8 +36,8 @@ function ProjectStatusChart() {
   }, []);
 
   return (
-    <div className="flex flex-col flex-1 w-full p-4 mt-4 bg-white border border-gray-200 rounded-sm shadow-md">
-      <strong className='font-medium text-gray-700'>Projects Status</strong>
+    <div className="flex flex-col flex-1 w-full p-4 mt-4 bg-white border border-gray-200 rounded-lg shadow-md">
+      <strong className='font-medium text-gray-700'>Project Status</strong>
       <div className='flex-1 w-full mt-3 text-xs'>
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>

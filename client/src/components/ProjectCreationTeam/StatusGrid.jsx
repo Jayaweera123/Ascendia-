@@ -79,7 +79,7 @@ export default StatusGrid;
 
 function BoxWrapper({ children }) {
     return (
-        <div className="relative flex items-center w-64 h-24 p-4 bg-white rounded-sm shadow-lg">
+        <div className="relative flex items-center w-64 h-24 p-4 bg-white m-4 rounded-lg shadow-md">
             {/* Blue decoration: a small blue dot in the top-left corner */}
             <div className="absolute w-4 h-4rounded-full top-2 left-2"></div>
             {children}

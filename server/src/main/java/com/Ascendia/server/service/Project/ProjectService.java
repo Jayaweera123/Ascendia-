@@ -9,6 +9,7 @@ import com.Ascendia.server.entity.Project.Project;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProjectService {
 
@@ -52,5 +53,10 @@ public interface ProjectService {
     Long countInProgressProjects();
     Long countCancelledProjects();
     Long countPendingProjects();
+
+    Map<Integer, Long> countCompletedProjectsByYear();
+    Map<Integer, Long> countInProgressProjectsByYear();
+    Map<Integer, Long> countCancelledProjectsByYear();
+    Map<Integer, Long> countPendingProjectsByYear();
 
 }
