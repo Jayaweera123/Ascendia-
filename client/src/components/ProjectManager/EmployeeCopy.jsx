@@ -61,6 +61,7 @@ function EmployeeCopy({ projectId }) {
           icon: "success",
           title: "Success!",
           text: "Task deleted successfully!",
+          confirmButtonColor: "#001b5e",
         }).then(() => {
           setEmployees((prevEmployees) =>
             prevEmployees.filter((employee) => employee.id !== id)

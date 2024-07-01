@@ -53,7 +53,7 @@ const JobDetails = ({ jobId }) => {
           <IoConstruct className="w-7 h-7 text-gray-600" />
         </div>
         <div className="ml-6 w-7/12">
-          <h3 className="text-xl font-semibold text-gray-800">
+          <h3 className="text-lg font-semibold text-gray-700">
             {job.jobName} {/* Display job name */}
           </h3>
           <p className="text-sm text-gray-600">

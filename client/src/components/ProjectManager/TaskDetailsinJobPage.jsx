@@ -122,8 +122,9 @@ const TaskDetailsinJobPage = ({ taskId, projectId }) => {
   function noDeleteWarning(id) {
     Swal.fire({
       icon: "warning",
-      title: "Warning!",
-      text: "You cannot delete this task because it has associated jobs.",
+      title: "Unable to delete",
+      text: "This task has associated jobs.",
+      confirmButtonColor: "#001b5e",
     });
     return; // Exit function
   }
@@ -136,6 +137,7 @@ const TaskDetailsinJobPage = ({ taskId, projectId }) => {
           icon: "success",
           title: "Success!",
           text: "Task deleted successfully!",
+          confirmButtonColor: "#001b5e",
         }).then(() => {
           navigator("/project/" + projectId + "/task");
         });

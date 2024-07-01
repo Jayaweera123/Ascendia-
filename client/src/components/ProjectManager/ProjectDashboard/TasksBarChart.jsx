@@ -102,10 +102,20 @@ const TasksBarChart = ({ projectId }) => {
     return tasks.map((task) => {
       const { jobCount = 0, completedJobCount = 0 } =
         jobCounts[task.taskId] || {};
+
+      // Calculate progress
+      let progress = 0;
+      if (task.completed) {
+        progress = 100;
+      } else {
+        progress =
+          jobCount > 0 ? ((completedJobCount / jobCount) * 100).toFixed(2) : 0;
+      }
       return {
         name: String(task.taskName),
-        progress:
-          jobCount > 0 ? ((completedJobCount / jobCount) * 100).toFixed(2) : 0,
+        /*progress:
+          jobCount > 0 ? ((completedJobCount / jobCount) * 100).toFixed(2) : 0,*/
+        progress,
         jobCount,
         completedJobCount,
       };

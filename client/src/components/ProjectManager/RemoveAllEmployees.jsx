@@ -22,9 +22,9 @@ const RemoveAllEmployees = ({ projectId }) => {
   function popUpWarning(projectId) {
     Swal.fire({
       icon: "warning",
-      title: "Warning!",
-      text: "Are you sure? This will remove all the employees from the project.",
-      confirmButtonColor: "#b11f1f",
+      title: "Are you sure? ",
+      text: "This will remove all the employees from the project.",
+      confirmButtonColor: "#001b5e",
       cancelButtonColor: "#6b7280",
       confirmButtonText: "Remove",
       cancelButtonText: "Cancel",
@@ -36,6 +36,8 @@ const RemoveAllEmployees = ({ projectId }) => {
             icon: "success",
             title: "Success!",
             text: "All employees have been removed.",
+            confirmButtonColor: "#001b5e",
+            cancelButtonColor: "#6b7280",
           });
           setEmployeeCount(0); // Update the count after removing employees
         });

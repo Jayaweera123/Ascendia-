@@ -59,6 +59,8 @@ const MarkAsCompleted = ({ taskId }) => {
       title: "Are you sure?",
       text: "Do you want to chnage the completion status?",
       showCancelButton: true,
+      confirmButtonColor: "#001b5e",
+      cancelButtonColor: "#6b7280",
     }).then((result) => {
       return result.isConfirmed;
     });
@@ -69,6 +71,7 @@ const MarkAsCompleted = ({ taskId }) => {
       icon: "success",
       title: "Success!",
       text: message,
+      confirmButtonColor: "#001b5e",
     });
   };
 

@@ -3,12 +3,15 @@ import { Link } from "react-router-dom";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { IoHome } from "react-icons/io5";
-import { FaRegClipboard } from "react-icons/fa6";
-import { FaClipboardUser } from "react-icons/fa6";
+import { FaRegClipboard, FaClipboardUser } from "react-icons/fa6";
 import { GiProgression } from "react-icons/gi";
 import { PiProjectorScreenChartBold } from "react-icons/pi";
 import { useParams } from "react-router-dom";
 import { getProjectById } from "../../services/ProjectService";
+import { TbLogout } from "react-icons/tb";
+import UserService from "../../services/UserService";
+import Swal from "sweetalert2";
+import "sweetalert2/src/sweetalert2.scss";
 
 const SideNavigation = ({ projectId }) => {
   //============================================
@@ -16,6 +19,25 @@ const SideNavigation = ({ projectId }) => {
   //For now I'm using the pmId from the project data.
 
   const [projectManagerId, setProjectManagerId] = useState(null);
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, logout!",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#001b5e",
+      cancelButtonColor: "#6b7280",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        UserService.logout();
+        navigate("/"); // Redirect to login page after logout
+        Swal.fire("Logged out!", "You have been logged out.", "success");
+      }
+    });
+  };
 
   useEffect(() => {
     if (projectId != null) {
@@ -32,10 +54,9 @@ const SideNavigation = ({ projectId }) => {
   //============================================
 
   const menus = [
-    { name: "Home", link: `/${projectManagerId}/pmhome`, icon: IoHome },
     {
       name: "Pojects",
-      link: `/${projectManagerId}/project`,
+      link: "/pmanager/projects",
       icon: PiProjectorScreenChartBold,
     },
 
@@ -55,6 +76,13 @@ const SideNavigation = ({ projectId }) => {
       name: "Progress",
       link: `/project/${projectId}/progress`,
       icon: GiProgression,
+    },
+    {
+      name: "Logout",
+      link: "#",
+      icon: TbLogout,
+      action: handleLogout,
+      margin: true,
     },
   ];
   const [open, setOpen] = useState(true);

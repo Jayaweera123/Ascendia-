@@ -154,8 +154,10 @@ const TaskCardforProject = ({ projectId }) => {
   function popUpWarning(id) {
     Swal.fire({
       icon: "warning",
-      title: "Warning!",
-      text: "Are you sure? This action Cannot be undone.",
+      title: "Are you sure?",
+      text: "You won't be able to revert this",
+      confirmButtonColor: "#001b5e",
+      cancelButtonColor: "#6b7280",
       showCancelButton: true,
     })
       .then((result) => {

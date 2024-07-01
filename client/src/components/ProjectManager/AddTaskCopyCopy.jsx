@@ -67,6 +67,7 @@ function AddTaskForm(projectId) {
               icon: "success",
               title: "Success!",
               text: "Task updated successfully!",
+              confirmButtonColor: "#001b5e",
             }).then(() => {
               navigator("/project/" + pID + "/task");
             });
@@ -82,6 +83,7 @@ function AddTaskForm(projectId) {
               icon: "success",
               title: "Success!",
               text: "Task created successfully!",
+              confirmButtonColor: "#001b5e",
             }).then(() => {
               navigator("/project/" + pID + "/task");
             });

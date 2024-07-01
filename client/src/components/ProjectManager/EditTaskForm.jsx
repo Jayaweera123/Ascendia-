@@ -71,6 +71,7 @@ function EditTaskForm({ id, prePageNavigator }) {
               icon: "success",
               title: "Success!",
               text: "Task updated successfully!",
+              confirmButtonColor: "#001b5e",
             }).then(() => {
               navigator(prePageNavigator /*"/project/" + pID + "/task"*/);
             });
