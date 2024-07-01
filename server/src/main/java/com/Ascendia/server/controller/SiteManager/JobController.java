@@ -2,6 +2,7 @@ package com.Ascendia.server.controller.SiteManager;
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.SiteManager.JobDto;
+import com.Ascendia.server.dto.SiteManager.JobGetDto;
 import com.Ascendia.server.service.SiteManager.JobService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,19 +26,19 @@ public class JobController {
     }
 
     @GetMapping("/senginner/job/{id}")
-    public ResponseEntity<JobDto> getJobById(@PathVariable("id") Long jobId) {
-        JobDto jobDto = jobService.getJobById(jobId);
+    public ResponseEntity<JobGetDto> getJobById(@PathVariable("id") Long jobId) {
+        JobGetDto jobDto = jobService.getJobById(jobId);
         return ResponseEntity.ok(jobDto);
     }
 
     @GetMapping("/senginner/task/{taskId}/jobs")
-    public ResponseEntity<List<JobDto>> getJobsByTaskId(@PathVariable Long taskId) {
-        List<JobDto> jobs = jobService.getJobsByTaskId(taskId);
+    public ResponseEntity<List<JobGetDto>> getJobsByTaskId(@PathVariable Long taskId) {
+        List<JobGetDto> jobs = jobService.getJobsByTaskId(taskId);
         return ResponseEntity.ok(jobs);
     }
 
     @GetMapping("/senginner/search/{taskId}")
-    public ResponseEntity<List<JobDto>> searchJob(@PathVariable Long taskId, @RequestParam("query") String query){
+    public ResponseEntity<List<JobGetDto>> searchJob(@PathVariable Long taskId, @RequestParam("query") String query){
         return ResponseEntity.ok(jobService.searchJob(taskId, query));
     }
 

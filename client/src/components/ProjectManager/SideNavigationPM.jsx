@@ -1,11 +1,34 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { IoHome } from "react-icons/io5";
 import { PiProjectorScreenChartBold } from "react-icons/pi";
+import { TbLogout } from "react-icons/tb";
+import UserService from "../../services/UserService";
+import Swal from "sweetalert2";
+import "sweetalert2/src/sweetalert2.scss";
 
 const SideNavigationPM = ({ pmId }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, logout!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        UserService.logout();
+        navigate("/"); // Redirect to login page after logout
+        Swal.fire("Logged out!", "You have been logged out.", "success");
+      }
+    });
+  };
+
   const menus = [
     { name: "Home", link: `/${pmId}/pmhome`, icon: IoHome },
     {
@@ -13,6 +36,7 @@ const SideNavigationPM = ({ pmId }) => {
       link: `/${pmId}/project`,
       icon: PiProjectorScreenChartBold,
     },
+    { name: "Logout", link: "#", icon: TbLogout, action: handleLogout },
   ];
   const [open, setOpen] = useState(true);
 

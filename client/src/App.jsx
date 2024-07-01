@@ -2,7 +2,9 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import TopNavigation from "./components/TopNavigation";
 
-{/*Ravindu*/}
+{
+  /*Ravindu*/
+}
 import SideNavigationPCTeam from "./components/ProjectCreationTeam/SideNavigationPCTeam";
 import AddProject from "./pages/ProjectCreationTeam/AddProject";
 import AssignPM from "./pages/ProjectCreationTeam/AssignPM";
@@ -14,7 +16,9 @@ import Assign from "./pages/ProjectCreationTeam/Assign";
 import Pm from "./pages/ProjectCreationTeam/Pm";
 import Completed from "./pages/ProjectCreationTeam/Completed"
 
-{/*Rashmi*/}
+{
+  /*Rashmi*/
+}
 import SideNavigationClient from "./components/Client/SideNavigationClient";
 import SideNavigationAdmin from "./components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "./components/Admin/TopNavigationAdmin";
@@ -29,7 +33,9 @@ import AddReview from "./pages/Client/AddReview";
 import Reviews from "./pages/Client/Reviews";
 import ReviewService from "./services/ReviewService";
 
-{/*Deshani*/}
+{
+  /*Deshani*/
+}
 import StoreKeeperDashboard from "./pages/Store/StoreKeeperDashboard";
 import ViewHistory from "./pages/Store/ViewHistory";
 import Material from "./pages/Store/Material";
@@ -41,7 +47,9 @@ import UpdateEquipmentForm from "./components/Store/UpdateEquipmentForm";
 import StoreServices from "./services/StoreServices";
 import History from "./pages/Store/History";
 
-{/*Nethuni*/}
+{
+  /*Nethuni*/
+}
 import SideNavigationPM from "./components/ProjectManager/SideNavigationPM";
 import SideNavigation from "./components/ProjectManager/SideNavigation";
 import TopNavigationPM from "./components/ProjectManager/TopNavigationPM";
@@ -59,6 +67,7 @@ import EditTask from "./pages/ProjectManager/EditTask";
 import AddEmployee from "./pages/ProjectManager/AddEmployee";
 import EmployeeHistory from "./pages/ProjectManager/EmployeeHistory";
 import EditTask0 from "./pages/ProjectManager/EditTask0";
+import JobList from "./pages/ProjectManager/JobList";
 
 const App = () => {
   return (
@@ -66,7 +75,7 @@ const App = () => {
       <BrowserRouter>
         <Routes>
           {/* Rashmi - Login */}
-          <Route exact path="/" element={<NewLogin />} /> 
+          <Route exact path="/" element={<NewLogin />} />
           <Route exact path="/login" element={<NewLogin />} />
 
           <Route path="*" element={<Navigate to="/login" />} />‰
@@ -100,7 +109,10 @@ const App = () => {
           {/* Ravindu */}
           {ProjectService.projectOnly() && (
             <>
-              <Route path="/sideNavigationPCTeam" element={<SideNavigationPCTeam />}/>
+              <Route
+                path="/sideNavigationPCTeam"
+                element={<SideNavigationPCTeam />}
+              />
               <Route path="/topNavigation" element={<TopNavigation />} />
               <Route path="/project/addProject" element={<AddProject/>}/>
               <Route path="/project/update/:projectId" element={<AddProject/>}/>
@@ -112,14 +124,13 @@ const App = () => {
               <Route path="/project/completed" element={<Completed />} />
               <Route path="/project/assign/:projectId" element={<Assign/>}/>
 
-
             </>
           )}
           {/*ProjectManager */}
           {TaskService.pmanagerOnly() && (
             <>
               <Route path="/:pmId/pmhome" element={<HomePM />} />
-              <Route path="/topNavigationPM" element={<TopNavigationPM />} />       
+              <Route path="/topNavigationPM" element={<TopNavigationPM />} />
               <Route path="/sideNavigationPM" element={<SideNavigationPM />} />
               <Route path="/sideNavigation" element={<SideNavigation />} />
               <Route path="/pmanager/projects" element={<Projects />} />
@@ -128,6 +139,7 @@ const App = () => {
                 element={<ProjectDashboard />}
               />
               <Route path="/task/:taskId/job" element={<Jobs />} />
+              <Route path="/task/:taskId/joblist" element={<JobList />} />
               <Route
                 path="/projects/:projectId/tasks"
                 element={<TasksForProject projectId={3} />}
@@ -158,7 +170,7 @@ const App = () => {
               />
               <Route
                 path="/project/:projectId/progress"
-                element={<ProjectProgress />}
+                element={<Progress />}
               />
             </>
           )}

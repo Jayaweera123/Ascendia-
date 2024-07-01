@@ -3,6 +3,7 @@ package com.Ascendia.server.service.SiteManager;
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.SiteManager.JobDto;
+import com.Ascendia.server.dto.SiteManager.JobGetDto;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface JobService {
     JobDto createJob(JobDto jobDto);
     //JobDto createJob(JobDto jobDto);
 
-    JobDto getJobById(Long jobId);
+    JobGetDto getJobById(Long jobId);
 
 
 
@@ -23,11 +24,11 @@ public interface JobService {
 
     //void calculateStatus(JobDto jobDto);
 
-    List<JobDto> getJobsByTaskId(Long taskId);
+    List<JobGetDto> getJobsByTaskId(Long taskId);
 
     boolean areAllJobsCompletedForTask(Long taskId);
 
-    List<JobDto> searchJob(Long TaskId, String query);
+    List<JobGetDto> searchJob(Long TaskId, String query);
 
     void markJobAsCompletedById(Long jobId);
 

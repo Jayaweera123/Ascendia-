@@ -232,109 +232,117 @@ const TaskCardforProject = ({ projectId }) => {
             </div>
             {/* Mapping task cards to a grid */}
             <div className="grid sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3">
-              {filteredTasks.map((task) => (
-                <div
-                  key={task.taskId}
-                  className="mb-6 rounded-lg bg-white shadow-md task-card "
-                >
-                  <div className="pb-6 pl-6 pr-6 pt-2">
-                    <div className="flex items-center justify-between border-b-2 border-gray-300 pb-2">
-                      <div className="flex items-center w-1/2">
-                        <div className="task-name-container">
-                          <Link
-                            key={task.taskId}
-                            to={`/task/${task.taskId}/job`}
-                          >
-                            <h3 className="text-lg font-semibold text-gray-700 task-name cursor-pointer">
-                              {task.taskName}
-                            </h3>
-                          </Link>
-                        </div>
-                      </div>
-                      <div className="flex justify-end pt-1.5">
-                        <div className="text-sm font-medium">
-                          <div
-                            className={`bg-indigo-100 text-indigo-500 rounded-md mr-1 pl-1 pr-1 ${
-                              taskStatus[task.taskId]
-                                ? `status-label-${taskStatus[
-                                    task.taskId
-                                  ].toLowerCase()}`
-                                : ""
-                            }`}
-                          >
-                            {taskStatus[task.taskId]}
-                            {/*{task.status}*/}
+              {filteredTasks.length === 0 ? (
+                <p className="py-1 sm:py-2 text-center text-gray-500">
+                  <em>No tasks yet for this project. </em>
+                </p>
+              ) : (
+                filteredTasks.map((task) => (
+                  <div
+                    key={task.taskId}
+                    className="mb-6 rounded-lg bg-white shadow-md task-card "
+                  >
+                    <div className="pb-6 pl-6 pr-6 pt-2">
+                      <div className="flex items-center justify-between border-b-2 border-gray-300 pb-2">
+                        <div className="flex items-center w-1/2">
+                          <div className="task-name-container">
+                            <Link
+                              key={task.taskId}
+                              to={`/task/${task.taskId}/job`}
+                            >
+                              <h3 className="text-lg font-semibold text-gray-700 task-name cursor-pointer">
+                                {task.taskName}
+                              </h3>
+                            </Link>
                           </div>
                         </div>
-                        <div className="flex">
-                          <Link
-                            to={`/t/${task.project.projectId}/edit-task/${task.taskId}`}
-                            className="group"
-                          >
-                            <LuClipboardEdit className="text-slate-600 transition-transform duration-300 transform hover:scale-150" />
-                          </Link>
-
-                          <RiDeleteBin6Line
-                            className="text-slate-600 cursor-pointer transition-transform duration-300 transform hover:scale-150"
-                            onClick={() => {
-                              const jobCount = jobCounts[task.taskId];
-                              if (
-                                jobCount >
-                                0 /* condition for the first function */
-                              ) {
-                                // Execute the first function
-                                noDeleteWarning(task.taskId);
-                              } else {
-                                popUpWarning(task.taskId);
-                              }
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <Link key={task.taskId} to={`/task/${task.taskId}/job`}>
-                      <div className="task-description-container  pt-3 min-h-28">
-                        <div className="text-sm font-normal text-gray-500 task-description">
-                          {expandedTasks[task.taskId]
-                            ? task.description
-                            : task.description.length > 170
-                            ? `${task.description.slice(0, 170)}...`
-                            : task.description}
-
-                          {task.description.length > 170 && (
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleSeeMoreClick(task.taskId);
-                              }}
-                              className="text-indigo-500 hover:underline ml-1"
+                        <div className="flex justify-end pt-1.5">
+                          <div className="text-sm font-medium">
+                            <div
+                              className={`bg-indigo-100 text-indigo-500 rounded-md mr-1 pl-1 pr-1 ${
+                                taskStatus[task.taskId]
+                                  ? `status-label-${taskStatus[
+                                      task.taskId
+                                    ].toLowerCase()}`
+                                  : ""
+                              }`}
                             >
-                              {expandedTasks[task.taskId]
-                                ? "See less"
-                                : "See more"}
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                      <div className="mt-4 flex items-center justify-between text-sm font-semibold mb-0">
-                        <div className="flex">
-                          <span className="mr-1">{jobCounts[task.taskId]}</span>{" "}
-                          Jobs
-                        </div>
-                        <div className="flex items-center text-red-500">
-                          {/*formatDate(task.endDate)*/}
-                          {taskStatus[task.taskId] !== "Completed" && (
-                            <div className="flex items-center text-red-500">
-                              <LuCalendarClock className="mr-1 text-lg" />
-                              {formatDate(task.endDate)}
+                              {taskStatus[task.taskId]}
+                              {/*{task.status}*/}
                             </div>
-                          )}
+                          </div>
+                          <div className="flex">
+                            <Link
+                              to={`/t/${task.project.projectId}/edit-task/${task.taskId}`}
+                              className="group"
+                            >
+                              <LuClipboardEdit className="text-slate-600 transition-transform duration-300 transform hover:scale-150" />
+                            </Link>
+
+                            <RiDeleteBin6Line
+                              className="text-slate-600 cursor-pointer transition-transform duration-300 transform hover:scale-150"
+                              onClick={() => {
+                                const jobCount = jobCounts[task.taskId];
+                                if (
+                                  jobCount >
+                                  0 /* condition for the first function */
+                                ) {
+                                  // Execute the first function
+                                  noDeleteWarning(task.taskId);
+                                } else {
+                                  popUpWarning(task.taskId);
+                                }
+                              }}
+                            />
+                          </div>
                         </div>
                       </div>
-                    </Link>
+                      <Link key={task.taskId} to={`/task/${task.taskId}/job`}>
+                        <div className="task-description-container  pt-3 min-h-28">
+                          <div className="text-sm font-normal text-gray-500 task-description">
+                            {expandedTasks[task.taskId]
+                              ? task.description
+                              : task.description.length > 170
+                              ? `${task.description.slice(0, 170)}...`
+                              : task.description}
+
+                            {task.description.length > 170 && (
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleSeeMoreClick(task.taskId);
+                                }}
+                                className="text-indigo-500 hover:underline ml-1"
+                              >
+                                {expandedTasks[task.taskId]
+                                  ? "See less"
+                                  : "See more"}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                        <div className="mt-4 flex items-center justify-between text-sm font-semibold mb-0">
+                          <div className="flex">
+                            <span className="mr-1">
+                              {jobCounts[task.taskId]}
+                            </span>{" "}
+                            Jobs
+                          </div>
+                          <div className="flex items-center text-red-500">
+                            {/*formatDate(task.endDate)*/}
+                            {taskStatus[task.taskId] !== "Completed" && (
+                              <div className="flex items-center text-red-500">
+                                <LuCalendarClock className="mr-1 text-lg" />
+                                {formatDate(task.endDate)}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </main>

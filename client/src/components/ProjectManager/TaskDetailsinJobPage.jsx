@@ -16,8 +16,9 @@ import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import { comment } from "postcss";
 import CommentCard from "./CommentCard"; // Import the CommentCard component
 import { formatDate } from "./Functions"; // Import the formatDate function
+import { FaArrowRight } from "react-icons/fa";
 
-const TaskDetailsinJobPage = ({ taskId }) => {
+const TaskDetailsinJobPage = ({ taskId, projectId }) => {
   // Your component logic goes here
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
@@ -28,13 +29,18 @@ const TaskDetailsinJobPage = ({ taskId }) => {
   const [iscompleted, setCompleted] = useState(false);
   const [timeDifference, setTimeDifference] = useState({});
   const [jobCounts, setJobCounts] = useState({});
-  const [projectId, setProjectId] = useState({});
+  //const [projectId, setProjectId] = useState({});
   const [comments, setComments] = useState([]);
 
   const [isEndDateGreaterThanCurrentDate, setIsEndDateGreaterThanCurrentDate] =
     useState(false);
 
   const navigator = useNavigate();
+
+  const navigateToJobList = () => {
+    navigator(`task/${taskId}/joblist`);
+  };
+
   const location = useLocation();
 
   const previousPage = location.state ? location.state.previousPage : "";
@@ -64,7 +70,7 @@ const TaskDetailsinJobPage = ({ taskId }) => {
         setEndDate(response.data.endDate);
         setProject(response.data.project.projectName); // Set the project data
         setTaskStatus(response.data.taskStatus);
-        setProjectId(response.data.project.projectId);
+        //setProjectId(response.data.project.projectId);
         setCompleted(response.data.completed);
         //setTimeDifference(response.data);
       })
@@ -197,6 +203,7 @@ const TaskDetailsinJobPage = ({ taskId }) => {
           {/* Add whitespace if shorter */}
         </p>
       </div>
+
       <div className="flex justify-between items-center mt-2">
         <div className="flex flex-col   text-gray-700">
           <p>Start Date: {startDate ? formatDate(startDate) : ""}</p>

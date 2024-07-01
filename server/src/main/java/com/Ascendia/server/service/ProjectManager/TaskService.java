@@ -2,6 +2,7 @@ package com.Ascendia.server.service.ProjectManager;
 
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
+import com.Ascendia.server.dto.ProjectManager.TaskUpdateDto;
 import com.Ascendia.server.dto.Store.MaterialDto;
 import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.entity.Store.Material;
@@ -17,7 +18,7 @@ public interface TaskService {
 
     //List<TaskDto> getAllTasks();
 
-    TaskDto updateTask(Long taskId, TaskDto updateTask);
+    TaskDto updateTask(Long taskId, TaskUpdateDto updateTask);
 
      void deleteTaskById(Long taskId);
 

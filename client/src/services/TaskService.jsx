@@ -75,10 +75,13 @@ export const markAsUncompleted = (taskId) =>
 
 //==========comments==================
 
-const REST_API_BASE_URL1 = "http://localhost:8080/api/v2/comment/";
+const REST_API_BASE_URL1 = "";
 
 export const getCommetsForTask = (taskId) =>
-  axios.get(REST_API_BASE_URL1 + "task/" + taskId);
+  api.get("http://localhost:8080/sengineer/comment/task/" + taskId);
+
+export const getCommentsForJob = (JobId) =>
+  api.get("http://localhost:8080/sengineer/comment/job/" + JobId);
 
 /** AUTHENTICATION CHECKER */
 class AuthService {

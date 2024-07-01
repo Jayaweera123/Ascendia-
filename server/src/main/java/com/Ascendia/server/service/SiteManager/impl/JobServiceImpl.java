@@ -2,6 +2,7 @@ package com.Ascendia.server.service.SiteManager.impl;
 
 
 import com.Ascendia.server.dto.SiteManager.JobDto;
+import com.Ascendia.server.dto.SiteManager.JobGetDto;
 import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.entity.SiteManager.Job;
 import com.Ascendia.server.exceptions.ResourceNotFoundException;
@@ -49,18 +50,18 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public JobDto getJobById(Long jobId) {
+    public JobGetDto getJobById(Long jobId) {
         Job job = jobRepository.findById(jobId)
                     .orElseThrow(() ->
                             new ResourceNotFoundException("Job not found with the given ID : "+jobId));
-        return JobMapper.mapToJobDto(job);
+        return JobMapper.mapToJobGetDto(job);
 
         }
 
     @Override
-    public List<JobDto> getJobsByTaskId(Long taskId) {
+    public List<JobGetDto> getJobsByTaskId(Long taskId) {
         List<Job> jobs = jobRepository.findByTaskTaskId(taskId);
-        return jobs.stream().map(JobMapper::mapToJobDto).collect(Collectors.toList());
+        return jobs.stream().map(JobMapper::mapToJobGetDto).collect(Collectors.toList());
     }
 
     @Override
@@ -70,9 +71,9 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<JobDto> searchJob(Long taskId, String query) {
+    public List<JobGetDto> searchJob(Long taskId, String query) {
         List<Job> jobs =  jobRepository.searchJob(taskId, query);
-        return jobs.stream().map(JobMapper::mapToJobDto)
+        return jobs.stream().map(JobMapper::mapToJobGetDto)
                 .collect(Collectors.toList());
     }
 

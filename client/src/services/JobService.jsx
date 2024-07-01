@@ -39,5 +39,8 @@ export const searchJobs = (taskId, query) =>
     "http://localhost:8080/senginner/search/" + taskId + "?query=" + query
   );
 
+export const getJobById = (jobId) =>
+  api.get("http://localhost:8080/senginner/job/" + jobId);
+
 export const updateStatusOfJob = (jobId) =>
   api.put(REST_API_BASE_URL0 + "updateStatus/" + jobId);

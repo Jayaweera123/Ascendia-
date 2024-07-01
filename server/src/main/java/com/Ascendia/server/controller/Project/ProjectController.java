@@ -1,9 +1,11 @@
 package com.Ascendia.server.controller.Project;
 
 import com.Ascendia.server.dto.Administrator.UserDto;
+import com.Ascendia.server.dto.Project.PmDto;
 import com.Ascendia.server.dto.Project.ProjectDto;
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.Project.ProjectGetDto;
+import com.Ascendia.server.dto.ProjectManager.TaskUpdateDto;
 import com.Ascendia.server.entity.Project.Project;
 import com.Ascendia.server.service.Project.ProjectService;
 import com.Ascendia.server.service.ProjectManager.TaskService;
@@ -143,6 +145,12 @@ public class ProjectController {
     public ResponseEntity<Integer> getTaskCountForProject(@PathVariable Long projectId) {
         int taskCount = projectService.getTaskCountForProject(projectId);
         return ResponseEntity.ok(taskCount);
+    }
+
+    @PutMapping("project/{projectId}/pm")
+    public String updateProjectPM(@PathVariable Long projectId, @RequestBody PmDto pmDto) {
+        // Update the proejct
+        return projectService.updatePM(projectId, pmDto);
     }
 
 }

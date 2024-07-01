@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -48,6 +50,23 @@ public class Task {
     @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "projectId")
     @JsonBackReference // Prevent infinite recursion
     private Project project;
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TaskEditHistory> taskEditHistories = new ArrayList<>();
+
+    public Task(Long taskId, String taskName, String description, LocalDate startDate, LocalDate endDate, LocalDate createdDate, String status, String prevStatus, boolean completed, Project project) {
+        this.taskId = taskId;
+        this.taskName = taskName;
+        this.description = description;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.createdDate = createdDate;
+        this.status = status;
+        this.prevStatus = prevStatus;
+        this.completed = completed;
+        this.project = project;
+        this.taskEditHistories = new ArrayList<>();
+    }
 
 
 }

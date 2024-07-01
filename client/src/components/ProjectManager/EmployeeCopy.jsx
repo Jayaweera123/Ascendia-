@@ -169,7 +169,7 @@ function EmployeeCopy({ projectId }) {
             <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
               {filteredEmployees.length === 0 ? (
                 <p className="py-1 sm:py-2 text-center text-gray-500">
-                  <em>No Employees </em>
+                  <em>No Assigned Employees </em>
                 </p>
               ) : (
                 <table className="min-w-full leading-normal">

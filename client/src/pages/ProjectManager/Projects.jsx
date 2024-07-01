@@ -51,7 +51,7 @@ function Projects() {
               ))}
             </ul>*/}
 
-            <ProjectCard projectManagerId={1} />
+            <ProjectCard projectManagerId={pmId} />
 
             {/* Uncomment and adjust this section for linking to tasks page */}
             {/* <Link to="/projects/tasks">

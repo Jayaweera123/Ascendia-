@@ -20,7 +20,7 @@ const AddEmployeeButton = ({ projectId }) => {
         <div className="flex items-center justify-center mr-2 ">
           <FaPlus className="font-bold" />
         </div>
-        Add
+        Assign
       </div>
     </button>
   );
