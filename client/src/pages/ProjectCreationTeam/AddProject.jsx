@@ -303,6 +303,9 @@ const AddProject = () => {
       showCancelButton: true,
       confirmButtonText: "Yes, clear it!",
       cancelButtonText: "No, cancel",
+      confirmButtonColor: '#001b5e',
+      cancelButtonColor: '#6b7280',
+
     }).then((result) => {
       if (result.isConfirmed) {
         clearForm();
@@ -335,7 +338,7 @@ const AddProject = () => {
             <form method="POST" encType="multipart/form-data">
               <div className="space-y-5">
                 <div className="flex flex-row gap-3 pt-2 pb-2 border-b items-centerd border-gray-900/10">                 
-                {projectId ?<MdEditDocument size={70} color="#001b5e" /> : <MdAssignmentAdd size={70} color="#001b5e" />}
+               
                   <div>
                     <h1 className="place-items-baseline py-1/2 text-5xl font-bold leading-relaxed text-left text-[#001b5e]">
                     {projectId ? 'Edit Project' : 'Create Project'}
@@ -488,6 +491,8 @@ const AddProject = () => {
                                 </div>
                                 {errors.profileImage && <div className="text-red-500 mt-2">{errors.profileImage}</div>}
                               </div>
+
+                              
 
                               <div className="mt-8">
                               <label

@@ -109,6 +109,9 @@ useEffect(() => {
         showCancelButton: true,
         confirmButtonText: 'Yes, deactivate!',
         cancelButtonText: 'No, cancel!',
+        confirmButtonColor: '#001b5e',
+        cancelButtonColor: '#6b7280',
+
       });
 
       if (result.isConfirmed) {

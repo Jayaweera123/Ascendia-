@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -60,5 +61,20 @@ public interface ProjectRepository  extends JpaRepository<Project, Long >{
 
     @Query("SELECT YEAR(p.createdDate), COUNT(p) FROM Project p WHERE p.projectStatus = 'pending' GROUP BY YEAR(p.createdDate)")
     List<Object[]> countPendingProjectsByYear();
+
+    @Query("SELECT EXTRACT(YEAR FROM p.createdDate) AS year, COUNT(p) AS count FROM Project p WHERE p.projectType = 'Residential' GROUP BY EXTRACT(YEAR FROM p.createdDate)")
+    List<Map<String, Object>> countResidentialProjectsAndYear();
+
+    @Query("SELECT EXTRACT(YEAR FROM p.createdDate) AS year, COUNT(p) AS count FROM Project p WHERE p.projectType = 'Commercial' GROUP BY EXTRACT(YEAR FROM p.createdDate)")
+    List<Map<String, Object>> countCommercialProjectsAndYear();
+
+    @Query("SELECT EXTRACT(YEAR FROM p.createdDate) AS year, COUNT(p) AS count FROM Project p WHERE p.projectType = 'Industrial' GROUP BY EXTRACT(YEAR FROM p.createdDate)")
+    List<Map<String, Object>> countIndustrialProjectsAndYear();
+
+    @Query("SELECT EXTRACT(YEAR FROM p.createdDate) AS year, COUNT(p) AS count FROM Project p WHERE p.projectType = 'Infrastructure' GROUP BY EXTRACT(YEAR FROM p.createdDate)")
+    List<Map<String, Object>> countInfrastructureProjectsAndYear();
+
+    @Query("SELECT EXTRACT(YEAR FROM p.createdDate) AS year, COUNT(p) AS count FROM Project p WHERE p.projectType = 'Other' GROUP BY EXTRACT(YEAR FROM p.createdDate)")
+    List<Map<String, Object>> countOtherProjectsAndYear();
 
 }

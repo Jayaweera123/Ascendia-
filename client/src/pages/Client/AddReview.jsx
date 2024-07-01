@@ -64,7 +64,9 @@ const AddReview = () => {
           title: 'Success!',
           text: 'Your review has been added.',
           icon: 'success',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#001b5e'
+          
         });
         navigator(`/reviews/${projectId}`);
       } catch (error) {
@@ -73,7 +75,9 @@ const AddReview = () => {
           title: 'Error!',
           text: 'There was an error adding your review.',
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#001b5e',
+
         });
       }
     }

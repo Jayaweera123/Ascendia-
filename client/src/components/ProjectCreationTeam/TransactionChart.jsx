@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Tooltip, Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis } from 'recharts';
-import { fetchProjectCountsByYear } from '../../services/ProjectService';
+import {
+  fetchResidentialProjectsCountByYear,
+  fetchCommercialProjectsCountByYear,
+  fetchIndustrialProjectsCountByYear,
+  fetchInfrastructureProjectsCountByYear,
+  fetchOtherProjectsCountByYear
+} from '../../services/ProjectService'; 
+
 
 function TransactionChart() {
   const [data, setData] = useState([]);
@@ -8,34 +15,52 @@ function TransactionChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const counts = await fetchProjectCountsByYear();
-        const years = Array.from(new Set([
-          ...Object.keys(counts.completed),
-          ...Object.keys(counts.inProgress),
-          ...Object.keys(counts.cancelled),
-          ...Object.keys(counts.pending)
-        ])).sort();
+        const [residential, commercial, industrial, infrastructure, other] = await Promise.all([
+          fetchResidentialProjectsCountByYear(),
+          fetchCommercialProjectsCountByYear(),
+          fetchIndustrialProjectsCountByYear(),
+          fetchInfrastructureProjectsCountByYear(),
+          fetchOtherProjectsCountByYear(),
+        ]);
 
-        const formattedData = years.map(year => ({
-          name: year,
-          Completed: counts.completed[year] || 0,
-          'In Progress': counts.inProgress[year] || 0,
-          Cancelled: counts.cancelled[year] || 0,
-          Pending: counts.pending[year] || 0
-        }));
-
-        setData(formattedData);
+        const combinedData = combineData(
+          residential.data,
+          commercial.data,
+          industrial.data,
+          infrastructure.data,
+          other.data
+        );
+        setData(combinedData);
       } catch (error) {
-        console.error("Error fetching project counts", error);
+        console.error("Error fetching data", error);
       }
     };
 
     fetchData();
   }, []);
 
+  const combineData = (residential, commercial, industrial, infrastructure, other) => {
+    const years = [...new Set([
+      ...residential.map(d => d.year),
+      ...commercial.map(d => d.year),
+      ...industrial.map(d => d.year),
+      ...infrastructure.map(d => d.year),
+      ...other.map(d => d.year)
+    ])];
+
+    return years.map(year => ({
+      name: year,
+      Residential: residential.find(d => d.year === year)?.count || 0,
+      Commercial: commercial.find(d => d.year === year)?.count || 0,
+      Industrial: industrial.find(d => d.year === year)?.count || 0,
+      Infrastructure: infrastructure.find(d => d.year === year)?.count || 0,
+      Others: other.find(d => d.year === year)?.count || 0
+    }));
+  };
+
   return (
-    <div className="flex flex-col flex-1 w-full p-4 mt-4 bg-white border border-gray-200 rounded-lg shadow-md h-96">
-      <strong className='font-medium text-gray-700'>Project Status</strong>
+    <div className="flex flex-col flex-1 w-full p-4 mt-4 bg-white border border-gray-200 rounded-sm shadow-md h-96">
+      <strong className='font-medium text-gray-700'>Project Types</strong>
       <div className='flex-1 w-full mt-3 text-xs'>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
@@ -52,11 +77,11 @@ function TransactionChart() {
             <YAxis ticks={[5, 10, 15, 20]} label={{ value: 'Projects', angle: -90, position: 'insideLeft' }} />
             <Tooltip />
             <Legend />
-            <Bar dataKey="Completed" fill="#15803d" />
-            <Bar dataKey="In Progress" fill="#0369a1" />
-            <Bar dataKey="Pending" fill="#a16207" />
-            <Bar dataKey="Cancelled" fill="#b91c1c" />
-            
+            <Bar dataKey="Residential" fill="#cfe2ff" />
+            <Bar dataKey="Commercial" fill="#9ec5fe" />
+            <Bar dataKey="Industrial" fill="#6ea8fe" />
+            <Bar dataKey="Infrastructure" fill="#3d8bfd" />
+            <Bar dataKey="Others" fill="#0a58ca" />
           </BarChart>
         </ResponsiveContainer>
       </div>

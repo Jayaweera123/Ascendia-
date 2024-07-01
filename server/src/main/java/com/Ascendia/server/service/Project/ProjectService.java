@@ -59,4 +59,16 @@ public interface ProjectService {
     Map<Integer, Long> countPendingProjectsByYear();
     void updateProjectManager(ProjectManagerUpdateDto projectManagerUpdateDto);
 
+    List<Map<String, Object>> getResidentialProjectsCountByYear();
+
+    List<Map<String, Object>> getCommercialProjectsCountByYear();
+
+    List<Map<String, Object>> getIndustrialProjectsCountByYear();
+
+    List<Map<String, Object>> getInfrastructureProjectsCountByYear();
+
+    List<Map<String, Object>> getOtherProjectsCountByYear();
+
+
+
 }

@@ -69,6 +69,9 @@ function PmCopy({ projectId }) {
       title: "Warning!",
       text: "Are you sure? You won't be able to revert this!",
       showCancelButton: true,
+      confirmButtonColor: '#001b5e',
+      cancelButtonColor: '#6b7280',
+
     }).then((result) => {
       if (result.isConfirmed) {
         removeEmployee(id);

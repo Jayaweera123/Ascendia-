@@ -203,4 +203,29 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.countPendingProjectsByYear());
     }
 
+    @GetMapping("/project/residential/count-by-year")
+    public List<Map<String, Object>> getResidentialProjectsCountByYear() {
+        return projectService.getResidentialProjectsCountByYear();
+    }
+
+    @GetMapping("/project/commercial/count-by-year")
+    public List<Map<String, Object>> getCommercialProjectsCountByYear() {
+        return projectService.getCommercialProjectsCountByYear();
+    }
+
+    @GetMapping("/project/industrial/count-by-year")
+    public List<Map<String, Object>> getIndustrialProjectsCountByYear() {
+        return projectService.getIndustrialProjectsCountByYear();
+    }
+
+    @GetMapping("/project/infrastructure/count-by-year")
+    public List<Map<String, Object>> getInfrastructureProjectsCountByYear() {
+        return projectService.getInfrastructureProjectsCountByYear();
+    }
+
+    @GetMapping("/project/other/count-by-year")
+    public List<Map<String, Object>> getOtherProjectsCountByYear() {
+        return projectService.getOtherProjectsCountByYear();
+    }
+
 }

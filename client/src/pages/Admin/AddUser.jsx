@@ -124,6 +124,8 @@ const AddUser = () => {
             icon: 'error',
             title: 'Authentication Error',
             text: 'No token found, please login again.',
+           
+
           }).then(() => {
             navigate('/login');  // Redirect to login if no token is found
           });

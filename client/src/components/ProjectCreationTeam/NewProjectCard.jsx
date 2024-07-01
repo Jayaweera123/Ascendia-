@@ -30,7 +30,10 @@ const NewProjectCard = () => {
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, deactivate it!'
+      confirmButtonText: 'Yes, deactivate it!',
+      confirmButtonColor: '#001b5e',
+      cancelButtonColor: '#6b7280',
+
     }).then((result) => {
       if (result.isConfirmed) {
         deactivateProjectById(projectId)

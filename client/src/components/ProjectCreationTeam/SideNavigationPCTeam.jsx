@@ -27,7 +27,10 @@ const SideNavigationPCTeam = () => {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, logout!',
-      cancelButtonText: 'Cancel'
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#001b5e',
+      cancelButtonColor: '#6b7280',
+
     }).then((result) => {
       if (result.isConfirmed) {
         UserService.logout();

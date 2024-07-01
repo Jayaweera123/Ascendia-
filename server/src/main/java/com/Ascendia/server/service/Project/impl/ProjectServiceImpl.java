@@ -389,4 +389,24 @@ public class ProjectServiceImpl implements ProjectService {
         }
         return resultMap;
     }
+
+    public List<Map<String, Object>> getResidentialProjectsCountByYear() {
+        return projectRepository.countResidentialProjectsAndYear();
+    }
+
+    public List<Map<String, Object>> getCommercialProjectsCountByYear() {
+        return projectRepository.countCommercialProjectsAndYear();
+    }
+
+    public List<Map<String, Object>> getIndustrialProjectsCountByYear() {
+        return projectRepository.countIndustrialProjectsAndYear();
+    }
+
+    public List<Map<String, Object>> getInfrastructureProjectsCountByYear() {
+        return projectRepository.countInfrastructureProjectsAndYear();
+    }
+
+    public List<Map<String, Object>> getOtherProjectsCountByYear() {
+        return projectRepository.countOtherProjectsAndYear();
+    }
 }

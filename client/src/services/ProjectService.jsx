@@ -73,6 +73,12 @@ export const fetchProjectCountsByYear = () => {
   });
 };
 
+export const fetchResidentialProjectsCountByYear = () => api.get("/project/residential/count-by-year");
+export const fetchCommercialProjectsCountByYear = () => api.get("/project/commercial/count-by-year");
+export const fetchIndustrialProjectsCountByYear = () => api.get("/project/industrial/count-by-year");
+export const fetchInfrastructureProjectsCountByYear = () => api.get("/project/infrastructure/count-by-year");
+export const fetchOtherProjectsCountByYear = () => api.get("/project/other/count-by-year");
+
 {
   /*Nethuni*/
 }
