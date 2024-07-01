@@ -14,17 +14,16 @@ public interface ProjectService {
 
     List<ProjectGetDto> getProjectsForUser(User user);
 
-    ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage, String clientFirstName, String clientLastName, String consultantFirstName, String consultantLastName);
-
+    ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage, String clientFirstName, String clientLastName, String consultantFirstName, String consultantLastName, String projectManagerFirstName, String projectManagerLastName);
     List<ProjectDto> getAllProjects();
 
     void deactivateProjectById(Long projectId);
 
     ProjectDto updateProjectById(Long projectId, ProjectDto projectDto, MultipartFile profileImage,
                                  String newClientFirstName, String newClientLastName,
-                                 String newConsultantFirstName, String newConsultantLastName);
+                                 String newConsultantFirstName, String newConsultantLastName, String projectManagerFirstName, String projectManagerLastName);
 
-    ProjectGetDto getProjectByProjectId(Long projectId);
+        ProjectGetDto getProjectByProjectId(Long projectId);
 
     //Nethuni
     ProjectDto getProjectId(Long projectId);

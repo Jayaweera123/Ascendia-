@@ -22,6 +22,7 @@ const AddProject = () => {
     createdDate: '',
     endDate: '',
     profileImage: null,
+    pmName: '',
     clientName: '', 
     consultantName: '', 
   });
@@ -34,6 +35,7 @@ const AddProject = () => {
     createdDate: "",
     endDate: "",
     profileImage: "",
+    pmName: "",
     clientName: "",
     consultantName: "",
   });
@@ -59,7 +61,7 @@ const AddProject = () => {
         }
       });
   
-      const { projectName, projectType, projectDescription, projectStatus, createdDate, endDate, image, clientFirstName, clientLastName, consultantFirstName, consultantLastName } = response.data;
+      const { projectName, projectType, projectDescription, projectStatus, createdDate, endDate, image, clientFirstName, clientLastName, consultantFirstName, consultantLastName, projectManagerFirstName, projectManagerLastName } = response.data;
       setFormData({
         projectName,
         projectType,
@@ -68,6 +70,7 @@ const AddProject = () => {
         createdDate,
         endDate,
         profileImage: image ? `http://localhost:8080/${image}` : null,
+        pmName: `${projectManagerFirstName} ${projectManagerLastName}`,
         clientName: `${clientFirstName} ${clientLastName}`,
         consultantName: `${consultantFirstName} ${consultantLastName}` 
       });
@@ -100,6 +103,7 @@ const AddProject = () => {
       createdDate: '',
       endDate: '',
       profileImage: null,
+      pmName: '',
       clientName: '',
       consultantName: '',  
     });
@@ -107,7 +111,7 @@ const AddProject = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-      if (name === 'clientName' || name === 'consultantName') {
+      if (name === 'clientName' || name === 'consultantName' || name === 'pmName') {
           // Split the name into first and last name
           const [firstName, ...lastNameParts] = value.split(' ');
           if (name === 'clientName') {
@@ -123,6 +127,13 @@ const AddProject = () => {
                   consultantName: value,
                   consultantFirstName: firstName,
                   consultantLastName: lastNameParts.join(' ')
+              });
+          } else if (name === 'pmName') {
+              setFormData({
+                  ...formData,
+                  pmName: value,
+                  projectManagerFirstName: firstName,
+                  projectManagerLastName: lastNameParts.join(' ')
               });
           }
       } else {
@@ -248,6 +259,13 @@ const AddProject = () => {
       errorsCopy.profileImage = '';
     }
 
+    if (!formData.pmName) {
+      errorsCopy.pmName = "Project Manager Name is required";
+      valid = false;
+    } else {
+      errorsCopy.pmName = "";
+    }
+
     if (!formData.clientName) {
       errorsCopy.clientName = "Client Name is required";
       valid = false;
@@ -323,6 +341,7 @@ const AddProject = () => {
       createdDate: "",
       endDate: "",
       profileImage: "",
+      pmName: "",
       clientName: "",
       consultantName: "",
     });
@@ -491,6 +510,32 @@ const AddProject = () => {
                                 </div>
                                 {errors.profileImage && <div className="text-red-500 mt-2">{errors.profileImage}</div>}
                               </div>
+
+                              <div className="mt-8">
+                              <label
+                                htmlFor="pmName"
+                                className="block text-base font-medium leading-6 text-gray-900"
+                              >
+                                Project Manager Name
+                              </label>
+                              <div className="mt-2">
+                                <input
+                                  type="text"
+                                  name="pmName"
+                                  id="pmName"
+                                  autoComplete="given-name"                 
+                                  value={formData.pmName}
+                                  onChange={handleChange}
+                                  className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  required
+                                />
+                                {errors.pmName && (
+                                  <p className="mt-2 text-red-500">
+                                    {errors.pmName}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
 
                               
 

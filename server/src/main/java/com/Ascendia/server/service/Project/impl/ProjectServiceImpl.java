@@ -66,7 +66,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage, String clientFirstName, String clientLastName, String consultantFirstName, String consultantLastName) {
+    public ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage, String clientFirstName, String clientLastName, String consultantFirstName, String consultantLastName, String projectManagerFirstName, String projectManagerLastName) {
         // Check if a profile image is provided
         if (profileImage != null && !profileImage.isEmpty()) {
             try {
@@ -84,6 +84,13 @@ public class ProjectServiceImpl implements ProjectService {
         }
         Project project = ProjectMapper.mapProject(projectDto);
         project.setCreatedDate(LocalDate.now());
+
+        Optional<User> pmOpt = userRepository.findByFirstNameAndLastName(projectManagerFirstName, projectManagerLastName);
+        if (pmOpt.isPresent()) {
+            project.setProjectManager(pmOpt.get());
+        } else {
+            throw new RuntimeException("Project Manager not found");
+        }
 
         Optional<User> clientOpt = userRepository.findByFirstNameAndLastName(clientFirstName, clientLastName);
         if (clientOpt.isPresent()) {
@@ -147,7 +154,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectDto updateProjectById(Long projectId, ProjectDto projectDto, MultipartFile profileImage,
                                         String newClientFirstName, String newClientLastName,
-                                        String newConsultantFirstName, String newConsultantLastName) {
+                                        String newConsultantFirstName, String newConsultantLastName, String projectManagerFirstName, String projectManagerLastName) {
 
         Project existingProject = projectRepository.findByProjectId(projectId);
 
@@ -185,6 +192,8 @@ public class ProjectServiceImpl implements ProjectService {
                 e.printStackTrace(); // Handle the exception appropriately
             }
         }
+
+
 
         // Update client information if provided
         if (newClientFirstName != null && newClientLastName != null) {

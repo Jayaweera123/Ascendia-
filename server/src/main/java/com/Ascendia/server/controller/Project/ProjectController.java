@@ -35,8 +35,10 @@ public class ProjectController {
                                                     @RequestParam("clientFirstName") String clientFirstName,
                                                     @RequestParam("clientLastName") String clientLastName,
                                                     @RequestParam("consultantFirstName") String consultantFirstName,
-                                                    @RequestParam("consultantLastName") String consultantLastName){
-        ProjectDto savedProject = projectService.createProject(projectDto, profileImage, clientFirstName, clientLastName, consultantFirstName, consultantLastName);
+                                                    @RequestParam("consultantLastName") String consultantLastName,
+                                                    @RequestParam("consultantFirstName") String projectManagerFirstName,
+                                                    @RequestParam("consultantLastName") String projectManagerLastName){
+        ProjectDto savedProject = projectService.createProject(projectDto, profileImage, clientFirstName, clientLastName, consultantFirstName, consultantLastName, projectManagerFirstName, projectManagerLastName);
         return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
     }
 
@@ -67,7 +69,9 @@ public class ProjectController {
             @RequestParam(value = "newClientFirstName", required = false) String newClientFirstName,
             @RequestParam(value = "newClientLastName", required = false) String newClientLastName,
             @RequestParam(value = "newConsultantFirstName", required = false) String newConsultantFirstName,
-            @RequestParam(value = "newConsultantLastName", required = false) String newConsultantLastName) {
+            @RequestParam(value = "newConsultantLastName", required = false) String newConsultantLastName,
+            @RequestParam(value = "newProjectManagerFirstName", required = false) String newProjectManagerFirstName,
+            @RequestParam(value = "newProjectManagerLastName", required = false) String newProjectManagerLastName) {
 
         // Update the project using the service
         ProjectDto updatedProjectDto = projectService.updateProjectById(
@@ -77,7 +81,9 @@ public class ProjectController {
                 newClientFirstName,
                 newClientLastName,
                 newConsultantFirstName,
-                newConsultantLastName
+                newConsultantLastName,
+                newProjectManagerFirstName,
+                newProjectManagerLastName
         );
 
         // Return the response
