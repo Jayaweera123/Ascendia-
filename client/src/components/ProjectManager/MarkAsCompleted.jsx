@@ -5,10 +5,19 @@ import {
   markAsUndone,
   getTask,
 } from "../../services/TaskService.jsx";
-import { TiTick } from "react-icons/ti";
+import { FaCheck } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const MarkAsCompleted = ({ taskId }) => {
   const [isCompleted, setIsCompleted] = useState(false);
+  const [updatedByUserId, setUpdatedByUserId] = useState("");
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userID");
+    if (userId) {
+      setUpdatedByUserId(userId);
+    }
+  }, []);
 
   useEffect(() => {
     getTask(taskId).then((response) => {
@@ -18,28 +27,63 @@ const MarkAsCompleted = ({ taskId }) => {
   }, [taskId]);
 
   const handleMarkAsDone = async () => {
-    if (isCompleted) {
-      await markAsUndone(taskId);
-      setIsCompleted(false);
-    } else {
-      await markAsDone(taskId);
-      setIsCompleted(true);
+    const updateDto = {
+      updatedByUserId,
+    };
+
+    // Display confirmation dialog
+    const confirmed = await showConfirmationDialog();
+    if (confirmed) {
+      try {
+        if (isCompleted) {
+          await markAsUndone(taskId, updateDto);
+          setIsCompleted(false);
+          showSuccessMessage("Task marked as undone successfully!");
+        } else {
+          await markAsDone(taskId, updateDto);
+          setIsCompleted(true);
+          showSuccessMessage("Task marked as done successfully!");
+        }
+        // Refresh the browser after marking as done or undone
+        window.location.reload();
+      } catch (error) {
+        console.error("Error marking task:", error);
+        showErrorMessage("Failed to mark task. Please try again.");
+      }
     }
-    window.location.reload(); // Refresh the page after marking as done/undone
+  };
+
+  const showConfirmationDialog = () => {
+    return Swal.fire({
+      icon: "info",
+      title: "Are you sure?",
+      text: "Do you want to chnage the completion status?",
+      showCancelButton: true,
+    }).then((result) => {
+      return result.isConfirmed;
+    });
+  };
+
+  const showSuccessMessage = (message) => {
+    Swal.fire({
+      icon: "success",
+      title: "Success!",
+      text: message,
+    });
   };
 
   return (
     <button
       className={`${
         isCompleted
-          ? "bg-[#239B56] text-white"
-          : "bg-sky-50 border-[#239B56] text-[#239B56]"
-      }  font-bold py-2 px-4 rounded-md`}
+          ? "bg-[#239B56] text-white border-[#239B56] "
+          : "bg-sky-50 border-[#101D3F] text-[#1f3261]"
+      }  font-bold py-2 px-4 rounded-md border`}
       onClick={handleMarkAsDone}
     >
       <div className="flex items-center">
         <div className="flex items-center justify-center mr-2">
-          <TiTick />
+          <FaCheck />
         </div>
         {isCompleted ? "Done" : "Mark as done"}
       </div>

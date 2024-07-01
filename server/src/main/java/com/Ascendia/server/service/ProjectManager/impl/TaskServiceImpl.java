@@ -328,24 +328,65 @@ private boolean validateTaskDates(LocalDate projectStartDate, LocalDate projectE
 
     //Robust method to mark as completed
     @Override
-    public void markAsCompleted(Long taskId) {
+    public void markAsCompleted(Long taskId, TaskUpdateDto taskUpdateDto) {
         Task task = getTaskById(taskId);
         if (!task.isCompleted()) {
             task.setPrevStatus(task.getStatus());
             task.setStatus("Completed");
             task.setCompleted(true);
             taskRepository.save(task);
+
+            StringBuilder changeDescription = new StringBuilder();
+            changeDescription.append("Marked the task as completed");
+
+            if (taskUpdateDto.getUpdatedByUserId() != null) {
+                User updatedByUser = userRepository.findById(taskUpdateDto.getUpdatedByUserId())
+                        .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + taskUpdateDto.getUpdatedByUserId()));
+
+                //Create the edit history record
+                TaskEditHistoryDto editHistoryDto = new TaskEditHistoryDto();
+                editHistoryDto.setTask(task);
+                editHistoryDto.setUpdatedByDesignation(updatedByUser.getDesignation());
+                editHistoryDto.setUpdatedByName(updatedByUser.getFirstName() + " " + updatedByUser.getLastName());
+                editHistoryDto.setUpdatedByProfilePicUrl(updatedByUser.getProfilePicUrl());
+                editHistoryDto.setUpdateTime(LocalDateTime.now());
+                editHistoryDto.setChangeDescription(changeDescription.toString());
+
+                // Call the service method to create the history record
+                taskEditHistoryService.createRecord(editHistoryDto);
+            }
+
         }
     }
 
     @Override
-    public void markAsUncompleted(Long taskId) {
+    public void markAsUncompleted(Long taskId, TaskUpdateDto taskUpdateDto) {
         Task task = getTaskById(taskId);
         if (task.isCompleted()) {
             task.setPrevStatus(task.getStatus());
             task.setStatus("In-Progress");
             task.setCompleted(false);
             taskRepository.save(task);
+
+            StringBuilder changeDescription = new StringBuilder();
+            changeDescription.append("Marked the task as uncompleted.");
+
+            if (taskUpdateDto.getUpdatedByUserId() != null) {
+                User updatedByUser = userRepository.findById(taskUpdateDto.getUpdatedByUserId())
+                        .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + taskUpdateDto.getUpdatedByUserId()));
+
+                //Create the edit history record
+                TaskEditHistoryDto editHistoryDto = new TaskEditHistoryDto();
+                editHistoryDto.setTask(task);
+                editHistoryDto.setUpdatedByDesignation(updatedByUser.getDesignation());
+                editHistoryDto.setUpdatedByName(updatedByUser.getFirstName() + " " + updatedByUser.getLastName());
+                editHistoryDto.setUpdatedByProfilePicUrl(updatedByUser.getProfilePicUrl());
+                editHistoryDto.setUpdateTime(LocalDateTime.now());
+                editHistoryDto.setChangeDescription(changeDescription.toString());
+
+                // Call the service method to create the history record
+                taskEditHistoryService.createRecord(editHistoryDto);
+            }
         }
 
     }

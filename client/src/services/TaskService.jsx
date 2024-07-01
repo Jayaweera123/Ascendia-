@@ -92,11 +92,17 @@ export const getEditHistoryForTask = (taskId) =>
 
 //====================== marks as done ====================
 
-export const markAsDone = (taskId) =>
-  api.put("http://localhost:8080/sengineer/" + taskId + "/mark-as-done");
+export const markAsDone = (taskId, updateDto) =>
+  api.put(
+    "http://localhost:8080/sengineer/" + taskId + "/mark-as-done",
+    updateDto
+  );
 
-export const markAsUndone = (taskId) =>
-  api.put("http://localhost:8080/pmanageronly/" + taskId + "/mark-as-undone");
+export const markAsUndone = (taskId, updateDto) =>
+  api.put(
+    "http://localhost:8080/pmanageronly/" + taskId + "/mark-as-undone",
+    updateDto
+  );
 
 /** AUTHENTICATION CHECKER */
 class AuthService {
