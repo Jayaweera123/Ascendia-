@@ -3,12 +3,15 @@ import axios from "axios";
 class ReviewService {
     static BASE_URL = "http://localhost:8080";
 
-    // Function to fetch the list of reviews 
-    static getAllReviews = async (token) => {
+    // Function to fetch the list of reviews for a specific project
+    static getAllReviews = async (token, projectId) => {
         try {
             const response = await axios.get(`${ReviewService.BASE_URL}/reviews/getAll`, {
                 headers: {
                     Authorization: `Bearer ${token}`
+                },
+                params: {
+                    projectId // Ensure projectId is sent as a query parameter
                 }
             });
             return response.data;

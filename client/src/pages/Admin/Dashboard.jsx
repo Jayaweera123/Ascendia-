@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin";
 import SideNavigationAdmin from "../../components/Admin/SideNavigationAdmin";
 import StatusGrid from "../../components/Admin/StatusGrid";
-import TransactionChart from "../../components/Admin/TransactionChart";
 import ProjectStatusChart from "../../components/Admin/ProjectStatusChart";
 import OnlineUserList from "../../components/Admin/OnlineUsesList";
 

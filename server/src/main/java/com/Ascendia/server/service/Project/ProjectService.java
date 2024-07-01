@@ -19,7 +19,9 @@ public interface ProjectService {
 
     void deactivateProjectById(Long projectId);
 
-    ProjectDto updateProjectById(Long projectId, ProjectDto projectDto, MultipartFile profileImage);
+    ProjectDto updateProjectById(Long projectId, ProjectDto projectDto, MultipartFile profileImage,
+                                 String newClientFirstName, String newClientLastName,
+                                 String newConsultantFirstName, String newConsultantLastName);
 
     ProjectGetDto getProjectByProjectId(Long projectId);
 

@@ -6,9 +6,10 @@ import TasksPieChart from "../../components/ProjectManager/ProjectDashboard/Task
 import TasksBarChart from "../../components/ProjectManager/ProjectDashboard/TasksBarChart";
 import TopNavigationClient from "../../components/Client/TopNavigationClient";
 import SideNavigationClient from "../../components/Client/SideNavigationClient";
+import { jwtDecode } from 'jwt-decode';
 
 function ClDashboard() {
-  const { projectId } = useParams();
+  const [projectId, setProjectId] = useState(null);
   return (
     <>
       <TopNavigationClient />

@@ -5,36 +5,52 @@ import SideNavigationPM from "../../components/ProjectManager/SideNavigationPM";
 import SideNavigationStore from "../../components/Store/SideNavigationStore";
 import TopNavigationClient from "../../components/Client/TopNavigationClient";
 import { MdOutlineRateReview } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import UserService from "../../services/UserService";
 import ReviewService from "../../services/ReviewService";
-import { format } from 'date-fns'; // Import date-fns for formatting dates
+import { format } from 'date-fns';
+import { jwtDecode } from 'jwt-decode';
 
 const Reviews = () => {
+  const { projectId: projectIdParam } = useParams();
   const [open, setOpen] = useState(true);
   const [reviews, setReviews] = useState([]);
   const navigate = useNavigate();
   const [designation, setDesignation] = useState('');
+  const [projectId, setProjectId] = useState(null);
 
+  
   useEffect(() => {
-    const userDesignation = UserService.getDesignation();
-    setDesignation(userDesignation);
-    fetchReviews();
-  }, []);
+    const fetchData = async () => {
+      const userDesignation = UserService.getDesignation();
+      setDesignation(userDesignation);
 
-  const fetchReviews = async () => {
-    try {
-      const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-      if (!token) {
-        throw new Error('No token found');
+      const token = localStorage.getItem("token");
+      let projectId = projectIdParam;
+      if (!projectId && token) {
+        const decodedToken = jwtDecode(token);
+        if (decodedToken && decodedToken.projectIDs && decodedToken.projectIDs.length > 0) {
+          projectId = decodedToken.projectIDs[0]; // Fallback to first project ID from token
+        }
       }
-      const response = await ReviewService.getAllReviews(token);
-      console.log("API Response:", response); // Log the entire response object
-      setReviews(response); // Set the fetched reviews to state
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-    }
-  };
+
+      if (projectId) {
+        console.log("Fetching reviews for Project ID: ", projectId);
+        setProjectId(projectId); // Set projectId state
+        try {
+          const response = await ReviewService.getAllReviews(token, projectId);
+          console.log("API Response:", response);
+          setReviews(response);
+        } catch (error) {
+          console.error('Error fetching reviews:', error);
+        }
+      } else {
+        console.error("No project ID found in params or token.");
+      }
+    };
+
+    fetchData();
+  }, [projectIdParam]);
 
   const renderSideNavigation = () => {
     switch (designation) {

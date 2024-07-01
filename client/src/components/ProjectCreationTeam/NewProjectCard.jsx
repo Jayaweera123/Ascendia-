@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { getAllProjectCards, deactivateProjectById } from "../../services/ProjectService.jsx";
 import { MdEdit, MdDelete, MdPerson } from "react-icons/md";
+import { GiProgression } from "react-icons/gi";
+import { PiFilesFill } from "react-icons/pi";
 import Swal from "sweetalert2";
 import axios from "axios";
 
@@ -59,6 +61,14 @@ const NewProjectCard = () => {
 
   const handleAssignEmployee = (projectId) => {
     navigate(`/project/assign/${projectId}`);
+  };
+
+  const projectProgress = (projectId) => {
+    navigate(`/progress/${projectId}`);
+  };
+
+  const projectReviews = (projectId) => {
+    navigate(`/reviews/${projectId}`);
   };
 
   if (projects.length === 0) {
@@ -136,7 +146,21 @@ const NewProjectCard = () => {
                           {new Date(project.endDate).toLocaleDateString()}
                         </span>
                       </div>
+                      
                     </div>
+                    <div className="flex justify-end mr-5 mb-5">
+                          <GiProgression
+                            className="mr-2 text-green-700 cursor-pointer"
+                            size={20}
+                            onClick={() => projectProgress(project.projectId)}
+                          />
+                          <PiFilesFill
+                            className="mr-2 text-blue-900 cursor-pointer"
+                            size={20}                           
+                            onClick={() => projectReviews(project.projectId)}
+                          />
+                        
+                        </div>
                   </div>
                 ))}
               </div>

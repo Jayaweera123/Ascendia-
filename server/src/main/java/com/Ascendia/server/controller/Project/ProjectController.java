@@ -59,12 +59,30 @@ public class ProjectController {
     }
 
     @PutMapping(value = "/project/update/{projectId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ProjectDto> updateProjectById(@PathVariable Long projectId,
-                                                        @ModelAttribute ProjectDto updatedProject,
-                                                        @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) {
-        ProjectDto updatedProjectDto = projectService.updateProjectById(projectId, updatedProject, profileImage);
+    public ResponseEntity<ProjectDto> updateProjectById(
+            @PathVariable Long projectId,
+            @ModelAttribute ProjectDto updatedProject,
+            @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
+            @RequestParam(value = "newClientFirstName", required = false) String newClientFirstName,
+            @RequestParam(value = "newClientLastName", required = false) String newClientLastName,
+            @RequestParam(value = "newConsultantFirstName", required = false) String newConsultantFirstName,
+            @RequestParam(value = "newConsultantLastName", required = false) String newConsultantLastName) {
+
+        // Update the project using the service
+        ProjectDto updatedProjectDto = projectService.updateProjectById(
+                projectId,
+                updatedProject,
+                profileImage,
+                newClientFirstName,
+                newClientLastName,
+                newConsultantFirstName,
+                newConsultantLastName
+        );
+
+        // Return the response
         return ResponseEntity.ok(updatedProjectDto);
     }
+
 
 
     @GetMapping("/progress/{projectId}")

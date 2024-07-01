@@ -9,13 +9,25 @@ import { GiProgression } from "react-icons/gi";
 import { PiProjectorScreenChartBold } from "react-icons/pi";
 import { useParams } from "react-router-dom";
 import { getProjectById } from "../../services/ProjectService";
+import { jwtDecode } from 'jwt-decode';
 
-const SideNavigation = ({ projectId }) => {
+const SideNavigation = () => {
   //============================================
   /*Need the ID of the project manager who is logged in to the system*/
   //For now I'm using the pmId from the project data.
 
   const [projectManagerId, setProjectManagerId] = useState(null);
+  const [projectId, setProjectId] = useState(null);
+  
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if (decodedToken && decodedToken.projectIDs && decodedToken.projectIDs.length > 0) {
+        setProjectId(decodedToken.projectIDs[0]); // Set the first projectId found in the token
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (projectId != null) {
@@ -32,30 +44,13 @@ const SideNavigation = ({ projectId }) => {
   //============================================
 
   const menus = [
-    { name: "Home", link: `/${projectManagerId}/pmhome`, icon: IoHome },
-    {
-      name: "Pojects",
-      link: `/${projectManagerId}/project`,
-      icon: PiProjectorScreenChartBold,
-    },
-
-    {
-      name: "Dashboard",
-      link: `/project/${projectId}/dashboard`,
-      icon: MdOutlineDashboard,
-      margin: true,
-    },
-    { name: "Tasks", link: `/project/${projectId}/task`, icon: FaRegClipboard },
-    {
-      name: "Employees",
-      link: `/project/${projectId}/employee`,
-      icon: FaClipboardUser,
-    },
-    {
-      name: "Progress",
-      link: `/project/${projectId}/progress`,
-      icon: GiProgression,
-    },
+    { name: "Home", link: projectManagerId ? `/${projectManagerId}/pmhome` : "#", icon: IoHome },
+    { name: "Projects", link: projectManagerId ? `/${projectManagerId}/project` : "#", icon: PiProjectorScreenChartBold },
+    { name: "Dashboard", link: projectId ? `/project/${projectId}/dashboard` : "#", icon: MdOutlineDashboard },
+    { name: "Tasks", link: projectId ? `/project/${projectId}/task` : "#", icon: FaRegClipboard },
+    { name: "Employees", link: projectId ? `/project/${projectId}/employee` : "#", icon: FaClipboardUser },
+    { name: "Progress", link: projectId ? `/project/${projectId}/progress` : "#", icon: GiProgression },
+    { name: "Project Progress", link: projectId ? `/progress/${projectId}` : "#", icon: GiProgression },
   ];
   const [open, setOpen] = useState(true);
 

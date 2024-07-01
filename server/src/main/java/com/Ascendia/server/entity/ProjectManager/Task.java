@@ -1,6 +1,8 @@
 package com.Ascendia.server.entity.ProjectManager;
 
 import com.Ascendia.server.entity.Project.Project;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Entity
 @Table (name = "task")
+@JsonIgnoreProperties({"project"}) // Prevent infinite recursion
 public class Task {
 
     @Id
@@ -43,6 +46,8 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false, referencedColumnName = "projectId")
+    @JsonBackReference // Prevent infinite recursion
     private Project project;
+
 
 }

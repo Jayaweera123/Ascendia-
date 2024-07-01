@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { TbReportAnalytics } from "react-icons/tb";
@@ -14,11 +14,24 @@ import ReviewService from "../../services/ReviewService";
 import { TbLogout } from "react-icons/tb";
 import Swal from "sweetalert2";
 import 'sweetalert2/src/sweetalert2.scss'; 
+import { jwtDecode } from 'jwt-decode';
 
 const SideNavigationClient = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
+  const [projectId, setProjectId] = useState(null);
+
   const isAuthenticated = ReviewService.isAuthenticated();
   const isClient = ReviewService.isClient();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if (decodedToken && decodedToken.projectIDs && decodedToken.projectIDs.length > 0) {
+        setProjectId(decodedToken.projectIDs[0]); // Set the first projectId found in the token
+      }
+    }
+  }, []);
 
   const handleLogout = () => {
     Swal.fire({
@@ -39,11 +52,9 @@ const SideNavigationClient = () => {
   
 
   const menus = [
-    
-    { name: "Dashboard", link: "/client/dashboard", icon: MdOutlineDashboard, condition: isClient },
-    { name: "Project Progress", link: "/progress", icon: GiProgression, margin: true },
-    { name: "Reviews", link: "/reviews", icon: PiFilesFill },
-    { name: "Add Review", link: "/addreview", icon: MdOutlineRateReview, condition: isClient},
+    { name: "Project Progress", link: projectId ? `/progress/${projectId}` : "#", icon: GiProgression },
+    { name: "Reviews", link: projectId ? `/reviews/${projectId}` : "#", icon: PiFilesFill },
+    { name: "Add Review", link: `/addreview/${projectId}`, icon: MdOutlineRateReview},
     { name: "Logout", link: "#", icon: TbLogout, action: handleLogout },
   ];
   const [open, setOpen] = useState(true);

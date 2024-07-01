@@ -240,12 +240,12 @@ const AddUser = () => {
   // Function to render page title dynamically based on whether adding or editing a user
   function pageTitle() {
     const isEditing = !!userID; // Check if editing an existing user
-    const icon = isEditing ? <FaUserEdit size={90} color="#001b5e" /> : <RiUserAddFill size={90} color="#001b5e" />;
+    
     const title = isEditing ? "Edit User" : "Add User";
 
     return (
-      <div className="flex flex-row gap-3 pt-2 items-centered">
-        {icon}
+      <div className="flex flex-row gap-3 pt-2 items-centered ml-5">
+        
         <div>
           <h1 className="place-items-baseline text-4xl leading-relaxed py-4 font-bold text-left text-[#001b5e]">
             {title}
@@ -263,7 +263,7 @@ const AddUser = () => {
       <section className="flex">
         <SideNavigationAdmin open={open} setOpen={setOpen} />
         <div class="relative bg-zinc-100 bg-contain h-fit w-screen">
-          <div className="m-5 text-xl font-semibold text-gray-900">
+          <div className="m-5 mt-2 mb-1 text-xl font-semibold text-gray-900">
             <form method="POST" onSubmit={handleSubmit}  encType="multipart/form-data">
               <div className="space-y-5">
                 {/* Render page title */}
@@ -381,6 +381,7 @@ const AddUser = () => {
                             <option>Consultant</option>
                             <option>Administrator</option>
                           </select>
+                          {errors.designation && <span className="text-red-500">{errors.designation}</span>}
                         </div>
                       </div>
 

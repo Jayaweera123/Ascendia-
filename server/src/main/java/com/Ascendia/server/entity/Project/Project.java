@@ -2,12 +2,14 @@ package com.Ascendia.server.entity.Project;
 
 import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.entity.ProjectManager.Task;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -58,6 +60,10 @@ public class Project {
 
     @Column(name = "active", nullable = false)
     private boolean active = true;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // Prevent infinite recursion
+    private List<Task> tasks;
 
     public Project(String projectName, String projectType, String projectDescription, String projectStatus, LocalDate createdDate, LocalDate endDate, String image, User ProjectManager, double progress) {
         this.projectName = projectName;

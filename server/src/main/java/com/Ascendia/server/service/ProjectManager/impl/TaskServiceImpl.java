@@ -92,9 +92,6 @@ public class  TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + taskId));
     }
 
-
-
-
     /*public List<TaskDto> getAllTasks() {
         List<Task> tasks = taskRepository.findAll();
         return tasks.stream().map((task) -> TaskMapper.mapToTaskDto(task))
@@ -337,15 +334,24 @@ public class  TaskServiceImpl implements TaskService {
     }
 
     //Ravindu
+
+    public long getJobCountForProject(Long projectId) {
+        return jobRepository.countJobsByProjectId(projectId);
+    }
+
+    public long getCompletedJobCountForProject(Long projectId) {
+        return jobRepository.countCompletedJobsByProjectId(projectId);
+    }
+
     @Override
     public int getTaskProgress(Long taskId) {
         Task task = getTaskById(taskId);
         if (task.isCompleted()) {
-            return 100; // Completed task
-        } else {
-            // Optionally implement more detailed progress calculation logic
-            return 0; // Incomplete task
+            return 100;
         }
+        int jobCount = getJobCountForTask(taskId);
+        int completedJobCount = getCompletedJobCountForTask(taskId);
+        return (jobCount > 0) ? (completedJobCount * 100 / jobCount) : 0;
     }
 
     @Override

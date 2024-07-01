@@ -34,9 +34,16 @@ public class ReviewController {
 
     // For getAllReviews endpoint
     @GetMapping("/reviews/getAll")
-    public ResponseEntity<List<ReviewDto>> getAllReviews(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<List<ReviewDto>> getAllReviews(
+            @RequestHeader("Authorization") String token,
+            @RequestParam(value = "projectId", required = false) Long projectId
+    ) {
         List<?> rawProjectIds = jwtUtils.extractProjectIDs(token.replace("Bearer ", ""));
         List<Long> projectIds = convertProjectIds(rawProjectIds);
+
+        if (projectId != null) {
+            projectIds = List.of(projectId);
+        }
 
         if (projectIds.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -44,6 +51,7 @@ public class ReviewController {
         List<ReviewDto> reviews = reviewService.getAllReviews(projectIds);
         return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
+
 
     private List<Long> convertProjectIds(List<?> rawProjectIds) {
         return rawProjectIds.stream()

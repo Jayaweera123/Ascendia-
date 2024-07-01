@@ -2,6 +2,7 @@ import React from "react";
 import "../../../src/App.css";
 
 const RadialProgressBar2 = ({ progress }) => {
+  const formattedProgress = Number(progress).toFixed(1);
   return (
     <div className="relative w-40 h-40">
       <svg className="w-full h-full" viewBox="0 0 100 100">
@@ -24,7 +25,7 @@ const RadialProgressBar2 = ({ progress }) => {
           strokeDashoffset={`calc(400 - (400 * ${progress}) / 100)`}
         ></circle>
         <text x="50" y="50" fontFamily="Verdana" fontSize="12" textAnchor="middle" alignmentBaseline="middle">
-          {progress}%
+        {formattedProgress}%
         </text>
       </svg>
     </div>

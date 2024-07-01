@@ -7,6 +7,8 @@ import com.Ascendia.server.dto.SiteManager.JobDto;
 import java.util.List;
 
 public interface JobService {
+
+    JobDto createJob(JobDto jobDto);
     //JobDto createJob(JobDto jobDto);
 
     JobDto getJobById(Long jobId);

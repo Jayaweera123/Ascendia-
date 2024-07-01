@@ -68,12 +68,14 @@ const App = () => {
           {/* Rashmi - Login */}
           <Route exact path="/" element={<NewLogin />} /> 
           <Route exact path="/login" element={<NewLogin />} />
-          <Route exact path="/newlogin" element={<NewLogin />} />
+
           <Route path="*" element={<Navigate to="/login" />} />‰
+
           {/* Ravindu - Progress */}
-          <Route path="/progress" element={<Progress />} />
+          <Route path="/progress/:projectId" element={<Progress />} />
+
           {/* Rashmi - Client */}
-          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/reviews/:projectId" element={<Reviews />} />
          
           {/* Check if user is authenticated and admin before rendering admin-only routes */}
           {UserService.adminOnly() && (
@@ -89,7 +91,7 @@ const App = () => {
           {/* Rashmi - Client */}
           {ReviewService.clientOnly() && (
             <>
-              <Route path="/addreview" element={<AddReview />} />
+              <Route path="/addreview/:projectId" element={<AddReview />} />
               <Route path="/client/dashboard" element={<ClDashboard />} />
               <Route path="/sidenavigationclient" element={<SideNavigationClient />} />
               <Route path="/topNavigationClient"element={<TopNavigationClient />}/>

@@ -207,6 +207,9 @@ public class UserServiceImpl implements UserService {
             List<Project> consultantProjects = projectRepository.findProjectsByConsultant(user);
             List<Long> consultantProjectIds = consultantProjects.stream().map(Project::getProjectId).collect(Collectors.toList());
 
+            List<Project> pmProjects = projectRepository.findProjectsByProjectManager(user);
+            List<Long> pmProjectIds = pmProjects.stream().map(Project::getProjectId).collect(Collectors.toList());
+
             // Fetch project IDs for other roles (e.g., site engineers, store keepers)
             List<Long> userRoleProjectIds = userProjectAssignmentRepository.findProjectIdsByUserId(user.getUserID());
 
@@ -216,6 +219,8 @@ public class UserServiceImpl implements UserService {
                 projectIds = clientProjectIds;
             } else if ("CONSULTANT".equalsIgnoreCase(user.getDesignation())) {
                 projectIds = consultantProjectIds;
+            } else if ("Project Manager".equalsIgnoreCase(user.getDesignation())) {
+                projectIds = pmProjectIds;
             } else {
                 projectIds = userRoleProjectIds;
             }

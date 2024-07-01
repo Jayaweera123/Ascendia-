@@ -1,5 +1,5 @@
 // Import necessary dependencies and components
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SideNavigationClient from "../../components/Client/SideNavigationClient"; // Adjust the path based on your project structure
 import TopNavigationClient from "../../components/Client/TopNavigationClient";
@@ -9,6 +9,7 @@ import { format } from 'date-fns'; // Import date-fns for formatting dates
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import ReviewService from "../../services/ReviewService";
+import { jwtDecode } from 'jwt-decode';
 
 const AddReview = () => {
   const [open, setOpen] = useState(true);
@@ -16,6 +17,16 @@ const AddReview = () => {
   const [email, setEmail] = useState('')
   const [reviewTitle, setReviewTitle] = useState('')
   const [reviewContent, setReviewContent] = useState('')
+  const [projectId, setProjectId] = useState(null);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if (decodedToken && decodedToken.projectIDs && decodedToken.projectIDs.length > 0) {
+        setProjectId(decodedToken.projectIDs[0]); // Set the first projectId found in the token
+      }
+    }
+  }, []);
 
   const [errors, setErrors] = useState({
     email: '',
@@ -55,7 +66,7 @@ const AddReview = () => {
           icon: 'success',
           confirmButtonText: 'OK'
         });
-        navigator('/reviews');
+        navigator(`/reviews/${projectId}`);
       } catch (error) {
         console.error('Error adding review:', error);
         Swal.fire({

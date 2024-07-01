@@ -6,6 +6,7 @@ import com.Ascendia.server.service.SiteManager.JobService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -16,6 +17,13 @@ import java.util.List;
 public class JobController {
 
     private JobService jobService;
+
+    @PostMapping("/senginner/createJob")
+    public ResponseEntity<JobDto> createJob (@RequestBody JobDto jobDto){
+        JobDto savedJob = jobService.createJob(jobDto);
+        return new ResponseEntity<>(savedJob, HttpStatus.CREATED);
+    }
+
     @GetMapping("/senginner/job/{id}")
     public ResponseEntity<JobDto> getJobById(@PathVariable("id") Long jobId) {
         JobDto jobDto = jobService.getJobById(jobId);

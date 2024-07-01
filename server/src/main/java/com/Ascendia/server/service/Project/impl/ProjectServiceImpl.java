@@ -146,7 +146,10 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public ProjectDto updateProjectById(Long projectId, ProjectDto projectDto, MultipartFile profileImage) {
+    public ProjectDto updateProjectById(Long projectId, ProjectDto projectDto, MultipartFile profileImage,
+                                        String newClientFirstName, String newClientLastName,
+                                        String newConsultantFirstName, String newConsultantLastName) {
+
         Project existingProject = projectRepository.findByProjectId(projectId);
 
         if (projectDto.getProjectType() != null) {
@@ -181,6 +184,26 @@ public class ProjectServiceImpl implements ProjectService {
                 existingProject.setImage(uploadPath.toString());
             } catch (IOException e) {
                 e.printStackTrace(); // Handle the exception appropriately
+            }
+        }
+
+        // Update client information if provided
+        if (newClientFirstName != null && newClientLastName != null) {
+            Optional<User> clientOpt = userRepository.findByFirstNameAndLastName(newClientFirstName, newClientLastName);
+            if (clientOpt.isPresent()) {
+                existingProject.setClient(clientOpt.get());
+            } else {
+                throw new RuntimeException("Client not found");
+            }
+        }
+
+        // Update consultant information if provided
+        if (newConsultantFirstName != null && newConsultantLastName != null) {
+            Optional<User> consultantOpt = userRepository.findByFirstNameAndLastName(newConsultantFirstName, newConsultantLastName);
+            if (consultantOpt.isPresent()) {
+                existingProject.setConsultant(consultantOpt.get());
+            } else {
+                throw new RuntimeException("Consultant not found");
             }
         }
 

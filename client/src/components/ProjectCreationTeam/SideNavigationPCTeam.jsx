@@ -41,9 +41,9 @@ const SideNavigationPCTeam = () => {
     { name: 'Dashboard', link: '/project/Dashboard', icon: PiProjectorScreenChartBold, condition: isProject },
     { name: 'Projects', link: '/projectslist', icon: MdOutlineDashboard, condition: isProject },
     { name: 'Create Project', link: '/project/addProject', icon: FaRegClipboard, condition: isProject },
-    { name: 'Progress', link: '/progress', icon: GiProgression, condition: isProject },
+    
     { name: 'Add Project Manager', link: '/project/pm', icon: GrUserManager, condition: isProject },
-    { name: 'Reviews', link: '/reviews', icon: PiFilesFill },
+    
     { name: "Logout", link: "#", icon: TbLogout, action: handleLogout },
     
     
