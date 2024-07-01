@@ -2,11 +2,10 @@ package com.Ascendia.server.service.Project;
 
 import com.Ascendia.server.dto.Project.PmDto;
 import com.Ascendia.server.dto.Project.ProjectDto;
-import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.Project.ProjectGetDto;
 import com.Ascendia.server.entity.Administrator.User;
-import com.Ascendia.server.entity.Project.Project;
 import org.springframework.web.multipart.MultipartFile;
+import com.Ascendia.server.dto.Project.ProjectManagerUpdateDto;
 
 import java.util.List;
 import java.util.Map;
@@ -58,5 +57,6 @@ public interface ProjectService {
     Map<Integer, Long> countInProgressProjectsByYear();
     Map<Integer, Long> countCancelledProjectsByYear();
     Map<Integer, Long> countPendingProjectsByYear();
+    void updateProjectManager(ProjectManagerUpdateDto projectManagerUpdateDto);
 
 }

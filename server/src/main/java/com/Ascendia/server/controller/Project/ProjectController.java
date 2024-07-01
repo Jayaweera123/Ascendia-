@@ -3,21 +3,19 @@ package com.Ascendia.server.controller.Project;
 import com.Ascendia.server.dto.Administrator.UserDto;
 import com.Ascendia.server.dto.Project.PmDto;
 import com.Ascendia.server.dto.Project.ProjectDto;
-import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.Project.ProjectGetDto;
 import com.Ascendia.server.dto.ProjectManager.TaskUpdateDto;
 import com.Ascendia.server.entity.Project.Project;
+import com.Ascendia.server.dto.Project.ProjectManagerUpdateDto;
 import com.Ascendia.server.service.Project.ProjectService;
 import com.Ascendia.server.service.ProjectManager.TaskService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -86,8 +84,6 @@ public class ProjectController {
         return ResponseEntity.ok(updatedProjectDto);
     }
 
-
-
     @GetMapping("/progress/{projectId}")
     public ResponseEntity<ProjectGetDto> getProjectByProjectId(@PathVariable Long projectId) {
         ProjectGetDto projectGetDto = projectService.getProjectByProjectId(projectId);
@@ -98,6 +94,15 @@ public class ProjectController {
         }
         return ResponseEntity.ok(projectGetDto);
     }
+
+
+    @PutMapping("/project/updateProjectManager")
+    public ResponseEntity<Void> updateProjectManager(@PathVariable Long projectId, @RequestBody ProjectManagerUpdateDto projectManagerUpdateDto) {
+        projectManagerUpdateDto.setProjectId(projectId);
+        projectService.updateProjectManager(projectManagerUpdateDto);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
 
 
 
