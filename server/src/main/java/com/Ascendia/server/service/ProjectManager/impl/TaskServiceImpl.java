@@ -455,6 +455,18 @@ private boolean validateTaskDates(LocalDate projectStartDate, LocalDate projectE
 
     @Override
     public double calculateProjectProgress(Long projectId) {
+        // Fetch the project by projectId
+        Project project = projectRepository.findById(projectId).orElse(null);
+        if (project == null) {
+            throw new RuntimeException("Project not found");
+        }
+
+        // Check if the project status is "completed"
+        if ("completed".equalsIgnoreCase(project.getProjectStatus())) {
+            return 100.0; // Project is completed, so progress is 100%
+        }
+
+        // Get the list of tasks for the project
         List<Task> tasks = taskRepository.findByProjectProjectId(projectId);
         if (tasks.isEmpty()) {
             return 0.0; // No tasks means no progress
@@ -467,5 +479,6 @@ private boolean validateTaskDates(LocalDate projectStartDate, LocalDate projectE
 
         return totalProgress / tasks.size();
     }
+
 
 }

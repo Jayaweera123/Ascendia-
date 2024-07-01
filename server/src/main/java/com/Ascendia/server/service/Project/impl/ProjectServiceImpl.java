@@ -66,7 +66,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage, String clientFirstName, String clientLastName, String consultantFirstName, String consultantLastName, String projectManagerFirstName, String projectManagerLastName) {
+    public ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage,
+                                    String projectManagerFirstName, String projectManagerLastName,
+                                    String clientFirstName, String clientLastName,
+                                    String consultantFirstName, String consultantLastName) {
         // Check if a profile image is provided
         if (profileImage != null && !profileImage.isEmpty()) {
             try {
@@ -153,8 +156,9 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectDto updateProjectById(Long projectId, ProjectDto projectDto, MultipartFile profileImage,
+                                        String newProjectManagerFirstName, String newProjectManagerLastName,
                                         String newClientFirstName, String newClientLastName,
-                                        String newConsultantFirstName, String newConsultantLastName, String projectManagerFirstName, String projectManagerLastName) {
+                                        String newConsultantFirstName, String newConsultantLastName) {
 
         Project existingProject = projectRepository.findByProjectId(projectId);
 
@@ -193,7 +197,14 @@ public class ProjectServiceImpl implements ProjectService {
             }
         }
 
-
+        if (newProjectManagerFirstName != null && newProjectManagerLastName != null) {
+            Optional<User> pmOpt = userRepository.findByFirstNameAndLastName(newProjectManagerFirstName, newProjectManagerLastName);
+            if (pmOpt.isPresent()) {
+                existingProject.setProjectManager(pmOpt.get());
+            } else {
+                throw new RuntimeException("Project Manager not found");
+            }
+        }
 
         // Update client information if provided
         if (newClientFirstName != null && newClientLastName != null) {
@@ -341,7 +352,7 @@ public class ProjectServiceImpl implements ProjectService {
             // Save the updated project entity
             Project UpdatedProject = projectRepository.save(project);
 
-            return "Prject manger is updated "+ projectManager.getFirstName() + " " + projectManager.getLastName();
+            return "Project manger is updated "+ projectManager.getFirstName() + " " + projectManager.getLastName();
 
         } else {
             // Handle the null case appropriately

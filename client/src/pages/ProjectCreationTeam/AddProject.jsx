@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import TopNavigation from "../../components/TopNavigation";
 import SideNavigationPCTeam from "../../components/ProjectCreationTeam/SideNavigationPCTeam";
-import { MdAssignmentAdd } from "react-icons/md";
-import { MdEditDocument } from "react-icons/md";
 import axios from "axios";
 import Swal from "sweetalert2";
 import * as ProjectService from "../../services/ProjectService";
@@ -14,9 +12,10 @@ const AddProject = () => {
   const navigate = useNavigate(); 
   const { projectId } = useParams();
 
-  const [formData, setFormData] = useState({
-    projectName: '',
+  const [formData, setFormData] = useState({ 
     projectType: '',
+    projectName: '',
+    location: '',
     projectDescription: '',
     projectStatus: '',
     createdDate: '',
@@ -30,6 +29,7 @@ const AddProject = () => {
   const [errors, setErrors] = useState({
     projectType: "",
     projectName: "",
+    location: "",
     projectDescription: "",
     projectStatus: "",
     createdDate: "",
@@ -60,11 +60,16 @@ const AddProject = () => {
           Authorization: `Bearer ${token}`
         }
       });
+      console.log(response);
   
-      const { projectName, projectType, projectDescription, projectStatus, createdDate, endDate, image, clientFirstName, clientLastName, consultantFirstName, consultantLastName, projectManagerFirstName, projectManagerLastName } = response.data;
+      const { projectName, projectType, location, projectDescription, projectStatus, createdDate, endDate, image, 
+        projectManagerFirstName, projectManagerLastName,
+        clientFirstName, clientLastName, 
+        consultantFirstName, consultantLastName } = response.data;
       setFormData({
         projectName,
         projectType,
+        location,
         projectDescription,
         projectStatus,
         createdDate,
@@ -95,9 +100,10 @@ const AddProject = () => {
   };
   
   const resetFormData = () => {
-    setFormData({
-      projectName: '',
+    setFormData({    
       projectType: '',
+      projectName: '',
+      location: '',
       projectDescription: '',
       projectStatus: '',
       createdDate: '',
@@ -145,34 +151,22 @@ const AddProject = () => {
   };
 
 
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file && file.size > 2 * 1024 * 1024) {
-      setErrors({
-        ...errors,
-        profileImage: 'Profile image size should not exceed 2MB'
-      });
+      setErrors(prevErrors => ({ ...prevErrors, profileImage: 'Profile image size should not exceed 2MB' }));
     } else {
-      setFormData({
-        ...formData,
-        profileImage: file
-      });
-      setErrors({
-        ...errors,
-        profileImage: ''
-      });
+      setFormData(prevFormData => ({ ...prevFormData, profileImage: file }));
+      setErrors(prevErrors => ({ ...prevErrors, profileImage: '' }));
     }
   };
 
-
   const saveProject = async (e) => {
     e.preventDefault();
-  
-    if (!validateForm()) {
-      return;
-    }
-  
-    const formDataToSend = new FormData();
+    if (!validateForm()) return;
+
+    const formDataToSend = new FormData(); 
     Object.keys(formData).forEach(key => {
       if (key === 'profileImage' && formData[key] && formData[key] instanceof File) {
         formDataToSend.append(key, formData[key]);
@@ -180,6 +174,7 @@ const AddProject = () => {
         formDataToSend.append(key, formData[key]);
       }
     });
+    console.log(formDataToSend);
   
     try {
       const token = localStorage.getItem('token');
@@ -236,6 +231,13 @@ const AddProject = () => {
       valid = false;
     } else {
       errorsCopy.projectName = "";
+    }
+
+    if (!formData.location) {
+      errorsCopy.location = "Location is required";
+      valid = false;
+    } else {
+      errorsCopy.location = "";
     }
   
     if (!formData.projectDescription) {
@@ -316,17 +318,19 @@ const AddProject = () => {
   const handleClearForm = () => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This action will clear all form fields. Are you sure you want to proceed?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, clear it!",
+      confirmButtonText: "Yes",
       cancelButtonText: "No, cancel",
       confirmButtonColor: '#001b5e',
       cancelButtonColor: '#6b7280',
-
     }).then((result) => {
-      if (result.isConfirmed) {
-        clearForm();
+      if (result.isConfirmed) {      
+        if (projectId) {
+          navigate('/projectslist');
+        } else {
+          clearForm();
+        }
       }
     });
   };
@@ -336,6 +340,7 @@ const AddProject = () => {
     setErrors({
       projectType: "",
       projectName: "",
+      location:"",
       projectDescription: "",
       projectStatus: "",
       createdDate: "",
@@ -402,7 +407,7 @@ const AddProject = () => {
                                 {errors.projectType && <span className="text-red-500">{errors.projectType}</span>}
                               </div>
                             
-                            <div className="mt-8">
+                            <div className="mt-8 ">
                               <label
                                 htmlFor="projectName"
                                 className="block text-base font-medium leading-6 text-gray-900"
@@ -418,7 +423,7 @@ const AddProject = () => {
                                   maxLength={100}
                                   value={formData.projectName}
                                   onChange={handleChange}
-                                  className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                   required
                                 />
                                 {errors.projectName && <span className="text-red-500">{errors.projectName}</span>}
@@ -427,6 +432,33 @@ const AddProject = () => {
                                 </p>
                               </div>
                             </div>
+
+                            <div className="mt-8">
+                              <label
+                                htmlFor="location"
+                                className="block text-base font-medium leading-6 text-gray-900"
+                              >
+                                Location
+                              </label>
+                              <div className="mt-2">
+                                <input
+                                  type="text"
+                                  id="location"
+                                  name="location"
+                                  autoComplete="given-name"                 
+                                  value={formData.location}
+                                  onChange={handleChange}
+                                  className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  required
+                                />
+                                {errors.location && (
+                                  <p className="mt-2 text-red-500">
+                                    {errors.location}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+
                             <div className="mt-8">
                               <label
                                 htmlFor="project-description"
@@ -660,7 +692,7 @@ const AddProject = () => {
                                 onClick={handleClearForm}
                                 className="w-24 px-4 py-2 text-xl font-semibold text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                     >
-                                Clear
+                                {projectId ? 'Cancel' : 'Clear'}
                               </button>
                             </div>
                           </div>

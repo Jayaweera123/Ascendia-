@@ -28,7 +28,7 @@ const Progress = () => {
     projectName: '',
     endDate: '',
     projectDescription: '',
-    profileImage: ''
+    image: ''
   });
 
   const renderSideNavigation = () => {
@@ -142,10 +142,10 @@ const Progress = () => {
             <div className="flex flex-row gap-5 p-3 m-3 border-2 border-dotted rounded-lg border-gray-900/10">
                 <div className="flex flex-col justify-center object-left gap-5 items-left">
                     <h1 className="top-0 left-0 text-3xl font-bold leading-9 tracking-tight text-left text-gray-900">
-                        Project ID - {project.projectId || 105}
+                        Project ID - {project.projectId}
                     </h1>
                     <h2 className="font-sans text-2xl font-semibold leading-9 tracking-tight text-left text-gray-500">
-                      {project.projectName || "The Galle Techno-Park" }
+                      {project.projectName }
                     </h2>
                     <h2 className="font-sans text-lg font-semibold leading-9 tracking-tight text-left text-gray-900">
                     Completion Date - {project.endDate ? (
@@ -157,13 +157,14 @@ const Progress = () => {
                     )}
                   </h2>
                     <div className="text-base text-justify">
-                      {project.projectDescription || "The Galle Techno-Park is located in the Galle District, close to the Southern Expressway Pinnaduwa interchange. Construction of the complex was envisioned by the Ministry of Information Technology in line with the National Policy Framework and the President’s vision."}
+                      {project.projectDescription }
                     </div>
 
                 </div>
+                
                 <img
-                  src={project.profileImage || progresspark}
-                  alt="park"
+                  src={project.image ? `http://localhost:8080/${project.image.replace(/\\/g, "/")}` : ""}
+                  alt={`Image of ${project.projectName}`}
                   className="object-right w-6/12 pt-1 shadow-sm h-1/2 shadow-white"
                 />
         

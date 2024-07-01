@@ -40,6 +40,8 @@ function TransactionChart() {
   }, []);
 
   const combineData = (residential, commercial, industrial, infrastructure, other) => {
+    const predefinedYearOrder = [2020, 2021, 2022, 2023, 2024];
+
     const years = [...new Set([
       ...residential.map(d => d.year),
       ...commercial.map(d => d.year),
@@ -48,7 +50,7 @@ function TransactionChart() {
       ...other.map(d => d.year)
     ])];
 
-    return years.map(year => ({
+    const combinedData = years.map(year => ({
       name: year,
       Residential: residential.find(d => d.year === year)?.count || 0,
       Commercial: commercial.find(d => d.year === year)?.count || 0,
@@ -56,7 +58,10 @@ function TransactionChart() {
       Infrastructure: infrastructure.find(d => d.year === year)?.count || 0,
       Others: other.find(d => d.year === year)?.count || 0
     }));
+
+    return combinedData.sort((a, b) => predefinedYearOrder.indexOf(a.name) - predefinedYearOrder.indexOf(b.name));
   };
+
 
   return (
     <div className="flex flex-col flex-1 w-full p-4 mt-4 bg-white border border-gray-200 rounded-sm shadow-md h-96">

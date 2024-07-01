@@ -32,13 +32,13 @@ public class ProjectController {
     @PostMapping("/project/createProject")
     public ResponseEntity<ProjectDto> createProject(@ModelAttribute ProjectDto projectDto,
                                                     @RequestParam("profileImage") MultipartFile profileImage,
+                                                    @RequestParam("projectManagerFirstName") String projectManagerFirstName,
+                                                    @RequestParam("projectManagerLastName") String projectManagerLastName,
                                                     @RequestParam("clientFirstName") String clientFirstName,
                                                     @RequestParam("clientLastName") String clientLastName,
                                                     @RequestParam("consultantFirstName") String consultantFirstName,
-                                                    @RequestParam("consultantLastName") String consultantLastName,
-                                                    @RequestParam("consultantFirstName") String projectManagerFirstName,
-                                                    @RequestParam("consultantLastName") String projectManagerLastName){
-        ProjectDto savedProject = projectService.createProject(projectDto, profileImage, clientFirstName, clientLastName, consultantFirstName, consultantLastName, projectManagerFirstName, projectManagerLastName);
+                                                    @RequestParam("consultantLastName") String consultantLastName){
+        ProjectDto savedProject = projectService.createProject(projectDto, profileImage, projectManagerFirstName, projectManagerLastName, clientFirstName, clientLastName, consultantFirstName, consultantLastName);
         return new ResponseEntity<>(savedProject, HttpStatus.CREATED);
     }
 
@@ -66,26 +66,25 @@ public class ProjectController {
             @PathVariable Long projectId,
             @ModelAttribute ProjectDto updatedProject,
             @RequestParam(value = "profileImage", required = false) MultipartFile profileImage,
+            @RequestParam(value = "newProjectManagerFirstName", required = false) String newProjectManagerFirstName,
+            @RequestParam(value = "newProjectManagerLastName", required = false) String newProjectManagerLastName,
             @RequestParam(value = "newClientFirstName", required = false) String newClientFirstName,
             @RequestParam(value = "newClientLastName", required = false) String newClientLastName,
             @RequestParam(value = "newConsultantFirstName", required = false) String newConsultantFirstName,
-            @RequestParam(value = "newConsultantLastName", required = false) String newConsultantLastName,
-            @RequestParam(value = "newProjectManagerFirstName", required = false) String newProjectManagerFirstName,
-            @RequestParam(value = "newProjectManagerLastName", required = false) String newProjectManagerLastName) {
+            @RequestParam(value = "newConsultantLastName", required = false) String newConsultantLastName){
 
         // Update the project using the service
         ProjectDto updatedProjectDto = projectService.updateProjectById(
                 projectId,
                 updatedProject,
                 profileImage,
+                newProjectManagerFirstName,
+                newProjectManagerLastName,
                 newClientFirstName,
                 newClientLastName,
                 newConsultantFirstName,
-                newConsultantLastName,
-                newProjectManagerFirstName,
-                newProjectManagerLastName
+                newConsultantLastName
         );
-
         // Return the response
         return ResponseEntity.ok(updatedProjectDto);
     }
@@ -107,56 +106,6 @@ public class ProjectController {
         projectManagerUpdateDto.setProjectId(projectId);
         projectService.updateProjectManager(projectManagerUpdateDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-
-
-
-    //Nethuni
-    @GetMapping("/pmanager/{id}")
-    public ResponseEntity<ProjectDto> getProjectById(@PathVariable("id") Long projectId) {
-        ProjectDto projectDto = projectService.getProjectId(projectId);
-        return ResponseEntity.ok(projectDto);
-    }
-
-
-    @GetMapping("/pmanager/{pmId}/all")
-    public ResponseEntity<List<ProjectGetDto>>  getProjectsByPMId(@PathVariable("pmId") Long pmId){
-        List<ProjectGetDto> projects = projectService.getProjectsByPmId(pmId);
-        return ResponseEntity.ok(projects);
-    }
-
-    //Build search REST API
-    /*@GetMapping("/pmanager/search/{pmId}")
-    public ResponseEntity<List<ProjectDto>> searchProject(@PathVariable String pmId, @RequestParam("query") String query){
-        return ResponseEntity.ok(projectService.searchProject(pmId, query));
-    }*/
-
-    /*@GetMapping("/pmanager/duration/{projectId}")
-    public String getDuration(@PathVariable("projectId") Long projectId) {
-        ProjectDto projectDto = projectService.getProjectId(projectId);
-        return projectService.calculateDuration(projectDto);
-    }*/
-
-    @GetMapping("/pmanager/{projectId}/jobs/count")
-    public Long getTotalJobsForProject(@PathVariable Long projectId) {
-        return projectService.getTotalJobsForProject(projectId);
-    }
-
-    @GetMapping("/pmanager/{projectId}/completed/jobs/count")
-    public Long getCOmpletedJobsForProject(@PathVariable Long projectId) {
-        return projectService.getCompletedJobsCountForProject(projectId);
-    }
-
-    @GetMapping("/pmanager/{projectId}/employees/count")
-    public Long getEmployeeCountForProject(@PathVariable Long projectId) {
-        return projectService.getEmployeeCountForProject(projectId);
-    }
-
-    @GetMapping("/pmanager/{projectId}/task/count")
-    public ResponseEntity<Integer> getTaskCountForProject(@PathVariable Long projectId) {
-        int taskCount = projectService.getTaskCountForProject(projectId);
-        return ResponseEntity.ok(taskCount);
     }
 
     @PutMapping("project/{projectId}/pm")
@@ -232,6 +181,42 @@ public class ProjectController {
     @GetMapping("/project/other/count-by-year")
     public List<Map<String, Object>> getOtherProjectsCountByYear() {
         return projectService.getOtherProjectsCountByYear();
+    }
+
+
+    //Nethuni
+    @GetMapping("/pmanager/{id}")
+    public ResponseEntity<ProjectDto> getProjectById(@PathVariable("id") Long projectId) {
+        ProjectDto projectDto = projectService.getProjectId(projectId);
+        return ResponseEntity.ok(projectDto);
+    }
+
+
+    @GetMapping("/pmanager/{pmId}/all")
+    public ResponseEntity<List<ProjectGetDto>>  getProjectsByPMId(@PathVariable("pmId") Long pmId){
+        List<ProjectGetDto> projects = projectService.getProjectsByPmId(pmId);
+        return ResponseEntity.ok(projects);
+    }
+
+    @GetMapping("/pmanager/{projectId}/jobs/count")
+    public Long getTotalJobsForProject(@PathVariable Long projectId) {
+        return projectService.getTotalJobsForProject(projectId);
+    }
+
+    @GetMapping("/pmanager/{projectId}/completed/jobs/count")
+    public Long getCOmpletedJobsForProject(@PathVariable Long projectId) {
+        return projectService.getCompletedJobsCountForProject(projectId);
+    }
+
+    @GetMapping("/pmanager/{projectId}/employees/count")
+    public Long getEmployeeCountForProject(@PathVariable Long projectId) {
+        return projectService.getEmployeeCountForProject(projectId);
+    }
+
+    @GetMapping("/pmanager/{projectId}/task/count")
+    public ResponseEntity<Integer> getTaskCountForProject(@PathVariable Long projectId) {
+        int taskCount = projectService.getTaskCountForProject(projectId);
+        return ResponseEntity.ok(taskCount);
     }
 
 }

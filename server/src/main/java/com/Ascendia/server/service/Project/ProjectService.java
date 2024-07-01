@@ -14,36 +14,21 @@ public interface ProjectService {
 
     List<ProjectGetDto> getProjectsForUser(User user);
 
-    ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage, String clientFirstName, String clientLastName, String consultantFirstName, String consultantLastName, String projectManagerFirstName, String projectManagerLastName);
+    ProjectDto createProject(ProjectDto projectDto, MultipartFile profileImage,
+                             String projectManagerFirstName, String projectManagerLastName,
+                             String clientFirstName, String clientLastName,
+                             String consultantFirstName, String consultantLastName);
+
     List<ProjectDto> getAllProjects();
 
     void deactivateProjectById(Long projectId);
 
     ProjectDto updateProjectById(Long projectId, ProjectDto projectDto, MultipartFile profileImage,
+                                 String newProjectManagerFirstName, String newProjectManagerLastName,
                                  String newClientFirstName, String newClientLastName,
-                                 String newConsultantFirstName, String newConsultantLastName, String projectManagerFirstName, String projectManagerLastName);
+                                 String newConsultantFirstName, String newConsultantLastName);
 
-        ProjectGetDto getProjectByProjectId(Long projectId);
-
-    //Nethuni
-    ProjectDto getProjectId(Long projectId);
-
-    List<ProjectGetDto> getProjectsByPmId(Long pmId);
-
-    //List<ProjectDto> getProjectsByPmId(String pmId);
-
-
-    //List<ProjectDto> searchProject(String pmId, String query);
-
-    //String calculateDuration(ProjectDto projectDto);
-
-    Long getTotalJobsForProject(Long projectId);
-
-    Long getCompletedJobsCountForProject(Long projectId);
-
-    Long getEmployeeCountForProject(Long projectId);
-
-    int getTaskCountForProject(Long projectId);
+    ProjectGetDto getProjectByProjectId(Long projectId);
 
     String updatePM(Long projectId, PmDto updatedPm);
 
@@ -59,15 +44,23 @@ public interface ProjectService {
     void updateProjectManager(ProjectManagerUpdateDto projectManagerUpdateDto);
 
     List<Map<String, Object>> getResidentialProjectsCountByYear();
-
     List<Map<String, Object>> getCommercialProjectsCountByYear();
-
     List<Map<String, Object>> getIndustrialProjectsCountByYear();
-
     List<Map<String, Object>> getInfrastructureProjectsCountByYear();
-
     List<Map<String, Object>> getOtherProjectsCountByYear();
 
 
+    //Nethuni
+    ProjectDto getProjectId(Long projectId);
+
+    List<ProjectGetDto> getProjectsByPmId(Long pmId);
+
+    Long getTotalJobsForProject(Long projectId);
+
+    Long getCompletedJobsCountForProject(Long projectId);
+
+    Long getEmployeeCountForProject(Long projectId);
+
+    int getTaskCountForProject(Long projectId);
 
 }

@@ -11,12 +11,14 @@ public class ProjectMapper {
                 project.getProjectId(),
                 project.getProjectName(),
                 project.getProjectType(),
+                project.getLocation(),
                 project.getProjectDescription(),
                 project.getProjectStatus(),
                 project.getCreatedDate(),
                 project.getEndDate(),
                 project.getImage(),
-                project.getProjectManager(),
+                project.getProjectManager() != null ? project.getProjectManager().getFirstName() : null,
+                project.getProjectManager() != null ? project.getProjectManager().getLastName() : null,
                 project.getClient() != null ? project.getClient().getFirstName() : null,
                 project.getClient() != null ? project.getClient().getLastName() : null,
                 project.getConsultant() != null ? project.getConsultant().getFirstName() : null,
@@ -28,31 +30,15 @@ public class ProjectMapper {
         Project project = new Project();
         project.setProjectName(projectDto.getProjectName());
         project.setProjectType(projectDto.getProjectType());
+        project.setLocation(projectDto.getLocation());
         project.setProjectDescription(projectDto.getProjectDescription());
         project.setProjectStatus(projectDto.getProjectStatus());
         project.setCreatedDate(projectDto.getCreatedDate());
         project.setEndDate(projectDto.getEndDate());
-        //project.setPmId(projectDto.getPmId());
         project.setImage(projectDto.getImage());
-        project.setProjectManager(projectDto.getProjectManager());
-
         return project;
     }
 
-        /*project.setProjectId(projectDto.getProjectId());
-        project.setProjectName(projectDto.getProjectName());
-        project.setProjectType(projectDto.getProjectType());
-        project.setProjectDescription(projectDto.getProjectDescription());
-        project.setProjectStatus(projectDto.getProjectStatus());
-        project.setCreatedDate(projectDto.getCreatedDate());
-        project.setEndDate(projectDto.getEndDate());
-        project.setPmId(projectDto.getPmId());
-        project.setImage(projectDto.getImage());
 
-        // Tasks mapping can be added if needed, assuming Task and TaskDto have a similar structure
-        // project.setTasks(projectDto.getTasks().stream().map(TaskDto::mapToTask).collect(Collectors.toList()));
-
-
-        return project;*/
 
 }

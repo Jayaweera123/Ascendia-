@@ -28,6 +28,9 @@ public class Project {
     @Column(name = "project_type", nullable = false)
     private String projectType;
 
+    @Column(name = "location", nullable = false)
+    private String location;
+
     @Column(name = "project_description", nullable = false, length = 1000)
     private String projectDescription;
 
@@ -65,16 +68,16 @@ public class Project {
     @JsonManagedReference // Prevent infinite recursion
     private List<Task> tasks;
 
-    public Project(String projectName, String projectType, String projectDescription, String projectStatus, LocalDate createdDate, LocalDate endDate, String image, User ProjectManager, double progress) {
+    public Project(String projectName, String projectType, String location, String projectDescription, String projectStatus, LocalDate createdDate, LocalDate endDate, String image, User projectManager, double progress) {
         this.projectName = projectName;
         this.projectType = projectType;
+        this.location = location;
         this.projectDescription = projectDescription;
         this.projectStatus = projectStatus;
         this.createdDate = createdDate;
         this.endDate = endDate;
-        //this.pmId = pmId;
         this.image = image;
-        this.projectManager = ProjectManager;
-        this.progress = progress; // Initialize the progress field
+        this.projectManager = projectManager;
+        this.progress = progress;
     }
 }
