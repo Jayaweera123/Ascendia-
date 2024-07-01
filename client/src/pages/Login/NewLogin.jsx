@@ -39,6 +39,8 @@ const NewLogin = () => {
           title: "Success!",
           text: "Login successful!",
           icon: "success",
+          confirmButtonColor: '#001b5e',
+          cancelButtonColor: '#6b7280',
         });
 
         // Navigate to the appropriate dashboard based on user designation
