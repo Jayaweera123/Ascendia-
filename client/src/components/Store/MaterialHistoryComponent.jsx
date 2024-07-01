@@ -3,15 +3,16 @@ import { useReactToPrint } from 'react-to-print';
 import SearchBar from "./SearchBar";
 import { FaDownload } from "react-icons/fa6";
 import DateRangePickerComponent from "./DateRangePickerComponent";
+import Swal from "sweetalert2";
 
 function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPage, 
     currentPage, numberOfPages, search, setSearch, action, setAction,
  value, setValue, updatedMaterial}) {
 
+    // Create an array of numbers for pagination
     const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
     const [showDatePicker, setShowDatePicker] = useState(false);
     
-
     //Function to format date and time
     const formatDateTime = (dateTimeString) => {
         const date = new Date(dateTimeString);
@@ -20,19 +21,27 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
         return { formattedDate, formattedTime };
     };
 
-    const componentPDF = useRef();
+    const componentPDF = useRef(); // Ref for the component to be printed
 
     const generatePDF = useReactToPrint({
         content: () => componentPDF.current,
         documentTitle: 'Equipment History',
         onAfterPrint: () => {
             console.log('After print');
-            // alert("data saved in pdf")
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'PDF created successfully!',
+                confirmButtonColor: '#001b5e'
+            });
         }
     });
+    
+    
 
     {console.log(componentPDF)}
 
+    // Handle change in action selection
     const handleActionChange = (e) => {
         const selectedAction = e.target.value;
        
@@ -46,8 +55,9 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
         console.log(action);
       }, [action]);
 
+
     return (
-        <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md">
+        <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md " style={{height:'38rem'}}>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <SearchBar search={search} setSearch={setSearch} />
 
@@ -70,10 +80,7 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
                     setValue = {setValue}/>
                 )}
                
-               <br />
-                
-                
-
+               {/* Downloard button*/}
                 <div className="mb-8">
                     <button className="mt-6 bg-[#101d3f] hover:bg-sky-800 text-white font-bold py-2 px-4 rounded" onClick={generatePDF}>
                         <div className="flex items-center">
@@ -84,8 +91,10 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
                         </div>
                     </button>
                 </div>
+
             </div>
 
+            {/* Main table displaying the material history */}
             <table className="min-w-full text-sm bg-white">
                 <thead>
                     <tr className="text-gray-700 border-b bg-blue-gray-100 border-blue-gray-50 border-y">
@@ -156,8 +165,9 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
             </table>
 
 
-            </div>
+        </div>
 
+            {/* Pagination controls */}
             <div className="flex items-center justify-between p-4 border-t border-blue-gray-50">
                 <button className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none" onClick={prePage}>
                     Previous

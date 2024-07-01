@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import TopNavigation from "./components/TopNavigation";
+import './shim/global.js';
 
 {
   /*Ravindu*/
@@ -37,7 +38,6 @@ import ReviewService from "./services/ReviewService";
   /*Deshani*/
 }
 import StoreKeeperDashboard from "./pages/Store/StoreKeeperDashboard";
-import ViewHistory from "./pages/Store/ViewHistory";
 import Material from "./pages/Store/Material";
 import MaterialForm from "./components/Store/MaterialForm";
 import Equipment from "./pages/Store/Equipment";
@@ -202,7 +202,6 @@ const App = () => {
           )}
           {StoreServices.skeeperOnly() && (
             <>
-              <Route path="/viewHistory" element={<ViewHistory />} />
               <Route path="/history" element={<History />} />
             </>
           )}
@@ -211,15 +210,9 @@ const App = () => {
               <Route path="/editMaterial/:id" element={<MaterialForm />} />
               <Route path="/addEquipment" element={<EquipmentForm />} />
               <Route path="/editEquipment/:id" element={<EquipmentForm />} />
-              <Route
-                path="/updateMaterial/:id"
-                element={<UpdateMaterialForm />}
-              />
-              <Route
-                path="/updateEquipment/:id"
-                element={<UpdateEquipmentForm />}
-              />
-              <Route path="/addMaterial" element={<MaterialForm />} />
+              <Route path="/updateMaterial/:id" element={<UpdateMaterialForm />} />
+              <Route path="/updateEquipment/:id" element={<UpdateEquipmentForm />} />
+              <Route path="/addMaterial" element={<MaterialForm />} />  
             </>
           )}
         </Routes>

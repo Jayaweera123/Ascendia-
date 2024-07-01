@@ -1,34 +1,46 @@
 import React, { useEffect, useState } from "react";
-import SideNavigationStore from "./SideNavigationStore"; // Adjust the path based on your project structure
-import TopNavigationStore from "./TopNavigationStore"; // Adjust the path based on your project structure
+import SideNavigationStore from "./SideNavigationStore"; 
+import TopNavigationStore from "./TopNavigationStore"; 
 import { getMaterial, inventoryUpdateMaterial } from '../../services/StoreServices';
 import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import NotificationBar from './NotificationBar';
 
 function UpdateMaterialForm() {
+  // State for controlling side navigation visibility
   const [open, setOpen] = useState(true);
+  // State variables to manage form inputs
   const [materialCode, setMaterialCode] = useState('')
   const [materialName, setMaterialName] = useState('')
   const [updatedQuantity, setUpdatedQuantity] = useState(0)
   const [action, setAction] = useState('Issue')
+  const [quantity, setQuantity] = useState(0)
 
-  const {id} = useParams();
+  const {id} = useParams(); // Fetching ID parameter from URL
 
+  // State for validation errors
   const  [errors, setErrors] = useState({
     
     updatedQuantity: ''
 
   })
 
-  const navigator = useNavigate();
+  // State for controlling notification bar visibility
+  const [isOpen, setIsOpen] = useState(false);
+  // Function to handle notification bar visibility
+  const notificationHandler = (status) => {
+    setIsOpen(status);
+};
+
+  const navigator = useNavigate(); // Navigation hook for redirecting
 
   useEffect(() => {
-    
-
+    // Effect to fetch material details when ID changes
       if(id){
         getMaterial(id).then((response) => {
           setMaterialCode(response.data.materialCode);
           setMaterialName(response.data.materialName);
+          setQuantity(response.data.quantity);
           setUpdatedQuantity(response.data.updatedQuantity);
         }).catch(error => {
           console.error(error);
@@ -47,8 +59,8 @@ function UpdateMaterialForm() {
         console.log(material, "id:", id)
 
         const confirmationOptions = {
-            title: 'Update Inventory?',
-            text: 'Are you sure you want to update inventory?',
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#001b5e',
@@ -77,13 +89,12 @@ function UpdateMaterialForm() {
     }
 }
 
-
-
+// Cancel button handler to navigate back to material list
 function handleCancel(e){
   navigator('/material')
 }
 
-//Form validation
+//Form validation function
 
 function validateForm(){
   let valid = true;
@@ -105,6 +116,11 @@ function validateForm(){
     errorsCopy.updatedQuantity = '*Quantity must be a whole number';
     valid = false;
   }
+
+  if(updatedQuantity > quantity && action === 'Issue'){
+    errorsCopy.updatedQuantity = '*Quantity must not exceed available quantity';
+    valid = false;
+  }
   
   setErrors(errorsCopy);
   
@@ -115,7 +131,8 @@ function validateForm(){
 
   return (
     <div>
-      <TopNavigationStore />
+      <TopNavigationStore notificationHandler={notificationHandler} />
+      {isOpen && <NotificationBar isOpen={isOpen} notificationHandler={notificationHandler}  />}
       <section className="flex gap-6">
         <SideNavigationStore open={open} setOpen={setOpen} />
         <div className="flex-auto w-8/12 m-3">

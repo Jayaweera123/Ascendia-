@@ -23,7 +23,7 @@ public class UpdateMaterial {
     private String action; //Add or Issue
     private LocalDateTime UpdatedDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "materialId" , referencedColumnName = "materialId")
     private Material material;
 

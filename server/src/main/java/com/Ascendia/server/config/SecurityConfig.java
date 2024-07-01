@@ -33,7 +33,7 @@ public class SecurityConfig{
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/auth/**", "/public/**", "/progress/**" ,"/pmanager/**" ,"/sengineer/**" ,"/reviews/**" ,"/uploads/**").permitAll() // Allow unauthenticated access to static resources
+                        .requestMatchers("/auth/**", "/public/**", "/progress/**" ,"/pmanager/**" ,"/sengineer/**" ,"/reviews/**" ,"/uploads/**","/websocket/**").permitAll() // Allow unauthenticated access to static resources
                         .requestMatchers("/admin/**").hasAnyAuthority("Administrator")
                         .requestMatchers("/client/**").hasAnyAuthority("Client", "Consultant")
                         .requestMatchers("/projects/**").hasAnyAuthority("Project Creation Team", "Project Manager", "Site Engineer", "Supervisor", "Technical Officer", "Store Keeper", "Quantity Surveyor")

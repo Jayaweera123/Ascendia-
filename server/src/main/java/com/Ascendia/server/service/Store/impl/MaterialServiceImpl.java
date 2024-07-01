@@ -1,11 +1,17 @@
 package com.Ascendia.server.service.Store.impl;
 
 import com.Ascendia.server.dto.Store.MaterialDto;
+import com.Ascendia.server.dto.Store.NotificationDto;
+import com.Ascendia.server.dto.Store.NotificationSeenDto;
 import com.Ascendia.server.dto.Store.UpdateMaterialDto;
 import com.Ascendia.server.entity.Project.Project;
+import com.Ascendia.server.entity.Store.Notification;
 import com.Ascendia.server.entity.Store.UpdateMaterial;
+import com.Ascendia.server.mapper.Store.NotificationIsSeenMapper;
+import com.Ascendia.server.mapper.Store.NotificationMapper;
 import com.Ascendia.server.mapper.Store.UpdateMaterialMapper;
 import com.Ascendia.server.repository.Project.ProjectRepository;
+import com.Ascendia.server.repository.Store.NotificationRepository;
 import com.Ascendia.server.repository.Store.UpdateMaterialRepository;
 import com.Ascendia.server.service.Store.MaterialService;
 import com.Ascendia.server.entity.Store.Material;
@@ -16,6 +22,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,6 +40,14 @@ public class MaterialServiceImpl implements MaterialService {
 
     @Autowired
     private UpdateMaterialRepository updateMaterialRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
+    //Create material
     @Override
     public MaterialDto createMaterial(MaterialDto materialDto) {
 
@@ -40,13 +55,22 @@ public class MaterialServiceImpl implements MaterialService {
         Project project = projectRepository.findById(materialDto.getProjectId())
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + materialDto.getProjectId()));
 
+
         Material material = MaterialMapper.mapToMaterial(materialDto, project);
+
+        // Check if material quantity is less than minimum level
+        if (material.getQuantity() <= material.getMinimumLevel()) {
+            material.setStatus("Low Stock");
+        }else{
+            material.setStatus("In Stock");
+        }
 
         Material savedMaterial = materialRepository.save(material);
 
         return MaterialMapper.mapToMaterialDto(savedMaterial);
     }
 
+    //Get material by id
     @Override
     public MaterialDto getMaterialById(Long materialId) {
         Material material = materialRepository.findById(materialId)
@@ -56,6 +80,7 @@ public class MaterialServiceImpl implements MaterialService {
         return MaterialMapper.mapToMaterialDto(material);
     }
 
+    //Get all materials by projectId
     @Override
     public List<MaterialDto> getAllMaterials(Long projectId) {
         Project project = projectRepository.findById(projectId)
@@ -65,6 +90,7 @@ public class MaterialServiceImpl implements MaterialService {
                 .collect(Collectors.toList());
     }
 
+    //Edit material by materialId
     @Override
     public MaterialDto editMaterial(Long materialId, MaterialDto editedMaterial) {
         Material material = materialRepository.findById(materialId).orElseThrow(
@@ -83,6 +109,7 @@ public class MaterialServiceImpl implements MaterialService {
         return MaterialMapper.mapToMaterialDto(editedMaterialObj);
     }
 
+    //Delete material by materialId
     @Override
     public void deleteMaterial(Long materialId) {
 
@@ -93,6 +120,7 @@ public class MaterialServiceImpl implements MaterialService {
         materialRepository.deleteById(materialId);
     }
 
+    //Search material by projectId and query
     @Override
     public List<MaterialDto> searchMaterial(Long projectId, String query) {
         List<Material> materials =  materialRepository.searchMaterial(projectId, query);
@@ -100,6 +128,7 @@ public class MaterialServiceImpl implements MaterialService {
                 .collect(Collectors.toList());
     }
 
+    //Update inventory by materialId
     @Override
     public MaterialDto updateInventory(Long materialId, UpdateMaterialDto updateMaterialDto) {
         Material material = materialRepository.findById(materialId).orElseThrow(() ->
@@ -128,9 +157,36 @@ public class MaterialServiceImpl implements MaterialService {
         updateMaterial.setMaterial(material); // Set the Material entity
         updateMaterialRepository.save(updateMaterial);
 
+        // Check if material quantity is less than minimum level and send notification if it is
+        if (updatedQuantity <= material.getMinimumLevel()) {
+            sendLowStockNotification(material);
+            material.setStatus("Low Stock");
+        }else{
+            material.setStatus("In Stock");
+        }
+
         return MaterialMapper.mapToMaterialDto(material);
     }
 
+    // Method to send notification
+    private void sendLowStockNotification(Material material) {
+
+
+        String storeKeeperId = material.getUserId(); // Assuming you have a way to get storekeeper ID
+        String message = material.getMaterialCode() + " - " + material.getMaterialName()  +  " is running low !";
+
+        Notification notification = new Notification(storeKeeperId, message);
+
+        notification.setNotifyDate(LocalDateTime.now());
+        notification.setIsSeen("unseen");
+        // Save notification to the database
+        notificationRepository.save(notification);
+
+        // Use SimpMessagingTemplate to send notification
+        simpMessagingTemplate.convertAndSendToUser(storeKeeperId, "/private", notification);
+    }
+
+    //Get all updated materials by projectId
     @Override
     public List<UpdateMaterialDto> getAllUpdatedMaterials(Long projectId) {
         Project project = projectRepository.findById(projectId)
@@ -141,6 +197,7 @@ public class MaterialServiceImpl implements MaterialService {
                 .collect(Collectors.toList());
     }
 
+    //Search updated materials by projectId and query
     @Override
     public List<UpdateMaterialDto> searchUpdatedMaterials(Long projectId, String query) {
         List<UpdateMaterial> updatedMaterials = updateMaterialRepository.searchUpdatedMaterials(projectId, query);
@@ -149,6 +206,8 @@ public class MaterialServiceImpl implements MaterialService {
                 .collect(Collectors.toList());
     }
 
+
+    //Get updated materials by date range
     public List<UpdateMaterialDto> getUpdatedMaterialsByDateRange(Long projectId, LocalDateTime startDate, LocalDateTime endDate) {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + projectId));
@@ -159,4 +218,54 @@ public class MaterialServiceImpl implements MaterialService {
                 .map(UpdateMaterialMapper::mapToUpdateMaterialDto)
                 .collect(Collectors.toList());
     }
+
+    //Get all notifications by userId
+    @Override
+    public List<NotificationDto> getAllNotifications(String userId) {
+        List<Notification> notifications = notificationRepository.findByUserId(userId);
+        return notifications.stream()
+                .map(NotificationMapper::mapToNotificationDto)
+                .collect(Collectors.toList());
+    }
+
+    //Get low stock materials by projectId
+    @Override
+    public List<MaterialDto> getLowStockMaterials(Long projectId) {
+        List<Material> materials = materialRepository.findProjectsWithLowStockMaterials(projectId);
+        return materials.stream().map(MaterialMapper::mapToMaterialDto)
+                .collect(Collectors.toList());
+    }
+
+    //Set notification seen by notificationId
+    @Override
+    public NotificationSeenDto setNotificationSeen(Long notificationId, NotificationSeenDto notificationSeenData) {
+        Notification notification = notificationRepository.findById(notificationId).orElseThrow(
+                () -> new ResourceNotFoundException("Notification is not exists with given id: " + notificationId)
+        );
+
+        notification.setIsSeen(notificationSeenData.getIsSeen());
+
+        Notification notificationSeenDataObj = notificationRepository.save(notification);
+
+        return NotificationIsSeenMapper.mapToNotificationSeenDto(notificationSeenDataObj);
+
+    }
+
+    //Mark all notifications as seen by userId
+    public void markAllAsSeen(String userId) {
+        List<Notification> notifications = notificationRepository.findByUserId(userId);
+        for (Notification notification : notifications) {
+            notification.setAllSeen(true);
+        }
+        notificationRepository.saveAll(notifications);
+    }
+
+    //Get unseen notifications by userId
+    @Override
+    public List<NotificationDto> getUnseenNotifications(String userId) {
+        List<Notification> notifications = notificationRepository.findUserIdWithUnseenNotifications(userId);
+        return notifications.stream().map(NotificationMapper::mapToNotificationDto)
+                .collect(Collectors.toList());
+    }
+
 }

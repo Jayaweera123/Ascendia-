@@ -4,6 +4,7 @@ import SideNavigationStore from "../../components/Store/SideNavigationStore";
 import DashboardCards from "../../components/Store/dashboard/DashboardCards";
 import MaterialChart from "../../components/Store/dashboard/MaterialChart";
 import NotificationBar from "../../components/Store/NotificationBar";
+import LowStockMaterials from "../../components/Store/dashboard/LowStockMaterials";
 
  // Retrieve and parse projectIDs from local storage
  const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
@@ -15,21 +16,26 @@ import NotificationBar from "../../components/Store/NotificationBar";
 
 function StoreKeeperDashboard() {
 
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(true); // State for sidebar open/close
   
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false); // State for notification bar open/close
   
+    // Handler function for notification bar status
     const notificationHandler = (status) => {
         setIsOpen(status);
     };
 
   return (
     <>
+       {/* Top navigation bar */}
       <TopNavigationStore notificationHandler={notificationHandler} />
+
+       {/* Notification bar */}
       {isOpen && <NotificationBar isOpen={isOpen} notificationHandler={notificationHandler} />}
       
       <section className="flex">
 
+        {/* Side navigation bar */} 
         <SideNavigationStore open={open} setOpen={setOpen} />
         <div className="relative flex-auto w-8/12 h-screen">
         
@@ -39,22 +45,23 @@ function StoreKeeperDashboard() {
               </div>
 
         <div className="min-h-screen mx-auto mt-20">
+
+              {/* Dashboard cards component */}
               <DashboardCards givenProjectId={givenProjectId}/>
 
              
             <div className="gap-5 lg:flex grow md:flex:none">
               <div className="py-5 lg:w-8/12">
+                {/* Material chart component */}
                 <MaterialChart givenProjectId={givenProjectId}/>
               </div>
 
               <div className="py-5 lg:w-8/12">
-                <MaterialChart />
+                {/* Low stock materials component */}
+                <LowStockMaterials givenProjectId={givenProjectId} />
               </div>
               
 
-              {/*<div className="py-5 lg:w-4/12">
-                <TasksPieChart projectId={projectId} />
-              </div>*/}
             </div> 
           </div>
           </div>

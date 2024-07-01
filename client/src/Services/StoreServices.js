@@ -31,6 +31,8 @@ export const getMaterial = (materialId) => api.get('/store/material/getMaterialB
 
 export const editMaterial = (materialId, material) => api.put('/skeeperonly/material/editMaterial/' + materialId, material);
 
+export const deleteMaterial = (materialId) => api.delete('/skeeperonly/material/deleteMaterial/' + materialId);
+
 export const searchMaterial = (projectId, query) => api.get(`/store/material/searchMaterial/${projectId}?query=${query}`);
 
 export const inventoryUpdateMaterial = (materialId, material) => api.put('/skeeperonly/material/updateInventory/material/' + materialId, material);
@@ -38,6 +40,16 @@ export const inventoryUpdateMaterial = (materialId, material) => api.put('/skeep
 export const getAllUpdatedMaterials = (projectId) => api.get('/store/material/getAllUpdatedMaterials/' + projectId);
 
 export const searchUpdatedMaterial = (projectId, query) => api.get(`/store/material/searchUpdatedMaterial/${projectId}?query=${query}`);
+
+export const getAllNotifications = (userId) => api.get('/skeeperonly/material/getAllNotifications/' + userId);
+
+export const getLowStockMaterials = (projectId) => api.get('/store/material/lowStockMaterials/' + projectId);
+
+export const setAsNotificationSeen = (notificationId, notificationData) => api.put('/skeeperonly/material/notificationSeen/' + notificationId, notificationData);
+
+export const markAllNotificationsAsSeen = (userId) => api.put('/skeeperonly/material/markAllAsSeen/' + userId);
+
+export const getUnseenNotifications = (userId) => api.get('/skeeperonly/material/unseenNotifications/' + userId);
 
 //Equipment
 export const listEquipment = (projectId) => api.get('/store/equipment/getAllEquipment/' + projectId);
@@ -47,6 +59,8 @@ export const createEquipment = (equipment) => api.post('/skeeperonly/equipment/c
 export const getEquipment = (equipmentId) => api.get('/store/equipment/getEquipmentById/' + equipmentId);
 
 export const editEquipment = (equipmentId, equipment) => api.put('/skeeperonly/equipment/editEquipment/' + equipmentId, equipment);
+
+export const deleteEquipment = (equipmentId) => api.delete('/skeeperonly/equipment/deleteEquipment/' + equipmentId);
 
 export const searchEquipment = (projectId, query) => api.get(`/store/equipment/searchEquipment/${projectId}?query=${query}`);
 

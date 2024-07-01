@@ -22,7 +22,7 @@ public class UpdateEquipment {
     private String action; //Add ,Issue, or return
     private LocalDateTime UpdatedDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "equipmentId" , referencedColumnName = "equipmentId")
     private Equipment equipment;
 }
