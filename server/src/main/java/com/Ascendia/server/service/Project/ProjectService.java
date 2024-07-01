@@ -48,4 +48,9 @@ public interface ProjectService {
 
     String updatePM(Long projectId, PmDto updatedPm);
 
+    Long countCompletedProjects();
+    Long countInProgressProjects();
+    Long countCancelledProjects();
+    Long countPendingProjects();
+
 }

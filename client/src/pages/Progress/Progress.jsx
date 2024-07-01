@@ -133,7 +133,7 @@ const Progress = () => {
         <div class="relative bg-sky-50 bg-cover h-fit w-">
         <div className="m-3 text-xl font-semibold text-gray-900">
         <div className="flex flex-row gap-3 pt-2 pb-1 ml-3 items-centered">
-        <GiProgression  size={80} color="#001b5e"/>
+        
             
           <div><h1 className="place-items-baseline text-4xl leading-relaxed py-4 tracking-tight font-bold text-left text-[#001b5e]">Progress</h1></div>
         </div>

@@ -51,6 +51,11 @@ export const getAllProjectCards = () => api.get(REST_API_BASE_URL + "/project/al
 
 export const deactivateProjectById = (projectId) => api.delete(`/project/${projectId}`);
 
+export const countCompletedProjects = () => api.get("/project/count/completed");
+export const countInProgressProjects = () => api.get("/project/count/inprogress");
+export const countPendingProjects = () => api.get("/project/count/pending");
+export const countCancelledProjects = () => api.get("/project/count/cancelled");
+
 {
   /*Nethuni*/
 }

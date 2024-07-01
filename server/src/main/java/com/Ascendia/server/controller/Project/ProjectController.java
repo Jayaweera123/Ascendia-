@@ -149,8 +149,32 @@ public class ProjectController {
 
     @PutMapping("project/{projectId}/pm")
     public String updateProjectPM(@PathVariable Long projectId, @RequestBody PmDto pmDto) {
-        // Update the proejct
+        // Update the project
         return projectService.updatePM(projectId, pmDto);
+    }
+
+    @GetMapping("/project/count/completed")
+    public ResponseEntity<Long> countCompletedProjects() {
+        Long count = projectService.countCompletedProjects();
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/project/count/inprogress")
+    public ResponseEntity<Long> countInProgressProjects() {
+        Long count = projectService.countInProgressProjects();
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/project/count/cancelled")
+    public ResponseEntity<Long> countCancelledProjects() {
+        Long count = projectService.countCancelledProjects();
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/project/count/pending")
+    public ResponseEntity<Long> countPendingProjects() {
+        Long count = projectService.countPendingProjects();
+        return ResponseEntity.ok(count);
     }
 
 }

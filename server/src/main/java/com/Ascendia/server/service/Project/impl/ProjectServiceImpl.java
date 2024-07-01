@@ -322,4 +322,23 @@ public class ProjectServiceImpl implements ProjectService {
 
     }
 
+    @Override
+    public Long countCompletedProjects() {
+        return projectRepository.countCompletedProjects();
+    }
+
+    @Override
+    public Long countInProgressProjects() {
+        return projectRepository.countInProgressProjects();
+    }
+
+    @Override
+    public Long countCancelledProjects() {
+        return projectRepository.countCancelledProjects();
+    }
+
+    @Override
+    public Long countPendingProjects() {
+        return projectRepository.countPendingProjects();
+    }
 }

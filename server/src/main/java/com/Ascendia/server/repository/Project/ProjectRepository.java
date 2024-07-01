@@ -36,6 +36,18 @@ public interface ProjectRepository  extends JpaRepository<Project, Long >{
     Project findByProjectId(Long projectId);
 
     List<Project> findByProjectManager(User user);
+
+    @Query("SELECT COUNT(p) FROM Project p WHERE p.projectStatus = 'Completed'")
+    Long countCompletedProjects();
+
+    @Query("SELECT COUNT(p) FROM Project p WHERE p.projectStatus = 'In-Progress'")
+    Long countInProgressProjects();
+
+    @Query("SELECT COUNT(p) FROM Project p WHERE p.projectStatus = 'Cancelled'")
+    Long countCancelledProjects();
+
+    @Query("SELECT COUNT(p) FROM Project p WHERE p.projectStatus = 'pending'")
+    Long countPendingProjects();
     /*
     List<Project> findByStoreKeeper(User user);
     List<Project> findBySiteEngineer(User user);

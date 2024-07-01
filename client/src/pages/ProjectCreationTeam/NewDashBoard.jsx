@@ -12,7 +12,7 @@ const NewDashBoard = () => {
   return (
     <div>
       <TopNavigation />
-      <section className="flex gap-6 mt-4">
+      <section className="flex gap-6">
         <SideNavigationPCTeam open={open} setOpen={setOpen} />
         <div className="flex flex-col w-full gap-4">
           <StatusGrid />
