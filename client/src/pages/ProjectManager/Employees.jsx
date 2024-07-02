@@ -15,7 +15,7 @@ function Employees() {
   return (
     <>
       <TopNavigationPM />
-      <section className="flex ">
+      <section className="flex mt-16">
         <SideNavigationPM projectId={projectId} />
         <div className="flex-auto">
           <div className="mx-10 my-5 ">
@@ -27,9 +27,9 @@ function Employees() {
             {/* <EmployeeCard projectId={projectId} />*/}
             <EmployeeCopy projectId={projectId} />
           </div>
-          <div className="mx-10 my-5 ">
+          {/*<div className="mx-10 my-5 ">
             <RemoveAllEmployees projectId={projectId} />
-          </div>
+          </div>*/}
         </div>
       </section>
     </>

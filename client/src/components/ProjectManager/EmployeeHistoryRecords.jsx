@@ -46,8 +46,7 @@ function EmployeeHistoryRecords({ projectId }) {
     selectedDesignation === "all"
       ? employees
       : employees.filter(
-          (employee) =>
-            employee.assignedUser.designation === selectedDesignation
+          (employee) => employee.assignedUserDesignation === selectedDesignation
         );
 
   useEffect(() => {

@@ -213,12 +213,12 @@ const TaskDetailsinJobPage = ({ taskId, projectId }) => {
 
         <div className="text-justify">
           <p className="text-gray-800 mt-1">
-            {description.length < 999
+            {description.length < 700
               ? description +
-                Array(1000 - description.length)
+                Array(700 - description.length)
                   .fill("\u00A0")
                   .join(" ")
-              : description + Array(200).fill("\u00A0").join(" ")}
+              : description + Array(100).fill("\u00A0").join(" ")}
             {/* Add whitespace if shorter */}
           </p>
         </div>

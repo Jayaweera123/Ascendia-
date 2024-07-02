@@ -12,12 +12,11 @@ public interface ProjectRepository  extends JpaRepository<Project, Long >{
 
     //List<Project> findByPmId(String pmId);
 
-    /*@Query(
-            "SELECT p FROM Project p WHERE " +
-                    "p.pmId = :pmId AND " +
-                    "(p.projectName LIKE CONCAT('%',:query, '%') OR " +
-                    "p.projectDescription LIKE CONCAT('%',:query, '%'))")
-    List<Project> searchProject(String pmId, String query);*/
+    @Query("SELECT p FROM Project p WHERE " +
+            "p.projectManager.userID = :pmId AND " +
+            "(p.projectName LIKE CONCAT('%', :query, '%') OR " +
+            "p.projectDescription LIKE CONCAT('%', :query, '%'))")
+    List<Project> searchProject(@Param("pmId") String pmId, @Param("query") String query);
 
     @Query("SELECT p FROM Project p WHERE p.projectManager = :pmId")
     List<Project> findProjectsByProjectManagerId(@Param("pmId") Long pmId);

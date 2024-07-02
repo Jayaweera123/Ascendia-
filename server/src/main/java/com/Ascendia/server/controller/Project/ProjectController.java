@@ -90,10 +90,10 @@ public class ProjectController {
     }
 
     //Build search REST API
-    /*@GetMapping("/pmanager/search/{pmId}")
-    public ResponseEntity<List<ProjectDto>> searchProject(@PathVariable String pmId, @RequestParam("query") String query){
+    @GetMapping("/pmanager/search/{pmId}")
+    public ResponseEntity<List<ProjectGetDto>> searchProject(@PathVariable Long pmId, @RequestParam("query") String query){
         return ResponseEntity.ok(projectService.searchProject(pmId, query));
-    }*/
+    }
 
     /*@GetMapping("/pmanager/duration/{projectId}")
     public String getDuration(@PathVariable("projectId") Long projectId) {

@@ -160,6 +160,15 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public List<ProjectGetDto> searchProject(Long pmId, String query) {
+            List<Project> projects = projectRepository.searchProject(pmId.toString(), query); // Convert pmId to String if necessary
+            return projects.stream()
+                    .map(ProjectGetMapper::mapToProjectGetDto) // Assuming toProjectDto method in ProjectMapper
+                    .collect(Collectors.toList());
+
+    }
+
+    @Override
     public List<ProjectGetDto> getProjectsForUser(User user) {
         List<Project> projects = new ArrayList<>();
 

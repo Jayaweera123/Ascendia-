@@ -32,7 +32,7 @@ public interface ProjectService {
     //List<ProjectDto> getProjectsByPmId(String pmId);
 
 
-    //List<ProjectDto> searchProject(String pmId, String query);
+    List<ProjectGetDto> searchProject(Long pmId, String query);
 
     //String calculateDuration(ProjectDto projectDto);
 

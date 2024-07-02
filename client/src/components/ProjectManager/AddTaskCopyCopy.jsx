@@ -318,20 +318,19 @@ function AddTaskForm(projectId) {
                     )}
                     {endDate && projectStartDate > endDate && (
                       <span className="mt-2 text-sm text-red-500">
-                        Invalid end date: Project starts in be end in{" "}
-                        {projectEndDate}
+                        Invalid end date: Project starts in {projectEndDate}
                       </span>
                     )}
                     {endDate && startDate && startDate == endDate && (
                       <span className="mt-2 text-sm text-red-500">
-                        Invalid end date.
+                        Invalid end date.{" "}
                       </span>
                     )}
                     {endDate &&
                       new Date(endDate) <
                         new Date(new Date().setHours(0, 0, 0, 0)) && (
                         <span className="mt-2 text-sm text-red-500">
-                          End date must be future date.
+                          End date must be a future date.
                         </span>
                       )}
                   </div>

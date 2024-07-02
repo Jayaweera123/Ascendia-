@@ -123,6 +123,8 @@ function EditTaskForm({ id, prePageNavigator }) {
     (endDate && projectStartDate > endDate) ||
     (startDate &&
       new Date(startDate) <= new Date(new Date().setHours(0, 0, 0, 0))) ||
+    (endDate &&
+      new Date(endDate) <= new Date(new Date().setHours(0, 0, 0, 0))) ||
     endDate > projectEndDate ||
     description.length > 999 ||
     taskName.length > 99;
@@ -292,17 +294,24 @@ function EditTaskForm({ id, prePageNavigator }) {
                         {projectEndDate}.
                       </span>
                     )}
-                    {endDate && projectStartDate > endDate && (
+                    {/*endDate && projectStartDate < endDate && (
                       <span className="mt-2 text-sm text-red-500">
-                        Invalid end date: Project starts in be end in{" "}
+                        Invalid end date: Project should be end in{" "}
                         {projectEndDate}
                       </span>
-                    )}
+                    )*/}
                     {endDate && startDate && startDate == endDate && (
                       <span className="mt-2 text-sm text-red-500">
                         Invalid end date.
                       </span>
                     )}
+                    {endDate &&
+                      new Date(endDate) <=
+                        new Date(new Date().setHours(0, 0, 0, 0)) && (
+                        <span className="mt-2 text-sm text-red-500">
+                          End date must be today or a future date.
+                        </span>
+                      )}
                   </div>
                 </div>
               </div>
