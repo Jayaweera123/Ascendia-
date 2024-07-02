@@ -60,11 +60,6 @@ const NewProjectCard = () => {
   const editProject = (projectId) => {
     navigate(`/project/update/${projectId}`);
   };
-  
-
-  const handleAssignEmployee = (projectId) => {
-    navigate(`/project/assign/${projectId}`);
-  };
 
   const projectProgress = (projectId) => {
     navigate(`/progress/${projectId}`);
@@ -120,11 +115,7 @@ const NewProjectCard = () => {
                           </span>
                         </p>
                         <div className="flex">
-                          <MdPerson
-                            className="mr-2 text-green-500 cursor-pointer"
-                            size={20}
-                            onClick={() => handleAssignEmployee(project.projectId)}
-                          />
+                          
                           <MdEdit
                             className="mr-2 text-blue-800 cursor-pointer"
                             size={20}                           

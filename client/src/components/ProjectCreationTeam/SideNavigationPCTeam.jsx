@@ -44,10 +44,6 @@ const SideNavigationPCTeam = () => {
     { name: 'Dashboard', link: '/project/Dashboard', icon: PiProjectorScreenChartBold, condition: isProject },
     { name: 'Projects', link: '/projectslist', icon: MdOutlineDashboard, condition: isProject },
     { name: 'Create Project', link: '/project/addProject', icon: FaRegClipboard, condition: isProject },  
-    { name: 'Add Project Manager', link: '/project/pm', icon: GrUserManager, condition: isProject },
-    
-    
-    
     
     
   ];
