@@ -18,6 +18,8 @@ const SideNavigationStore = () => {
       title: 'Are you sure?',
       text: 'You will be logged out!',
       icon: 'warning',
+      confirmButtonColor: '#001b5e',
+      cancelButtonColor: '#6b7280',
       showCancelButton: true,
       confirmButtonText: 'Yes, logout!',
       cancelButtonText: 'Cancel'
@@ -25,7 +27,13 @@ const SideNavigationStore = () => {
       if (result.isConfirmed) {
         AuthService.logout();
         navigate('/');  // Redirect to login page after logout
-        Swal.fire('Logged out!', 'You have been logged out.', 'success');
+        Swal.fire({
+          title: "Logged out!",
+          text: "You have been logged out.!",
+          icon: "success",
+          confirmButtonColor: '#001b5e',
+          cancelButtonColor: '#6b7280',
+        });
       }
     });
   };

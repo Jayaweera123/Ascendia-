@@ -21,12 +21,12 @@ function MaterialHistoryComponent({ records, prePage, changeCurrentPage, nextPag
         return { formattedDate, formattedTime };
     };
 
-    const componentPDF = useRef(); // Ref for the component to be printed
+    const componentPDF = useRef(); // Ref for the component to be printed. assigns the result of the useReactToPrint hook. 
 
     const generatePDF = useReactToPrint({
-        content: () => componentPDF.current,
+        content: () => componentPDF.current, // This property specifies what content should be printed. 
         documentTitle: 'Equipment History',
-        onAfterPrint: () => {
+        onAfterPrint: () => {     // This is a callback function that will be executed after the printing process is completed.
             console.log('After print');
             Swal.fire({
                 icon: 'success',
