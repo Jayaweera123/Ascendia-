@@ -7,13 +7,8 @@ import SideNavigationPCTeam from "../../components/ProjectCreationTeam/SideNavig
 import SideNavigation from "../../components/ProjectManager/SideNavigation";
 import SideNavigationStore from "../../components/Store/SideNavigationStore"; 
 import TopNavigationClient from "../../components/Client/TopNavigationClient";
-import progresspark from "../../assets/progresspark.png";
-import { GiProgression } from "react-icons/gi";
 import RadialProgressBar1 from "../../components/Progress/RadialProgressBar1";
 import RadialProgressBar2 from "../../components/Progress/RadialProgressBar2";
-import RadialProgressBar3 from "../../components/Progress/RadialProgressBar3";
-import RadialProgressBar4 from "../../components/Progress/RadialProgressBar4";
-import RadialProgressBar5 from "../../components/Progress/RadialProgressBar5";
 import UserService from "../../services/UserService";
 import { format } from 'date-fns';
 
