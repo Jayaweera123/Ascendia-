@@ -37,9 +37,9 @@ public interface TaskService {
 
     boolean isCompleted(Long taskId);
 
-    void markAsCompleted(Long taskId);
+    void markAsCompleted(Long taskId, TaskUpdateDto taskUpdateDto);
 
-    void markAsUncompleted(Long taskId);
+    void markAsUncompleted(Long taskId, TaskUpdateDto taskUpdateDto);
 
     void moveToInProgress(Long taskId);
 

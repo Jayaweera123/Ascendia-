@@ -39,7 +39,7 @@ function Projects() {
   return (
     <>
       <TopNavigationPM />
-      <section className="flex">
+      <section className="flex mt-16">
         <SideNavigationPM pmId={pmId} />
 
         <div className="flex-auto w-8/12">

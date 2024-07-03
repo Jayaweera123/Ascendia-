@@ -55,6 +55,13 @@ public interface ProjectService {
 
     List<ProjectGetDto> getProjectsByPmId(Long pmId);
 
+    //List<ProjectDto> getProjectsByPmId(String pmId);
+
+
+    List<ProjectGetDto> searchProject(Long pmId, String query);
+
+    //String calculateDuration(ProjectDto projectDto);
+
     Long getTotalJobsForProject(Long projectId);
 
     Long getCompletedJobsCountForProject(Long projectId);

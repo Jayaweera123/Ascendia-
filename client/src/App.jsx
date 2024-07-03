@@ -151,7 +151,7 @@ const App = () => {
               <Route path="/projects" element={<Projects />} />
               <Route path="/tasks" element={<Tasks />} />
               <Route path="/employees" element={<Employees />} />
-              <Route path="/progress" element={<ProjectProgress />} />
+
               <Route
                 path="/:projectId/employee-history"
                 element={<EmployeeHistory />}

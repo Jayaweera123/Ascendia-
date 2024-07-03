@@ -108,6 +108,8 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
 
     }
 
+
+
     @Override
     public List<Project> getProjectsByAssignedUser(User assignedUser) {
         return userProjectAssignmentRepository.findProjectsByAssignedUser(assignedUser);
@@ -152,6 +154,25 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
 
         // Delete the assignment
         userProjectAssignmentRepository.deleteById(assignmentId);
+
+        //Send Email
+
+        String subject = "Removal From the Project Notification";
+
+        String body =
+                "Dear " + assignedUser.getFirstName() + " " + assignedUser.getLastName() + ",\n\n" +
+                       "We want to express our sincere gratitude for your contributions to the project as a " + assignedUser.getDesignation() + ".\n\n" +
+                        "Project: " + assignment.getProject().getProjectName() + "\n" +
+                        "Removed By: " + assignment.getAssignedByUser().getFirstName() + " " + assignment.getAssignedByUser().getLastName() + " (" + assignment.getAssignedByUser().getDesignation() + ")\n\n" +
+                        "Your dedication and efforts have been greatly appreciated. Although you are no longer assigned to this project, we value the contributions you made and the expertise you brought to our team.\n\n" +
+                        "Should you have any questions or need further assistance, please do not hesitate to contact us.\n\n" +
+                        "Best regards,\n" +
+                        "Ascendia Construction Management\n" +
+                        "\n";
+
+        sendEmailService.sendEmail(assignedUser.getEmail(), body, subject);
+
+
     }
 
     @Override

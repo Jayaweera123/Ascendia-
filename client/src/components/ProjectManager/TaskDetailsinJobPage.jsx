@@ -17,6 +17,7 @@ import { comment } from "postcss";
 import CommentCard from "./CommentCard"; // Import the CommentCard component
 import { formatDate } from "./Functions"; // Import the formatDate function
 import { FaArrowRight } from "react-icons/fa";
+import EditHistoy from "./EditHistory";
 
 const TaskDetailsinJobPage = ({ taskId, projectId }) => {
   // Your component logic goes here
@@ -69,7 +70,7 @@ const TaskDetailsinJobPage = ({ taskId, projectId }) => {
         setStartDate(response.data.startDate);
         setEndDate(response.data.endDate);
         setProject(response.data.project.projectName); // Set the project data
-        setTaskStatus(response.data.taskStatus);
+        setTaskStatus(response.data.status);
         //setProjectId(response.data.project.projectId);
         setCompleted(response.data.completed);
         //setTimeDifference(response.data);
@@ -121,8 +122,9 @@ const TaskDetailsinJobPage = ({ taskId, projectId }) => {
   function noDeleteWarning(id) {
     Swal.fire({
       icon: "warning",
-      title: "Warning!",
-      text: "You cannot delete this task because it has associated jobs.",
+      title: "Unable to delete",
+      text: "This task has associated jobs.",
+      confirmButtonColor: "#001b5e",
     });
     return; // Exit function
   }
@@ -135,6 +137,7 @@ const TaskDetailsinJobPage = ({ taskId, projectId }) => {
           icon: "success",
           title: "Success!",
           text: "Task deleted successfully!",
+          confirmButtonColor: "#001b5e",
         }).then(() => {
           navigator("/project/" + projectId + "/task");
         });
@@ -164,73 +167,123 @@ const TaskDetailsinJobPage = ({ taskId, projectId }) => {
   }
 
   return (
-    <div className="mt-2.5 mb-5 p-5 bg-white shadow-md rounded-md ">
-      <div className="flex justify-between  w-full">
-        <div className="flex text-xl font-semibold mb-2 text-gray-700">
-          {project}
-          <IoIosArrowForward className="mt-1.5" />
-          {taskName}
+    <>
+      <div className="mt-2.5 mb-5 p-5 bg-white shadow-md rounded-md ">
+        <div className="flex justify-between  w-full">
+          {/*Title */}
+          <div className="flex text-xl font-semibold mb-2 text-gray-700">
+            {project}
+            <IoIosArrowForward className="mt-1.5" />
+            {taskName}
+          </div>
+
+          <div className="flex">
+            {/*Status */}
+
+            <div
+              className={`flex items-center font-semibold  bg-indigo-100 text-indigo-500 rounded-md mr-1 pl-1 pr-1 mb-2 mt-1 py-0 status-label-${taskStatus.toLowerCase()}`}
+            >
+              {taskStatus}
+            </div>
+
+            {/*Edit and Delete buttons */}
+            <div className="flex mt-2">
+              <Link
+                to={`/${projectId}/edit-task/${taskId}`}
+                className="group ml-1"
+              >
+                <LuClipboardEdit className="text-slate-600 text-lg transition-transform duration-300 transform hover:scale-150" />
+              </Link>
+
+              <RiDeleteBin6Line
+                className="text-slate-600 text-lg cursor-pointer transition-transform duration-300 transform hover:scale-150"
+                onClick={() => {
+                  const jobCount = jobCounts[taskId];
+                  if (jobCount > 0 /* condition for the first function */) {
+                    // Execute the first function
+                    noDeleteWarning(taskId);
+                  } else {
+                    popUpWarning(taskId);
+                  }
+                }}
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="flex">
-          <Link to={`/${projectId}/edit-task/${taskId}`} className="group">
-            <LuClipboardEdit className="text-slate-600 transition-transform duration-300 transform hover:scale-150" />
-          </Link>
-
-          <RiDeleteBin6Line
-            className="text-slate-600 cursor-pointer transition-transform duration-300 transform hover:scale-150"
-            onClick={() => {
-              const jobCount = jobCounts[taskId];
-              if (jobCount > 0 /* condition for the first function */) {
-                // Execute the first function
-                noDeleteWarning(taskId);
-              } else {
-                popUpWarning(taskId);
-              }
-            }}
-          />
+        <div className="text-justify">
+          <p className="text-gray-800 mt-1">
+            {description.length < 700
+              ? description +
+                Array(700 - description.length)
+                  .fill("\u00A0")
+                  .join(" ")
+              : description + Array(100).fill("\u00A0").join(" ")}
+            {/* Add whitespace if shorter */}
+          </p>
         </div>
-      </div>
 
-      <div className="text-justify">
-        <p className="text-gray-800 mt-1">
-          {description.length < 999
-            ? description +
-              Array(1000 - description.length)
-                .fill("\u00A0")
-                .join(" ")
-            : description + Array(200).fill("\u00A0").join(" ")}
-          {/* Add whitespace if shorter */}
-        </p>
-      </div>
+        <div className="flex justify-between items-center mt-2">
+          <div>
+            <div className="flex flex-col   text-gray-700">
+              {startDate && <p>Scheduled To: {formatDate(startDate)}</p>}
+              <p>Due on: {formatDate(endDate)}</p>
+            </div>
 
-      <div className="flex justify-between items-center mt-2">
-        <div className="flex flex-col   text-gray-700">
-          <p>Start Date: {startDate ? formatDate(startDate) : ""}</p>
-          <p>Due Date: {formatDate(endDate)}</p>
-        </div>
-        <div className="ml-auto">
-          {iscompleted ? (
-            <div className="ml-auto font-semibold" style={{ color: "#239B56" }}>
-              Task is completed
+            {/*Edit Hisory */}
+            <div className="flex">
+              <EditHistoy taskId={taskId} />
             </div>
-          ) : isEndDateGreaterThanCurrentDate ? (
-            <div className="ml-auto font-semibold" style={{ color: "#239B56" }}>
-              {JSON.stringify(timeDifference).replace(/"/g, "")} remaining
-            </div>
-          ) : (
-            <div className="ml-auto font-semibold" style={{ color: "#E75538" }}>
-              overdue by {JSON.stringify(timeDifference).replace(/"/g, "")}
-            </div>
-          )}
+          </div>
+          <div className="ml-auto">
+            {iscompleted ? (
+              <div
+                className="ml-auto font-semibold"
+                style={{ color: "#239B56" }}
+              ></div>
+            ) : isEndDateGreaterThanCurrentDate ? (
+              <div
+                className="ml-auto font-semibold"
+                style={{ color: "#239B56" }}
+              >
+                {JSON.stringify(timeDifference).replace(/"/g, "")} remaining
+              </div>
+            ) : (
+              <div
+                className="ml-auto font-semibold"
+                style={{ color: "#E75538" }}
+              >
+                overdue by {JSON.stringify(timeDifference).replace(/"/g, "")}
+              </div>
+            )}
 
-          {/* Render the comment cards */}
-          <div className="mt-1  text-gray-700 font-semibold">
-            <CommentCard comments={comments} />
+            {/* Render the comment cards */}
+            <div className="mt-1  text-gray-700 font-semibold">
+              <CommentCard comments={comments} />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <style>{`
+    .status-label-completed {
+      background-color: #D5F5E3 ; /* Green color for completed Tasks */
+      color: #239B56  ;
+      fit-content: 1;
+    }
+  
+  .status-label-overdue {
+    background-color: #FFE7E2; /* Red color for overdue Tasks */
+    color: #E75538;
+    fit-content: 1;
+    }
+  
+    .status-label-in-progress {
+      background-color: #FFFEC7; /* Yellow color for upcoming projects */
+      color: #EEAF32;
+      fit-content: 1;
+    }
+      `}</style>
+    </>
   );
 };
 

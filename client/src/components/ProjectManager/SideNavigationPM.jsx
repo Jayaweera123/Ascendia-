@@ -20,20 +20,28 @@ const SideNavigationPM = ({ pmId }) => {
       showCancelButton: true,
       confirmButtonText: "Yes, logout!",
       cancelButtonText: "Cancel",
+      confirmButtonColor: "#001b5e",
+      cancelButtonColor: "#6b7280",
     }).then((result) => {
       if (result.isConfirmed) {
-        UserService.logout();
-        navigate("/"); // Redirect to login page after logout
-        Swal.fire("Logged out!", "You have been logged out.", "success");
+        // Assuming UserService.logout() is an async function that handles logout
+        UserService.logout()
+          .then(() => {
+            navigate("/"); // Redirect to login page after logout
+            Swal.fire("Logged out!", "You have been logged out.", "success");
+          })
+          .catch((error) => {
+            console.error("Logout error:", error);
+            Swal.fire("Error", "Failed to logout. Please try again.", "error");
+          });
       }
     });
   };
 
   const menus = [
-    { name: "Home", link: `/${pmId}/pmhome`, icon: IoHome },
     {
       name: "Pojects",
-      link: `/${pmId}/project`,
+      link: "pmanager/projects",
       icon: PiProjectorScreenChartBold,
     },
     { name: "Logout", link: "#", icon: TbLogout, action: handleLogout },
