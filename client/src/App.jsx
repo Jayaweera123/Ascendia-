@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import TopNavigation from "./components/TopNavigation";
+import './shim/global.js';
 
 {
   /*Ravindu*/
@@ -8,12 +9,13 @@ import TopNavigation from "./components/TopNavigation";
 import SideNavigationPCTeam from "./components/ProjectCreationTeam/SideNavigationPCTeam";
 import AddProject from "./pages/ProjectCreationTeam/AddProject";
 import AssignPM from "./pages/ProjectCreationTeam/AssignPM";
-import ProjectService from "./services/ProjectService";
+import ProjectService from "./services/ProjectService.jsx";
 import Progress from "./pages/Progress/Progress";
 import ProjectsList from "./pages/ProjectCreationTeam/ProjectList";
 import NewDashBoard from "./pages/ProjectCreationTeam/NewDashBoard";
 import Assign from "./pages/ProjectCreationTeam/Assign";
 import Pm from "./pages/ProjectCreationTeam/Pm";
+import Completed from "./pages/ProjectCreationTeam/Completed"
 
 {
   /*Rashmi*/
@@ -22,7 +24,7 @@ import SideNavigationClient from "./components/Client/SideNavigationClient";
 import SideNavigationAdmin from "./components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "./components/Admin/TopNavigationAdmin";
 import TopNavigationClient from "./components/Client/TopNavigationClient";
-import UserService from "./services/UserService";
+import UserService from "./services/UserService.js";
 import AddUser from "./pages/Admin/AddUser";
 import DashBoard from "./pages/Admin/Dashboard";
 import UserList from "./pages/Admin/UserList";
@@ -30,20 +32,19 @@ import ClDashboard from "./pages/Client/ClDashboard";
 import NewLogin from "./pages/Login/NewLogin";
 import AddReview from "./pages/Client/AddReview";
 import Reviews from "./pages/Client/Reviews";
-import ReviewService from "./services/ReviewService";
+import ReviewService from "./services/ReviewService.js";
 
 {
   /*Deshani*/
 }
 import StoreKeeperDashboard from "./pages/Store/StoreKeeperDashboard";
-import ViewHistory from "./pages/Store/ViewHistory";
 import Material from "./pages/Store/Material";
 import MaterialForm from "./components/Store/MaterialForm";
 import Equipment from "./pages/Store/Equipment";
 import EquipmentForm from "./components/Store/EquipmentForm";
 import UpdateMaterialForm from "./components/Store/UpdateMaterialForm";
 import UpdateEquipmentForm from "./components/Store/UpdateEquipmentForm";
-import StoreServices from "./services/StoreServices";
+import StoreServices from "./services/StoreServices.js";
 import History from "./pages/Store/History";
 
 {
@@ -61,7 +62,7 @@ import ProjectProgress from "./pages/ProjectManager/ProjectProgress";
 import AddTask from "./pages/ProjectManager/AddTask";
 import TasksForProject from "./pages/ProjectManager/TasksForProject";
 import Jobs from "./pages/ProjectManager/Jobs";
-import TaskService from "./services/TaskService";
+import TaskService from "./services/TaskService.jsx";
 import EditTask from "./pages/ProjectManager/EditTask";
 import AddEmployee from "./pages/ProjectManager/AddEmployee";
 import EmployeeHistory from "./pages/ProjectManager/EmployeeHistory";
@@ -76,39 +77,33 @@ const App = () => {
           {/* Rashmi - Login */}
           <Route exact path="/" element={<NewLogin />} />
           <Route exact path="/login" element={<NewLogin />} />
-          <Route exact path="/newlogin" element={<NewLogin />} />
+
           <Route path="*" element={<Navigate to="/login" />} />‰
+
           {/* Ravindu - Progress */}
-          <Route path="/progress" element={<Progress />} />
+          <Route path="/progress/:projectId" element={<Progress />} />
+
           {/* Rashmi - Client */}
-          <Route path="/reviews" element={<Reviews />} />
-          <Route
-            path="/sidenavigationclient"
-            element={<SideNavigationClient />}
-          />
-          <Route
-            path="/sidenavigationadmin"
-            element={<SideNavigationAdmin />}
-          />
-          <Route path="/topNavigationAdmin" element={<TopNavigationAdmin />} />
-          <Route
-            path="/topNavigationClient"
-            element={<TopNavigationClient />}
-          />
+          <Route path="/reviews/:projectId" element={<Reviews />} />
+         
           {/* Check if user is authenticated and admin before rendering admin-only routes */}
           {UserService.adminOnly() && (
             <>
-              <Route path="/admin/adduser" element={<AddUser />} />
-              <Route path="/admin/dashboard" element={<DashBoard />} />
-              <Route path="/admin/userlist" element={<UserList />} />
-              <Route path="/admin/update/:userID" element={<AddUser />} />
+              <Route path="/admin/adduser" element={<AddUser />} />         
+              <Route path="/admin/dashboard" element={<DashBoard/>}/>
+              <Route path="/admin/userlist" element={<UserList/>}/>
+              <Route path="/admin/update/:userID" element={<AddUser/>}/>
+              <Route path="/sidenavigationadmin" element={<SideNavigationAdmin />}/>
+              <Route path="/topNavigationAdmin" element={<TopNavigationAdmin />} />
             </>
           )}
           {/* Rashmi - Client */}
-          {ReviewService.creviewOnly() && (
+          {ReviewService.clientOnly() && (
             <>
-              <Route path="/addreview" element={<AddReview />} />
+              <Route path="/addreview/:projectId" element={<AddReview />} />
               <Route path="/client/dashboard" element={<ClDashboard />} />
+              <Route path="/sidenavigationclient" element={<SideNavigationClient />} />
+              <Route path="/topNavigationClient"element={<TopNavigationClient />}/>
             </>
           )}
           {/* Ravindu */}
@@ -119,12 +114,16 @@ const App = () => {
                 element={<SideNavigationPCTeam />}
               />
               <Route path="/topNavigation" element={<TopNavigation />} />
-              <Route path="/project/addProject" element={<AddProject />} />
-              <Route path="/assignPM" element={<AssignPM />} />
-              <Route path="/projectslist" element={<ProjectsList />} />
-              <Route path="/project/DashBoard" element={<NewDashBoard />} />
-              <Route path="/project/assign" element={<Assign />} />
-              <Route path="/project/pm" element={<Pm />} />
+              <Route path="/project/addProject" element={<AddProject/>}/>
+              <Route path="/project/update/:projectId" element={<AddProject/>}/>
+              <Route path="/assignPM" element={<AssignPM/>}/>
+              <Route path="/projectslist" element={<ProjectsList/>}/>
+              <Route path="/project/Dashboard" element={<NewDashBoard/>}/>   
+              <Route path="/project/assign" element={<Assign/>}/>
+              <Route path="/project/pm" element={<Pm/>}/>
+              <Route path="/project/completed" element={<Completed />} />
+              <Route path="/project/assign/:projectId" element={<Assign/>}/>
+
             </>
           )}
           {/*ProjectManager */}
@@ -203,7 +202,6 @@ const App = () => {
           )}
           {StoreServices.skeeperOnly() && (
             <>
-              <Route path="/viewHistory" element={<ViewHistory />} />
               <Route path="/history" element={<History />} />
             </>
           )}
@@ -212,15 +210,9 @@ const App = () => {
               <Route path="/editMaterial/:id" element={<MaterialForm />} />
               <Route path="/addEquipment" element={<EquipmentForm />} />
               <Route path="/editEquipment/:id" element={<EquipmentForm />} />
-              <Route
-                path="/updateMaterial/:id"
-                element={<UpdateMaterialForm />}
-              />
-              <Route
-                path="/updateEquipment/:id"
-                element={<UpdateEquipmentForm />}
-              />
-              <Route path="/addMaterial" element={<MaterialForm />} />
+              <Route path="/updateMaterial/:id" element={<UpdateMaterialForm />} />
+              <Route path="/updateEquipment/:id" element={<UpdateEquipmentForm />} />
+              <Route path="/addMaterial" element={<MaterialForm />} />  
             </>
           )}
         </Routes>

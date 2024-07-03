@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin";
 import SideNavigationAdmin from "../../components/Admin/SideNavigationAdmin";
 import StatusGrid from "../../components/Admin/StatusGrid";
-import TransactionChart from "../../components/Admin/TransactionChart";
 import ProjectStatusChart from "../../components/Admin/ProjectStatusChart";
 import OnlineUserList from "../../components/Admin/OnlineUsesList";
 
@@ -12,7 +11,7 @@ const DashBoard = () => {
   return (
     <div>
       <TopNavigationAdmin />
-      <section className="flex">
+      <section className="flex overflow-x-hidden overflow-y-hidden">
         <SideNavigationAdmin open={open} setOpen={setOpen} />
         <div className="flex flex-col w-full gap-4">
           <StatusGrid />

@@ -96,7 +96,7 @@ export default StatusGrid;
 
 function BoxWrapper({ icon, label, value, bgColor }) {
     return (
-        <div className="m-4 relative flex items-center w-64 h-24 p-4 bg-white rounded-lg shadow-md">
+        <div className="m-4 relative flex items-center w-60 h-24 p-4 bg-white rounded-lg shadow-md">
             {/* Icon container */}
             <div className={`flex items-center justify-center w-12 h-12 ${bgColor} rounded-full`}>
                 {icon}

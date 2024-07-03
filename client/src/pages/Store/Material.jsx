@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { listMaterial } from "../../services/StoreServices";
+import { listMaterial, searchMaterial, deleteMaterial, getAllUpdatedMaterials } from "../../services/StoreServices";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../../components/Store/SearchBar";
 import TopNavigationStore from "../../components/Store/TopNavigationStore";
 import SideNavigationStore from "../../components/Store/SideNavigationStore";
-import { searchMaterial } from "../../services/StoreServices";
 import NotificationBar from "../../components/Store/NotificationBar";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import Swal from "sweetalert2";
 
 function Material() {
-  const [open, setOpen] = useState(true);
 
-  const [material, setMaterial] = useState([]);
+  const [open, setOpen] = useState(true); // State for sidebar open/close
 
-  const navigator = useNavigate();
+  const [material, setMaterial] = useState([]); // State for storing materials data
 
-  const [search, setSearch] = useState("");
+  const navigator = useNavigate(); // Navigation hook for routing
+
+  const [search, setSearch] = useState(""); // State for search input
 
   // Retrieve and parse projectIDs from local storage
   const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
@@ -25,7 +27,7 @@ function Material() {
   console.log('projectId', givenProjectId);
 
   
-  //Pagination
+  // State for pagination
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
   const lastIndex = currentPage * recordsPerPage;
@@ -33,14 +35,22 @@ function Material() {
   const records = material.slice(firstIndex, lastIndex);
   const numberOfPages = Math.ceil(material.length / recordsPerPage);
   const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
-    const [isOpen, setIsOpen] = useState(false);
+    
+  // State for notification bar open/close
+  const [isOpen, setIsOpen] = useState(false);
   
-    const notificationHandler = (status) => {
+  // Handler function for notification bar status
+  const notificationHandler = (status) => {
         setIsOpen(status);
-    };
+  };
 
-  //Get all materials
+  // Fetch all materials on component mount
   useEffect(() => {
+    getAllMaterials();
+  }, []);
+
+  // Function to fetch all materials
+  const getAllMaterials = () => {
     listMaterial(givenProjectId)
       .then((response) => {
         setMaterial(response.data);
@@ -48,9 +58,9 @@ function Material() {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }
 
-  //Search materials
+   // Effect for searching materials based on search term
   useEffect(() => {
     if (search !== "") {
       searchMaterial(givenProjectId, search)
@@ -72,29 +82,69 @@ function Material() {
     }
   }, [search]);
 
+  // Function to navigate to add material page
   const addNewMaterial = () => {
     navigator("/addMaterial");
   };
 
+  // Function to navigate to edit material page
   const editMaterial = (id) => {
     navigator(`/editMaterial/${id}`);
   };
 
+  // Function to navigate to update material page
   const updateMaterial = (id) => {
     navigator(`/updateMaterial/${id}`);
   };
 
-  //Pagination
+  // Function to delete material
+  const removeMaterial = (id) => {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#001b5e',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Delete'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          deleteMaterial(id)
+            .then((response) => {
+              getAllMaterials();
+              Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: 'Your material has been deleted.',
+                confirmButtonColor: '#001b5e'
+              });
+            })
+            .catch((error) => {
+              console.error(error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'You cannot delete this material',
+                confirmButtonColor: '#001b5e'
+              });
+            });
+        }
+      });
+    };
+  
+  // Function to navigate to previous page in pagination
   const prePage = () => {
     if (currentPage !== 1) {
       setCurrentPage(currentPage - 1);
     }
   };
 
+  // Function to change current page in pagination
   const changeCurrentPage = (id) => {
     setCurrentPage(id);
   };
 
+  // Function to navigate to next page in pagination
   const nextPage = () => {
     if (currentPage !== numberOfPages) {
       setCurrentPage(currentPage + 1);
@@ -120,8 +170,10 @@ function Material() {
                         <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md">
                             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                                 
+                                    {/* Search bar component */}
                                     <SearchBar search = {search} setSearch={setSearch}/>
 
+                                    {/* Button to add new material */}
                                     <div className="mb-8">
                                         <button className="mt-6 bg-[#101d3f] hover:bg-sky-800 text-white font-bold py-2 px-4 rounded al " onClick={addNewMaterial}>
                                             <div className="flex items-center">
@@ -136,17 +188,18 @@ function Material() {
                                     </div>     
                             </div>
                             
+                            {/* Table for displaying materials */}
                             <table className="min-w-full text-sm bg-white">
                                 <thead>
                                     <tr className="text-gray-700 border-b bg-blue-gray-100 border-blue-gray-50 border-y">
-                                    {/* <th scope="col" className="p-4"> </th> */}
-                                    <th className="px-4 py-5 text-left">Material Code</th>
-                                    <th className="px-4 py-5 text-left">Material Name</th>
-                                    <th className="px-4 py-5 text-left">Quantity</th>
-                                    <th className="px-4 py-5 text-left">Measuring Unit</th>
-                                    <th className="px-4 py-5 text-left">Description</th>
-                                    <th className="w-16 px-4 py-5 text-left">Edit</th>
-                                    <th className="w-16 px-4 py-5 text-left">Add/Issue</th>
+                                      <th className="px-4 py-5 text-left">Material Code</th>
+                                      <th className="px-4 py-5 text-left">Material Name</th>
+                                      <th className="px-4 py-5 text-left">Quantity</th>
+                                      <th className="px-4 py-5 text-left">Measuring Unit</th>
+                                      <th className="px-4 py-5 text-left">Description</th>
+                                      <th className="w-16 px-4 py-5 text-left">Edit</th>
+                                      <th className="w-16 px-4 py-5 text-left">Delete</th>
+                                      <th className="w-16 px-4 py-5 text-left">Add/Issue</th>
                                     </tr>
                                 </thead>
                                 <tbody className="text-blue-gray-900">
@@ -154,17 +207,18 @@ function Material() {
                                         records
                                         .map(material =>
                                             <tr className="bg-white border-b border-blue-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600" key={material.materialId}>
-                                                {/* <td class="w-4 p-4">
-                                                    <div class="flex items-center">
-                                                        <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onChange={() => handleCheckboxChange(material.materialCode)}/>
-                                                        <label for="checkbox-table-search-1" className="sr-only">checkbox</label>
-                                                    </div>
-                                                </td> */}
                                                 <td className="px-4 py-3">{material.materialCode}</td>
                                                 <td className="px-4 py-3">{material.materialName}</td>
                                                 <td className="px-4 py-3">{material.quantity}</td>
                                                 <td className="px-4 py-3">{material.measuringUnit}</td>
-                                                <td className="px-4 py-3">{material.description}</td>
+                                                <td className="px-4 py-3">
+                                                    <div className="relative group">
+                                                        {material.description.substring(0, 20)}...
+                                                        <div className="absolute z-10 hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
+                                                        {material.description}
+                                                        </div>
+                                                    </div>
+                                                </td>    
 
                                                 {/******************************** Edit material **************************************/}
                                                 <td className="px-5 py-3">
@@ -184,6 +238,26 @@ function Material() {
                                                         </button>
                                                         <div className="absolute hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
                                                             Edit
+                                                        </div>
+                                                    </div>
+
+                                                    
+                                                </td>
+
+                                                {/******************************** Delete material **************************************/}
+                                                <td className="py-3 px-7">
+                                                    <div className="relative inline-block group">
+                                                        <button
+                                                            type="button"
+                                                            className="focus:outline-none text-neutral-700 dark:text-neutral-200 group-hover:opacity-70"
+                                                            aria-label="Edit"
+                                                            onClick={() => removeMaterial(material.materialId)}
+                                                        >
+                                                            <RiDeleteBin6Line className="text-xl" />
+                                                      
+                                                        </button>
+                                                        <div className="absolute hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
+                                                            Delete
                                                         </div>
                                                     </div>
 

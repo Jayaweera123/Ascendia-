@@ -139,9 +139,6 @@ private boolean validateTaskDates(LocalDate projectStartDate, LocalDate projectE
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + taskId));
     }
 
-
-
-
     /*public List<TaskDto> getAllTasks() {
         List<Task> tasks = taskRepository.findAll();
         return tasks.stream().map((task) -> TaskMapper.mapToTaskDto(task))
@@ -477,19 +474,40 @@ private boolean validateTaskDates(LocalDate projectStartDate, LocalDate projectE
     }
 
     //Ravindu
+
+    public long getJobCountForProject(Long projectId) {
+        return jobRepository.countJobsByProjectId(projectId);
+    }
+
+    public long getCompletedJobCountForProject(Long projectId) {
+        return jobRepository.countCompletedJobsByProjectId(projectId);
+    }
+
     @Override
     public int getTaskProgress(Long taskId) {
         Task task = getTaskById(taskId);
         if (task.isCompleted()) {
-            return 100; // Completed task
-        } else {
-            // Optionally implement more detailed progress calculation logic
-            return 0; // Incomplete task
+            return 100;
         }
+        int jobCount = getJobCountForTask(taskId);
+        int completedJobCount = getCompletedJobCountForTask(taskId);
+        return (jobCount > 0) ? (completedJobCount * 100 / jobCount) : 0;
     }
 
     @Override
     public double calculateProjectProgress(Long projectId) {
+        // Fetch the project by projectId
+        Project project = projectRepository.findById(projectId).orElse(null);
+        if (project == null) {
+            throw new RuntimeException("Project not found");
+        }
+
+        // Check if the project status is "completed"
+        if ("completed".equalsIgnoreCase(project.getProjectStatus())) {
+            return 100.0; // Project is completed, so progress is 100%
+        }
+
+        // Get the list of tasks for the project
         List<Task> tasks = taskRepository.findByProjectProjectId(projectId);
         if (tasks.isEmpty()) {
             return 0.0; // No tasks means no progress
@@ -502,5 +520,6 @@ private boolean validateTaskDates(LocalDate projectStartDate, LocalDate projectE
 
         return totalProgress / tasks.size();
     }
+
 
 }

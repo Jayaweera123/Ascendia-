@@ -1,168 +1,354 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import TopNavigation from "../../components/TopNavigation";
 import SideNavigationPCTeam from "../../components/ProjectCreationTeam/SideNavigationPCTeam";
-import { MdAssignmentAdd } from "react-icons/md";
-import { IoPersonAdd } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import * as ProjectService from "../../services/ProjectService";
+
 
 const AddProject = () => {
   const [open, setOpen] = useState(true);
-  const navigate = useNavigate();
-  const [projectType, setProjectType] = useState("");
-  const [projectName, setProjectName] = useState("");
-  const [projectDescription, setProjectDescription] = useState("");
-  const [projectStatus, setProjectStatus] = useState("");
-  const [profileImage, setProfileImage] = useState(null);
-  const [createdDate, setCreatedDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const navigate = useNavigate(); 
+  const { projectId } = useParams();
+
+  const [formData, setFormData] = useState({ 
+    projectType: '',
+    projectName: '',
+    location: '',
+    projectDescription: '',
+    projectStatus: '',
+    createdDate: '',
+    endDate: '',
+    profileImage: null,
+    pmName: '',
+    clientName: '', 
+    consultantName: '', 
+  });
+
   const [errors, setErrors] = useState({
     projectType: "",
     projectName: "",
+    location: "",
     projectDescription: "",
     projectStatus: "",
     createdDate: "",
     endDate: "",
+    profileImage: "",
+    pmName: "",
+    clientName: "",
+    consultantName: "",
   });
+
+  useEffect(() => {
+    if (projectId && projectId !== "undefined") {
+      fetchFormDataById(projectId); // Fetch project data if projectId exists
+    } else {
+      resetFormData();
+    }
+  }, [projectId]);
+  
+  const fetchFormDataById = async (projectId) => {
+    try {
+      const token = localStorage.getItem('token');
+      console.log('Token:', token);
+      if (!token) {
+        throw new Error('No token found');
+      }
+      const response = await axios.get(`http://localhost:8080/pmanager/${projectId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log(response);
+  
+      const { projectName, projectType, location, projectDescription, projectStatus, createdDate, endDate, image, 
+        projectManagerFirstName, projectManagerLastName,
+        clientFirstName, clientLastName, 
+        consultantFirstName, consultantLastName } = response.data;
+      setFormData({
+        projectName,
+        projectType,
+        location,
+        projectDescription,
+        projectStatus,
+        createdDate,
+        endDate,
+        profileImage: image ? `http://localhost:8080/${image}` : null,
+        pmName: `${projectManagerFirstName} ${projectManagerLastName}`,
+        clientName: `${clientFirstName} ${clientLastName}`,
+        consultantName: `${consultantFirstName} ${consultantLastName}` 
+      });
+    } catch (error) {
+      console.error('Error fetching project data:', error);
+      if (error.response && error.response.status === 403) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Access Forbidden',
+          text: 'You do not have permission to view this project.'
+        }).then(() => {
+          navigate('/projectslist');
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An error occurred while fetching project data.'
+        });
+      }
+    }
+  };
+  
+  const resetFormData = () => {
+    setFormData({    
+      projectType: '',
+      projectName: '',
+      location: '',
+      projectDescription: '',
+      projectStatus: '',
+      createdDate: '',
+      endDate: '',
+      profileImage: null,
+      pmName: '',
+      clientName: '',
+      consultantName: '',  
+    });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+      if (name === 'clientName' || name === 'consultantName' || name === 'pmName') {
+          // Split the name into first and last name
+          const [firstName, ...lastNameParts] = value.split(' ');
+          if (name === 'clientName') {
+              setFormData({
+                  ...formData,
+                  clientName: value,
+                  clientFirstName: firstName,
+                  clientLastName: lastNameParts.join(' ')
+              });
+          } else if (name === 'consultantName') {
+              setFormData({
+                  ...formData,
+                  consultantName: value,
+                  consultantFirstName: firstName,
+                  consultantLastName: lastNameParts.join(' ')
+              });
+          } else if (name === 'pmName') {
+              setFormData({
+                  ...formData,
+                  pmName: value,
+                  projectManagerFirstName: firstName,
+                  projectManagerLastName: lastNameParts.join(' ')
+              });
+          }
+      } else {
+          setFormData({
+              ...formData,
+              [name]: value
+          });
+      }
+  };
+
+
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.size > 2 * 1024 * 1024) {
+      setErrors(prevErrors => ({ ...prevErrors, profileImage: 'Profile image size should not exceed 2MB' }));
+    } else {
+      setFormData(prevFormData => ({ ...prevFormData, profileImage: file }));
+      setErrors(prevErrors => ({ ...prevErrors, profileImage: '' }));
+    }
+  };
 
   const saveProject = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
 
-    if (!validateForm()) {
-      return;
-    }
-
-    const formData = new FormData();
-
-    formData.append("projectDescription", projectDescription);
-    formData.append("projectName", projectName);
-    formData.append("projectType", projectType);
-    formData.append("endDate", endDate);
-    formData.append("createdDate", createdDate);
-    formData.append("projectStatus", projectStatus);
-
-    if (profileImage) {
-      formData.append("profileImage", profileImage);
-    }
-    try {
-      const response = await axios.post(
-        "http://localhost:8080/project/createProject",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (response.status === 201) {
-        // Show SweetAlert success message
-        Swal.fire({
-          title: "Success!",
-          text: "Project created successfully!",
-          icon: "success",
-          confirmButtonText: "OK",
-        }).then(() => {
-          // Redirect to projects page
-          navigate("/projectslist");
-        });
-      } else {
-        console.error("Failed to create project");
+    const formDataToSend = new FormData(); 
+    Object.keys(formData).forEach(key => {
+      if (key === 'profileImage' && formData[key] && formData[key] instanceof File) {
+        formDataToSend.append(key, formData[key]);
+      } else if (key !== 'profileImage') {
+        formDataToSend.append(key, formData[key]);
       }
+    });
+    console.log(formDataToSend);
+  
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Authentication Error',
+          text: 'No token found, please login again.',
+        }).then(() => {
+          navigate('/login');
+        });
+        return;
+      }
+  
+      let response;
+      if (projectId) {
+        response = await ProjectService.updateProjectById(projectId, formDataToSend);
+      } else {
+        response = await ProjectService.createProject(formDataToSend);
+      }
+  
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: `Project ${projectId ? 'updated' : 'created'} successfully`,
+      }).then(() => {
+        navigate('/projectslist');
+      });
     } catch (error) {
-      console.error("Error creating project:", error);
+      console.error('Error adding/updating project:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: `An error occurred while adding/updating the project. Please try again.`,
+      });
     }
   };
-
-  const handleAssignProjectManager = () => {
-    navigate("/assignPM");
-  };
+  
 
   const validateForm = () => {
     let valid = true;
     const errorsCopy = { ...errors };
-
+  
     // Validate each form field
-    if (!projectType) {
+    if (!formData.projectType) {
       errorsCopy.projectType = "Project type is required";
       valid = false;
     } else {
       errorsCopy.projectType = "";
     }
-
-    if (!projectName) {
+  
+    if (!formData.projectName) {
       errorsCopy.projectName = "Project name is required";
       valid = false;
     } else {
       errorsCopy.projectName = "";
     }
 
-    if (!projectDescription) {
+    if (!formData.location) {
+      errorsCopy.location = "Location is required";
+      valid = false;
+    } else {
+      errorsCopy.location = "";
+    }
+  
+    if (!formData.projectDescription) {
       errorsCopy.projectDescription = "Project description is required";
       valid = false;
     } else {
       errorsCopy.projectDescription = "";
     }
-
-    if (!projectStatus) {
+  
+    if (!formData.projectStatus) {
       errorsCopy.projectStatus = "Project status is required";
       valid = false;
     } else {
       errorsCopy.projectStatus = "";
     }
 
-    if (!createdDate) {
+    if (formData.profileImage && formData.profileImage.size > 2 * 1024 * 1024) {
+      errorsCopy.profileImage = 'Profile image size should not exceed 2MB';
+      valid = false;
+    } else {
+      errorsCopy.profileImage = '';
+    }
+
+    if (!formData.pmName) {
+      errorsCopy.pmName = "Project Manager Name is required";
+      valid = false;
+    } else {
+      errorsCopy.pmName = "";
+    }
+
+    if (!formData.clientName) {
+      errorsCopy.clientName = "Client Name is required";
+      valid = false;
+    } else {
+      errorsCopy.clientName = "";
+    }
+
+    if (!formData.consultantName) {
+      errorsCopy.consultantName = "Consultant Name is required";
+      valid = false;
+    } else {
+      errorsCopy.consultantName = "";
+    }
+  
+    if (!formData.createdDate) {
       errorsCopy.createdDate = "Start date is required";
       valid = false;
     } else {
       errorsCopy.createdDate = "";
     }
-
-    if (!endDate) {
+  
+    if (!formData.endDate) {
       errorsCopy.endDate = "End date is required";
       valid = false;
     } else {
       errorsCopy.endDate = "";
     }
 
-    // Update errors state
-    setErrors(errorsCopy);
+    // Check if endDate is after createdDate
+    if (formData.createdDate && formData.endDate) {
+      const createdDate = new Date(formData.createdDate);
+      const endDate = new Date(formData.endDate);
 
+      if (createdDate > endDate) {
+        errorsCopy.endDate = "End date must be after the start date";
+        valid = false;
+      } else {
+        errorsCopy.endDate = "";
+      }
+    }
+  
+    setErrors(errorsCopy);
+  
     return valid;
   };
+  
 
   const handleClearForm = () => {
     Swal.fire({
       title: "Are you sure?",
-      text: "This action will clear all form fields. Are you sure you want to proceed?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Yes, clear it!",
+      confirmButtonText: "Yes",
       cancelButtonText: "No, cancel",
+      confirmButtonColor: '#001b5e',
+      cancelButtonColor: '#6b7280',
     }).then((result) => {
-      if (result.isConfirmed) {
-        clearForm();
+      if (result.isConfirmed) {      
+        if (projectId) {
+          navigate('/projectslist');
+        } else {
+          clearForm();
+        }
       }
     });
   };
 
   const clearForm = () => {
-    setProjectType("");
-    setProjectName("");
-    setProjectDescription("");
-    setProjectStatus("");
-    setProfileImage(null);
-    setCreatedDate("");
-    setEndDate("");
+    resetFormData();
     setErrors({
       projectType: "",
       projectName: "",
+      location:"",
       projectDescription: "",
       projectStatus: "",
       createdDate: "",
       endDate: "",
+      profileImage: "",
+      pmName: "",
+      clientName: "",
+      consultantName: "",
     });
   };
 
@@ -175,11 +361,11 @@ const AddProject = () => {
           <div className="m-3 text-xl font-semibold text-gray-900">
             <form method="POST" encType="multipart/form-data">
               <div className="space-y-5">
-                <div className="flex flex-row gap-3 pt-2 pb-2 border-b items-centerd border-gray-900/10">
-                  <MdAssignmentAdd size={70} color="#001b5e" />
+                <div className="flex flex-row gap-3 pt-2 pb-2 border-b items-centerd border-gray-900/10">                 
+               
                   <div>
                     <h1 className="place-items-baseline py-1/2 text-5xl font-bold leading-relaxed text-left text-[#001b5e]">
-                      Create Project
+                    {projectId ? 'Edit Project' : 'Create Project'}
                     </h1>
                   </div>
                 </div>
@@ -202,12 +388,10 @@ const AddProject = () => {
                                 <select
                                   id="project-type"
                                   type="text"
-                                  name="project-type"
+                                  name="projectType" // Corrected name attribute
                                   autoComplete="off"
-                                  value={projectType}
-                                  onChange={(e) =>
-                                    setProjectType(e.target.value)
-                                  }
+                                  value={formData.projectType}
+                                  onChange={handleChange}
                                   className="block w-1/2 h-10 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:Lending-6"
                                   required
                                 >
@@ -220,14 +404,10 @@ const AddProject = () => {
                                   <option value="infrastructure">Infrastructure Construction</option>
                                   <option value="other">Other Constrction</option>
                                 </select>
-                                {errors.projectType && (
-                                  <p className="mt-2 text-red-500">
-                                    {errors.projectType}
-                                  </p>
-                                )}
+                                {errors.projectType && <span className="text-red-500">{errors.projectType}</span>}
                               </div>
                             
-                            <div className="mt-8">
+                            <div className="mt-8 ">
                               <label
                                 htmlFor="projectName"
                                 className="block text-base font-medium leading-6 text-gray-900"
@@ -240,52 +420,69 @@ const AddProject = () => {
                                   name="projectName"
                                   id="projectName"
                                   autoComplete="given-name"
-                                  maxLength={200}
-                                  value={projectName}
-                                  onChange={(e) =>
-                                    setProjectName(e.target.value)
-                                  }
-                                  className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  maxLength={100}
+                                  value={formData.projectName}
+                                  onChange={handleChange}
+                                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                   required
                                 />
-                                {errors.projectName && (
-                                  <p className="mt-2 text-red-500">
-                                    {errors.projectName}
-                                  </p>
-                                )}
+                                {errors.projectName && <span className="text-red-500">{errors.projectName}</span>}
                                 <p className="mt-1 text-sm text-gray-500">
-                                  Maximum 200 characters
+                                  Maximum 100 characters
                                 </p>
                               </div>
                             </div>
+
                             <div className="mt-8">
                               <label
-                                htmlFor="comment"
+                                htmlFor="location"
+                                className="block text-base font-medium leading-6 text-gray-900"
+                              >
+                                Location
+                              </label>
+                              <div className="mt-2">
+                                <input
+                                  type="text"
+                                  id="location"
+                                  name="location"
+                                  autoComplete="given-name"                 
+                                  value={formData.location}
+                                  onChange={handleChange}
+                                  className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  required
+                                />
+                                {errors.location && (
+                                  <p className="mt-2 text-red-500">
+                                    {errors.location}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="mt-8">
+                              <label
+                                htmlFor="project-description"
                                 className="block text-base font-medium leading-6 text-gray-900"
                               >
                                 Project Description
                               </label>
                               <div className="mt-2">
                                 <textarea
-                                  id="comment"
-                                  name="comment"
+                                  name="projectDescription" // Corrected name attribute
+                                  id="project-description"
                                   type="text"
                                   autoComplete="off"
                                   rows="6"
-                                  value={projectDescription}
-                                  onChange={(e) =>
-                                    setProjectDescription(e.target.value)
-                                  }
+                                  value={formData.projectDescription}
+                                  onChange={handleChange}
                                   className="block w-full px-3 py-2 text-gray-900 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                   placeholder="Write your project description here..."
                                   required
                                 ></textarea>
-                                {errors.projectDescription && (
-                                  <p className="mt-2 text-red-500">
-                                    {errors.projectDescription}
-                                  </p>
-                                )}
-                              </div>
+                                </div>
+                                {errors.projectDescription && <span className="text-red-500">{errors.projectDescription}</span>}
+                                
+                              
                             </div>
                             <div className="mt-8">
                               <label
@@ -297,13 +494,11 @@ const AddProject = () => {
                               <div className="mt-2">
                                 <select
                                   id="project-status"
-                                  name="project-status"
+                                  name="projectStatus" // Corrected name attribute
                                   type="text"
                                   autoComplete="off"
-                                  value={projectStatus}
-                                  onChange={(e) =>
-                                    setProjectStatus(e.target.value)
-                                  }
+                                  value={formData.projectStatus}
+                                  onChange={handleChange}
                                   className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                   required
                                 >
@@ -317,18 +512,11 @@ const AddProject = () => {
                                   <option value="completed">Completed</option>
                                   <option value="cancelled">Cancelled</option>
                                 </select>
-                                {errors.projectStatus && (
-                                  <p className="mt-2 text-red-500">
-                                    {errors.projectStatus}
-                                  </p>
-                                )}
+                                {errors.projectStatus && <span className="text-red-500">{errors.projectStatus}</span>}
                               </div>
                             </div>
                             <div className="mt-8">
-                              <label
-                                htmlFor="image"
-                                className="block text-base font-medium leading-6 text-gray-900"
-                              >
+                              <label htmlFor="image" className="block text-base font-medium leading-6 text-gray-900">
                                 Project Image
                               </label>
                               <div className="flex items-center mt-2">
@@ -336,30 +524,111 @@ const AddProject = () => {
                                   <input
                                     type="file"
                                     id="image"
-                                    name="image"
+                                    name="profileImage"
                                     accept="image/*"
-                                    onChange={(e) =>
-                                      setProfileImage(e.target.files[0])
-                                    }
+                                    onChange={handleFileChange}
                                     className="block w-full h-10 py-2 text-gray-900 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    required
+                                    required={!formData.profileImage}
                                   />
                                 </div>
                                 <div className="w-1/2 ml-4">
-                                  {profileImage && (
+                                  {formData.profileImage && (
                                     <img
-                                      src={URL.createObjectURL(profileImage)}
+                                      src={formData.profileImage instanceof File ? URL.createObjectURL(formData.profileImage) : formData.profileImage}
                                       alt="Project Image"
                                       className="object-cover w-full h-32 border border-gray-300 rounded-md shadow-sm"
-                                    ></img>
+                                    />
                                   )}
                                 </div>
+                                {errors.profileImage && <div className="text-red-500 mt-2">{errors.profileImage}</div>}
+                              </div>
+
+                              <div className="mt-8">
+                              <label
+                                htmlFor="pmName"
+                                className="block text-base font-medium leading-6 text-gray-900"
+                              >
+                                Project Manager Name
+                              </label>
+                              <div className="mt-2">
+                                <input
+                                  type="text"
+                                  name="pmName"
+                                  id="pmName"
+                                  autoComplete="given-name"                 
+                                  value={formData.pmName}
+                                  onChange={handleChange}
+                                  className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  required
+                                />
+                                {errors.pmName && (
+                                  <p className="mt-2 text-red-500">
+                                    {errors.pmName}
+                                  </p>
+                                )}
                               </div>
                             </div>
+
+                              
+
+                              <div className="mt-8">
+                              <label
+                                htmlFor="clientName"
+                                className="block text-base font-medium leading-6 text-gray-900"
+                              >
+                                Client Name
+                              </label>
+                              <div className="mt-2">
+                                <input
+                                  type="text"
+                                  name="clientName"
+                                  id="clientName"
+                                  autoComplete="given-name"                 
+                                  value={formData.clientName}
+                                  onChange={handleChange}
+                                  className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  required
+                                />
+                                {errors.clientName && (
+                                  <p className="mt-2 text-red-500">
+                                    {errors.clientName}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="mt-8">
+                              <label
+                                htmlFor="consultantName"
+                                className="block text-base font-medium leading-6 text-gray-900"
+                              >
+                                Consultant Name
+                              </label>
+                              <div className="mt-2">
+                                <input
+                                  type="text"
+                                  name="consultantName"
+                                  id="consultantName"
+                                  autoComplete="given-name"                 
+                                  value={formData.consultantName}
+                                  onChange={handleChange}
+                                  className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                  required
+                                />
+                                {errors.consultantName && (
+                                  <p className="mt-2 text-red-500">
+                                    {errors.consultantName}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            
+
+                            
                             <div className="flex flex-wrap mt-8">
                               <div className="pr-4 sm:w-1/2">
                                 <label
-                                  htmlFor="added-date"
+                                  htmlFor="created-date"
                                   className="block text-base font-medium leading-6 text-gray-900"
                                 >
                                   Started Date
@@ -367,23 +636,20 @@ const AddProject = () => {
                                 <div className="mt-4">
                                   <input
                                     type="date"
-                                    name="added-date"
-                                    id="added-date"
+                                    name="createdDate" // Corrected name attribute
+                                    id="created-date"
                                     autoComplete="added-date"
-                                    value={createdDate}
-                                    onChange={(e) =>
-                                      setCreatedDate(e.target.value)
-                                    }
+                                    value={formData.createdDate}
+                                    onChange={handleChange}
                                     className="block w-1/2 h-10 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 tracking-wide"
                                     required
                                   />
-                                  {errors.createdDate && (
-                                    <p className="mt-2 text-red-500">
-                                      {errors.createdDate}
-                                    </p>
-                                  )}
-                                </div>
+                                  </div>
+                                  {errors.createdDate && <span className="text-red-500">{errors.createdDate}</span>}
+                                
+                              
                               </div>
+
                               <div className="mt-4 sm:w-1/2 sm:mt-0">
                                 <label
                                   htmlFor="end-date"
@@ -394,33 +660,22 @@ const AddProject = () => {
                                 <div className="mt-4">
                                   <input
                                     type="date"
-                                    name="end-date"
+                                    name="endDate" // Corrected name attribute
                                     id="end-date"
                                     autoComplete="end-date"
-                                    value={endDate}
-                                    onChange={(e) => setEndDate(e.target.value)}
+                                    value={formData.endDate}
+                                    onChange={handleChange}
                                     className="block w-1/2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 tracking-wide"
                                     required
                                   />
-                                  {errors.endDate && (
-                                    <p className="mt-2 text-red-500">
-                                      {errors.endDate}
-                                    </p>
-                                  )}
-                                </div>
+                                  </div>
+                                  {errors.endDate && <span className="text-red-500">{errors.endDate}</span>}
+                                
                               </div>
                             </div>
-                            <div className="mt-16">
-                              <button
-                                onClick={handleAssignProjectManager}
-                                className="flex items-center px-4 h-10 py-2 mr-4 text-xl font-semibold text-white bg-[#101d3f] rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                              >
-                                <span className="mr-2">
-                                  <IoPersonAdd />
-                                </span>
-                                Assign Project Manager
-                              </button>
+
                             </div>
+                            
 
                             <div className="flex items-center justify-center mt-6 mb-5 mr-5 gap-x-6">
                             
@@ -429,7 +684,7 @@ const AddProject = () => {
                                 onClick={saveProject}
                                 className="w-24 px-4 py-2 text-xl font-semibold text-white bg-[#101d3f] rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                               >
-                                Create
+                                {projectId ? 'Update' : 'Create'}
                               </button>
 
                               <button
@@ -437,7 +692,7 @@ const AddProject = () => {
                                 onClick={handleClearForm}
                                 className="w-24 px-4 py-2 text-xl font-semibold text-white bg-red-600 border border-transparent rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                     >
-                                Clear
+                                {projectId ? 'Cancel' : 'Clear'}
                               </button>
                             </div>
                           </div>

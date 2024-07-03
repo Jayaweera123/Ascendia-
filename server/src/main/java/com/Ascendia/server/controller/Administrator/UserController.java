@@ -69,7 +69,6 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(userID, updatedUser, profileImage));
     }
 
-
     //Build Delete User REST API
     @DeleteMapping("/admin/deactivate/{userID}")
     public ResponseEntity<String> deactivateUser(@PathVariable("userID") Long userID){
@@ -137,6 +136,14 @@ public class UserController {
     @GetMapping("/pmanager/available/all")
     public ResponseEntity<List<UserDto>> getAllAvailableUsers(){
         List<UserDto> users = userService.getAllAvailableUsers();
+        return ResponseEntity.ok(users);
+    }
+
+
+    //Ravindu - Get All available Project Managers
+    @GetMapping("/project/available/allprojectmanagers")
+    public ResponseEntity<List<UserDto>> getAllAvailableProjectManagers(){
+        List<UserDto> users = userService.getAllAvailableProjectManagers();
         return ResponseEntity.ok(users);
     }
 

@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { getAllProjectCards, deleteProjectById } from "../../services/ProjectService.jsx";
+import { useNavigate, useParams } from 'react-router-dom';
+import { getAllProjectCards, deactivateProjectById } from "../../services/ProjectService.jsx";
 import { MdEdit, MdDelete, MdPerson } from "react-icons/md";
+import { GiProgression } from "react-icons/gi";
+import { PiFilesFill } from "react-icons/pi";
 import Swal from "sweetalert2";
 import axios from "axios";
 
 const NewProjectCard = () => {
   const [projects, setProjects] = useState([]);
+  const navigate = useNavigate(); 
+  const { projectId } = useParams();
 
   useEffect(() => {
     getAllProjectCards()
@@ -14,43 +19,56 @@ const NewProjectCard = () => {
       })
       .catch((error) => {
         console.error("Error fetching project cards:", error);
-        // Display an error message to the user
         Swal.fire("Error", "Failed to fetch project cards. Please try again.", "error");
       });
   }, []);
 
-  const handleDelete = (projectId) => {
+  const handleDeactivate = (projectId) => {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'You will not be able to recover this project!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!'
+      confirmButtonText: 'Yes, deactivate it!',
+      confirmButtonColor: '#001b5e',
+      cancelButtonColor: '#6b7280',
+
     }).then((result) => {
       if (result.isConfirmed) {
-        deleteProjectById(projectId)
+        deactivateProjectById(projectId)
           .then(() => {
             Swal.fire(
-              'Deleted!',
-              'Your project has been deleted.',
+              'Deactivated!',
+              'Your project has been deactivated.',
               'success'
             );
             setProjects(projects.filter(project => project.projectId !== projectId));
           })
           .catch((error) => {
-            console.error("Delete error:", error);
+            console.error("Deactivate error:", error);
             Swal.fire(
               'Error!',
-              'Failed to delete the project.',
+              'Failed to deactivate the project.',
               'error'
             );
           });
       }
     });
-  };  
+  };
   
+  const editProject = (projectId) => {
+    navigate(`/project/update/${projectId}`);
+  };
+
+  const projectProgress = (projectId) => {
+    navigate(`/progress/${projectId}`);
+  };
+
+  const projectReviews = (projectId) => {
+    navigate(`/reviews/${projectId}`);
+  };
+
   if (projects.length === 0) {
     return <div className="mt-10 text-center">No projects available.</div>;
   }
@@ -67,7 +85,6 @@ const NewProjectCard = () => {
                     key={project.projectId}
                     className="mb-6 transition-transform duration-300 transform bg-white rounded-lg shadow-lg hover:scale-105 hover:shadow-xl"
                   >
-                    {/* Project Image */}
                     <img
                       className="object-cover w-full h-48 rounded-t-lg"
                       src={
@@ -98,18 +115,16 @@ const NewProjectCard = () => {
                           </span>
                         </p>
                         <div className="flex">
-                          <MdPerson
-                            className="mr-2 text-green-500 cursor-pointer"
-                            size={20}
-                          />
+                          
                           <MdEdit
                             className="mr-2 text-blue-800 cursor-pointer"
-                            size={20}
+                            size={20}                           
+                            onClick={() => editProject(project.projectId)}
                           />
                           <MdDelete
                             className="text-red-600 cursor-pointer"
                             size={20}
-                            onClick={() => handleDelete(project.projectId)}
+                            onClick={() => handleDeactivate(project.projectId)}
                           />
                         </div>
                       </div>
@@ -125,7 +140,21 @@ const NewProjectCard = () => {
                           {new Date(project.endDate).toLocaleDateString()}
                         </span>
                       </div>
+                      
                     </div>
+                    <div className="flex justify-end mr-5 mb-5">
+                          <GiProgression
+                            className="mr-2 text-green-700 cursor-pointer"
+                            size={20}
+                            onClick={() => projectProgress(project.projectId)}
+                          />
+                          <PiFilesFill
+                            className="mr-2 text-blue-900 cursor-pointer"
+                            size={20}                           
+                            onClick={() => projectReviews(project.projectId)}
+                          />
+                        
+                        </div>
                   </div>
                 ))}
               </div>
@@ -133,20 +162,19 @@ const NewProjectCard = () => {
           </main>
         </div>
       </div>
-      {/* Style tag for embedding CSS */}
       <style>{`
         .status-label-completed {
-          background-color: #34d399; /* Green color for completed projects */
+          background-color: #34d399;
           color: #ffffff;
         }
 
         .status-label-ongoing {
-          background-color: #60a5fa; /* Blue color for ongoing projects */
+          background-color: #60a5fa;
           color: #ffffff;
         }
 
         .status-label-upcoming {
-          background-color: #fcd34d; /* Yellow color for upcoming projects */
+          background-color: #fcd34d;
           color: #ffffff;
         }
 
@@ -158,12 +186,12 @@ const NewProjectCard = () => {
         }
 
         .badge-green {
-          background-color: #34d399; /* Green badge for createdDate */
+          background-color: #34d399;
           color: #ffffff;
         }
 
         .badge-red {
-          background-color: #f87171; /* Red badge for endDate */
+          background-color: #f87171;
           color: #ffffff;
         }
 

@@ -3,11 +3,14 @@ import { useReactToPrint } from 'react-to-print';
 import SearchBar from "../../components/Store/SearchBar";
 import { FaDownload } from "react-icons/fa6";
 import DateRangePickerComponent from "./DateRangePickerComponent";
+import Swal from "sweetalert2";
 
 function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNextPage, eCurrentPage, eNumberOfPages,
-    search, setSearch ,action, setAction, value, setValue, updatedEquipment
-}) {
+    search, setSearch ,action, setAction, value, setValue, updatedEquipment}) {
+     
+     // Generate an array of page numbers
     const numbers = [...Array(eNumberOfPages + 1).keys()].slice(1);
+     // State for showing the date picker
     const [showDatePicker, setShowDatePicker] = useState(false);
 
      // Function to format date and time
@@ -18,24 +21,30 @@ function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNe
         return { formattedDate, formattedTime };
     };
 
+    // Reference for the component to print
     const componentPDF = useRef();
 
+    // Hook for generating PDF
     const generatePDF = useReactToPrint({
         content: () => componentPDF.current,
         documentTitle: 'Equipment History',
         onAfterPrint: () => {
             console.log('After print');
-            // alert("data saved in pdf")
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'PDF crated successfully!',
+                confirmButtonColor: '#001b5e'
+              })
         }
     });
 
     {console.log(componentPDF)}
 
+    // Function to handle action change
     const handleActionChange = (e) => {
         const selectedAction = e.target.value;
-       
         setAction(e.target.value);
-       
         setShowDatePicker(selectedAction === "Filter By Date");
        
     };
@@ -44,8 +53,9 @@ function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNe
         console.log(action);
       }, [action]);
 
+
     return (
-        <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md">
+        <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md " style={{height:'38rem'}}>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                             
                             <SearchBar search = {search} setSearch={setSearch}/>
@@ -61,6 +71,7 @@ function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNe
                                 </select>
                             </div>
 
+                            {/* Show date picker if action is "Filter By Date" */}
                             {showDatePicker && (
                     
                                 <DateRangePickerComponent
@@ -68,7 +79,7 @@ function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNe
                                 setValue = {setValue}/>
                              )}
 
-                            <br />
+                            {/* Button to generate PDF */}
                             <div className="mb-8">
                                 <button className="mt-6 bg-[#101d3f] hover:bg-sky-800 text-white font-bold py-2 px-4 rounded al ml-3" onClick={generatePDF}>
                                     <div className="flex items-center">
@@ -83,6 +94,7 @@ function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNe
                         
                     </div>
 
+            {/* Table displaying equipment history */}
             <table className="min-w-full text-sm bg-white">
                 <thead>
                     <tr className="text-gray-700 border-b bg-blue-gray-100 border-blue-gray-50 border-y">
@@ -113,7 +125,7 @@ function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNe
                 </tbody>
             </table>
 
-        {/* For print pdf     */}
+        {/* Hidden component for printing PDF */}
         <div ref={componentPDF} style={{width:'100%'}} className="hidden w-full pt-20 pb-10 pl-20 pr-10 print:block">   
 
                     <div className="pb-5">
@@ -152,7 +164,7 @@ function EquipmentHistoryComponent({ eRecords, ePrePage, eChangeCurrentPage, eNe
         </div>
 
 
-
+            {/* Pagination controls */}
             <div className="flex items-center justify-between p-4 border-t border-blue-gray-50">
                 <button className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none" onClick={ePrePage}>
                     Previous

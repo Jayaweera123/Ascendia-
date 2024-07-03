@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import SideNavigationAdmin from "../../components/Admin/SideNavigationAdmin";
 import TopNavigationAdmin from "../../components/Admin/TopNavigationAdmin";
-import { FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { LiaUserEditSolid } from "react-icons/lia";
 import { TiUserAddOutline } from "react-icons/ti";
@@ -18,7 +17,7 @@ const UserList = () => {
   const [matchedUserIDs, setMatchedUserIDs] = useState([]);
   const navigate = useNavigate();
 
-  //Pagination
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 5;
   const lastIndex = currentPage * recordsPerPage;
@@ -26,7 +25,7 @@ const UserList = () => {
   const records = users.slice(firstIndex, lastIndex);
   const numberOfPages = Math.ceil(users.length / recordsPerPage);
   const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
-    const [isOpen, setIsOpen] = useState(false);
+    
 
   // useEffect hook to fetch user list when component mounts
   useEffect(() => {
@@ -67,12 +66,10 @@ const UserList = () => {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No token found');
 
-            let response;
-        if (lastName) {
-          response = await UserService.getUserByFirstNameAndLastName(firstName, lastName, token);
-        } else {
-          response = await UserService.getUserByFirstName(firstName, token);
-        }
+            console.log("Request URL:", `http://localhost:8080/admin/name?firstName=${firstName}&lastName=${lastName || ""}`);
+            const response = await UserService.getUserByFirstNameAndLastName(firstName, lastName || "", token);
+            console.log(response);
+        
             if (response && response.users) {
                 setUsers(response.users);
                 setMatchedUserIDs(response.users.map(user => user.userID));
@@ -112,6 +109,9 @@ useEffect(() => {
         showCancelButton: true,
         confirmButtonText: 'Yes, deactivate!',
         cancelButtonText: 'No, cancel!',
+        confirmButtonColor: '#001b5e',
+        cancelButtonColor: '#6b7280',
+
       });
 
       if (result.isConfirmed) {
@@ -155,11 +155,11 @@ useEffect(() => {
           <div className="m-3 text-xl font-semibold text-gray-900">
             <div className="flex flex-row gap-3 pt-2 pb-1 ml-5 items-centered">
              
-              <FaUsers size={80} color="#001b5e" />
+              
               <div>
                 
                 <h1 className="place-items-baseline text-4xl leading-relaxed py-4 tracking-tight font-bold text-left text-[#001b5e]">
-                  User List
+                  Users List
                 </h1>
               </div>
             </div>
@@ -237,7 +237,7 @@ useEffect(() => {
                 </thead>
                 <tbody>
                   {/* Render user data in table rows */}
-                  {users.map((user) => (
+                  {records.map((user) => (
                     <tr
                       key={user.userID}
                       className={`bg-white border-b dark:border-gray-100 hover:bg-gray-50 ${
@@ -298,31 +298,34 @@ useEffect(() => {
                 </tbody>
               </table>
               <div className="flex items-center justify-between p-4 border-t border-blue-gray-50">
-                                <button className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none" onClick={prePage}>
-                                    Previous
-                                </button>
-
-                                    <div className="flex items-center gap-2">
-                                        
-                                    {/************************************************* Pagination *********************************************/}
-                                        {
-                                            numbers.map((n, i) => (
-                                                <button className={ `${currentPage ===n ? "px-3 py-1 text-sm border rounded-full border-blue-gray-500 focus:outline-none bg-slate-200" : "px-3 py-1 text-sm focus:outline-none border rounded-full border-blue-gray-500"}`} key={i} onClick={() => changeCurrentPage(n)}>
-                                                    {n}
-                                                </button>
-
-                                            ))
-                                        
-                                        }
-
-                                        
-                                    </div>
-
-                                    <button className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none" onClick={nextPage}>
-                                        Next
-                                    </button>
-
-                            </div>
+                <button
+                  className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none"
+                  onClick={prePage}
+                >
+                  Previous
+                </button>
+                <div className="flex items-center gap-2">
+                  {numbers.map((n, i) => (
+                    <button
+                      className={`${
+                        currentPage === n
+                          ? "px-3 py-1 text-sm border rounded-full border-blue-gray-500 focus:outline-none bg-slate-200"
+                          : "px-3 py-1 text-sm focus:outline-none border rounded-full border-blue-gray-500"
+                      }`}
+                      key={i}
+                      onClick={() => changeCurrentPage(n)}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none"
+                  onClick={nextPage}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
         </div>

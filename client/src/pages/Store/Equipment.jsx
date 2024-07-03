@@ -1,27 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { listEquipment } from "../../services/StoreServices";
+import { deleteEquipment, listEquipment } from "../../services/StoreServices";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../../components/Store/SearchBar";
 import TopNavigationStore from "../../components/Store/TopNavigationStore";
 import SideNavigationStore from "../../components/Store/SideNavigationStore";
 import { searchEquipment } from "../../services/StoreServices";
 import NotificationBar from "../../components/Store/NotificationBar";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import Swal from "sweetalert2";
 
 function Equipment() {
 
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState(true); // State for controlling side navigation visibility
 
-    const [equipment, setEquipment] = useState([]);
+    const [equipment, setEquipment] = useState([]); // State for storing equipment data
 
-    const navigator = useNavigate();
+    const navigator = useNavigate(); // Navigation hook for redirecting
 
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState(""); // State for search input
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false); // State for controlling notification bar visibility
   
+    // Function to handle notification visibility
     const notificationHandler = (status) => {
         setIsOpen(status);
     };
+
 
     // Retrieve and parse projectIDs from local storage
     const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
@@ -41,16 +45,21 @@ function Equipment() {
     const numberOfPages = Math.ceil(equipment.length / recordsPerPage);
     const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
 
-    //Get all equipment
+    // Fetch all equipment on component mount
     useEffect(() => {
+        getAllMaterials();
+    }, []);
+    
+    // Function to fetch all equipment
+    const getAllMaterials = () => {
         listEquipment(givenProjectId).then((response) => {
             setEquipment(response.data);
         }).catch(error => {
             console.error(error);
         })
-    }, [])
+    }
 
-    //Search equipment
+    // Search equipment based on input
     useEffect(() => {
         if (search !== "") {
             searchEquipment(givenProjectId, search).then(response => {
@@ -68,30 +77,70 @@ function Equipment() {
         }
     }, [search]);
 
-
+    // Function to navigate to add new equipment page
     const addNewEquipment = () => {
             navigator("/addEquipment")
     }
 
+    // Function to navigate to edit equipment page
     const editEquipment = (id) => {
         navigator(`/editEquipment/${id}`)
     }
 
+    // Function to navigate to update equipment page
     const updateEquipment= (id) => {
         navigator(`/updateEquipment/${id}`)
     }
 
+    // Function to delete equipment
+    const removeEquipment = (id) => {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#001b5e',
+          cancelButtonColor: '#6b7280',
+          confirmButtonText: 'Delete'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            deleteEquipment(id)
+              .then((response) => {
+                getAllMaterials();
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Deleted!',
+                  text: 'Your equipment has been deleted.',
+                  confirmButtonColor: '#001b5e'
+                });
+              })
+              .catch((error) => {
+                console.error(error);
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'You cannot delete this equipment',
+                  confirmButtonColor: '#001b5e'
+                });
+              });
+          }
+        });
+      };
+
     //Pagination
+    // Function to navigate to previous page in pagination
     const prePage = () => {
         if(currentPage !== 1 ){
             setCurrentPage(currentPage - 1)
         }
     }
 
+    // Function to change current page in pagination
     const changeCurrentPage = (id) => {
         setCurrentPage(id)
     }
 
+    // Function to navigate to next page in pagination
     const nextPage = () => {
             if(currentPage !== numberOfPages ){
                 setCurrentPage(currentPage + 1)
@@ -101,7 +150,7 @@ function Equipment() {
   return (
     <div>
         <TopNavigationStore notificationHandler={notificationHandler} />
-        {isOpen && <NotificationBar isOpen={isOpen} notificationHandler={notificationHandler} />}
+        {isOpen && <NotificationBar isOpen={isOpen} notificationHandler={notificationHandler}  />}
 
         <section className="flex">
             <SideNavigationStore open={open} setOpen={setOpen} />
@@ -117,8 +166,10 @@ function Equipment() {
                     <div className="pt-3 pb-10 pl-10 pr-10 mr-10 bg-white rounded-lg shadow-md">
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                             
+                                {/* Search Bar Component */}
                                 <SearchBar search = {search} setSearch={setSearch}/>
 
+                                {/* Add new equipment button */}
                                 <div className="mb-8">
                                     <button className="mt-6 bg-[#101d3f] hover:bg-sky-800 text-white font-bold py-2 px-4 rounded al " onClick={addNewEquipment}>
                                         <div className="flex items-center">
@@ -137,13 +188,14 @@ function Equipment() {
                         <table className="min-w-full text-sm bg-white">
                             <thead>
                                 <tr className="text-gray-700 border-b bg-blue-gray-100 border-blue-gray-50 border-y">
-                                {/* <th scope="col" className="p-4"> </th> */}
-                                <th className="px-4 py-5 text-left">Equipment Code</th>
-                                <th className="px-4 py-5 text-left">Equipment Name</th>
-                                <th className="px-4 py-5 text-left">Quantity</th>
-                                <th className="px-4 py-5 text-left">Description</th>
-                                <th className="w-16 px-4 py-5 text-left">Edit</th>
-                                <th className="w-16 px-4 py-5 text-left">Add/Issue</th>
+
+                                    <th className="px-4 py-5 text-left">Equipment Code</th>
+                                    <th className="px-4 py-5 text-left">Equipment Name</th>
+                                    <th className="px-4 py-5 text-left">Quantity</th>
+                                    <th className="px-4 py-5 text-left">Description</th>
+                                    <th className="w-16 px-4 py-5 text-left">Edit</th>
+                                    <th className="w-16 px-4 py-5 text-left">Delete</th>
+                                    <th className="w-16 px-4 py-5 text-left">Add/Issue</th>
                                
                                 </tr>
                             </thead>
@@ -152,16 +204,18 @@ function Equipment() {
                                     records
                                     .map(equipment =>
                                         <tr className="bg-white border-b border-blue-gray-200 dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-600" key={equipment.equipmentId}>
-                                            {/* <td class="w-4 p-4">
-                                                <div class="flex items-center">
-                                                    <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" onChange={() => handleCheckboxChange(equipment.equipmentCode)}/>
-                                                    <label for="checkbox-table-search-1" className="sr-only">checkbox</label>
-                                                </div>
-                                            </td> */}
+                                        
                                             <td className="px-4 py-3">{equipment.equipmentCode}</td>
                                             <td className="px-4 py-3">{equipment.equipmentName}</td>
                                             <td className="px-4 py-3">{equipment.quantity}</td>
-                                            <td className="px-4 py-3">{equipment.description}</td>
+                                            <td className="px-4 py-3">
+                                                    <div className="relative group">
+                                                        {equipment.description.substring(0, 20)}...
+                                                        <div className="absolute z-10 hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
+                                                        {equipment.description}
+                                                        </div>
+                                                    </div>
+                                            </td>
 
                                             {/* ******************* Edit equipment functionality ****************************/}
                                             <td className="px-5 py-3">
@@ -181,6 +235,26 @@ function Equipment() {
                                                     </button>
                                                     <div className="absolute hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
                                                         Edit
+                                                    </div>
+                                                </div>
+                                                
+                                            </td>
+
+                                            {/* ******************* Delete equipment functionality ****************************/}
+                                            <td className="py-3 px-7">
+                                                <div className="relative justify-center inline-block group">
+                                                    <button
+                                                        type="button"
+                                                        className="focus:outline-none text-neutral-700 dark:text-neutral-200 group-hover:opacity-70"
+                                                        aria-label="Edit"
+                                                        onClick={() => removeEquipment(equipment.equipmentId)}
+                                                    >
+
+                                                        <RiDeleteBin6Line className="text-xl" />
+
+                                                    </button>
+                                                    <div className="absolute hidden px-2 py-1 text-white bg-gray-800 rounded shadow-md group-hover:block">
+                                                        Delete
                                                     </div>
                                                 </div>
                                                 
@@ -223,6 +297,7 @@ function Equipment() {
                                 <div className="flex items-center gap-2">
 
                                 {/***************************************** Pagination **********************************************/}
+                                    {/* Render pagination buttons */}
                                     {
                                         numbers.map((n, i) => (
                                             <button className={ `${currentPage ===n ? "px-3 py-1 text-sm border rounded-full border-blue-gray-500 focus:outline-none bg-slate-200" : "px-3 py-1 text-sm focus:outline-none border rounded-full border-blue-gray-500"}`} key={i} onClick={() => changeCurrentPage(n)}>

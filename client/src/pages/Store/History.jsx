@@ -10,34 +10,34 @@ import NotificationBar from "../../components/Store/NotificationBar";
 
 function History() {
 
-    const [open, setOpen] = useState(true);
-    const [updatedMaterial, setUpdatedMaterial] = useState([]);
-    const [updatedEquipment, setUpdatedEquipment] = useState([]);
+    const [open, setOpen] = useState(true); // State for sidebar open/close
+    const [updatedMaterial, setUpdatedMaterial] = useState([]); // State for storing updated materials
+    const [updatedEquipment, setUpdatedEquipment] = useState([]); // State for storing updated equipment
     const [activeTab, setActiveTab] = useState('material'); // State to manage active tab
-    const [searchMaterial, setSearchMaterial] = useState("");
-    const [searchEquipment, setSearchEquipment] = useState("");
-    const [action, setAction] = useState('All History');
+    const [searchMaterial, setSearchMaterial] = useState(""); // State for material search input
+    const [searchEquipment, setSearchEquipment] = useState(""); // State for equipment search input
+    const [action, setAction] = useState('All History');  // State for material history filter action
+    // State for material history date range filter
     const [value, setValue] = useState({ 
-
         startDate: new Date(), 
         endDate: new Date().setMonth(11) 
-        
         }); 
-    const [eAction, setEAction] = useState('All History');
+
+    const [eAction, setEAction] = useState('All History'); // State for equipment history filter action
+    // State for equipment history date range filter
     const [eValue, setEValue] = useState({ 
-
         startDate: new Date(), 
         endDate: new Date().setMonth(11) 
-        
         }); 
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false); // State for notification bar open/close
   
+     // Handler function for notification bar status
     const notificationHandler = (status) => {
         setIsOpen(status);
     };    
 
-    const navigator = useNavigate();
+    const navigator = useNavigate(); // Navigation hook for routing
 
     // Retrieve and parse projectIDs from local storage
     const projectIDs = JSON.parse(localStorage.getItem('projectIDs'));
@@ -63,7 +63,7 @@ function History() {
     const eRecords = updatedEquipment.slice(eFirstIndex, eLastIndex);
     const eNumberOfPages = Math.ceil(updatedEquipment.length / eRecordsPerPage);
 
-
+    // Effect to fetch updated materials based on filter criteria
     useEffect(() => {
         if(action === "All History"){
         getAllUpdatedMaterials(givenProjectId).then((response) => {
@@ -93,16 +93,7 @@ function History() {
     }
     }, [action,value]);
 
-    // // Get all updated equipment and sort by date
-    // useEffect(() => {
-    //     getAllUpdatedEquipment(givenProjectId).then((response) => {
-    //         const sortedEquipment = response.data.sort((a, b) => new Date(b.updatedDate) - new Date(a.updatedDate));
-    //         setUpdatedEquipment(sortedEquipment);
-    //     }).catch(error => {
-    //         console.error(error);
-    //     });
-    // }, []);
-
+    // Effect to fetch updated equipment based on filter criteria
     useEffect(() => {
         if(eAction === "All History"){
         getAllUpdatedEquipment(givenProjectId).then((response) => {
@@ -133,7 +124,7 @@ function History() {
     }
     }, [eAction,eValue]);
 
-    //Search updated materials
+    // Effect to search updated materials based on search input
     useEffect(() => {
         if (searchMaterial !== "") {
             searchUpdatedMaterial(givenProjectId, searchMaterial).then(response => {
@@ -153,7 +144,7 @@ function History() {
         }
     }, [searchMaterial]);
 
-    // Search updated equipments
+    // Effect to search updated equipment based on search input
     useEffect(() => {
         if (searchEquipment !== "") {
             searchUpdatedEquipment(givenProjectId, searchEquipment).then(response => {
@@ -212,10 +203,13 @@ function History() {
 
     return (
         <div>
+            {/* Top navigation bar */}
             <TopNavigationStore notificationHandler={notificationHandler} />
+            {/* Notification bar */}
             {isOpen && <NotificationBar isOpen={isOpen} notificationHandler={notificationHandler} />}
             
             <section className="flex">
+                {/* Side navigation bar */}
                 <SideNavigationStore open={open} setOpen={setOpen} />
 
                 <div className="relative flex-auto w-8/12 h-screen">
@@ -225,6 +219,7 @@ function History() {
 
                     <div className="flex justify-center min-h-screen mx-auto mt-20 ml-10 ">
                         <div className="overflow-x-auto basis-full">
+                            {/* Toggle buttons for material and equipment tabs */}
                             <button
                                 type="button"
                                 onClick={() => setActiveTab('material')}
@@ -241,6 +236,7 @@ function History() {
                                 Equipment
                             </button>
 
+                            {/* Render MaterialHistoryComponent if activeTab is 'material' */}
                             {activeTab === 'material' && (
                                 <MaterialHistoryComponent 
                                     records={records}
@@ -259,7 +255,7 @@ function History() {
                                 />
                             )}
 
-
+                            {/* Render EquipmentHistoryComponent if activeTab is 'equipment' */}
                             {activeTab === 'equipment' && (
                                 <EquipmentHistoryComponent
                                     eRecords={eRecords}

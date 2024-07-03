@@ -1,5 +1,5 @@
 // Import necessary dependencies and components
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import SideNavigationClient from "../../components/Client/SideNavigationClient"; // Adjust the path based on your project structure
 import TopNavigationClient from "../../components/Client/TopNavigationClient";
@@ -9,6 +9,7 @@ import { format } from 'date-fns'; // Import date-fns for formatting dates
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import ReviewService from "../../services/ReviewService";
+import { jwtDecode } from 'jwt-decode';
 
 const AddReview = () => {
   const [open, setOpen] = useState(true);
@@ -16,6 +17,16 @@ const AddReview = () => {
   const [email, setEmail] = useState('')
   const [reviewTitle, setReviewTitle] = useState('')
   const [reviewContent, setReviewContent] = useState('')
+  const [projectId, setProjectId] = useState(null);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if (decodedToken && decodedToken.projectIDs && decodedToken.projectIDs.length > 0) {
+        setProjectId(decodedToken.projectIDs[0]); // Set the first projectId found in the token
+      }
+    }
+  }, []);
 
   const [errors, setErrors] = useState({
     email: '',
@@ -53,16 +64,20 @@ const AddReview = () => {
           title: 'Success!',
           text: 'Your review has been added.',
           icon: 'success',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#001b5e'
+          
         });
-        navigator('/reviews');
+        navigator(`/reviews/${projectId}`);
       } catch (error) {
         console.error('Error adding review:', error);
         Swal.fire({
           title: 'Error!',
           text: 'There was an error adding your review.',
           icon: 'error',
-          confirmButtonText: 'OK'
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#001b5e',
+
         });
       }
     }
@@ -98,7 +113,7 @@ const AddReview = () => {
             <div className="px-6 mx-auto max-w-7xl lg:px-8">
               <div className="max-w-2xl mx-auto lg:mx-0">
                 <div className="flex flex-row gap-3 pt-2 pb-1 border-b items-centered border-gray-900/10">
-                  <MdOutlineAddBox size={100} color="#001b5e"/>
+                  
                   <div><h1 className="place-items-baseline text-4xl leading-relaxed py-4 font-bold text-left text-[#001b5e]">Add Review</h1></div>
                 </div>
                 <p className="mt-2 text-lg leading-8 text-gray-600">

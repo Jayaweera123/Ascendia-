@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import UserService from "../../services/UserService";
 import Swal from "sweetalert2";
-import "sweetalert2/src/sweetalert2.scss";
+import 'sweetalert2/src/sweetalert2.scss';
+import { jwtDecode } from 'jwt-decode';
 
 const NewLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,6 +11,16 @@ const NewLogin = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [projectId, setProjectId] = useState(null);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if (decodedToken && decodedToken.projectIDs && decodedToken.projectIDs.length > 0) {
+        setProjectId(decodedToken.projectIDs[0]); // Set the first projectId found in the token
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +38,8 @@ const NewLogin = () => {
           title: "Success!",
           text: "Login successful!",
           icon: "success",
+          confirmButtonColor: '#001b5e',
+          cancelButtonColor: '#6b7280',
         });
 
         // Navigate to the appropriate dashboard based on user designation
@@ -34,12 +47,12 @@ const NewLogin = () => {
           case "Administrator":
             navigate("/admin/dashboard");
             break;
-          case "Client":
-          case "Consultant":
-            navigate("/client/dashboard");
+          case 'Client':
+          case 'Consultant':
+            navigate(`/progress/${projectId}`);
             break;
-          case "Project Creation Team":
-            navigate("/project/DashBoard");
+          case 'Project Creation Team':
+            navigate('/project/Dashboard');
             break;
           case "Project Manager":
             navigate("/pmanager/projects");

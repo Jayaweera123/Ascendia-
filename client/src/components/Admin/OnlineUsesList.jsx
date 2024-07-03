@@ -3,8 +3,16 @@ import UserService from "../../services/UserService";
 
 const OnlineUserList = () => {
   const [users, setUsers] = useState([]);
+  const [matchedUserIDs, setMatchedUserIDs] = useState([]);
+
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [usersPerPage] = useState(10); // Adjust this number as needed
+  const recordsPerPage = 4;
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = users.slice(firstIndex, lastIndex);
+  const numberOfPages = Math.ceil(users.length / recordsPerPage);
+  const numbers = [...Array(numberOfPages + 1).keys()].slice(1);
 
   useEffect(() => {
     fetchOnlineUsers();
@@ -30,10 +38,22 @@ const OnlineUserList = () => {
     }
   };
 
-  // Calculate the indices for slicing the users array
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  //Pagination
+  const prePage = () => {
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const changeCurrentPage = (id) => {
+    setCurrentPage(id);
+  };
+
+  const nextPage = () => {
+    if (currentPage !== numberOfPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
   
   return (
             <div className="relative m-5 overflow-x-auto bg-white rounded-lg shadow-md">
@@ -51,7 +71,7 @@ const OnlineUserList = () => {
                 </thead>
                 <tbody>
                   {/* Render user data in table rows */}
-                  {users.map((user) => (
+                  {records.map((user) => (
                     <tr
                       key={user.userID}
                       className="bg-white border-b dark:border-gray-100 hover:bg-gray-50"
@@ -83,25 +103,35 @@ const OnlineUserList = () => {
                   ))}
                 </tbody>
               </table>
-              <div className="flex justify-between mt-4">
-              <button
-                onClick={() => setCurrentPage(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-4 py-2 text-white bg-blue-500 rounded disabled:bg-gray-300"
-              >
-                Previous
-              </button>
-              <span className="self-center text-sm text-gray-700">
-                Page {currentPage} of {Math.ceil(users.length / usersPerPage)}
-              </span>
-              <button
-                onClick={() => setCurrentPage(currentPage + 1)}
-                disabled={currentPage === Math.ceil(users.length / usersPerPage)}
-                className="px-4 py-2 text-white bg-blue-500 rounded disabled:bg-gray-300"
-              >
-                Next
-              </button>
-            </div>
+              <div className="flex items-center justify-between p-4 border-t border-blue-gray-50">
+                <button
+                  className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none"
+                  onClick={prePage}
+                >
+                  Previous
+                </button>
+                <div className="flex items-center gap-2">
+                  {numbers.map((n, i) => (
+                    <button
+                      className={`${
+                        currentPage === n
+                          ? "px-3 py-1 text-sm border rounded-full border-blue-gray-500 focus:outline-none bg-slate-200"
+                          : "px-3 py-1 text-sm focus:outline-none border rounded-full border-blue-gray-500"
+                      }`}
+                      key={i}
+                      onClick={() => changeCurrentPage(n)}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  className="px-3 py-1 text-sm text-blue-500 border border-blue-500 rounded-sm focus:outline-none"
+                  onClick={nextPage}
+                >
+                  Next
+                </button>
+              </div>
             </div>
          
   );

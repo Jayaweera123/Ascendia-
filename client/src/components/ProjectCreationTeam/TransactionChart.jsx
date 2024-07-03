@@ -1,15 +1,68 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tooltip, Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import {
+  fetchResidentialProjectsCountByYear,
+  fetchCommercialProjectsCountByYear,
+  fetchIndustrialProjectsCountByYear,
+  fetchInfrastructureProjectsCountByYear,
+  fetchOtherProjectsCountByYear
+} from '../../services/ProjectService'; 
 
-const data = [
-  { name: '2020', Residential: 12, Commercial: 8, Industrial: 6, Infrastructure: 10, Others: 4 },
-  { name: '2021', Residential: 15, Commercial: 10, Industrial: 9, Infrastructure: 12, Others: 5 },
-  { name: '2022', Residential: 18, Commercial: 14, Industrial: 12, Infrastructure: 15, Others: 8 },
-  { name: '2023', Residential: 20, Commercial: 17, Industrial: 14, Infrastructure: 18, Others: 10 },
-  { name: '2024', Residential: 19, Commercial: 16, Industrial: 13, Infrastructure: 17, Others: 9 },
-];
 
 function TransactionChart() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [residential, commercial, industrial, infrastructure, other] = await Promise.all([
+          fetchResidentialProjectsCountByYear(),
+          fetchCommercialProjectsCountByYear(),
+          fetchIndustrialProjectsCountByYear(),
+          fetchInfrastructureProjectsCountByYear(),
+          fetchOtherProjectsCountByYear(),
+        ]);
+
+        const combinedData = combineData(
+          residential.data,
+          commercial.data,
+          industrial.data,
+          infrastructure.data,
+          other.data
+        );
+        setData(combinedData);
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const combineData = (residential, commercial, industrial, infrastructure, other) => {
+    const predefinedYearOrder = [2020, 2021, 2022, 2023, 2024];
+
+    const years = [...new Set([
+      ...residential.map(d => d.year),
+      ...commercial.map(d => d.year),
+      ...industrial.map(d => d.year),
+      ...infrastructure.map(d => d.year),
+      ...other.map(d => d.year)
+    ])];
+
+    const combinedData = years.map(year => ({
+      name: year,
+      Residential: residential.find(d => d.year === year)?.count || 0,
+      Commercial: commercial.find(d => d.year === year)?.count || 0,
+      Industrial: industrial.find(d => d.year === year)?.count || 0,
+      Infrastructure: infrastructure.find(d => d.year === year)?.count || 0,
+      Others: other.find(d => d.year === year)?.count || 0
+    }));
+
+    return combinedData.sort((a, b) => predefinedYearOrder.indexOf(a.name) - predefinedYearOrder.indexOf(b.name));
+  };
+
+
   return (
     <div className="flex flex-col flex-1 w-full p-4 mt-4 bg-white border border-gray-200 rounded-sm shadow-md h-96">
       <strong className='font-medium text-gray-700'>Project Types</strong>

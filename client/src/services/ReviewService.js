@@ -3,12 +3,15 @@ import axios from "axios";
 class ReviewService {
     static BASE_URL = "http://localhost:8080";
 
-    // Function to fetch the list of reviews 
-    static getAllReviews = async (token) => {
+    // Function to fetch the list of reviews for a specific project
+    static getAllReviews = async (token, projectId) => {
         try {
             const response = await axios.get(`${ReviewService.BASE_URL}/reviews/getAll`, {
                 headers: {
                     Authorization: `Bearer ${token}`
+                },
+                params: {
+                    projectId // Ensure projectId is sent as a query parameter
                 }
             });
             return response.data;
@@ -40,13 +43,13 @@ class ReviewService {
         return !!token;
     }
 
-    static isCreview() {
+    static isClient() {
         const designation = localStorage.getItem('designation');
         return designation === 'Client' || designation === 'Consultant';
     }
 
-    static creviewOnly() {
-        return this.isAuthenticated() && this.isCreview();
+    static clientOnly() {
+        return this.isAuthenticated() && this.isClient();
     }
 
 }

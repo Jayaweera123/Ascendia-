@@ -7,12 +7,9 @@ import UserService from "../../services/UserService";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
-
-// Define the AddUser component
 const AddUser = () => {
-
-  // State variables to manage component state
   const [open, setOpen] = useState(true);
+  const { userID } = useParams();
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -24,7 +21,6 @@ const AddUser = () => {
     profileImage: null
   });
  
-  const { userID } = useParams(); // Get the user ID from the URL parameters
   const [errors, setErrors] = useState({
     firstName: '',
     lastName: '',
@@ -34,7 +30,6 @@ const AddUser = () => {
     profileImage: ''
   });
 
-  // Use navigate hook for routing
   const navigate = useNavigate(); // Assuming this is used for navigation within the application
 
   // useEffect hook to fetch user data if editing an existing user
@@ -58,7 +53,7 @@ const AddUser = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await UserService.getUserById(userID, token);
-      const { firstName, lastName, phoneNumber, email, designation, department, profileImage } = response.user;
+      const { firstName, lastName, phoneNumber, email, designation, department, profilePicUrl } = response.user;
       setFormData({ 
         firstName, 
         lastName, 
@@ -66,7 +61,7 @@ const AddUser = () => {
         email, 
         designation, 
         department, 
-        profileImage: profileImage ? `${UserService.BASE_URL}/images/${profileImage}` : null 
+        profileImage: profilePicUrl ? `${UserService.BASE_URL}/${profilePicUrl}` : null 
       });
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -111,7 +106,7 @@ const AddUser = () => {
     Object.keys(formData).forEach(key => {
       if (key === 'profileImage' && formData[key] && formData[key] instanceof File) {
         formDataToSend.append(key, formData[key]);
-      } else {
+      } else if (key !== 'profileImage') {
         formDataToSend.append(key, formData[key]);
       }
     });
@@ -129,6 +124,8 @@ const AddUser = () => {
             icon: 'error',
             title: 'Authentication Error',
             text: 'No token found, please login again.',
+           
+
           }).then(() => {
             navigate('/login');  // Redirect to login if no token is found
           });
@@ -157,7 +154,7 @@ const AddUser = () => {
         Swal.fire({
           icon: 'success',
           title: 'Success',
-          text: 'User added/updated successfully',
+          text: `User ${userID ? 'updated' : 'added'} successfully`,
         }).then(() => {
           navigate('/admin/userlist');
         });
@@ -245,12 +242,12 @@ const AddUser = () => {
   // Function to render page title dynamically based on whether adding or editing a user
   function pageTitle() {
     const isEditing = !!userID; // Check if editing an existing user
-    const icon = isEditing ? <FaUserEdit size={90} color="#001b5e" /> : <RiUserAddFill size={90} color="#001b5e" />;
+    
     const title = isEditing ? "Edit User" : "Add User";
 
     return (
-      <div className="flex flex-row gap-3 pt-2 items-centered">
-        {icon}
+      <div className="flex flex-row gap-3 pt-2 items-centered ml-5">
+        
         <div>
           <h1 className="place-items-baseline text-4xl leading-relaxed py-4 font-bold text-left text-[#001b5e]">
             {title}
@@ -268,7 +265,7 @@ const AddUser = () => {
       <section className="flex">
         <SideNavigationAdmin open={open} setOpen={setOpen} />
         <div class="relative bg-zinc-100 bg-contain h-fit w-screen">
-          <div className="m-5 text-xl font-semibold text-gray-900">
+          <div className="m-5 mt-2 mb-1 text-xl font-semibold text-gray-900">
             <form method="POST" onSubmit={handleSubmit}  encType="multipart/form-data">
               <div className="space-y-5">
                 {/* Render page title */}
@@ -386,6 +383,7 @@ const AddUser = () => {
                             <option>Consultant</option>
                             <option>Administrator</option>
                           </select>
+                          {errors.designation && <span className="text-red-500">{errors.designation}</span>}
                         </div>
                       </div>
 
