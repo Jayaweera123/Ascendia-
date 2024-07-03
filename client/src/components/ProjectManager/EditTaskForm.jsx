@@ -222,13 +222,13 @@ function EditTaskForm({ id, prePageNavigator }) {
                         {projectStartDate}.
                       </span>
                     )}
-                    {/*{startDate &&
-                      new Date(startDate) <=
+                    {startDate &&
+                      new Date(startDate) <
                         new Date(new Date().setHours(0, 0, 0, 0)) && (
                         <span className="mt-2 text-sm text-red-500">
                           Start date must be today or a future date.
                         </span>
-                      )}*/}
+                      )}
                   </div>
                 </div>
 

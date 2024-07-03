@@ -25,7 +25,7 @@ const EditHistoryPopUp = ({ records }) => {
                     />
               <div class="text-left"> 
                 <h3 class="text-lg font-semibold">${record.updatedByName}</h3>
-                <p class="text-sm text-gray-500">${
+                <p class="text-xsm text-gray-500">${
                   record.updatedByDesignation
                 }</p>
               </div>
