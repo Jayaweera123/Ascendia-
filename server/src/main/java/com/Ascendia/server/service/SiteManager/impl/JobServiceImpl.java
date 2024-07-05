@@ -113,16 +113,24 @@ public class JobServiceImpl implements JobService {
 
     public String calculateStatus(Job job) {
         LocalDate currentDate = LocalDate.now();
+        LocalDate startDate = job.getStartDate();
+        LocalDate endDate = job.getEndDate();
+
         if (!job.isDone()) {
-            if (currentDate.isBefore(job.getStartDate())) {
-                return "Scheduled";
-            } else if (currentDate.isAfter(job.getEndDate())) {
-                return "Overdue";
+            if (startDate == null && currentDate.isAfter(endDate)) {
+                return ("Overdue");
+            } else if (startDate == null || currentDate.isBefore(startDate)) {
+                return ("Scheduled");
+            } else if (currentDate.isAfter(endDate)) {
+                return ("Overdue");
+            } else if ((currentDate.isEqual(startDate)) || currentDate.isEqual(endDate)) {
+                return ("In-Progress");
             } else {
-                return "In-Progress";
+                return ("In-Progress");
             }
-        } else {
-            return "Completed";
+        }
+        else {
+            return ("Completed");
         }
     }
 

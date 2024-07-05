@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IoConstruct } from "react-icons/io5";
 import { LuCalendar } from "react-icons/lu";
-import { getJobById } from "../../services/JobService";
+import { getJobById, updateStatusOfJob } from "../../services/JobService";
 import { getCommentsForJob } from "../../services/TaskService";
 import CommentCardPopup from "./CommentPopUpJobs";
 
@@ -48,31 +48,34 @@ const JobDetails = ({ jobId }) => {
           <h3 className="text-lg font-semibold text-gray-700">{job.jobName}</h3>
           <p className="text-sm text-gray-600">{job.description}</p>
         </div>
-
-        <div className="flex flex-col ml-6">
-          <div className="mb-2 font-medium text-gray-700">
-            <p className="text-sm">Start Date</p>
-            <div className="flex items-center text-sm text-gray-500">
-              <LuCalendar className="w-5 h-5" />
-              <span className="ml-1">{job.startDate}</span>
+        {!job.done ? (
+          <>
+            <div className="flex flex-col ml-6">
+              <div className="mb-2 font-medium text-gray-700">
+                <p className="text-sm">Start Date</p>
+                <div className="flex items-center text-sm text-gray-500">
+                  <LuCalendar className="w-5 h-5" />
+                  <span className="ml-1">{job.startDate}</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="flex flex-col ml-6">
-          <div className="mb-2 font-medium text-gray-700">
-            <p className="text-sm">End Date</p>
-            <div className="flex items-center text-sm text-gray-500">
-              <LuCalendar className="w-5 h-5" />
-              <span className="ml-1">{job.endDate}</span>
+            <div className="flex flex-col ml-6">
+              <div className="mb-2 font-medium text-gray-700">
+                <p className="text-sm">End Date</p>
+                <div className="flex items-center text-sm text-gray-500">
+                  <LuCalendar className="w-5 h-5" />
+                  <span className="ml-1">{job.endDate}</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        ) : null}
 
         <div className="ml-auto">
           <div className="flex items-center text-sm font-medium">
             <div className="flex justify-end pt-1.5">
               <div
-                className={`status-label ${
+                className={`bg-indigo-100 text-indigo-500 status-label ${
                   jobStatus ? `status-label-${jobStatus.toLowerCase()}` : ""
                 } rounded-md mr-1 h-fit pl-1 pr-1`}
               >
@@ -96,26 +99,12 @@ const JobDetails = ({ jobId }) => {
             background-color: #FFE7E2; /* Red color for overdue jobs */
             color: #E75538;
           }
+          
           .status-label-in-progress {
             background-color: #FFFEC7; /* Yellow color for in-progress jobs */
             color: #EEAF32;
           }
-          .task-name-container {
-            max-height: calc(10 * 0.9em); /* 2 lines * line-height */
-            overflow: hidden;
-            position: relative;
-          }
-          .task-name {
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            transition: white-space 0.3s; /* Smooth transition for white-space change */
-          }
-          .task-name:hover {
-            white-space: normal; /* Make overflowing text visible when hovered */
-          }
+          
         `}
       </style>
     </>

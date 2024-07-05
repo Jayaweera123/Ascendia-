@@ -48,11 +48,11 @@ public class JobController {
         return ResponseEntity.ok().build();
     }
 
-    /*@PutMapping("/senginner/updateStatus/{jobId}")
+    @PutMapping("/senginner/updateStatus/{jobId}")
     public ResponseEntity<String> updateJobStatus(@PathVariable Long jobId) {
         String newStatus = jobService.updateJobStatus(jobId);
         return ResponseEntity.ok(newStatus);
-    }*/
+    }
 
 
 

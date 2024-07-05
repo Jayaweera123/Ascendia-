@@ -335,12 +335,16 @@ const TaskCardforProject = ({ projectId }) => {
                             </div>
                           </div>
                           <div className="mt-4 flex items-center justify-between text-sm font-semibold mb-0">
-                            <div className="flex">
-                              <span className="mr-1">
-                                {jobCounts[task.taskId]}
-                              </span>{" "}
-                              Jobs
-                            </div>
+                            {jobCounts[task.taskId] > 0 ? (
+                              <div className="flex">
+                                <span className="mr-1">
+                                  {jobCounts[task.taskId]}
+                                </span>{" "}
+                                Jobs
+                              </div>
+                            ) : (
+                              <div> </div>
+                            )}
                             <div className="flex items-center text-red-500">
                               {/*formatDate(task.endDate)*/}
                               {taskStatus[task.taskId] !== "Completed" && (

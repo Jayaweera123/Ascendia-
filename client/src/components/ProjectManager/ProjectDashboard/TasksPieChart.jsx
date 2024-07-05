@@ -51,6 +51,20 @@ const TasksPieChart = ({ projectId }) => {
     }
   }, [tasks]);
 
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const { name, value } = payload[0];
+      return (
+        <div className="bg-white p-2 rounded-md shadow text-xs text-gray-700">
+          <p className="font-semibold">{name}</p>
+          <p>{`Jobs: ${value}`}</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   useEffect(() => {
     function handleResize() {
       const chartContainerWidth = chartRef.current.offsetWidth;
@@ -114,7 +128,7 @@ const TasksPieChart = ({ projectId }) => {
                 />
               ))}
             </Pie>
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
           </PieChart>
         </div>
       </div>
