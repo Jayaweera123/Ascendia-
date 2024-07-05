@@ -44,10 +44,17 @@ const TaskCardforProject = ({ projectId }) => {
     // Fetch tasks for the project when projectId changes
     getTasksForProject(projectId)
       .then((response) => {
-        setTasks(response.data);
+        const tasksData = response.data;
+        if (Array.isArray(tasksData)) {
+          setTasks(tasksData);
+        } else {
+          console.error("Tasks data is not an array:", tasksData);
+          setTasks([]);
+        }
       })
       .catch((error) => {
-        console.error(error);
+        console.error("Error fetching tasks:", error);
+        setTasks([]);
       });
   }, [projectId]);
 
@@ -201,10 +208,11 @@ const TaskCardforProject = ({ projectId }) => {
     setSelectedStatus(e.target.value);
   };
 
-  const filteredTasks =
-    selectedStatus === "all"
+  const filteredTasks = Array.isArray(tasks)
+    ? selectedStatus === "all"
       ? tasks
-      : tasks.filter((task) => taskStatus[task.taskId] === selectedStatus);
+      : tasks.filter((task) => taskStatus[task.taskId] === selectedStatus)
+    : [];
 
   return (
     <>

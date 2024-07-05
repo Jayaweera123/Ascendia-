@@ -99,6 +99,11 @@ const TasksBarChart = ({ projectId }) => {
   }, []);
 
   const data = useMemo(() => {
+    if (!Array.isArray(tasks)) {
+      console.error("tasks is not an array:", tasks);
+      return [];
+    }
+
     return tasks.map((task) => {
       const { jobCount = 0, completedJobCount = 0 } =
         jobCounts[task.taskId] || {};

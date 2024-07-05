@@ -18,7 +18,13 @@ const TasksPieChart = ({ projectId }) => {
     // Fetch tasks for the project when projectId changes
     getTasksForProject(projectId)
       .then((response) => {
-        setTasks(response.data);
+        const tasksData = response.data;
+        if (Array.isArray(tasksData)) {
+          setTasks(tasksData);
+        } else {
+          console.error("Tasks data is not an array:", tasksData);
+          setTasks([]);
+        }
       })
       .catch((error) => {
         console.error(error);
