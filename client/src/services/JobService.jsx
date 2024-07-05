@@ -43,4 +43,4 @@ export const getJobById = (jobId) =>
   api.get("http://localhost:8080/senginner/job/" + jobId);
 
 export const updateStatusOfJob = (jobId) =>
-  api.put(REST_API_BASE_URL0 + "updateStatus/" + jobId);
+  api.put("http://localhost:8080/senginner/updateStatus/" + jobId);

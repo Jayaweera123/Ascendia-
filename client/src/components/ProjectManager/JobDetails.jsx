@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { IoConstruct } from "react-icons/io5";
 import { LuCalendar } from "react-icons/lu";
-import { getJobById } from "../../services/JobService";
+import { getJobById, updateStatusOfJob } from "../../services/JobService";
 import { getCommentsForJob } from "../../services/TaskService";
 import CommentCardPopup from "./CommentPopUpJobs";
 
