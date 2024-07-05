@@ -289,7 +289,7 @@ function AddTaskForm(projectId) {
                     htmlFor="endDate"
                     className="block text-base font-medium leading-6 text-gray-900"
                   >
-                    End Date:
+                    Due Date:
                   </label>
                   <div className="mt-3">
                     <input

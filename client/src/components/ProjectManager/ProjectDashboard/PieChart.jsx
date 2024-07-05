@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PieChart, Pie, Cell } from "recharts";
+import { PieChart, Pie, Cell, Tooltip } from "recharts";
 import {
   getCompletedJobCount,
   getJobCount,
@@ -44,7 +44,7 @@ const PieChartProgress = ({ projectId }) => {
   const renderCustomLabel = () => {
     return (
       <text
-        x={210}
+        x={200} // Centering the text
         y={200}
         textAnchor="middle"
         dominantBaseline="middle"
@@ -53,6 +53,20 @@ const PieChartProgress = ({ projectId }) => {
         {`${percentage}%`}
       </text>
     );
+  };
+
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const { name, value } = payload[0];
+      return (
+        <div className="bg-white p-2 rounded-md shadow text-xs text-gray-700">
+          <p className="font-semibold">{name}</p>
+          <p>{`Jobs: ${value}`}</p>
+        </div>
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -77,6 +91,7 @@ const PieChartProgress = ({ projectId }) => {
             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
+        <Tooltip content={<CustomTooltip />} />
       </PieChart>
     </div>
   );
