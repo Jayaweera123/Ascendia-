@@ -382,7 +382,7 @@ onChanged: (value) {
                                       ),
                                     ),
                                     SizedBox(
-  width: 170,
+  width: 165,
   height: 35,
   child: MaterialButton(
     
@@ -490,92 +490,6 @@ SizedBox(
     height: 37,
 
     child: ElevatedButton(
-
-
-
-
-
-
-
-/*
-
-
- void _editData(int taskId,String taskName,String description,DateTime startDate,DateTime endDate,int projectId) async {
-  String updatedTask = ''; // Initialize the updated comment text
-print("object edit 04");
-  try {
-    showDialog(
-      
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Edit Comment"),
-          content: TextField(
-            
-            controller: TextEditingController(text: updatedTask),
-            onChanged: (newValue) {
-setState(() {
-                if (newValue.isNotEmpty) {
-                  print("object edite 5");
-      updatedTask = newValue;
-      print("object edite 6");
-    } else {
-      // Handle empty value here, if needed
-    }
-              });
-            },
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () async {
-                print("object edite 01");
-                Navigator.of(context).pop(); // Close the dialog
-                  // Call the service method to update the comment
-                  print(taskId);
-                  await service.updateTask(taskId, updatedTask, description,startDate,endDate,projectId);
-                  // Handle the result as needed
-                  print("object edite 03");
-                
-              },
-              child:const Text('Update'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Cancel"),
-            ),
-          ],
-        );
-      },
-    );
-  } catch (e) {
-    // Handle error
-    print(e.toString());
-  }
-}
-
-
-
-
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
       onPressed: () {
@@ -748,7 +662,11 @@ print("object edit 04");
 
                         Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) =>const inProgressSite(dataList: [],)),
+      MaterialPageRoute(builder: (context) =>const inProgressSite(
+        
+       // dataList: [],
+        
+        )),
      );
                 
               },

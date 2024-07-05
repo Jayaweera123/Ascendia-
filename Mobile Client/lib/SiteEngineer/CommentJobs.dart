@@ -23,11 +23,11 @@ class CommentJob {
   });
   factory CommentJob.fromJson(Map<String, dynamic> json) {
     return CommentJob(
-      commentJobId: (json['commentId']??0)as int,
-      job: Job.fromJson(json['task']??{}),
-      commentedJobUser: User.fromJson(json['commentedUser']??{}),
-      commentJobDate: DateTime.parse(json['commentDate']??DateTime.now().toIso8601String()),
-      commentJobText: json['commentText']??'',
+      commentJobId: (json['commentJobId']??0)as int,
+      job: Job.fromJson(json['job']??{}),
+      commentedJobUser: User.fromJson(json['commentedJobUser']??{}),
+      commentJobDate: DateTime.parse(json['commentJobDate']??DateTime.now().toIso8601String()),
+      commentJobText: json['commentJobText']??'',
       
     );
   }

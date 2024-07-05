@@ -14,7 +14,7 @@ class Job{
   final DateTime startDate;
   final DateTime endDate;
   final String status;
-  final bool isDone;
+         bool isDone;
   final Task task;
 
 

@@ -1,16 +1,14 @@
 package com.Ascendia.server.controller.ProjectManager;
 
-import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.Project.TaskProgressDto;
-import com.Ascendia.server.dto.Store.EquipmentDto;
-import com.Ascendia.server.entity.ProjectManager.Task;
-import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
+import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.service.ProjectManager.TaskService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,12 +36,12 @@ public class TaskController {
         return ResponseEntity.ok(taskDto);
     }
 
-    //Get all Tasks REST API
-    // @GetMapping("all")
-    // public ResponseEntity<List<TaskDto>> getAllTasks() {
-    //     List<TaskDto> tasks = taskService.getAllTasks();
-    //     return ResponseEntity.ok(tasks);
-    // }
+
+     @GetMapping("/sengineer/all")
+     public ResponseEntity<List<TaskDto>> getAllTasks() {
+         List<TaskDto> tasks = taskService.getAllTasks();
+         return ResponseEntity.ok(tasks);
+     }
 
 
 /*
@@ -74,7 +72,7 @@ public class TaskController {
 
 
     //Delete Tasks REST API
-    @DeleteMapping("/pmanageronly/task/{id}")
+    @DeleteMapping("/sengineer/task/{id}")
     public ResponseEntity<String> deleteTask(@PathVariable("id") Long taskId) {
         taskService.deleteTaskById(taskId);
         return ResponseEntity.ok("Task deleted successfully");
@@ -88,7 +86,7 @@ public class TaskController {
     }
 
     //Get the total job Count REST API
-    @GetMapping("/pmanager/{taskId}/jobcount")
+    @GetMapping("/sengineer/{taskId}/jobcount")
     public ResponseEntity<Integer> getJobCountForTask(@PathVariable Long taskId) {
         int jobCount = taskService.getJobCountForTask(taskId);
         return ResponseEntity.ok(jobCount);
@@ -102,7 +100,7 @@ public class TaskController {
 */
 
     //Completed Job Count
-    @GetMapping("/pmanager/{taskId}/job/completed")
+    @GetMapping("/sengineer/{taskId}/job/completed")
     public ResponseEntity<Integer> getCompletedJobCountForTask(@PathVariable Long taskId) {
         int completedJobCount = taskService.getCompletedJobCountForTask(taskId);
         return ResponseEntity.ok(completedJobCount);
@@ -136,7 +134,7 @@ public class TaskController {
         taskService.markAsCompleted(taskId);
     }
 
-    @PutMapping("/pmanageronly/{taskId}/mark-as-undone")
+    @PutMapping("/sengineer/{taskId}/mark-as-undone")
     public void markAsUndone(@PathVariable Long taskId) {
         taskService.markAsUncompleted(taskId);
     }
@@ -166,10 +164,38 @@ public class TaskController {
         return ResponseEntity.ok(taskProgressList);
     }
 
-    @GetMapping("/api/task/{projectId}/inProgress")
+    @GetMapping("/supervisor/api/task/{projectId}/inProgress")
     public ResponseEntity<List<TaskDto>> getTasksByInProgresStatus(@PathVariable Long projectId) {
         List<TaskDto> tasks = taskService.getTasksByInProgresStatus(projectId);
         return ResponseEntity.ok(tasks);
 
     }
+    @GetMapping("/supervisor/api/task/{projectId}/Scheduled")
+    public ResponseEntity<List<TaskDto>> getTasksByScheduledStatus(@PathVariable Long projectId) {
+        List<TaskDto> tasks = taskService.getTasksByScheduledStatus(projectId);
+        return ResponseEntity.ok(tasks);
+
+    }
+
+    @GetMapping("/supervisor/api/task/{projectId}/completed")
+    public ResponseEntity<List<TaskDto>> getTasksByCompletedStatus(@PathVariable Long projectId) {
+        List<TaskDto> tasks = taskService.getTasksByCompletedStatus(projectId);
+        return ResponseEntity.ok(tasks);
+
+    }
+
+
+    //======
+    @GetMapping("/supervisor/tasks/{taskId}/jobStatus")
+    public String getInprogressTaskSutableStatus(@PathVariable Long taskId) {
+        return taskService.compareJobCounts(taskId);
+    }
+    @GetMapping("/supervisor/api/task/{projectId}/withOut/completed")
+    public ResponseEntity<List<TaskDto>> getTasksWithOutCompletedTask(@PathVariable Long projectId) {
+        List<TaskDto> tasks = taskService.getTasksWithOutCompletedTask(projectId);
+        return ResponseEntity.ok(tasks);
+    }
 }
+
+//getTasksByScheduledStatus
+//getTasksWithOutCompletedTask

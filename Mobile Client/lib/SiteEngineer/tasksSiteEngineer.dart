@@ -28,7 +28,8 @@ class _ProjectSiteState extends State<tasksSite> {
 void newUpadatesFormGo(){
 Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) =>const updateSite()),
+      MaterialPageRoute(builder: (context) =>const updateSite(
+      )),
     );
 
 }
@@ -44,14 +45,13 @@ Navigator.push(
 void taskGoToHome (){
   Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) =>const HomeSite()),
+      MaterialPageRoute(builder: (context) =>const HomeSite(
+
+        
+      )),
     );
 }
 void projectListGo (){
-  // Navigator.push(
-  //     context,
-  //     MaterialPageRoute(builder: (context) =>const projectList()),
-  //   );
 }
 
 //projectList
@@ -100,15 +100,20 @@ void projectListGo (){
                       ),
             
                       Container(
-                        decoration: const BoxDecoration(
-                            //color: Color.fromARGB(255, 114, 89, 13),
-                            ),
+                        decoration: const BoxDecoration(),
                         alignment: Alignment.topLeft,
-            
-                        child: const Icon(
-                          Icons.arrow_back,
-                          color: Color.fromRGBO(0, 31, 63, 1),
-                          size: 30,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Color.fromRGBO(0, 31, 63, 1),
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => HomeSite()),
+                            );
+                          },
                         ),
                       ),
             
@@ -241,78 +246,8 @@ child:const Center(
 
        ),
 
-
-
-
      const Padding(padding: EdgeInsets.all(19)),
 
-       InkWell(
-  onTap: projectListGo,
-child:Container(
-        width: 287,
-        height:57,
-        decoration: BoxDecoration(
-          
-            borderRadius: BorderRadius.circular(19.0),
-            color:const Color.fromRGBO(255, 215, 0, 1),
-            border: Border.all(
-              color: const Color.fromRGBO(0, 31, 63, 1),
-              width: 1.5,
-            )
-          ),
-child:const Center(
-           child:Text(
-            'Project',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 16,
-              fontWeight:FontWeight.bold,
-              color:  Color.fromRGBO(50, 75, 101, 1),
-            ),
-          ),
-)
-
-        ),
-
-       ),
-
-
-       
-     const Padding(padding: EdgeInsets.all(19)),
-
-       InkWell(
-  onTap: logingPageGo,
-child:Container(
-        width: 287,
-        height:57,
-        decoration: BoxDecoration(
-          
-            borderRadius: BorderRadius.circular(19.0),
-            color:const Color.fromRGBO(255, 215, 0, 1),
-            border: Border.all(
-              color: const Color.fromRGBO(0, 31, 63, 1),
-              width: 1.5,
-            )
-          ),
-child:const Center(
-           child:Text(
-            'Login',
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 16,
-              fontWeight:FontWeight.bold,
-              color:  Color.fromRGBO(50, 75, 101, 1),
-            ),
-          ),
-)
-
-        ),
-
-       ),
-
-
-
-//
 
         ]// Content for the first container
       ),

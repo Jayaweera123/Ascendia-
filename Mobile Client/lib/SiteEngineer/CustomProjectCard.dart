@@ -6,15 +6,17 @@ class CustomCard extends StatelessWidget {
   final String projectName;
   final String projectDescription;
   final String imageUrl;
+  final int projectId;
+  final int userID;
 
-  const CustomCard({
-    Key? key,
-    required this.projectName,
-    required this.projectDescription,
-    required this.imageUrl,
-  }) : super(key: key);
-
-
+  const CustomCard(
+      {Key? key,
+      required this.projectName,
+      required this.projectDescription,
+      required this.imageUrl,
+      required this.userID,
+      required this.projectId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +24,10 @@ class CustomCard extends StatelessWidget {
       onTap: () {
         // Implement navigation to project details page if needed
         Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => HomeSite(
-
-
-      )),
-    );
+          context,
+          MaterialPageRoute(builder: (context) => HomeSite()),
+        );
       },
-
-    
       child: Column(
         children: [
           Container(
@@ -51,19 +48,17 @@ class CustomCard extends StatelessWidget {
                 topLeft: Radius.circular(40.0),
                 topRight: Radius.circular(40.0),
               ),
-              child:Image.file(
-                File(imageUrl),
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return const Center(child: Icon(Icons.error
-                  ,size: 20,));
-                },
+              child: Image.asset(
+                'asset/project.jpg',
+                width: 50.0, // Set the width as needed
+                height: 50.0, // Set the height as needed
+                fit: BoxFit.cover, // Set the height as needed
               ),
             ),
           ),
           Container(
             height: 70,
-            width: 280,            
+            width: 280,
             color: const Color.fromRGBO(255, 215, 0, 1),
             child: Column(
               children: [
@@ -91,15 +86,6 @@ class CustomCard extends StatelessWidget {
                         ),
                       ),
                       const Padding(padding: EdgeInsets.all(2)),
-                      Text(
-                        projectDescription,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      
                     ],
                   ),
                 ),

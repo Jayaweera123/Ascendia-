@@ -5,18 +5,25 @@ import 'package:flutter/material.dart';
 import 'package:my_project/BackGround.dart';
 import 'package:my_project/SiteEngineer/CompleteSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/inProgressSiteEngineer.dart';
+import 'package:my_project/SiteEngineer/jobAppInprogressPage.dart';
 import 'package:my_project/SiteEngineer/tasksAddFormSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/Task.dart';
 import 'package:my_project/service.dart';
-import 'package:my_project/SiteEngineer/jobAppPage.dart';
 import 'package:my_project/SiteEngineer/TaskCommentFormSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/updatingTaskForm.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:my_project/SiteEngineer/Task.dart';
 //import 'package:my_project/coponents/signupButon.dart';
 //import 'package:my_project/ConstentParts.dart';
+import 'package:my_project/SiteEngineer/tasksSiteEngineer.dart';
 
 class updateSite extends StatefulWidget {
+
   
-  const updateSite({Key? key}) : super(key: key);
+  const updateSite({Key? key,
+
+  
+  }) : super(key: key);
   
 
   @override
@@ -24,16 +31,38 @@ class updateSite extends StatefulWidget {
 }
 
 
-Future<List<Task>> getAllScheduledTasks(int projectId) async {
-  final response = await http.get(Uri.parse("http://localhost:8080/api/task/api/task/$projectId/inProgress"));
-  if(response.statusCode == 200){   //http://10.0.2.2:8080/api/task/api/task/1/scheduled
+
+Future<String?> getToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('jwt_token');
+}
+
+Future<List<Task>> getAllInProgressTasks(int projectId) async {
+
+  print("enter to the getAllProjectByToken");
+  final token = await getToken();
+  if (token == null) {
+    throw Exception('Token not found');
+  }
+  print("project name");
+
+  final response = await http.get(                  //http://10.0.2.2:8080/projects/user
+    Uri.parse("http://localhost:8080/supervisor/api/task/$projectId/inProgress"),//http://localhost:8080/api/task/api/task/$projectId/scheduled
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
+  print("enter to the respones code");
+
+  if (response.statusCode == 200) {
     final List<dynamic> jsonData = json.decode(response.body);
     return jsonData.map((taskData) => Task.fromJson(taskData)).toList();
-   // print('fvdfvdfvdfv');
-  }else{
-    throw Exception('Failed to load comment10');
+  } else {
+    throw Exception('Failed to load projects');
   }
-  }
+}
+
 
 class _ProjectSiteState extends State<updateSite> {
   final TextEditingController searchingcontroller = TextEditingController();
@@ -49,12 +78,44 @@ class _ProjectSiteState extends State<updateSite> {
       Map<int, bool> isFocused = {};
 
 
+
+
+
+Future<String> getInprogressTaskSutableStatus(int taskId) async {
+  final token = await getToken();
+  if (token == null) {
+    throw Exception('Token not found');
+  }
+
+  final response = await http.get(
+    Uri.parse("http://localhost:8080/supervisor/tasks/$taskId/jobStatus"),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    return response.body; // No need to parse since body is already a String
+  } else {
+    throw Exception('Failed to load jobs');
+  }
+}
+
+
+
+
+
+
+
+
+
     void inProgressGoToNew() {
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => inProgressSite(
-        dataList: dataList,
+   //     dataList: dataList,
       ),
     ),
   );
@@ -124,15 +185,20 @@ class _ProjectSiteState extends State<updateSite> {
                       ),
             
                       Container(
-                        decoration: const BoxDecoration(
-                            //color: Color.fromARGB(255, 114, 89, 13),
-                            ),
+                        decoration: const BoxDecoration(),
                         alignment: Alignment.topLeft,
-            
-                        child: const Icon(
-                          Icons.arrow_back,
-                          color: Color.fromRGBO(0, 31, 63, 1),
-                          size: 30,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Color.fromRGBO(0, 31, 63, 1),
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => tasksSite()),
+                            );
+                          },
                         ),
                       ),
             
@@ -355,11 +421,11 @@ Container(
 
 Center(
   child: SizedBox(
-    height: 400,
+    height: 450,
     width: 300,
     child: SingleChildScrollView(
       child: FutureBuilder<List<Task>>(
-        future: getAllScheduledTasks(1),
+        future: getAllInProgressTasks(1),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             
@@ -403,7 +469,7 @@ Center(
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => jobAppPage(
+                                      builder: (context) => jobInProgressAppPage(
                                         taskId: task.taskId,
                                         taskName: task.taskName,
                                        
@@ -421,16 +487,31 @@ Center(
          
 GestureDetector(
   onTap: () {
-    setState(() {
-      isFocused[task.taskId] = !(isFocused[task.taskId] ?? false); // Toggle the isChecked state with null check
-    });
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Warnning !'),
+          content: const Text('Job are InCompleted.!'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+            ),
+          ],
+        );
+      },
+    );
   },
   child: Icon(
-    (isFocused[task.taskId] ?? false)
-      ? Icons.check_box_outlined 
-      : Icons.check_box_outline_blank, // Change icon based on isChecked
+    isFocused[task.taskId] ?? false
+      ? Icons.check_box_outlined
+      : Icons.check_box_outline_blank,
   ),
 ),
+
          
 
 
@@ -562,8 +643,8 @@ children: [
 ),
 ),
 
-const Padding(padding: EdgeInsets.all(10)),
-
+//const Padding(padding: EdgeInsets.all(10)),
+/*
 Center(
         child: SizedBox(
           width: 284,
@@ -591,7 +672,7 @@ Center(
         ),
 ),
 
-
+*/
                   ],
                 )
                 ),

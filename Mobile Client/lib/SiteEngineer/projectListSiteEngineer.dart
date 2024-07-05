@@ -8,15 +8,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_project/SiteEngineer/CustomProjectCard.dart'; // Import the CustomCard widget
+import 'package:my_project/SiteEngineer/User.dart';
 
 class projectList extends StatefulWidget {
-  final String token;
+  final String? token;
 
-  const projectList({
-    Key? key,
-    required this.token,
-  }) : super(key: key);
-
+  projectList({this.token}); // Make token optional
   @override
   State<projectList> createState() => _ProjectSiteState();
 }
@@ -36,7 +33,7 @@ Future<List<Project>> getAllProjectByToken() async {
   print("project name");
 
   final response = await http.get(
-    Uri.parse("http://10.0.2.2:8080/projects/user"),
+    Uri.parse("http://localhost:8080/projects/user"),
     headers: {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
@@ -148,7 +145,7 @@ class _ProjectSiteState extends State<projectList> {
                       )
                     ],
                   ),
-
+const Padding(padding: EdgeInsets.all(10)),  
                   Container(
                     height: 630,
                     width: 300,
@@ -168,6 +165,8 @@ class _ProjectSiteState extends State<projectList> {
                                 print(project.image);
                                 print(project.projectDescription);
                                 return CustomCard(
+                                  userID:project.projectManager.userID,
+                                  projectId:project.projectId,
                                   projectName: project.projectName,
                                   projectDescription: project.projectDescription,
                                   imageUrl: project.image, // Update as per your project model

@@ -14,13 +14,12 @@ import 'package:my_project/service.dart';
 import 'package:my_project/SiteEngineer/Task.dart';
 import 'package:my_project/SiteEngineer/JobCommentFormSiteEngineer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:my_project/SiteEngineer/inprogressSiteEngineer.dart';
 
-class jobAppPage extends StatefulWidget {
+class jobAppCompletedPage extends StatefulWidget {
   final int taskId;
   final String taskName;
 
-  jobAppPage({Key? key, required this.taskId, required this.taskName})
+  jobAppCompletedPage({Key? key, required this.taskId, required this.taskName})
       : super(key: key);
 
   @override
@@ -58,7 +57,7 @@ Future<List<Job>> getJobsByTasks(int taskId) async {
   }
 }
 
-class _DisplayDataPageState extends State<jobAppPage> {
+class _DisplayDataPageState extends State<jobAppCompletedPage> {
   //List<bool> rememberMeList = List.generate(100, (index) => false); // Assuming a maximum of 100 items
   Map<int, bool> isFocused = {};
   final TextEditingController searchingcontroller = TextEditingController();
@@ -129,7 +128,7 @@ class _DisplayDataPageState extends State<jobAppPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const inProgressSite()),
+                                  builder: (context) => completeSite()),
                             );
                           },
                         ),
@@ -189,7 +188,7 @@ class _DisplayDataPageState extends State<jobAppPage> {
 /* ..............................to-do button............................. */
 
                             Container(
-                                width: 92,
+                                width: 122,
                                 height: 46,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(19.0),
@@ -200,7 +199,7 @@ class _DisplayDataPageState extends State<jobAppPage> {
                                     )),
                                 child: const Center(
                                   child: Text(
-                                    'To-Do',
+                                    'Completed',
                                     style: TextStyle(
                                       color: Color.fromARGB(255, 255, 255, 255),
                                       fontSize: 20.0,
@@ -249,7 +248,7 @@ class _DisplayDataPageState extends State<jobAppPage> {
                               Container(
                                 color: const Color.fromARGB(255, 255, 255, 255),
                                 child: const Text(
-                                  'Done',
+                                  '',
                                   style: TextStyle(
                                     color: Color.fromRGBO(102, 120, 139, 1),
                                     fontSize: 14.0,
@@ -348,46 +347,8 @@ class _DisplayDataPageState extends State<jobAppPage> {
                                                   ),
                                                 ),
                                                 const Padding(
-                                                    padding: EdgeInsets.all(0)),
-                                                PopupMenuButton<String>(
-                                                  onSelected: (String value) {
-                                                    if (value == 'Delete') {
-                                                      _deleteData(job.jobId);
-                                                    } else if (value ==
-                                                        'Edit') {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              UpdatingJobForm(
-                                                            jobId: job.jobId,
-                                                            jobName:
-                                                                job.jobName,
-                                                            description:
-                                                                job.description,
-                                                            startDate:
-                                                                job.startDate,
-                                                            endDate:
-                                                                job.endDate,
-                                                            task: job.task,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
-                                                  },
-                                                  itemBuilder: (BuildContext
-                                                          context) =>
-                                                      <PopupMenuEntry<String>>[
-                                                    const PopupMenuItem<String>(
-                                                      value: 'Delete',
-                                                      child: Text('Delete'),
-                                                    ),
-                                                    const PopupMenuItem<String>(
-                                                      value: 'Edit',
-                                                      child: Text('Edit'),
-                                                    ),
-                                                  ],
-                                                ),
+                                                    padding:
+                                                        EdgeInsets.all(13)),
                                               ]),
                                         ],
                                       ),
@@ -403,179 +364,11 @@ class _DisplayDataPageState extends State<jobAppPage> {
                       ),
                     ),
                     const Padding(padding: EdgeInsets.all(10)),
-                    Center(
-                      child: SizedBox(
-                        width: 284,
-                        height: 42,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            primary: const Color.fromRGBO(
-                                0, 31, 63, 1), // Background color
-                            onPrimary: const Color.fromARGB(
-                                255, 255, 255, 255), // Text color
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  75.0), // Rounded corners
-                            ),
-                          ),
-                          child: const Text(
-                            'Add',
-                            style: TextStyle(
-                              fontSize: 19,
-                              fontFamily: 'Intel',
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 )),
           ],
         ),
       ),
     );
-  }
-
-  void _editData(int taskId, String taskName, String description,
-      DateTime startDate, DateTime endDate, int projectId) async {
-    String updatedTask = ''; // Initialize the updated comment text
-    print("object edit 04");
-    try {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Edit Comment"),
-            content: TextField(
-              controller: TextEditingController(text: updatedTask),
-              onChanged: (newValue) {
-                setState(() {
-                  if (newValue.isNotEmpty) {
-                    print("object edite 5");
-                    updatedTask = newValue;
-                    print("object edite 6");
-                  } else {
-                    // Handle empty value here, if needed
-                  }
-                });
-              },
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () async {
-                  print("object edite 01");
-                  Navigator.of(context).pop(); // Close the dialog
-                  // Call the service method to update the comment
-                  print(taskId);
-                  await service.updateTask(taskId, updatedTask, description,
-                      startDate, endDate, projectId);
-                  // Handle the result as needed
-                  print("object edite 03");
-                },
-                child: const Text('Update'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Cancel"),
-              ),
-            ],
-          );
-        },
-      );
-    } catch (e) {
-      // Handle error
-      print(e.toString());
-    }
-  }
-
-  void _deleteData(int jobId) async {
-    print(jobId);
-    try {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text(
-              "Warrning",
-              style: TextStyle(
-                color: Color.fromRGBO(50, 75, 101, 1),
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
-              ),
-            ),
-            content: const Text("Are you sure you want to delete this Job ?",
-                style: TextStyle(
-                  color: Color.fromRGBO(50, 75, 101, 1),
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.normal,
-                  fontFamily: 'Inter',
-                )),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  service.deleteJob(jobId);
-
-                  AlertDialog(
-                    icon: const Icon(Icons.delete_outlined),
-                    content:
-                        const Text("Are you sure you want to delete this Job ?",
-                            style: TextStyle(
-                              color: Color.fromRGBO(50, 75, 101, 1),
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.normal,
-                              fontFamily: 'Inter',
-                            )),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("OK"),
-                      ),
-                    ],
-                  );
-
-                  Navigator.of(context).pop();
-                },
-                child: const Text("OK"),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Cancel"),
-              ),
-            ],
-          );
-        },
-      );
-      // Call the deleteComment method with the appropriate comment ID
-
-      // Handle the result, for example
-    } catch (e) {
-      // Handle error, for example:
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("Error"),
-            content: Text("Failed to delete task: $e"),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
-    }
   }
 }

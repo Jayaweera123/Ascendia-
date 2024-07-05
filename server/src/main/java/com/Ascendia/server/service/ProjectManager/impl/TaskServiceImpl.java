@@ -175,7 +175,8 @@ public class  TaskServiceImpl implements TaskService {
     public int getJobCountForTask(Long taskId) {
         return jobRepository.countJobsByTask_TaskId(taskId);
     }
-/*
+
+    /*
     @Override
     public int getCompletedJobCountForTask(Long taskId) {
         return jobRepository.countJobsByTask_TaskIdAndStatusCompleted(taskId);
@@ -408,5 +409,61 @@ public class  TaskServiceImpl implements TaskService {
 
         return totalProgress / tasks.size();
     }
+
+    ///
+
+
+    @Override
+    public String compareJobCounts(Long taskId) {
+        int allJobsCount = getJobCountForTask(taskId);
+        int completedJobsCount = getCompletedJobCountForTask(taskId);
+
+        if (allJobsCount == completedJobsCount) {
+            return "completed";
+        } else {
+            return "pending";
+        }
+    }
+
+
+    @Override
+    public List<TaskDto> getTasksByCompletedStatus(Long projectId) {
+
+
+        String completedStatus = "Completed";
+
+        // Retrieve tasks with the current status "Overdue"
+        List<Task> tasks = taskRepository.findByProjectProjectId(projectId);
+
+        //Filter tasks Based on the specified condition
+        List<Task> filteredTasks = tasks.stream()
+                .filter(task -> completedStatus.equals(task.getStatus()))
+                .collect(Collectors.toList());
+
+        return filteredTasks.stream().map(TaskMapper::mapToTaskDto).collect(Collectors.toList());
+    }
+
+
+
+    @Override
+    public List<TaskDto> getTasksWithOutCompletedTask(Long projectId) {
+
+        String overdueStatus = "Overdue";
+        String inProgressStatus = "In-Progress";
+        String scheduledStatus = "Scheduled";
+
+        // Retrieve tasks with the current status "Overdue"
+        List<Task> tasks = taskRepository.findByProjectProjectId(projectId);
+
+        //Filter tasks Based on the specified condition
+        List<Task> filteredTasks = tasks.stream()
+                .filter(task -> inProgressStatus.equals(task.getStatus()) ||
+                        (overdueStatus.equals(task.getStatus()) && inProgressStatus.equals(task.getPrevStatus())) || scheduledStatus.equals(task.getStatus()) ||
+                        (overdueStatus.equals(task.getStatus()) && scheduledStatus.equals(task.getPrevStatus())))
+                .collect(Collectors.toList());
+
+        return filteredTasks.stream().map(TaskMapper::mapToTaskDto).collect(Collectors.toList());
+    }
+
 
 }

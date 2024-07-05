@@ -33,11 +33,8 @@ public class JobController {
         return ResponseEntity.ok(jobService.searchJob(taskId, query));
     }
 
-    @PutMapping("/senginner/complete/{jobId}")
-    public ResponseEntity<Void> completeJobById(@PathVariable Long jobId) {
-        jobService.markJobAsCompletedById(jobId);
-        return ResponseEntity.ok().build();
-    }
+
+
 
     /*@PutMapping("/senginner/updateStatus/{jobId}")
     public ResponseEntity<String> updateJobStatus(@PathVariable Long jobId) {
@@ -46,7 +43,7 @@ public class JobController {
     }*/
 
     // add the sample API
-    @PostMapping("createJob")
+    @PostMapping("/senginner/createJob")
     public ResponseEntity<JobDto> createJob (@RequestBody JobDto jobDto){
         JobDto savedJob = jobService.createJob(jobDto);
         return new ResponseEntity<>(savedJob, HttpStatus.CREATED);
@@ -54,7 +51,7 @@ public class JobController {
 
 
     // get comment API
-    @GetMapping("{jobId}")
+    @GetMapping("/senginner/{jobId}")
     public ResponseEntity<JobDto> getJobById(@PathVariable("jobId") Long jobId){
         JobDto jobDto =  jobService.getJobById(jobId);
         return ResponseEntity.ok(jobDto);
@@ -62,7 +59,7 @@ public class JobController {
 
 
     //get all the comment list API
-    @GetMapping("allJobs")
+    @GetMapping("/senginner/allJobs")
     public ResponseEntity <List<JobDto>> getAllJob(){
         List<JobDto> jobs = jobService.getAllJob();
         return ResponseEntity.ok(jobs);
@@ -70,23 +67,29 @@ public class JobController {
 
 
     //update the sample API
-    @PutMapping("{jobId}")
+    @PutMapping("/senginner/{jobId}")
     public ResponseEntity<JobDto>updateJob(@PathVariable("jobId") Long jobId ,@RequestBody JobDto updateJob){
         JobDto jobDto =jobService.updateJob(jobId , updateJob);
         return ResponseEntity.ok(jobDto);
     }
 
     //delete comment API
-    @DeleteMapping("{jobId}")
+    @DeleteMapping("/senginner/{jobId}")
     public ResponseEntity<String> deleteJob(@PathVariable("jobId") Long jobId ){
         jobService.deleteJob(jobId);
         return ResponseEntity.ok("job is delete successfully");
+
     }
-
-
-
-
-
+    @PutMapping("/senginner/complete/{jobId}")
+    public ResponseEntity<Void> completeJobById(@PathVariable Long jobId) {
+        jobService.markJobAsCompletedById(jobId);
+        return ResponseEntity.ok().build();
+    }
+    @PutMapping("/senginner/complete/to/shceduled/{jobId}")
+    public ResponseEntity<Void> completeConverToScheduledJobById(@PathVariable Long jobId) {
+        jobService.markJobAsCompletedConverToSchedualedById(jobId);
+        return ResponseEntity.ok().build();
+    }
 
 
 }

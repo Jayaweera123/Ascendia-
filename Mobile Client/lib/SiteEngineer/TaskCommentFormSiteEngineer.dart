@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:my_project/BackGround.dart';
 import 'package:my_project/service.dart';
 import 'package:my_project/SiteEngineer/CommentTasks.dart';
-import 'package:my_project/SiteEngineer/User.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:my_project/SiteEngineer/inprogressSiteEngineer.dart';
 
 class TaskCommentSite extends StatefulWidget {
-  //final String selectedData;// pass data from inprogress page 
+
   final int taskId;
   final String taskName;
 
@@ -22,8 +23,29 @@ class TaskCommentSite extends StatefulWidget {
   State<TaskCommentSite> createState() => _ProjectSiteState();
 }
 
+Future<String?> getToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  
+  return prefs.getString('jwt_token');
+}
+
+
   Future<List<Comment>> getCommentByTask(int taskId) async {
-  final response = await http.get(Uri.parse("http://localhost:8080/api/v2/comment/task/$taskId"));
+
+      print("enter to the getCommentByTask");
+      print("taskID: $taskId *************");
+  final token = await getToken();
+  if (token == null) {
+    throw Exception('Token not found');
+  }
+  print(token);
+  print("project getCommentByTask out");
+  final response = await http.get(Uri.parse("http://localhost:8080/sengineer/comment/task/$taskId"),
+  headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },);
+   print("project getCommentByTask out end point");  
   if(response.statusCode == 200){
     final List<dynamic> jsonData = json.decode(response.body);
     print('obect future get method');
@@ -33,6 +55,7 @@ class TaskCommentSite extends StatefulWidget {
     throw Exception('Failed to load comment10');
   }
   }
+
 
 
 
@@ -56,6 +79,7 @@ class _ProjectSiteState extends State<TaskCommentSite> {
     super.initState();
     tasksName = widget.taskName;
     print("object3");
+    
   }
 
 
@@ -114,10 +138,18 @@ class _ProjectSiteState extends State<TaskCommentSite> {
                       Container(
                         decoration: const BoxDecoration(),
                         alignment: Alignment.topLeft,
-                        child: const Icon(
-                          Icons.arrow_back,
-                          color: Color.fromRGBO(0, 31, 63, 1),
-                          size: 30,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Color.fromRGBO(0, 31, 63, 1),
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => inProgressSite()),
+                            );
+                          },
                         ),
                       ),
                       Row(
@@ -314,94 +346,6 @@ const Padding(padding: EdgeInsets.all(5)),
 Column(children: [
 
 
-/*
-Center(
-  child: SizedBox(
-    height: 250,
-    width: 250,
-    child: SingleChildScrollView(
-      child:  FutureBuilder<List<Comment>>(
-      future: getAllComments(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
-        } else if (snapshot.hasData) {
-          final List<Comment> comments = snapshot.data!;
-          return ListView.builder(
-            itemCount: comments.length,
-            itemBuilder: (context, index) {
-              final comment = comments[index];
-              return Card(
-                margin: const EdgeInsets.all(5),
-                color: const Color.fromRGBO(255, 227, 76, 1),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: const BorderSide(
-                    color: Colors.black,
-                    width: 1.0,
-                  ),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ListTile(
-                      title: Text(
-                        'Task Name: ${comment.taskName} \n Comment: ${comment.commentText}',
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      subtitle: Text(
-                        'Date: ${comment.commentDate}',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Color.fromARGB(255, 103, 102, 102),
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            // Implement your edit functionality
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            // Implement your delete functionality
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        } else {
-          return Center(
-            child: Text('No data available'),
-          );
-        }
-      },
-    )
-    ),
-  ),
-),
-*/
-
 Center(
   child: SizedBox(
     height: 300,
@@ -411,13 +355,13 @@ Center(
         future: getCommentByTask(widget.taskId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            print("object7");
+            print("object comment 7");
             return CircularProgressIndicator();
           } else if (snapshot.hasError) {
-            print("object9");
+            print("object comment 9");
             return Text('Error: ${snapshot.error}');
           } else if (snapshot.hasData) {
-            print("object10   new");
+            print("object 10   new");
             final List<Comment> comments = snapshot.data!;
             return Column(
               children: comments.map((comment) {
@@ -493,91 +437,6 @@ Center(
 ),
 
 
-
-
-
-/*
-
-Center(
-
-child:SizedBox(
-  height: 250,
-  width: 250,
-  child: SingleChildScrollView(
-        child: Column(
-          children: [
-
-            
-      for (int index = 0; index < comments.length; index++)
-      
-        Card(
-  //elevation: 8,
-  margin:const  EdgeInsets.all(5),
-  color:const  Color.fromRGBO(255, 227, 76, 1),
-  shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(12),
-    side:const BorderSide(
-      color: Colors.black,
-      width: 1.0,
-    )
-    
-  ),
-  child: Column(
-   mainAxisSize: MainAxisSize.min,
-    children: [
-      
-      ListTile(
-        
-        title: Text('Task Name: ${tasksName}\n${comments[index]['commentText']}',
-        
-          style:const  TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Inter',
-          ),
-        ),
-        subtitle: Text(_dateTime3.toString(),
-          style:const  TextStyle(
-            fontSize: 14,
-            color:  Color.fromARGB(255, 103, 102, 102),
-            fontFamily: 'Inter',
-          ),
-        ),
-        
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          IconButton(
-            icon:const  Icon(Icons.edit),
-            onPressed: () {
-              _editData(comments[index]['id'], index);
-            },
-          ),
-
-          IconButton(
-            icon:const  Icon(Icons.delete),
-            onPressed: () {
-              _deleteData(comments[index]['id'], index);
-            },
-          ),
-
-          
-        ],
-      ),
-    ],
-  ),
-),
-
-    ],
-        ),
-      ),
-),
-  
-)
-*/
-
-
 ],),
 
 const Padding(padding: EdgeInsets.all(10)),
@@ -586,7 +445,7 @@ Row(
   mainAxisAlignment: MainAxisAlignment.end,
   children: [
 SizedBox(
-    width: 85,
+    width: 90,
     height: 37,
     child: ElevatedButton(
       onPressed: () {
@@ -598,8 +457,24 @@ SizedBox(
       userInput = ''; // Clear the input after saving
       print(widget.taskId);
       print(controllertaskscomment1.text);
-service.saveComment(widget.taskId, 1, controllertaskscomment1.text);
+service.saveComment(widget.taskId, controllertaskscomment1.text , 1 );
 
+showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Comment Submitted'),
+          content: Text('Your comment has been successfully submitted.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+      
       controllertaskscomment1.clear(); // Clear the TextEditingController
       _dateTime3 = DateTime.now(); // Update dateTime
     });
@@ -767,61 +642,6 @@ setState(() {
     print(e.toString());
   }
 }
-
-/*
-
-
-  // Check if the index is within the bounds of the list
-  if (commentId >= 0 && commentId < savedData.length) {
-    // Show a dialog for editing the comment
-    print("object23");
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        String updatedComment = savedData[commentId]; // Initialize with the current comment text
-        return AlertDialog(
-          title:const Text('Edit Comment'),
-          content: TextField(
-            controller: TextEditingController(text: updatedComment),
-            onChanged: (newValue) {
-              updatedComment = newValue; // Update the comment text as the user types
-            },
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog without saving changes
-              },
-              child:const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                Navigator.of(context).pop(); // Close the dialog
-                // Update the comment text in the list
-                setState(() {
-                  savedData[commentId] = updatedComment;
-                });
-                try {
-                  // Call the service method to update the comment
-                  await service.updateComment(commentId , updatedComment, _dateTime3.toString());
-                  // Handle the result as needed
-                } catch (e) {
-                  // Handle error
-                  print("26");
-                }
-              },
-              child:const Text('Save'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-  print("27");
-}
-
-
-*/
 
 
 void _deleteData(int commentId) async {

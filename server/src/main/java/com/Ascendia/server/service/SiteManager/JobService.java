@@ -1,7 +1,6 @@
 package com.Ascendia.server.service.SiteManager;
 
 
-import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.SiteManager.JobDto;
 
 import java.util.List;
@@ -41,6 +40,7 @@ public interface JobService {
 
     void deleteJob (Long jobId);
 
+    void markJobAsCompletedConverToSchedualedById(Long jobId);
 
-
+//markJobAsCompletedConverToSchedualedById
 }

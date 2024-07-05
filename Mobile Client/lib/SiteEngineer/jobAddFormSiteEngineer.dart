@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:my_project/service.dart';
 import 'package:my_project/SiteEngineer/JobAddSiteEngineer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:my_project/sampleCode.dart';
 
 
@@ -21,9 +22,30 @@ class JobbAddFormSite extends StatefulWidget {
   State<JobbAddFormSite> createState() => _ProjectSiteState();
 }
 
+Future<String?> getToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('jwt_token');
+}
 
-Future<List<Task>> getAllTasks() async {
-  final response = await http.get(Uri.parse("http://localhost:8080/api/task/all"));
+
+Future<List<Task>> getAllInCompletedTask(int projectId)async {
+
+    print("enter to the getAllProjectByToken");
+  final token = await getToken();
+  if (token == null) {
+    throw Exception('Token not found');
+  }
+  print("project name in ");
+
+  final response = await http.get(Uri.parse("http://localhost:8080/supervisor/api/task/$projectId/withOut/completed"),//http://localhost:8080/senginner/createJob
+  headers: {                                                                       //http://localhost:8080/api/task/all
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
+
+   print("project name out");
+
   if (response.statusCode == 200) {
     final List<dynamic> jsonData = json.decode(response.body);
     return jsonData.map((taskData) => Task.fromJson(taskData)).toList();
@@ -63,7 +85,7 @@ class _ProjectSiteState extends State<JobbAddFormSite> {
 
   Future<void> fetchTasks() async {
     try {
-      List<Task> fetchedTasks = await getAllTasks();
+      List<Task> fetchedTasks = await getAllInCompletedTask(1);
       setState(() {
         tasks = fetchedTasks;
         if (tasks.isNotEmpty) {
@@ -149,10 +171,18 @@ void _showDatePicker2(){
                       Container(
                         decoration: const BoxDecoration(),
                         alignment: Alignment.topLeft,
-                        child: const Icon(
-                          Icons.arrow_back,
-                          color: Color.fromRGBO(0, 31, 63, 1),
-                          size: 30,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Color.fromRGBO(0, 31, 63, 1),
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => JobAddSite()),
+                            );
+                          },
                         ),
                       ),
                       Row(
@@ -442,7 +472,7 @@ const Padding(padding: EdgeInsets.all(3)),
                                     ),
                                 
   SizedBox(
-  width: 170,
+  width: 165,
   height: 35,
   child: MaterialButton(
     onPressed: _showDatePicker1,
@@ -497,7 +527,7 @@ const Padding(padding: EdgeInsets.all(3)),
                                     ),
    
 SizedBox(
-  width: 168,
+  width: 165,
   height: 35,
   child: MaterialButton(
     onPressed: _showDatePicker2,
@@ -544,92 +574,112 @@ SizedBox(
 const Padding(padding: EdgeInsets.all(20)),
 Row(
   mainAxisAlignment: MainAxisAlignment.end,
-  children: [
-SizedBox(
-    width: 110,
-    height: 37,
+  children: [SizedBox(
+  width: 110,
+  height: 37,
+  child: ElevatedButton(
+    onPressed: () {
+      if (jobFormName.text.isNotEmpty && jobFormDescription.text.isNotEmpty) {
+        // Validate dates
+        if (_dateTime1.isAfter(_dateTime2) || _dateTime1.isAtSameMomentAs(_dateTime2)) {
+          // Show error dialog
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Error'),
+                content: Text('Start date must be before the end date.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          // Show success dialog and create job
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Success'),
+                content: Text('Job created successfully!'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const JobAddSite()),
+                      );
+                    },
+                    child: Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
 
-    child: ElevatedButton(
-      onPressed: () {
-        
-print("object 04");
-  // Saving the comment using service
+          setState(() {
+            DateTime startDate = _dateTime1;
+            DateTime endDate = _dateTime2;
 
-  if (userInputTask.isNotEmpty) {
-    setState(() {
+            service.CreateJobs(
+              jobFormName.text,
+              jobFormDescription.text,
+              startDate,
+              endDate,
+              selectedTask!.taskId,
+            );
 
-
-      print("object 03");
-
-
-
-      DateTime startDate = _dateTime1; // Assuming _dateTime1 is your start date
-      DateTime endDate = _dateTime2; // Assuming _dateTime2 is your end date
-
-      service.CreateJobs(jobFormName.text,jobFormDescription.text,startDate,endDate,selectedTask!.taskId);
-      print("object 02");
-      print(startDate);
-      print(endDate);
-
-      _dateTime1 = DateTime.now(); // Update dateTime
-      _dateTime2 = DateTime.now();
-      Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) =>const JobAddSite()),
-     );
-    });
-  } else {
-    // Handle the case when userInput is empty
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Error'),
-          content: Text('Please enter some data before saving.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: Text('OK'),
-            ),
-          ],
+            // Clear text fields and reset date pickers
+            jobFormName.clear();
+            jobFormDescription.clear();
+            _dateTime1 = DateTime.now();
+            _dateTime2 = DateTime.now();
+          });
+        }
+      } else {
+        // Handle the case when jobFormName or jobFormDescription is empty
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Error'),
+              content: Text('Please enter all the required fields before saving.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Close the dialog
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
         );
-      },
-    );
-  } 
-
-
-
-
-
-
-
-
-
-        print(jobFormName);
-        print(jobFormDescription);
-        // Perform login logic here
-     },
-      style: ElevatedButton.styleFrom(
-        primary: const Color.fromRGBO(16, 0, 63, 1), // Background color
-        onPrimary:const Color.fromARGB(255, 255, 255, 255), // Text color
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(75.0), // Rounded corners
-        ),
-       // padding:const EdgeInsets.symmetric(horizontal: 20, vertical: 16), // Adjust size here
+      }
+    },
+    style: ElevatedButton.styleFrom(
+      primary: const Color.fromRGBO(16, 0, 63, 1), // Background color
+      onPrimary: const Color.fromARGB(255, 255, 255, 255), // Text color
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(75.0), // Rounded corners
       ),
-
-      child:const Text(
-        'Create',
-        style: TextStyle(
-          fontSize: 19,
-          fontFamily: 'Intel',
-          fontWeight: FontWeight.bold,
-        ),
+    ),
+    child: const Text(
+      'Create',
+      style: TextStyle(
+        fontSize: 19,
+        fontFamily: 'Intel',
+        fontWeight: FontWeight.bold,
       ),
-)
+    ),
   ),
+),
 
 const Padding(padding: EdgeInsets.all(3)),
 

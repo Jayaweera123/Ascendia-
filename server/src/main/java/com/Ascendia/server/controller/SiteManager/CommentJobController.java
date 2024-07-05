@@ -1,4 +1,3 @@
-/*
 package com.Ascendia.server.controller.SiteManager;
 
 import com.Ascendia.server.dto.SiteManager.CommentJobDto;
@@ -13,45 +12,17 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("api/v2/comment")
+@RequestMapping("sengineer/commentJob")
 @AllArgsConstructor
 public class CommentJobController {
 
-
     private CommentJobService commentJobService;
 
-    @PostMapping("/createJobComment")
-    public ResponseEntity<CommentResponseJobDto> createJobComment(@RequestBody CommentJobDto commentJobDto) {
-        if (commentJobDto == null ||  commentJobDto.getCommentedJobUser() == null || commentJobDto.getCommentedJobUser().getUserID() == null) {
-            throw new IllegalArgumentException("Commented user information in CommentDto cannot be null");
-        }
-
-        if (commentJobDto.getJob() == null || commentJobDto.getJob().getJobId() == null) {
-            throw new IllegalArgumentException("Task information in CommentDto cannot be null");
-        }
-
-
+    @PostMapping("/sengineer/comment/createJobComment")
+    public ResponseEntity<CommentResponseJobDto>createJobComment(@RequestBody CommentJobDto commentJobDto){
         CommentResponseJobDto savedJobComment = commentJobService.createJobComment(commentJobDto);
-        return new ResponseEntity<>(savedJobComment, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedJobComment , HttpStatus.CREATED);
     }
-/*
-    @PostMapping("/comments")
-    public ResponseEntity<?> createComment(@RequestBody CommentDto commentDto) {
-        if (commentDto.getCommentedUser() == null) {
-            return ResponseEntity.badRequest().body("User information cannot be null");
-        }
-
-        try {
-            commentService.createComment(commentDto);
-            return ResponseEntity.ok("Comment created successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
-*/
-
-/*
 
     @GetMapping("/job/{jobId}")
     public ResponseEntity <List<CommentResponseJobDto>> getCommentsForJob(@PathVariable Long jobId){
@@ -59,24 +30,23 @@ public class CommentJobController {
         return ResponseEntity.ok(commentJobs);
     }
 
-    @GetMapping("all")
+    @GetMapping
     public ResponseEntity <List<CommentJobDto>> getAllJobComment(){
         List<CommentJobDto> commentJobs = commentJobService.getAllJobComment();
         return ResponseEntity.ok(commentJobs);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<CommentJobDto>updateJobComment(@PathVariable("id") int commentJobId,@RequestBody CommentJobDto updateJobComment){
-        CommentJobDto commentJobDto =commentJobService.updateJobComment(commentJobId , updateJobComment);
+    public ResponseEntity<CommentJobDto>updateJobComment(@PathVariable("id") int commentJobtId,@RequestBody CommentJobDto updateJobComment){
+        CommentJobDto commentJobDto =commentJobService.updateJobComment(commentJobtId , updateJobComment);
         return ResponseEntity.ok(commentJobDto);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteComment(@PathVariable("id") int commentJobId ){
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteJobComment(@PathVariable("id") int commentJobId ){
         commentJobService.deleteJobComment(commentJobId);
-        return ResponseEntity.ok("Comment is delete successfully");
+        return ResponseEntity.ok("CommentJob is delete successfully");
 
     }
 
 }
-*/

@@ -5,8 +5,8 @@ import 'package:my_project/service.dart';
 import 'package:my_project/SiteEngineer/Task.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:my_project/service.dart';
 import 'package:my_project/SiteEngineer/JobAddSiteEngineer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UpdatingJobForm extends StatefulWidget {
   int jobId;
@@ -28,8 +28,32 @@ class UpdatingJobForm extends StatefulWidget {
 }
 
 
+
+Future<String?> getToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('jwt_token');
+}
+
+
+
 Future<List<Task>> getAllTasks() async {
-  final response = await http.get(Uri.parse("http://localhost:8080/api/task/all"));
+
+    print("enter to the getAllProjectByToken");
+  final token = await getToken();
+  if (token == null) {
+    throw Exception('Token not found');
+  }
+  print("project name in ");
+
+  final response = await http.get(Uri.parse("http://localhost:8080/sengineer/all"),//http://localhost:8080/senginner/createJob
+  headers: {                                                                       //http://localhost:8080/api/task/all
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
+
+   print("project name out");
+
   if (response.statusCode == 200) {
     final List<dynamic> jsonData = json.decode(response.body);
     return jsonData.map((taskData) => Task.fromJson(taskData)).toList();
@@ -37,6 +61,14 @@ Future<List<Task>> getAllTasks() async {
     throw Exception('Failed to load tasks');
   }
 }
+
+
+
+
+
+
+
+
 
 
 class _ProjectSiteState extends State<UpdatingJobForm> {

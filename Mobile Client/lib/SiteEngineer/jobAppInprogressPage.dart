@@ -11,54 +11,21 @@ import 'package:my_project/SiteEngineer/updateSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/HomeSiteEngineer.dart';
 import 'package:my_project/SiteEngineer/updatingJobForm.dart';
 import 'package:my_project/service.dart';
-import 'package:my_project/SiteEngineer/Task.dart';
 import 'package:my_project/SiteEngineer/JobCommentFormSiteEngineer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:my_project/SiteEngineer/inprogressSiteEngineer.dart';
 
-class jobAppPage extends StatefulWidget {
+class jobInProgressAppPage extends StatefulWidget {
   final int taskId;
   final String taskName;
 
-  jobAppPage({Key? key, required this.taskId, required this.taskName})
+  jobInProgressAppPage({Key? key, required this.taskId, required this.taskName})
       : super(key: key);
 
   @override
   _DisplayDataPageState createState() => _DisplayDataPageState();
 }
 
-Future<String?> getToken() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('jwt_token');
-}
-
-Future<List<Job>> getJobsByTasks(int taskId) async {
-  //http://10.0.2.2:8080/api/job/api/task/19/jobs
-
-  print("enter to the getJobsByTasks");
-  final token = await getToken();
-  if (token == null) {
-    throw Exception('Token not found');
-  }
-  print("project name in ");
-
-  final response = await http.get(
-    Uri.parse("http://localhost:8080/senginner/task/$taskId/jobs"),
-    headers: {
-      //http://localhost:8080/api/task/all
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
-    },
-  );
-  if (response.statusCode == 200) {
-    final List<dynamic> jsonData = json.decode(response.body);
-    return jsonData.map((jobData) => Job.fromJson(jobData)).toList();
-  } else {
-    throw Exception('Failed to load comment10');
-  }
-}
-
-class _DisplayDataPageState extends State<jobAppPage> {
+class _DisplayDataPageState extends State<jobInProgressAppPage> {
   //List<bool> rememberMeList = List.generate(100, (index) => false); // Assuming a maximum of 100 items
   Map<int, bool> isFocused = {};
   final TextEditingController searchingcontroller = TextEditingController();
@@ -67,6 +34,134 @@ class _DisplayDataPageState extends State<jobAppPage> {
   String projectSubName = 'The Galle Techno-Park';
   Service service = Service();
   List<String> savedData = [];
+
+  int allJobCount = 0;
+  int completedJobCount = 0;
+
+  Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('jwt_token');
+  }
+
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Start the timer when the widget initializes
+    startFetchingJobsPeriodically();
+  }
+
+  @override
+  void dispose() {
+    // Cancel the timer when the widget is disposed to avoid memory leaks
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void startFetchingJobsPeriodically() {
+    // Start a timer that runs fetchJobsAndCounts every 30 seconds
+    _timer = Timer.periodic(Duration(seconds: 3), (Timer t) {
+      // Call your fetchJobsAndCounts method
+      fetchJobsAndCounts();
+    });
+  }
+
+  Future<void> fetchJobsAndCounts() async {
+    try {
+      final allJobs = await getAllJobsCountByTasks(widget.taskId);
+      final completedJobs = await getCompletedJobsCountByTasks(widget.taskId);
+
+      setState(() {
+        allJobCount = allJobs;
+        completedJobCount = completedJobs;
+      });
+
+      print("alljobscount $allJobCount");
+      print("completedJobsCount $completedJobCount");
+
+      // Check your conditions here
+      if (allJobCount > 0 && completedJobCount > 0) {
+        // Perform actions based on the condition
+        print('Both job counts are greater than zero.');
+      } else {
+        print('At least one of the job counts is zero or less.');
+      }
+    } catch (e) {
+      print('Error fetching job counts: $e');
+    }
+  }
+
+  Future<int> getAllJobsCountByTasks(int taskId) async {
+    final token = await getToken();
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final response = await http.get(
+      Uri.parse("http://localhost:8080/sengineer/$taskId/jobcount"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return int.parse(response.body);
+    } else {
+      throw Exception('Failed to load jobs');
+    }
+  }
+
+  Future<int> getCompletedJobsCountByTasks(int taskId) async {
+    final token = await getToken();
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+
+    final response = await http.get(
+      Uri.parse("http://localhost:8080/sengineer/$taskId/job/completed"),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return int.parse(response.body);
+    } else {
+      throw Exception('Failed to load jobs');
+    }
+  }
+
+  Future<List<Job>> getJobsByTasks(int taskId) async {
+    //http://10.0.2.2:8080/api/job/api/task/19/jobs
+
+    print("enter to the getJobsByTasks");
+    final token = await getToken();
+    if (token == null) {
+      throw Exception('Token not found');
+    }
+    print("project name in ");
+
+    final response = await http.get(
+      Uri.parse("http://localhost:8080/senginner/task/$taskId/jobs"),
+      headers: {
+        //http://localhost:8080/api/task/all
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    if (response.statusCode == 200) {
+      // fetchJobsAndCounts();
+      print("enter to the getJobsByTasks");
+      final List<dynamic> jsonData = json.decode(response.body);
+      return jsonData.map((jobData) => Job.fromJson(jobData)).toList();
+    } else {
+      throw Exception('Failed to load comment10');
+    }
+  }
 
   void toDoGoToNewOne() {
     Navigator.push(
@@ -129,7 +224,7 @@ class _DisplayDataPageState extends State<jobAppPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const inProgressSite()),
+                                  builder: (context) => updateSite()),
                             );
                           },
                         ),
@@ -189,7 +284,7 @@ class _DisplayDataPageState extends State<jobAppPage> {
 /* ..............................to-do button............................. */
 
                             Container(
-                                width: 92,
+                                width: 132,
                                 height: 46,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(19.0),
@@ -200,7 +295,7 @@ class _DisplayDataPageState extends State<jobAppPage> {
                                     )),
                                 child: const Center(
                                   child: Text(
-                                    'To-Do',
+                                    'In-Progress',
                                     style: TextStyle(
                                       color: Color.fromARGB(255, 255, 255, 255),
                                       fontSize: 20.0,
@@ -292,6 +387,8 @@ class _DisplayDataPageState extends State<jobAppPage> {
                               } else if (snapshot.hasData) {
                                 print("object10");
                                 final List<Job> jobs = snapshot.data!;
+                                // Calculate total job count
+                                int jobCount = jobs.length;
                                 return Column(
                                   children: jobs.map((job) {
                                     return Card(
@@ -323,13 +420,68 @@ class _DisplayDataPageState extends State<jobAppPage> {
                                           Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          title: Text(
+                                                              'Confirm Status Change'),
+                                                          content: Text(job
+                                                                      .status ==
+                                                                  'Completed'
+                                                              ? 'Are you sure mark job as incompleted ? '
+                                                              : 'Are you sure mark job as completed ?'),
+                                                          actions: <Widget>[
+                                                            TextButton(
+                                                              child: Text(
+                                                                  'Cancel'),
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(); // Close the dialog
+                                                              },
+                                                            ),
+                                                            TextButton(
+                                                              child: Text(
+                                                                  'Confirm'),
+                                                              onPressed:
+                                                                  () async {
+                                                                if (job.status ==
+                                                                    'Completed') {
+                                                                  _markJobAsIncomplete(
+                                                                      job.jobId); // Call function to mark as incomplete
+                                                                } else {
+                                                                  _markJobAsComplete(
+                                                                      job.jobId); // Call function to mark as complete
+                                                                }
+                                                                // After marking as complete/incomplete, update the job locall);
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop(); // Close the dialog
+                                                              },
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                  child: Icon(
+                                                    job.status == 'Completed'
+                                                        ? Icons
+                                                            .check_box_outlined
+                                                        : Icons
+                                                            .check_box_outline_blank,
+                                                  ),
+                                                ),
                                                 const Padding(
                                                     padding:
                                                         EdgeInsets.all(19)),
                                                 GestureDetector(
                                                   onTap: () {
                                                     // Add your navigation logic here
-
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -408,7 +560,81 @@ class _DisplayDataPageState extends State<jobAppPage> {
                         width: 284,
                         height: 42,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: (allJobCount == completedJobCount &&
+                                  allJobCount != 0)
+                              ? () async {
+                                  print("selectedJobIds");
+                                  print(completedJobCount);
+                                  print("selectedJobIds");
+                                  print("allJobIds");
+                                  print(allJobCount);
+
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Warning'),
+                                        content: const Text(
+                                            'Are you sure this task is Completed ?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: const Text('Cancel'),
+                                            onPressed: () {
+                                              Navigator.of(context)
+                                                  .pop(); // Close the dialog
+                                            },
+                                          ),
+                                          TextButton(
+                                            child: const Text('OK'),
+                                            onPressed: () {
+                                              // Navigator.of(context).pop(); // Close the first dialog
+
+                                              // Show the success dialog
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title:
+                                                        const Text('Success'),
+                                                    content: const Text(
+                                                        'Task is moved to Completed task list successfully!'),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        child: const Text('OK'),
+                                                        onPressed: () {
+                                                          service
+                                                              .updateInprogresToCompleted(
+                                                                  widget
+                                                                      .taskId);
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  const updateSite(
+
+                                                                      //passData,
+
+                                                                      ),
+                                                            ),
+                                                          );
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+
+                                  //updateSite
+                                  //  print(allJobs);
+                                }
+                              : null,
                           style: ElevatedButton.styleFrom(
                             primary: const Color.fromRGBO(
                                 0, 31, 63, 1), // Background color
@@ -576,6 +802,60 @@ class _DisplayDataPageState extends State<jobAppPage> {
           );
         },
       );
+    }
+  }
+
+  void _markJobAsComplete(int jobId) async {
+    try {
+      // Prepare your PUT request to update the backend
+      final token = await getToken(); // Retrieve token for authorization
+      final response = await http.put(
+        Uri.parse(
+            'http://localhost:8080/senginner/complete/$jobId'), // Adjust endpoint
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token', // Add your authorization token
+        },
+        body: json.encode({'isDone': true}), // Send updated status
+      );
+
+      if (response.statusCode == 200) {
+        // Handle success response if needed
+        print('Job marked as complete');
+      } else {
+        // Handle error response if needed
+        print('Failed to mark job as complete');
+      }
+    } catch (e) {
+      // Handle exceptions
+      print('Error: $e');
+    }
+  }
+
+  void _markJobAsIncomplete(int jobId) async {
+    try {
+      // Prepare your PUT request to update the backend
+      final token = await getToken(); // Retrieve token for authorization
+      final response = await http.put(
+        Uri.parse(
+            'http://localhost:8080/senginner/complete/to/shceduled/$jobId'), // Adjust endpoint
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token', // Add your authorization token
+        },
+        body: json.encode({'isDone': false}), // Send updated status
+      );
+
+      if (response.statusCode == 200) {
+        // Handle success response if needed
+        print('Job marked as incomplete');
+      } else {
+        // Handle error response if needed
+        print('Failed to mark job as incomplete');
+      }
+    } catch (e) {
+      // Handle exceptions
+      print('Error: $e');
     }
   }
 }

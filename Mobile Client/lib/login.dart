@@ -25,19 +25,16 @@ class NameState extends State<LoginPageone> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-
-
-
   Future<void> login(String username, String password) async {
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:8080/auth/login'),
+        Uri.parse('http://localhost:8080/auth/login'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'username': username,
           'password': password,
         }),
-      );
+      ).timeout(Duration(seconds: 60)); // Increase the timeout duration
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         final token = responseData['token'];
@@ -51,7 +48,7 @@ class NameState extends State<LoginPageone> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => projectList(
         token:token,
@@ -87,13 +84,11 @@ class NameState extends State<LoginPageone> {
     }
   }
 
+// Function to store token in SharedPreferences
   Future<void> storeToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('jwt_token', token);
   }
-
-
-
 
   bool isFocused1 = false;
    bool isFocused2 = false;

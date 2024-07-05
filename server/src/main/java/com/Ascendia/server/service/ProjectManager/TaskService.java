@@ -2,10 +2,7 @@ package com.Ascendia.server.service.ProjectManager;
 
 
 import com.Ascendia.server.dto.ProjectManager.TaskDto;
-import com.Ascendia.server.dto.Store.MaterialDto;
 import com.Ascendia.server.entity.ProjectManager.Task;
-import com.Ascendia.server.entity.Store.Material;
-import com.Ascendia.server.mapper.Store.MaterialMapper;
 
 import java.util.List;
 
@@ -60,5 +57,13 @@ public interface TaskService {
     List<TaskDto> getTasksByScheduledStatus(Long projectId);
 
     List<TaskDto> getTasksByInProgresStatus(Long projectId);
+
+    String compareJobCounts(Long taskId);
+
+    //getTasksByCompletedStatus
+    List<TaskDto> getTasksByCompletedStatus(Long projectId);
+
+    List<TaskDto> getTasksWithOutCompletedTask(Long projectId);
+    //getTasksWithOutCompletedTask
 
 }

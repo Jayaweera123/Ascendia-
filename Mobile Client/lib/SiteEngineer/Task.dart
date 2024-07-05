@@ -48,6 +48,7 @@ class Task {
   final String prevStatus;
   final bool completed;
   final Project project;
+  final int jobCount;
 
   Task({
     required this.taskId,
@@ -59,7 +60,8 @@ class Task {
     required this.status,
     required this.prevStatus,
     required this.project,
-    required this.completed
+    required this.completed,
+    required this.jobCount,
   });
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
@@ -73,6 +75,7 @@ class Task {
       prevStatus: json['prevStatus'] ?? '',
       completed: json['completed'] ?? false,
       project: Project.fromJson(json['projectId']??{}), // Provide a default value if projectId is null
+      jobCount: json['jobCount'] ?? 0,
     );
   }
 
@@ -83,8 +86,12 @@ class Task {
       'description': description,
       'startDate': startDate.toIso8601String(),
       'endDate': endDate.toIso8601String(),
+      'createdDate': createdDate.toIso8601String(),
       'status': status,
+      'prevStatus': prevStatus,
+      'completed': completed,
       'project': project.toJson(),
+      'jobCount': jobCount,
     };
   }
 
