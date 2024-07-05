@@ -20,35 +20,29 @@ import com.Ascendia.server.service.ProjectManager.SendEmailService;
 import com.Ascendia.server.service.ProjectManager.UserProjectAssignmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentService {
 
-    private final UserProjectAssignmentRepository userProjectAssignmentRepository;
+    private UserProjectAssignmentRepository userProjectAssignmentRepository;
+
     private final AssignmentHistoryService assignmentHistoryService;
-    private final SendEmailService sendEmailService;
-    private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+
+    private SendEmailService sendEmailService;
 
     @Autowired
-    public UserProjectAssignmentServiceImpl(
-            UserProjectAssignmentRepository userProjectAssignmentRepository,
-            AssignmentHistoryService assignmentHistoryService,
-            @Qualifier("projectManagerSendEmailServiceImpl") SendEmailService sendEmailService,
-            ProjectRepository projectRepository,
-            UserRepository userRepository) {
-        this.userProjectAssignmentRepository = userProjectAssignmentRepository;
-        this.assignmentHistoryService = assignmentHistoryService;
-        this.sendEmailService = sendEmailService;
-        this.projectRepository = projectRepository;
-        this.userRepository = userRepository;
-    }
+    private ProjectRepository projectRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+
 
 
 

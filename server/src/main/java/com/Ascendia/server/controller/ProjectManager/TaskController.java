@@ -123,9 +123,21 @@ public class TaskController {
     }
 
     @GetMapping("/progress/{projectId}/projectprogress")
-    public ResponseEntity<Double> calculateProjectProgress(@PathVariable Long projectId) {
+    public ResponseEntity<Double> getProjectProgress(@PathVariable Long projectId) {
         double progress = taskService.calculateProjectProgress(projectId);
         return ResponseEntity.ok(progress);
     }
+
+
+    //Ravindu
+    @GetMapping("/progress/{projectId}/taskprogress")
+    public ResponseEntity<List<TaskProgressDto>> getTasksProgressByProjectId(@PathVariable Long projectId) {
+        List<TaskDto> tasks = taskService.getTasksByProjectId(projectId);
+        List<TaskProgressDto> taskProgressList = tasks.stream()
+                .map(task -> new TaskProgressDto(task.getTaskId(), task.getTaskName(), taskService.getTaskProgress(task.getTaskId())))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(taskProgressList);
+    }
+
 }
 

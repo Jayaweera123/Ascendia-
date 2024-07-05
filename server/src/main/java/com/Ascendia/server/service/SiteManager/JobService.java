@@ -9,8 +9,6 @@ import com.Ascendia.server.entity.ProjectManager.Task;
 import java.util.List;
 
 public interface JobService {
-
-    JobDto createJob(JobDto jobDto);
     //JobDto createJob(JobDto jobDto);
 
     JobGetDto getJobById(Long jobId);

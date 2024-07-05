@@ -26,18 +26,19 @@ public class TaskMapper {
     }
 
     public static Task mapToTask(TaskDto taskDto) {
-        Task task = new Task();
-        task.setTaskId(taskDto.getTaskId());
-        task.setTaskName(taskDto.getTaskName());
-        task.setDescription(taskDto.getDescription());
-        task.setStartDate(taskDto.getStartDate());
-        task.setEndDate(taskDto.getEndDate());
-        task.setCreatedDate(taskDto.getCreatedDate());
-        task.setStatus(taskDto.getStatus());
-        task.setPrevStatus(taskDto.getPrevStatus());
-        task.setCompleted(taskDto.isCompleted());
-        task.setProject(taskDto.getProject()); // Ensure Task entity's Project is set
-        return task;
+        return new Task (
+                taskDto.getTaskId(),
+                taskDto.getTaskName(),
+                taskDto.getDescription(),
+                taskDto.getStartDate(),
+                taskDto.getEndDate(),
+               // taskDto.getTaskStatus(),
+                taskDto.getCreatedDate(),
+                taskDto.getStatus(),
+                taskDto.getPrevStatus(),
+                taskDto.isCompleted(),
+                taskDto.getProject()
+        );
     }
 
     public static TaskGetDto mapToTaskGetDto(Task task) {
