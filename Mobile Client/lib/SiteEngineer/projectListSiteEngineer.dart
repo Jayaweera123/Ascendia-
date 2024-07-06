@@ -24,7 +24,6 @@ Future<String?> getToken() async {
 }
 
 Future<List<Project>> getAllProjectByToken() async {
-
   print("enter to the getAllProjectByToken");
   final token = await getToken();
   if (token == null) {
@@ -43,7 +42,9 @@ Future<List<Project>> getAllProjectByToken() async {
 
   if (response.statusCode == 200) {
     final List<dynamic> jsonData = json.decode(response.body);
-    return jsonData.map((projectData) => Project.fromJson(projectData)).toList();
+    return jsonData
+        .map((projectData) => Project.fromJson(projectData))
+        .toList();
   } else {
     throw Exception('Failed to load projects');
   }
@@ -91,11 +92,9 @@ class _ProjectSiteState extends State<projectList> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const Padding(padding: EdgeInsets.only(top: 35)),
-
                   Row(
                     children: [
                       const SizedBox(width: 35),
-
                       Container(
                         decoration: const BoxDecoration(),
                         alignment: Alignment.topLeft,
@@ -108,12 +107,12 @@ class _ProjectSiteState extends State<projectList> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => LoginPageone()),
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPageone()),
                             );
                           },
                         ),
                       ),
-
                       Image.asset(
                         'asset/campany logo.jpg',
                         width: 50.0,
@@ -122,7 +121,6 @@ class _ProjectSiteState extends State<projectList> {
                       ),
                     ],
                   ),
-
                   Row(
                     children: [
                       const SizedBox(width: 50),
@@ -145,7 +143,7 @@ class _ProjectSiteState extends State<projectList> {
                       )
                     ],
                   ),
-const Padding(padding: EdgeInsets.all(10)),  
+                  const Padding(padding: EdgeInsets.all(10)),
                   Container(
                     height: 630,
                     width: 300,
@@ -153,7 +151,8 @@ const Padding(padding: EdgeInsets.all(10)),
                       child: FutureBuilder<List<Project>>(
                         future: getAllProjectByToken(),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return const CircularProgressIndicator();
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
@@ -165,11 +164,13 @@ const Padding(padding: EdgeInsets.all(10)),
                                 print(project.image);
                                 print(project.projectDescription);
                                 return CustomCard(
-                                  userID:project.projectManager.userID,
-                                  projectId:project.projectId,
+                                  userID: project.projectManager.userID,
+                                  projectId: project.projectId,
                                   projectName: project.projectName,
-                                  projectDescription: project.projectDescription,
-                                  imageUrl: project.image, // Update as per your project model
+                                  projectDescription:
+                                      project.projectDescription,
+                                  imageUrl: project
+                                      .image, // Update as per your project model
                                 );
                               }).toList(),
                             );
