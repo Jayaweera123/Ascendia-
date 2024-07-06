@@ -64,9 +64,6 @@ public class Project {
     @Column(name = "active", nullable = false)
     private boolean active = true;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference // Prevent infinite recursion
-    private List<Task> tasks;
 
     public Project(String projectName, String projectType, String location, String projectDescription, String projectStatus, LocalDate createdDate, LocalDate endDate, String image, User projectManager, double progress) {
         this.projectName = projectName;

@@ -22,7 +22,7 @@ const EditTask = () => {
     <>
       <TopNavigationPM />
 
-      <section className="flex">
+      <section className="flex mt-16">
         <SideNavigationPM projectId={projectId} />
 
         <div className="w-8/12 ml-3.5 mr-3.5 mt-5 flex-grow">

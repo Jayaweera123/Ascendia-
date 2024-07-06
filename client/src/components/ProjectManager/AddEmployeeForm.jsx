@@ -92,6 +92,8 @@ function AddEmployeeForm({ projectId }) {
         Swal.fire({
           icon: "success",
           title: "Success!",
+          confirmButtonColor: "#001b5e",
+
           text: `${selectedCount} employees added to the project`,
         });
       })
@@ -113,6 +115,8 @@ function AddEmployeeForm({ projectId }) {
         title: "Do you want to assign selected employee(s)?",
         showCancelButton: true,
         confirmButtonText: "Add",
+        confirmButtonColor: "#001b5e",
+        cancelButtonColor: "#6b7280",
         customClass: {
           title: "my-swal-title", // Define your custom class name
         },
@@ -248,9 +252,11 @@ function AddEmployeeForm({ projectId }) {
     Swal.fire({
       title: "Selected Employees",
       html: selectedEmployeeListHTML, // Use html property to render HTML content
+      confirmButtonColor: "#001b5e",
+
       customClass: {
-        title: "my-swal-title", // Define your custom class name
-        confirmButton: "my-swal-confirm-button",
+        /*title: "my-swal-title", // Define your custom class name
+        confirmButton: "my-swal-confirm-button",*/
       },
     });
   }
