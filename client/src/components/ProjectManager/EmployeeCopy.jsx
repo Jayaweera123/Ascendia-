@@ -60,7 +60,8 @@ function EmployeeCopy({ projectId }) {
         Swal.fire({
           icon: "success",
           title: "Success!",
-          text: "Task deleted successfully!",
+          text: "Employee removed successfully!",
+          confirmButtonColor: "#001b5e",
         }).then(() => {
           setEmployees((prevEmployees) =>
             prevEmployees.filter((employee) => employee.id !== id)
@@ -76,8 +77,10 @@ function EmployeeCopy({ projectId }) {
   function popUpWarning(id) {
     Swal.fire({
       icon: "warning",
-      title: "Warning!",
-      text: "Are you sure? You won't be able to revert this!",
+      title: " Are you sure?",
+      text: "You won't be able to revert this!",
+      confirmButtonColor: "#001b5e",
+      cancelButtonColor: "#6b7280",
       showCancelButton: true,
     })
       .then((result) => {
@@ -153,7 +156,7 @@ function EmployeeCopy({ projectId }) {
                 onChange={handleDesignationChange}
               >
                 <option value="all">All</option>
-                <option value="Civil Engineer">Site Engineer</option>
+                <option value="Site Engineer">Site Engineer</option>
                 <option value="Technical Officer">Technical Officer</option>
                 <option value="Supervisor">Supervisor</option>
                 <option value="Store Keeper">Store Keeper</option>
@@ -187,9 +190,7 @@ function EmployeeCopy({ projectId }) {
                       <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                         Added on
                       </th>
-                      <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Status
-                      </th>
+                      <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
                       <th className="border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
                     </tr>
                   </thead>
@@ -240,15 +241,16 @@ function EmployeeCopy({ projectId }) {
                           </p>
                         </td>
                         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                          <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
+                          {/*<span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
                             <span
                               aria-hidden
                               className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
                             ></span>
-                            <span className="relative">
+                            {/*<span className="relative">
                               {employee.assignmentStatus}
                             </span>
-                          </span>
+                           
+                          </span> */}
                         </td>
                         <td>
                           <RiDeleteBin6Line

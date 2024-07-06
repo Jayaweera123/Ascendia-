@@ -7,6 +7,21 @@ import Swal from "sweetalert2";
 import { getEmployeeCount } from "../../services/ProjectService";
 
 const RemoveAllEmployees = ({ projectId }) => {
+  const [status, setStatus] = useState("");
+
+  //Get employees details
+  useEffect(() => {
+    // Fetch employees for the project when projectId changes
+    getProjectById(projectId)
+      .then((response) => {
+        setStatus(response.data.projectStatus);
+        console.log(status);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [projectId]);
+
   function popUpWarning(projectId) {
     Swal.fire({
       icon: "warning",
@@ -32,15 +47,17 @@ const RemoveAllEmployees = ({ projectId }) => {
 
   return (
     <div className="py-3">
-      <button
-        className="bg-[#9b2929] hover:bg-[#814040] text-white font-bold rounded-md p-2.5"
-        onClick={() => popUpWarning(projectId)}
-      >
-        <div className="flex items-center">
-          <div className="flex items-center justify-center"></div>
-          Remove All Employees
-        </div>
-      </button>
+      {status === "Completed" && (
+        <button
+          className="bg-[#9b2929] hover:bg-[#814040] text-white font-bold rounded-md p-2.5"
+          onClick={() => popUpWarning(projectId)}
+        >
+          <div className="flex items-center">
+            <div className="flex items-center justify-center"></div>
+            Remove All Employees
+          </div>
+        </button>
+      )}
     </div>
   );
 };

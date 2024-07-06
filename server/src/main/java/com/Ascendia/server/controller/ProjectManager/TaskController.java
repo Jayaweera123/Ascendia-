@@ -105,14 +105,14 @@ public class TaskController {
     }
 
     @PutMapping("/sengineer/{taskId}/mark-as-done")
-    public String markAsDone(@PathVariable Long taskId) {
-        taskService.markAsCompleted(taskId);
+    public String markAsDone(@PathVariable Long taskId, @RequestBody TaskUpdateDto taskUpdateDto) {
+        taskService.markAsCompleted(taskId, taskUpdateDto);
         return ("task id "+taskId+" marked as Completed");
     }
 
     @PutMapping("/pmanageronly/{taskId}/mark-as-undone")
-    public void markAsUndone(@PathVariable Long taskId) {
-        taskService.markAsUncompleted(taskId);
+    public void markAsUndone(@PathVariable Long taskId, @RequestBody TaskUpdateDto taskUpdateDto) {
+        taskService.markAsUncompleted(taskId, taskUpdateDto);
     }
 
     //Ravindu
@@ -123,9 +123,21 @@ public class TaskController {
     }
 
     @GetMapping("/progress/{projectId}/projectprogress")
-    public ResponseEntity<Double> calculateProjectProgress(@PathVariable Long projectId) {
+    public ResponseEntity<Double> getProjectProgress(@PathVariable Long projectId) {
         double progress = taskService.calculateProjectProgress(projectId);
         return ResponseEntity.ok(progress);
     }
+
+
+    //Ravindu
+    @GetMapping("/progress/{projectId}/taskprogress")
+    public ResponseEntity<List<TaskProgressDto>> getTasksProgressByProjectId(@PathVariable Long projectId) {
+        List<TaskDto> tasks = taskService.getTasksByProjectId(projectId);
+        List<TaskProgressDto> taskProgressList = tasks.stream()
+                .map(task -> new TaskProgressDto(task.getTaskId(), task.getTaskName(), taskService.getTaskProgress(task.getTaskId())))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(taskProgressList);
+    }
+
 }
 

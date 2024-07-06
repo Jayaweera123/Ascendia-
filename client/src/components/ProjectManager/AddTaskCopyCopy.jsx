@@ -67,6 +67,7 @@ function AddTaskForm(projectId) {
               icon: "success",
               title: "Success!",
               text: "Task updated successfully!",
+              confirmButtonColor: "#001b5e",
             }).then(() => {
               navigator("/project/" + pID + "/task");
             });
@@ -82,6 +83,7 @@ function AddTaskForm(projectId) {
               icon: "success",
               title: "Success!",
               text: "Task created successfully!",
+              confirmButtonColor: "#001b5e",
             }).then(() => {
               navigator("/project/" + pID + "/task");
             });
@@ -287,7 +289,7 @@ function AddTaskForm(projectId) {
                     htmlFor="endDate"
                     className="block text-base font-medium leading-6 text-gray-900"
                   >
-                    End Date:
+                    Due Date:
                   </label>
                   <div className="mt-3">
                     <input
@@ -316,20 +318,19 @@ function AddTaskForm(projectId) {
                     )}
                     {endDate && projectStartDate > endDate && (
                       <span className="mt-2 text-sm text-red-500">
-                        Invalid end date: Project starts in be end in{" "}
-                        {projectEndDate}
+                        Invalid end date: Project starts in {projectEndDate}
                       </span>
                     )}
                     {endDate && startDate && startDate == endDate && (
                       <span className="mt-2 text-sm text-red-500">
-                        Invalid end date.
+                        Invalid end date.{" "}
                       </span>
                     )}
                     {endDate &&
                       new Date(endDate) <
                         new Date(new Date().setHours(0, 0, 0, 0)) && (
                         <span className="mt-2 text-sm text-red-500">
-                          End date must be future date.
+                          End date must be a future date.
                         </span>
                       )}
                   </div>

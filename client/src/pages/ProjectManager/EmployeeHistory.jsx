@@ -10,7 +10,7 @@ function EmployeeHistory() {
   return (
     <>
       <TopNavigationPM />
-      <section className="flex">
+      <section className="flex mt-16">
         <SideNavigationPM projectId={projectId} />
         <div className="flex-auto">
           <div className="mx-10 my-5 ">

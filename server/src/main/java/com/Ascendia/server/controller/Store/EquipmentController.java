@@ -54,7 +54,7 @@ public class EquipmentController {
     }
 
     //Build delete Equipment REST API
-    @DeleteMapping("/skeeperonly/equipment/deleteEquipment/{id}")
+    @DeleteMapping("/skeeperonly/equipment/deleteEquipment{id}")
     public ResponseEntity<String> deleteEquipment (@PathVariable("id") Long equipmentId){
         equipmentService.deleteEquipment(equipmentId);
 

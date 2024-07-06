@@ -26,7 +26,7 @@ function JobList() {
   return (
     <>
       <TopNavigationPM />
-      <section className="flex">
+      <section className="flex mt-16">
         <SideNavigationPM projectId={projectId} />
         <div className="flex-auto w-8/12">
           <div className="mx-10 my-5">

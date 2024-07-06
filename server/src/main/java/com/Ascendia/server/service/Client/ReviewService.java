@@ -5,8 +5,8 @@ import java.util.List;
 
 public interface ReviewService {
 
-    ReviewDto addReview(ReviewDto reviewDto, Long projectId);
+    ReviewDto addReview(ReviewDto reviewDto);
 
-    List<ReviewDto> getAllReviews(List<Long> projectIds);
+    List<ReviewDto> getAllReviews();
 
 }

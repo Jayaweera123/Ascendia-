@@ -15,7 +15,7 @@ function ProjectProgress() {
   return (
     <>
       <TopNavigationPM />
-      <section className="flex">
+      <section className="flex mt-16">
         <SideNavigationPM projectId={projectId} />
         <PageTitle title="Progress" />
 

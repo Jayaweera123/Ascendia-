@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,28 +25,6 @@ public class JobServiceImpl implements JobService {
 
     private JobRepository jobRepository;
     private TaskRepository taskRepository;
-
-    @Override
-    public JobDto createJob(JobDto jobDto){
-
-        Optional<Task> taskOptional = taskRepository.findById(jobDto.getTask().getTaskId());
-        if (taskOptional.isPresent()) {
-            // Set the tasks details in the jobDto
-            jobDto.setTask(taskOptional.get());
-            Job job = JobMapper.mapToJob(jobDto);
-            // Calculate the status
-            job.setStatus("TO_DO"); // Set default status
-            job.setDone(false);
-
-
-            Job savedJob = jobRepository.save(job);
-            return JobMapper.mapToJobDto(savedJob);
-        } else {
-            // Handle the case where the project does not exist
-            // For example, throw an exception or return null
-            throw new ResourceNotFoundException("Tasks not found with ID: " + jobDto.getTask().getTaskId());
-        }
-    }
 
     @Override
     public JobGetDto getJobById(Long jobId) {
@@ -113,16 +90,24 @@ public class JobServiceImpl implements JobService {
 
     public String calculateStatus(Job job) {
         LocalDate currentDate = LocalDate.now();
+        LocalDate startDate = job.getStartDate();
+        LocalDate endDate = job.getEndDate();
+
         if (!job.isDone()) {
-            if (currentDate.isBefore(job.getStartDate())) {
-                return "Scheduled";
-            } else if (currentDate.isAfter(job.getEndDate())) {
-                return "Overdue";
+            if (startDate == null && currentDate.isAfter(endDate)) {
+                return ("Overdue");
+            } else if (startDate == null || currentDate.isBefore(startDate)) {
+                return ("Scheduled");
+            } else if (currentDate.isAfter(endDate)) {
+                return ("Overdue");
+            } else if ((currentDate.isEqual(startDate)) || currentDate.isEqual(endDate)) {
+                return ("In-Progress");
             } else {
-                return "In-Progress";
+                return ("In-Progress");
             }
-        } else {
-            return "Completed";
+        }
+        else {
+            return ("Completed");
         }
     }
 

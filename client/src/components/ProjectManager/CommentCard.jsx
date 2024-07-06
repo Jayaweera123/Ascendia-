@@ -23,13 +23,13 @@ const CommentCardPopup = ({ comments }) => {
                   }"
                   alt=""
                 />
-          <div>
+          <div class="text-left">
             <h3 class="text-lg font-semibold">${comment.commentedUserName}</h3>
             <p class="text-sm text-gray-500">${comment.designation}</p>
           </div>
         </div>
-        <div class="mb-2">
-         
+       
+       <div class="mt-2 mb-2 pl-10 text-left">  
           <p class="text-gray-800">${comment.commentText}</p>
         </div>
         <div class="text-right text-gray-500 text-sm">
@@ -49,13 +49,19 @@ const CommentCardPopup = ({ comments }) => {
         title: "my-swal-title",
         confirmButton: "my-swal-confirm-button",
       },
+      showClass: {
+        popup: "swal2-noanimation", // Custom class to disable animation
+      },
+      hideClass: {
+        popup: "", // Custom class to disable animation
+      },
     });
   };
 
   return (
     <>
       <span
-        className="  text-gray-600 cursor-pointer"
+        className="  text-gray-700 cursor-pointer"
         onClick={comments.length > 0 ? handlePopup : null}
       >
         {comments.length} <em> Comments </em>

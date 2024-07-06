@@ -18,7 +18,13 @@ const TasksPieChart = ({ projectId }) => {
     // Fetch tasks for the project when projectId changes
     getTasksForProject(projectId)
       .then((response) => {
-        setTasks(response.data);
+        const tasksData = response.data;
+        if (Array.isArray(tasksData)) {
+          setTasks(tasksData);
+        } else {
+          console.error("Tasks data is not an array:", tasksData);
+          setTasks([]);
+        }
       })
       .catch((error) => {
         console.error(error);
@@ -44,6 +50,20 @@ const TasksPieChart = ({ projectId }) => {
       fetchJobCounts();
     }
   }, [tasks]);
+
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const { name, value } = payload[0];
+      return (
+        <div className="bg-white p-2 rounded-md shadow text-xs text-gray-700">
+          <p className="font-semibold">{name}</p>
+          <p>{`Jobs: ${value}`}</p>
+        </div>
+      );
+    }
+
+    return null;
+  };
 
   useEffect(() => {
     function handleResize() {
@@ -108,7 +128,7 @@ const TasksPieChart = ({ projectId }) => {
                 />
               ))}
             </Pie>
-            <Tooltip />
+            <Tooltip content={<CustomTooltip />} />
           </PieChart>
         </div>
       </div>

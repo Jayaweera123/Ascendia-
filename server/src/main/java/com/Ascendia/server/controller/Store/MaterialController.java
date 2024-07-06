@@ -1,8 +1,6 @@
 package com.Ascendia.server.controller.Store;
 
 import com.Ascendia.server.dto.Store.MaterialDto;
-import com.Ascendia.server.dto.Store.NotificationDto;
-import com.Ascendia.server.dto.Store.NotificationSeenDto;
 import com.Ascendia.server.dto.Store.UpdateMaterialDto;
 import com.Ascendia.server.service.Store.MaterialService;
 import lombok.AllArgsConstructor;
@@ -107,43 +105,4 @@ public class MaterialController {
 
         return ResponseEntity.ok(updatedMaterials);
     }
-
-    //Build Get all notifications REST API
-    @GetMapping("/skeeperonly/material/getAllNotifications/{userId}")
-    public ResponseEntity<List<NotificationDto>> getAllNotifications(@PathVariable String userId){
-        List<NotificationDto> notifications =  materialService.getAllNotifications(userId);
-        return ResponseEntity.ok(notifications);
-    }
-
-    //Build get all low stock materials REST API
-    @GetMapping("/store/material/lowStockMaterials/{projectId}")
-    public ResponseEntity<List<MaterialDto>> getLowStockMaterials(@PathVariable Long projectId){
-        return ResponseEntity.ok(materialService.getLowStockMaterials(projectId));
-    }
-
-    //Build
-    @PutMapping("/skeeperonly/material/notificationSeen/{id}")
-    public ResponseEntity<NotificationSeenDto> setNotificationSeen(@PathVariable("id") Long notificationId, @RequestBody NotificationSeenDto notificationSeenData) {
-        NotificationSeenDto notificationSeenDto = materialService.setNotificationSeen(notificationId, notificationSeenData);
-        return ResponseEntity.ok(notificationSeenDto);
-
-    }
-
-    //Build mark all notifications as seen REST API
-    @PutMapping("/skeeperonly/material/markAllAsSeen/{userId}")
-    public ResponseEntity<Void> markAllNotificationsAsSeen(@PathVariable String userId) {
-        try {
-            materialService.markAllAsSeen(userId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    //Build get all unseen notifications REST API
-    @GetMapping("/skeeperonly/material/unseenNotifications/{userId}")
-    public ResponseEntity<List<NotificationDto>> getUnseenNotifications(@PathVariable String userId){
-        return ResponseEntity.ok(materialService.getUnseenNotifications(userId));
-    }
-
 }
