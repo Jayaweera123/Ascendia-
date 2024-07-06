@@ -1,8 +1,6 @@
 package com.Ascendia.server.service.Store;
 
 import com.Ascendia.server.dto.Store.MaterialDto;
-import com.Ascendia.server.dto.Store.NotificationDto;
-import com.Ascendia.server.dto.Store.NotificationSeenDto;
 import com.Ascendia.server.dto.Store.UpdateMaterialDto;
 
 import java.time.LocalDateTime;
@@ -29,14 +27,5 @@ public interface MaterialService {
 
     List<UpdateMaterialDto> getUpdatedMaterialsByDateRange(Long projectId, LocalDateTime startDate, LocalDateTime endDate);
 
-    List<NotificationDto> getAllNotifications(String userId);
-
-    List<MaterialDto> getLowStockMaterials(Long projectId);
-
-    NotificationSeenDto setNotificationSeen(Long notificationId, NotificationSeenDto notificationSeenData);
-
-    void markAllAsSeen(String userId);
-
-    List<NotificationDto> getUnseenNotifications(String userId);
 
 }

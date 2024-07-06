@@ -18,20 +18,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectDto {
-    private Long projectId;
     private String projectName;
     private String projectType;
-    private String location;
     private String projectDescription;
     private String projectStatus;
     private LocalDate createdDate;
     private LocalDate endDate;
     private String image;
-    private String projectManagerFirstName;
-    private String projectManagerLastName;
-    private String clientFirstName;
-    private String clientLastName;
-    private String consultantFirstName;
-    private String consultantLastName;
-
+    private User projectManager;
 }

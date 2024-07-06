@@ -6,65 +6,30 @@ import com.Ascendia.server.entity.ProjectManager.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
-@Repository
 public interface ProjectRepository  extends JpaRepository<Project, Long >{
+
+    //List<Project> findByPmId(String pmId);
+
+    @Query("SELECT p FROM Project p WHERE " +
+            "p.projectManager.userID = :pmId AND " +
+            "(p.projectName LIKE CONCAT('%', :query, '%') OR " +
+            "p.projectDescription LIKE CONCAT('%', :query, '%'))")
+    List<Project> searchProject(@Param("pmId") String pmId, @Param("query") String query);
 
     @Query("SELECT p FROM Project p WHERE p.projectManager = :pmId")
     List<Project> findProjectsByProjectManagerId(@Param("pmId") Long pmId);
 
     List<Project> findProjectsByProjectManager(User projectManager);
-    List<Project> findProjectsByClient(User client);
-    List<Project> findProjectsByConsultant(User consultant);
-
-    List<Project> findAllByActiveTrue();
 
     Project findByProjectId(Long projectId);
 
     List<Project> findByProjectManager(User user);
-
-    @Query("SELECT COUNT(p) FROM Project p WHERE p.projectStatus = 'Completed'")
-    Long countCompletedProjects();
-
-    @Query("SELECT COUNT(p) FROM Project p WHERE p.projectStatus = 'In-Progress'")
-    Long countInProgressProjects();
-
-    @Query("SELECT COUNT(p) FROM Project p WHERE p.projectStatus = 'Cancelled'")
-    Long countCancelledProjects();
-
-    @Query("SELECT COUNT(p) FROM Project p WHERE p.projectStatus = 'pending'")
-    Long countPendingProjects();
-
-    @Query("SELECT YEAR(p.createdDate), COUNT(p) FROM Project p WHERE p.projectStatus = 'Completed' GROUP BY YEAR(p.createdDate)")
-    List<Object[]> countCompletedProjectsByYear();
-
-    @Query("SELECT YEAR(p.createdDate), COUNT(p) FROM Project p WHERE p.projectStatus = 'In-Progress' GROUP BY YEAR(p.createdDate)")
-    List<Object[]> countInProgressProjectsByYear();
-
-    @Query("SELECT YEAR(p.createdDate), COUNT(p) FROM Project p WHERE p.projectStatus = 'Cancelled' GROUP BY YEAR(p.createdDate)")
-    List<Object[]> countCancelledProjectsByYear();
-
-    @Query("SELECT YEAR(p.createdDate), COUNT(p) FROM Project p WHERE p.projectStatus = 'pending' GROUP BY YEAR(p.createdDate)")
-    List<Object[]> countPendingProjectsByYear();
-
-    @Query("SELECT EXTRACT(YEAR FROM p.createdDate) AS year, COUNT(p) AS count FROM Project p WHERE p.projectType = 'Residential' GROUP BY EXTRACT(YEAR FROM p.createdDate)")
-    List<Map<String, Object>> countResidentialProjectsAndYear();
-
-    @Query("SELECT EXTRACT(YEAR FROM p.createdDate) AS year, COUNT(p) AS count FROM Project p WHERE p.projectType = 'Commercial' GROUP BY EXTRACT(YEAR FROM p.createdDate)")
-    List<Map<String, Object>> countCommercialProjectsAndYear();
-
-    @Query("SELECT EXTRACT(YEAR FROM p.createdDate) AS year, COUNT(p) AS count FROM Project p WHERE p.projectType = 'Industrial' GROUP BY EXTRACT(YEAR FROM p.createdDate)")
-    List<Map<String, Object>> countIndustrialProjectsAndYear();
-
-    @Query("SELECT EXTRACT(YEAR FROM p.createdDate) AS year, COUNT(p) AS count FROM Project p WHERE p.projectType = 'Infrastructure' GROUP BY EXTRACT(YEAR FROM p.createdDate)")
-    List<Map<String, Object>> countInfrastructureProjectsAndYear();
-
-    @Query("SELECT EXTRACT(YEAR FROM p.createdDate) AS year, COUNT(p) AS count FROM Project p WHERE p.projectType = 'Other' GROUP BY EXTRACT(YEAR FROM p.createdDate)")
-    List<Map<String, Object>> countOtherProjectsAndYear();
-
+    /*
+    List<Project> findByStoreKeeper(User user);
+    List<Project> findBySiteEngineer(User user);
+    List<Project> findBySupervisor(User user);
+    List<Project> findByTechnicalOfficer(User user);
+    List<Project> findByQuantitySurveyor(User user);*/
 }

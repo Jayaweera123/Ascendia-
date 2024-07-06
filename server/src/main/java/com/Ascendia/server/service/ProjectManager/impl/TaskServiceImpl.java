@@ -139,6 +139,9 @@ private boolean validateTaskDates(LocalDate projectStartDate, LocalDate projectE
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + taskId));
     }
 
+
+
+
     /*public List<TaskDto> getAllTasks() {
         List<Task> tasks = taskRepository.findAll();
         return tasks.stream().map((task) -> TaskMapper.mapToTaskDto(task))
@@ -325,24 +328,65 @@ private boolean validateTaskDates(LocalDate projectStartDate, LocalDate projectE
 
     //Robust method to mark as completed
     @Override
-    public void markAsCompleted(Long taskId) {
+    public void markAsCompleted(Long taskId, TaskUpdateDto taskUpdateDto) {
         Task task = getTaskById(taskId);
         if (!task.isCompleted()) {
             task.setPrevStatus(task.getStatus());
             task.setStatus("Completed");
             task.setCompleted(true);
             taskRepository.save(task);
+
+            StringBuilder changeDescription = new StringBuilder();
+            changeDescription.append("Marked the task as completed");
+
+            if (taskUpdateDto.getUpdatedByUserId() != null) {
+                User updatedByUser = userRepository.findById(taskUpdateDto.getUpdatedByUserId())
+                        .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + taskUpdateDto.getUpdatedByUserId()));
+
+                //Create the edit history record
+                TaskEditHistoryDto editHistoryDto = new TaskEditHistoryDto();
+                editHistoryDto.setTask(task);
+                editHistoryDto.setUpdatedByDesignation(updatedByUser.getDesignation());
+                editHistoryDto.setUpdatedByName(updatedByUser.getFirstName() + " " + updatedByUser.getLastName());
+                editHistoryDto.setUpdatedByProfilePicUrl(updatedByUser.getProfilePicUrl());
+                editHistoryDto.setUpdateTime(LocalDateTime.now());
+                editHistoryDto.setChangeDescription(changeDescription.toString());
+
+                // Call the service method to create the history record
+                taskEditHistoryService.createRecord(editHistoryDto);
+            }
+
         }
     }
 
     @Override
-    public void markAsUncompleted(Long taskId) {
+    public void markAsUncompleted(Long taskId, TaskUpdateDto taskUpdateDto) {
         Task task = getTaskById(taskId);
         if (task.isCompleted()) {
             task.setPrevStatus(task.getStatus());
             task.setStatus("In-Progress");
             task.setCompleted(false);
             taskRepository.save(task);
+
+            StringBuilder changeDescription = new StringBuilder();
+            changeDescription.append("Marked the task as uncompleted.");
+
+            if (taskUpdateDto.getUpdatedByUserId() != null) {
+                User updatedByUser = userRepository.findById(taskUpdateDto.getUpdatedByUserId())
+                        .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + taskUpdateDto.getUpdatedByUserId()));
+
+                //Create the edit history record
+                TaskEditHistoryDto editHistoryDto = new TaskEditHistoryDto();
+                editHistoryDto.setTask(task);
+                editHistoryDto.setUpdatedByDesignation(updatedByUser.getDesignation());
+                editHistoryDto.setUpdatedByName(updatedByUser.getFirstName() + " " + updatedByUser.getLastName());
+                editHistoryDto.setUpdatedByProfilePicUrl(updatedByUser.getProfilePicUrl());
+                editHistoryDto.setUpdateTime(LocalDateTime.now());
+                editHistoryDto.setChangeDescription(changeDescription.toString());
+
+                // Call the service method to create the history record
+                taskEditHistoryService.createRecord(editHistoryDto);
+            }
         }
 
     }
@@ -433,40 +477,19 @@ private boolean validateTaskDates(LocalDate projectStartDate, LocalDate projectE
     }
 
     //Ravindu
-
-    public long getJobCountForProject(Long projectId) {
-        return jobRepository.countJobsByProjectId(projectId);
-    }
-
-    public long getCompletedJobCountForProject(Long projectId) {
-        return jobRepository.countCompletedJobsByProjectId(projectId);
-    }
-
     @Override
     public int getTaskProgress(Long taskId) {
         Task task = getTaskById(taskId);
         if (task.isCompleted()) {
-            return 100;
+            return 100; // Completed task
+        } else {
+            // Optionally implement more detailed progress calculation logic
+            return 0; // Incomplete task
         }
-        int jobCount = getJobCountForTask(taskId);
-        int completedJobCount = getCompletedJobCountForTask(taskId);
-        return (jobCount > 0) ? (completedJobCount * 100 / jobCount) : 0;
     }
 
     @Override
     public double calculateProjectProgress(Long projectId) {
-        // Fetch the project by projectId
-        Project project = projectRepository.findById(projectId).orElse(null);
-        if (project == null) {
-            throw new RuntimeException("Project not found");
-        }
-
-        // Check if the project status is "completed"
-        if ("completed".equalsIgnoreCase(project.getProjectStatus())) {
-            return 100.0; // Project is completed, so progress is 100%
-        }
-
-        // Get the list of tasks for the project
         List<Task> tasks = taskRepository.findByProjectProjectId(projectId);
         if (tasks.isEmpty()) {
             return 0.0; // No tasks means no progress
@@ -479,6 +502,5 @@ private boolean validateTaskDates(LocalDate projectStartDate, LocalDate projectE
 
         return totalProgress / tasks.size();
     }
-
 
 }

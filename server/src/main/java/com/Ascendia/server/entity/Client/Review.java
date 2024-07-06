@@ -1,7 +1,6 @@
 package com.Ascendia.server.entity.Client;
 
 import com.Ascendia.server.entity.Administrator.User;
-import com.Ascendia.server.entity.Project.Project;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,8 +35,6 @@ public class Review {
     @JoinColumn(name = "userID")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "projectId" , referencedColumnName = "projectId")
-    private Project project;
+
 
 }

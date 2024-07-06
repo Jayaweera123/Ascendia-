@@ -3,7 +3,7 @@ import React from "react";
 const TopNavigationPM = () => {
   return (
     <>
-      <style jsx>{`
+      <style jsx="true">{`
         .content-padding {
           padding-top: 4rem; /* Adjust this value based on the height of your fixed navigation bar */
         }

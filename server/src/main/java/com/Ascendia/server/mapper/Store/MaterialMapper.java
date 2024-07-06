@@ -16,11 +16,7 @@ public class MaterialMapper {
                 material.getMinimumLevel(),
                 material.getDescription(),
                 material.getCreatedDate(),
-                material.getProject().getProjectId(),
-                material.getUserId(),
-                material.getStatus()
-
-
+                material.getProject().getProjectId()
         );
     }
 
@@ -35,8 +31,6 @@ public class MaterialMapper {
                 materialDto.getMinimumLevel(),
                 materialDto.getDescription(),
                 materialDto.getCreatedDate(),
-                materialDto.getUserId(),
-                materialDto.getStatus(),
                 project
         );
     }

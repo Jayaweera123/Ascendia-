@@ -20,35 +20,29 @@ import com.Ascendia.server.service.ProjectManager.SendEmailService;
 import com.Ascendia.server.service.ProjectManager.UserProjectAssignmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentService {
 
-    private final UserProjectAssignmentRepository userProjectAssignmentRepository;
+    private UserProjectAssignmentRepository userProjectAssignmentRepository;
+
     private final AssignmentHistoryService assignmentHistoryService;
-    private final SendEmailService sendEmailService;
-    private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+
+    private SendEmailService sendEmailService;
 
     @Autowired
-    public UserProjectAssignmentServiceImpl(
-            UserProjectAssignmentRepository userProjectAssignmentRepository,
-            AssignmentHistoryService assignmentHistoryService,
-            @Qualifier("projectManagerSendEmailServiceImpl") SendEmailService sendEmailService,
-            ProjectRepository projectRepository,
-            UserRepository userRepository) {
-        this.userProjectAssignmentRepository = userProjectAssignmentRepository;
-        this.assignmentHistoryService = assignmentHistoryService;
-        this.sendEmailService = sendEmailService;
-        this.projectRepository = projectRepository;
-        this.userRepository = userRepository;
-    }
+    private ProjectRepository projectRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+
 
 
 
@@ -108,6 +102,8 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
 
     }
 
+
+
     @Override
     public List<Project> getProjectsByAssignedUser(User assignedUser) {
         return userProjectAssignmentRepository.findProjectsByAssignedUser(assignedUser);
@@ -152,6 +148,25 @@ public class UserProjectAssignmentServiceImpl implements UserProjectAssignmentSe
 
         // Delete the assignment
         userProjectAssignmentRepository.deleteById(assignmentId);
+
+        //Send Email
+
+        String subject = "Removal From the Project Notification";
+
+        String body =
+                "Dear " + assignedUser.getFirstName() + " " + assignedUser.getLastName() + ",\n\n" +
+                       "We want to express our sincere gratitude for your contributions to the project as a " + assignedUser.getDesignation() + ".\n\n" +
+                        "Project: " + assignment.getProject().getProjectName() + "\n" +
+                        "Removed By: " + assignment.getAssignedByUser().getFirstName() + " " + assignment.getAssignedByUser().getLastName() + " (" + assignment.getAssignedByUser().getDesignation() + ")\n\n" +
+                        "Your dedication and efforts have been greatly appreciated. Although you are no longer assigned to this project, we value the contributions you made and the expertise you brought to our team.\n\n" +
+                        "Should you have any questions or need further assistance, please do not hesitate to contact us.\n\n" +
+                        "Best regards,\n" +
+                        "Ascendia Construction Management\n" +
+                        "\n";
+
+        sendEmailService.sendEmail(assignedUser.getEmail(), body, subject);
+
+
     }
 
     @Override
