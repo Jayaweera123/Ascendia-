@@ -2,15 +2,11 @@ package com.Ascendia.server.service.ProjectManager.impl;
 
 
 import com.Ascendia.server.dto.ProjectManager.AssignmentHistoryDto;
-import com.Ascendia.server.dto.ProjectManager.TaskDto;
 import com.Ascendia.server.dto.ProjectManager.UserProjectAssignmentDto;
 import com.Ascendia.server.entity.Administrator.User;
 import com.Ascendia.server.entity.Project.Project;
-import com.Ascendia.server.entity.ProjectManager.AssignmentHistory;
-import com.Ascendia.server.entity.ProjectManager.Task;
 import com.Ascendia.server.entity.ProjectManager.UserProjectAssignment;
 import com.Ascendia.server.exceptions.ResourceNotFoundException;
-import com.Ascendia.server.mapper.ProjectManager.TaskMapper;
 import com.Ascendia.server.mapper.ProjectManager.UserProjectAssignmentMapper;
 import com.Ascendia.server.repository.Administrator.UserRepository;
 import com.Ascendia.server.repository.Project.ProjectRepository;
@@ -23,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 import java.util.stream.Collectors;
 

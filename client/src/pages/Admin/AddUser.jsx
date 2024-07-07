@@ -257,8 +257,6 @@ const AddUser = () => {
     );
   }
 
-
-  // Return the JSX content of the component
   return (
     <div>
       <TopNavigationAdmin />

@@ -28,4 +28,17 @@ public class TaskDto {
     private boolean completed;
     private Project project;
 
+
+    // Method to calculate and set status based on start and end dates
+   /* public void calculateAndSetStatus() {
+        LocalDate currentDate = LocalDate.now();
+        if (currentDate.isBefore(startDate)) {
+            setStatus("Scheduled");
+        } else if (currentDate.isAfter(endDate)) {
+            setStatus("Completed");
+        } else {
+            setStatus("In Progress");
+        }
+    }*/
+
 }

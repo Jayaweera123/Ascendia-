@@ -15,5 +15,4 @@ public interface MaterialRepository extends JpaRepository<Material, Long> {
             "m.materialName LIKE CONCAT('%',:query, '%'))")
     List<Material> searchMaterial(Long projectId, String query);
     List<Material> findAllByProject(Project project);
-
 }
