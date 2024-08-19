@@ -6,6 +6,18 @@
 
 **Ascendia** is a comprehensive construction project management system designed to improve and optimize workflows for large-scale construction companies. The platform addresses various industry challenges, offering robust solutions accessible via both web and mobile applications. With support for five distinct user roles, Ascendia ensures efficient management across all levels of construction projects.
 
+## Project Structure
+
+```bash
+Ascendia/
+├── .idea/              # IDE configuration files
+├── Mobile Client/      # Flutter mobile app
+├── client/             # ReactJS application
+├── server/             # SpringBoot application
+├── README.md           # Project documentation
+└── package-lock.json   # NPM package lock file
+````
+
 ## Key Features
 
 - **Authentication**: Secure user access and role assignment powered by JWT.
@@ -24,17 +36,6 @@
 - **Mobile App**: Flutter
 - **Notifications**: Real-time via Socket.io, email via SMTP
 
-## Project Structure
-
-```bash
-Ascendia/
-├── .idea/              # IDE configuration files
-├── Mobile Client/      # Flutter mobile app
-├── client/             # ReactJS application
-├── server/             # SpringBoot application
-├── README.md           # Project documentation
-└── package-lock.json   # NPM package lock file
-````
 # 
 ![Screenshot (777)](https://github.com/Jayaweera123/Ascendia-/assets/155569167/5a7d0b86-73ec-450c-9864-87679548e0e5)
 #
