@@ -27,12 +27,11 @@
 
 ```bash
 Ascendia/
-├── backend/            # Spring Boot application
-├── frontend/           # ReactJS application
-├── mobile/             # Flutter mobile app
-├── database/           # SQL scripts and database models
-├── notifications/      # Socket.io and SMTP server integration
-└── README.md           # Project documentation
+├── .idea/              # IDE configuration files
+├── Mobile Client/      # Flutter mobile app
+├── client/             # ReactJS application
+├── README.md           # Project documentation
+└── package-lock.json   # NPM package lock file
 ````
 # 
 ![Screenshot (777)](https://github.com/Jayaweera123/Ascendia-/assets/155569167/5a7d0b86-73ec-450c-9864-87679548e0e5)
