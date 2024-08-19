@@ -30,6 +30,7 @@ Ascendia/
 ├── .idea/              # IDE configuration files
 ├── Mobile Client/      # Flutter mobile app
 ├── client/             # ReactJS application
+├── server/             # SpringBoot application
 ├── README.md           # Project documentation
 └── package-lock.json   # NPM package lock file
 ````
