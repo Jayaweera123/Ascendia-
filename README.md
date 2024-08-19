@@ -37,10 +37,12 @@ Ascendia/
 ````
 # 
 ![Screenshot (777)](https://github.com/Jayaweera123/Ascendia-/assets/155569167/5a7d0b86-73ec-450c-9864-87679548e0e5)
-# 
-![storeDashbard](https://github.com/user-attachments/assets/80f9e2c5-c36b-42e6-8cd1-97a51d4f2001)
 #
-![Screenshot (778)](https://github.com/user-attachments/assets/5cddf001-475c-4ffb-8ec3-0d9ca14ea603)
+![storeDashbard](https://github.com/user-attachments/assets/9babc8c0-386a-4389-9ed9-95a638728fa0)
+#
+![2 project_dashboard](https://github.com/user-attachments/assets/254f92a1-4826-43cd-81a1-06a845ef6d1c)
+#
+
 
 
 
