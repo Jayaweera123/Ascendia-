@@ -6,12 +6,15 @@ import {
   markAsCompleted,
   getJobCountForTask,
   deleteTask,
+  getCommetsForTask,
 } from "../../services/TaskService";
 import { IoIosArrowForward } from "react-icons/io";
 import { LuClipboardEdit, LuCalendarClock } from "react-icons/lu";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Swal from "sweetalert2";
 import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
+import { comment } from "postcss";
+import CommentCard from "./CommentCard"; // Import the CommentCard component
 
 const TaskDetailsinJobPage = ({ taskId }) => {
   // Your component logic goes here
@@ -24,6 +27,7 @@ const TaskDetailsinJobPage = ({ taskId }) => {
   const [timeDifference, setTimeDifference] = useState({});
   const [jobCounts, setJobCounts] = useState({});
   const [projectId, setProjectId] = useState({});
+  const [comments, setComments] = useState([]);
 
   const [isEndDateGreaterThanCurrentDate, setIsEndDateGreaterThanCurrentDate] =
     useState(false);
@@ -76,6 +80,17 @@ const TaskDetailsinJobPage = ({ taskId }) => {
         console.error(error);
       });
   }, [taskId]); // Add taskId to the dependency array
+
+  useEffect(() => {
+    getCommetsForTask(taskId)
+      .then((response) => {
+        console.log(response.data);
+        setComments(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, [taskId]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -188,7 +203,7 @@ const TaskDetailsinJobPage = ({ taskId }) => {
       <div className="flex justify-between items-center mt-2">
         <div className="flex flex-col   text-gray-700">
           <p>Start Date: {formatDate(startDate)}</p>
-          <p>End Date: {formatDate(endDate)}</p>
+          <p>Due Date: {formatDate(endDate)}</p>
         </div>
         <div className="ml-auto">
           {taskStatus === "COMPLETED" ? (
@@ -204,6 +219,11 @@ const TaskDetailsinJobPage = ({ taskId }) => {
               overdue by {JSON.stringify(timeDifference).replace(/"/g, "")}
             </div>
           )}
+
+          {/* Render the comment cards */}
+          <div className="mt-1  text-gray-700 font-semibold">
+            <CommentCard comments={comments} />
+          </div>
         </div>
       </div>
     </div>

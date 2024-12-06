@@ -65,6 +65,11 @@ public class ProjectController {
         return projectService.getTotalJobsForProject(projectId);
     }
 
+    @GetMapping("/{projectId}/completed/jobs/count")
+    public Long getCOmpletedJobsForProject(@PathVariable Long projectId) {
+        return projectService.getCompletedJobsCountForProject(projectId);
+    }
+
     @GetMapping("/{projectId}/employees/count")
     public Long getEmployeeCountForProject(@PathVariable Long projectId) {
         return projectService.getEmployeeCountForProject(projectId);

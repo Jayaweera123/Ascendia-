@@ -90,6 +90,12 @@ public class TaskController {
         return ResponseEntity.ok(jobCount);
     }
 
+    @GetMapping("/{taskId}/jobcount/completed")
+    public ResponseEntity<Integer> getCompletedJobCountForTask(@PathVariable Long taskId) {
+        int completedJobCount = taskService.getCompletedJobCountForTask(taskId);
+        return ResponseEntity.ok(completedJobCount);
+    }
+
     @GetMapping("/{taskId}/set-status")
     public String setTaskStatusLable(@PathVariable Long taskId) {
         return taskService.checkCompletionOrStatusUpdate(taskId);

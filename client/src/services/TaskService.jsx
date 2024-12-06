@@ -22,6 +22,9 @@ export const getTasksForProject = (ProjectId) =>
 export const getJobCountForTask = (taskId) =>
   axios.get(REST_API_BASE_URL0 + taskId + "/jobcount");
 
+export const getCompletedJobCountForTask = (taskId) =>
+  axios.get(REST_API_BASE_URL0 + taskId + "/jobcount/completed");
+
 export const setStatusLabel = (taskId) =>
   axios.get(REST_API_BASE_URL0 + taskId + "/set-status");
 
@@ -36,3 +39,10 @@ export const markAsCompleted = (taskId) =>
 
 export const markAsUncompleted = (taskId) =>
   axios.get(REST_API_BASE_URL0 + taskId + "/mark-as-undone");
+
+//==========comments==================
+
+const REST_API_BASE_URL1 = "http://localhost:8080/api/v2/comment/";
+
+export const getCommetsForTask = (taskId) =>
+  axios.get(REST_API_BASE_URL1 + "task/" + taskId);
