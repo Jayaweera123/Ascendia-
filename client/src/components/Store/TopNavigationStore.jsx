@@ -4,7 +4,7 @@ import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import Swal from 'sweetalert2'; // Import SweetAlert2
 import '../../shim/global.js';
-import { markAllNotificationsAsSeen, getUnseenNotifications } from '../../services/StoreServices';
+import { markAllNotificationsAsSeen, getUnseenNotifications } from '../../services/StoreServices.js';
 
 const TopNavigationStore = ({ notificationHandler }) => {
 

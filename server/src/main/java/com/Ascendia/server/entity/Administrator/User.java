@@ -1,6 +1,5 @@
 package com.Ascendia.server.entity.Administrator;
 
-import com.Ascendia.server.entity.Project.Project;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
